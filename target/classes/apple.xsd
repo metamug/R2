@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+<xs:simpleType name="id">
+	<xs:restriction base="xs:long" >
+		<xs:minInclusive value="0" />
+	</xs:restriction>	
+</xs:simpleType>
+
+<xs:simpleType name="out">
+	<xs:restriction base="xs:string">
+   		<xs:enumeration value="json"/>
+   		<xs:enumeration value="xml"/>
+   		<xs:enumeration value="table"/>
+  	</xs:restriction>
+</xs:simpleType>	
+
+<xs:simpleType name="version">
+	<xs:restriction base="xs:float">
+		<xs:minInclusive value="0.1" />
+	</xs:restriction>	
+</xs:simpleType>	
+
+<xs:simpleType name="table">
+	<xs:restriction base="xs:string">
+		<xs:minLength value="1" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:element name="Resource">
+	<xs:complexType>
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="Request" type="request" />
+			<xs:element name="Create" type="create" />
+			<xs:element name="Read" type="read" />
+			<xs:element name="Update" type="update" />
+			<xs:element name="Delete" type="delete" />
+		</xs:choice>	
+		<xs:attribute name="version" type="version" use="required" />
+		<xs:attribute name="table" type="table" use="required" />
+	</xs:complexType>
+</xs:element>
+
+<xs:simpleType name="method">
+   	<xs:restriction base="xs:string">
+   		<xs:enumeration value="GET"/>
+   		<xs:enumeration value="POST"/>
+   		<xs:enumeration value="PUT"/>
+   		<xs:enumeration value="DELETE"/>
+  	</xs:restriction>
+</xs:simpleType>
+
+<xs:complexType name="sql" >
+	<xs:simpleContent>
+		<xs:extension base="xs:string">
+			<xs:attribute name="type" type="sqlType" default="query" />
+                        <xs:attribute name="on" type="xs:string" />
+		</xs:extension>	
+	</xs:simpleContent>				
+</xs:complexType>	
+
+<xs:simpleType name="sqlType">
+	<xs:restriction base="xs:string">
+   		<xs:enumeration value="query"/>
+   		<xs:enumeration value="update"/>
+  	</xs:restriction>
+</xs:simpleType>	
+
+<xs:complexType name="request">
+	<xs:sequence>
+		<xs:element name="Sql" type="sql" minOccurs="1" maxOccurs="1" />
+	</xs:sequence>
+	<xs:attribute name="method" type="method" default="GET" />
+	<xs:attribute name="id" type="id" use="optional" />
+	<xs:attribute name="out" type="out" default="json" />
+</xs:complexType>	
+
+<xs:complexType name="create">
+	<xs:complexContent>
+		<xs:extension base="request">
+		</xs:extension>	
+	</xs:complexContent>	
+</xs:complexType>
+
+<xs:complexType name="read">
+	<xs:complexContent>
+		<xs:extension base="request">
+		</xs:extension>	
+	</xs:complexContent>	
+</xs:complexType>
+
+<xs:complexType name="update">
+	<xs:complexContent>
+		<xs:extension base="request">
+		</xs:extension>	
+	</xs:complexContent>	
+</xs:complexType>
+
+<xs:complexType name="delete">
+	<xs:complexContent>
+		<xs:extension base="request">
+		</xs:extension>	
+	</xs:complexContent>	
+</xs:complexType>
+
+</xs:schema>	

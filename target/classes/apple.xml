@@ -1,0 +1,43 @@
+<Resource version="1.1" table="apple" >
+
+	<Request method="GET" id="1" out="json" >
+		<Sql>
+			select * from employee 
+			where employee_name = @param1 
+			and employee_id = @myId
+		</Sql>
+	</Request>
+	
+	<Create>
+		<Sql>
+		insert into employee 
+		(employee_name, employee_id) 
+		values(@name, @id)
+		</Sql>
+	</Create>
+
+	<!--derived from request -->
+	<Read out="table" >
+		<Sql>
+		select * from employee
+		</Sql>
+	</Read>
+	
+	<Read id="12" out="table" >
+		<Sql on="item lt 1">select * from employee where employee_id=12
+		</Sql>
+	</Read>
+
+	
+	<!-- Table REST calls -->
+<!--	<Fetch>
+		<Select col="emp_id" as="Employee Id" />
+		<Select col="emp_name" as="emp_name" />
+	</Fetch>
+
+	<Create>
+		<Field col="emp_id" as="Employee Id" />
+		<Field col="emp_name" as="emp_name" />
+	</Create>
+-->
+</Resource>
