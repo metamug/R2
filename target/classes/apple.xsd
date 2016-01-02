@@ -68,7 +68,7 @@
 
 <xs:complexType name="request">
 	<xs:sequence>
-		<xs:element name="Sql" type="sql" minOccurs="1" maxOccurs="1" />
+		<xs:element name="Sql" type="sql" minOccurs="1" maxOccurs="unbounded" />
 	</xs:sequence>
 	<xs:attribute name="method" type="method" default="GET" />
 	<xs:attribute name="id" type="id" use="optional" />

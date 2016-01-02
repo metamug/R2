@@ -8,7 +8,7 @@ package com.metamug.jaxb;
 
 import com.metamug.jaxb.gener.Request;
 import com.metamug.jaxb.gener.Resource;
-import java.io.File;
+import com.metamug.jaxb.gener.Sql;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -29,13 +29,16 @@ public class JAXB {
             
             for (Request req : resource.getRequestOrCreateOrRead()) {
                 //System.out.println("\nrequest_name: " + req.getClass().getSimpleName());
+                System.out.println("\n--------------------------------------------------------------");
                 System.out.print("    method: " + req.getMethod().value());
                 System.out.print("    out: " + req.getOut().value());
                 System.out.print("    id: " + req.getId());               
                 
-                System.out.println("    sqltype: " + req.getSql().getType());
-                System.out.println("on: " + req.getSql().getOn());
-                System.out.println(req.getSql().getValue().trim());
+                for(Sql sql : req.getSql()){
+                    System.out.println("    sqltype: " + sql.getType().value());
+                    System.out.println("on: " + sql.getOn());
+                    System.out.println(sql.getValue().trim());
+                }
             }
 
         } catch (JAXBException e) {

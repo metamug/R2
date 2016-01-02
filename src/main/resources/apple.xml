@@ -6,6 +6,9 @@
 			where employee_name = @param1 
 			and employee_id = @myId
 		</Sql>
+                <Sql>
+                    select * from employee where employee_name = @param1
+                </Sql>
 	</Request>
 	
 	<Create>
