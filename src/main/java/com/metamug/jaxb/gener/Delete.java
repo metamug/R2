@@ -8,6 +8,8 @@
 
 package com.metamug.jaxb.gener;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
@@ -35,7 +37,19 @@ public class Delete
     extends Request
 {
     public Delete(){
-        super(Method.DELETE, SqlType.UPDATE);
+        super(Method.DELETE);
     }
 
+    @Override
+    public List<Sql> getSql() {
+        if (sql == null) {
+            sql = new ArrayList<Sql>();
+        }
+        //System.out.println("Overrided!+_+_+++_++_+_+_++_++_++_+_+_+_");
+        for(Sql sql : this.sql){
+            sql.setType("update");
+        }
+        
+        return this.sql;
+    }    
 }

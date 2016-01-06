@@ -26,21 +26,20 @@ public class JAXB {
             
             System.out.println("table: " + resource.getTable());
             System.out.print("    version: " + Float.toString(resource.getVersion()));
-            
+            //
             for (Request req : resource.getRequestOrCreateOrRead()) {
-                //System.out.println("\nrequest_name: " + req.getClass().getSimpleName());
                 System.out.println("\n--------------------------------------------------------------");
                 System.out.print("    method: " + req.getMethod().value());
                 System.out.print("    out: " + req.getOut().value());
                 System.out.print("    id: " + req.getId());               
                 
                 for(Sql sql : req.getSql()){
-                    System.out.println("    sqltype: " + sql.getType().value());
+                    System.out.println("    sqltype: " + sql.getType());
                     System.out.println("on: " + sql.getOn());
-                    System.out.println(sql.getValue().trim());
+                    System.out.println(sql.getValue().trim()); 
                 }
             }
-
+            //it is because  of the spcae in the print statements
         } catch (JAXBException e) {
             e.printStackTrace();
 	}

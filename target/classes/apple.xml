@@ -4,13 +4,13 @@
 		<Sql>
 			select * from employee 
 			where employee_name = @param1 
-			and employee_id = @myId
+			and employee_id = @id
 		</Sql>
-                <Sql>
-                    select * from employee where employee_name = @param1
+                <Sql type="update">
+                    update employee set employee_name = @param1 where employee_id=@id
                 </Sql>
 	</Request>
-	
+	       
 	<Create>
 		<Sql>
 		insert into employee 

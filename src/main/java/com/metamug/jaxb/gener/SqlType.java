@@ -8,6 +8,7 @@
 
 package com.metamug.jaxb.gener;
 
+import static com.metamug.jaxb.gener.Method.valueOf;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
@@ -31,28 +32,17 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "sqlType")
 @XmlEnum
 public enum SqlType {
-
-    @XmlEnumValue("query")
-    QUERY("query"),
-    @XmlEnumValue("update")
-    UPDATE("update");
-    private final String value;
-
-    SqlType(String v) {
-        value = v;
-    }
+    
+    UPDATE,
+    QUERY;
 
     public String value() {
-        return value;
+        return name();
     }
 
     public static SqlType fromValue(String v) {
-        for (SqlType c: SqlType.values()) {
-            if (c.value.equals(v)) {
-                return c;
-            }
-        }
-        throw new IllegalArgumentException(v);
+        return valueOf(v);
     }
+
 
 }
