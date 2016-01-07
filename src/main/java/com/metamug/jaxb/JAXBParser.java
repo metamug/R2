@@ -42,11 +42,15 @@ public class JAXBParser {
 	try {
             validator.validate(xmlFile);
             parse();
+            createHtml();
         } catch (SAXException|IOException e) {
 	    System.out.println(xmlFile.getSystemId() + " is NOT valid.");
 	    System.out.println("Reason: " + e.getMessage());
-	}		
-       
+	}		       
+    }
+    
+    public static void createHtml(){
+        File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
         File xsl = new File(JAXBParser.class.getResource("/resource.xsl").getFile());
         File outHtml = new File(JAXBParser.class.getResource("/resource.html").getFile());
         try {
