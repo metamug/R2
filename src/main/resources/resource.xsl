@@ -5,51 +5,108 @@
     <html><head><title><xsl:value-of select="@table"/></title></head>
     <body>
     	<p><b>Resource Name: </b><xsl:value-of select="@table"/></p>
-    	<p><b>Resource Description: </b><xsl:apply-templates select="Resource/desc"/></p>
-		<p><b>API Version: </b><xsl:value-of select="@version"/></p>
-		<p><b>Requests: </b></p>
-		<table style="width=100%">
+    	<p><b>Resource Description: </b><xsl:choose>
+                                                <xsl:when test='string-length(desc)>0'>
+                                                        <xsl:value-of select="desc"/> 
+                                                </xsl:when>
+                                                <xsl:otherwise>Not Given
+                                                </xsl:otherwise></xsl:choose></p>
+                                                
+	<p><b>API Version: </b><xsl:value-of select="@version"/></p>
+	<p><b>Requests: </b></p>
+		
+                <table border="1">
 			<tr>
 				<td><b>Type</b></td><td><b>Description</b></td><td><b>Method</b></td><td><b>Output</b></td>
 			</tr>
-			<xsl:for-each select="Resource/Request">
+			<xsl:for-each select="Request">
 				<tr>
-					<td><b>Request</b></td>
-					<td><b><xsl:value-of select="desc"/></b></td>
-					<td><b><xsl:value-of select="@method"/></b></td>
-					<td><b><xsl:value-of select="@out"/></b></td>
+					<td>Request</td>
+					<td><xsl:choose>
+                                                <xsl:when test='string-length(desc)>0'>
+                                                        <xsl:value-of select="desc"/> 
+                                                </xsl:when>
+                                                <xsl:otherwise>Not Given
+                                                </xsl:otherwise></xsl:choose></td>
+					<td><xsl:value-of select="@method"/></td>
+					<td><xsl:choose>
+                                                <xsl:when test='string-length(@out)>0'>
+                                                        <xsl:value-of select="@out"/> 
+                                                </xsl:when>
+                                                <xsl:otherwise>json
+                                                </xsl:otherwise></xsl:choose></td>
 				</tr>
 			</xsl:for-each>
-			<xsl:for-each select="Resource/Create">
+			<xsl:for-each select="Create">
 				<tr>
-					<td><b>Create</b></td>
-					<td><b><xsl:value-of select="desc"/></b></td>
-					<td><b><xsl:value-of select="@method"/></b></td>
-					<td><b><xsl:value-of select="@out"/></b></td>
+					<td>Create</td>
+					<td><xsl:choose>
+                                                <xsl:when test='string-length(desc)>0'>
+                                                        <xsl:value-of select="desc"/> 
+                                                </xsl:when>
+                                                <xsl:otherwise>Not Given
+                                                </xsl:otherwise></xsl:choose></td>
+					<td>POST</td>
+					<td><xsl:choose>
+                                                <xsl:when test='string-length(@out)>0'>
+                                                        <xsl:value-of select="@out"/> 
+                                                </xsl:when>
+                                                <xsl:otherwise>json
+                                                </xsl:otherwise></xsl:choose></td>
 				</tr>
 			</xsl:for-each>
-			<xsl:for-each select="Resource/Read">
+			<xsl:for-each select="Read">
 				<tr>
-					<td><b>Read</b></td>
-					<td><b><xsl:value-of select="desc"/></b></td>
-					<td><b><xsl:value-of select="@method"/></b></td>
-					<td><b><xsl:value-of select="@out"/></b></td>
+					<td>Read</td>
+					<td><xsl:choose>
+                                                <xsl:when test='string-length(desc)>0'>
+                                                        <xsl:value-of select="desc"/> 
+                                                </xsl:when>
+                                                <xsl:otherwise>Not Given
+                                                </xsl:otherwise></xsl:choose></td>
+					<td>GET</td>
+					<td><xsl:choose>
+                                                <xsl:when test='string-length(@out)>0'>
+                                                        <xsl:value-of select="@out"/> 
+                                                </xsl:when>
+                                                <xsl:otherwise>json
+                                                </xsl:otherwise></xsl:choose></td>
 				</tr>
 			</xsl:for-each>
-			<xsl:for-each select="Resource/Update">
+			<xsl:for-each select="Update">
 				<tr>
-					<td><b>Update</b></td>
-					<td><b><xsl:value-of select="desc"/></b></td>
-					<td><b><xsl:value-of select="@method"/></b></td>
-					<td><b><xsl:value-of select="@out"/></b></td>
+					<td>Update</td>
+					<td><xsl:choose>
+                                                <xsl:when test='string-length(desc)>0'>
+                                                        <xsl:value-of select="desc"/> 
+                                                </xsl:when>
+                                                <xsl:otherwise>Not Given
+                                                </xsl:otherwise></xsl:choose></td>
+					<td>PUT</td>
+					<td><xsl:choose>
+                                                <xsl:when test='string-length(@out)>0'>
+                                                        <xsl:value-of select="@out"/> 
+                                                </xsl:when>
+                                                <xsl:otherwise>json
+                                                </xsl:otherwise></xsl:choose></td>
 				</tr>
 			</xsl:for-each>
-			<xsl:for-each select="Resource/Delete">
+			<xsl:for-each select="Delete">
 				<tr>
-					<td><b>Delete</b></td>
-					<td><b><xsl:value-of select="desc"/></b></td>
-					<td><b><xsl:value-of select="@method"/></b></td>
-					<td><b><xsl:value-of select="@out"/></b></td>
+					<td>Delete</td>
+					<td><xsl:choose>
+                                                <xsl:when test='string-length(desc)>0'>
+                                                        <xsl:value-of select="desc"/> 
+                                                </xsl:when>
+                                                <xsl:otherwise>Not Given
+                                                </xsl:otherwise></xsl:choose></td>
+					<td>DELETE</td>
+					<td><xsl:choose>
+                                                <xsl:when test='string-length(@out)>0'>
+                                                        <xsl:value-of select="@out"/> 
+                                                </xsl:when>
+                                                <xsl:otherwise>json
+                                                </xsl:otherwise></xsl:choose></td>
 				</tr>
 			</xsl:for-each>
 		</table>	
