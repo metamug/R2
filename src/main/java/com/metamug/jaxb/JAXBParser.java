@@ -9,13 +9,17 @@ package com.metamug.jaxb;
 import com.metamug.jaxb.gener.Request;
 import com.metamug.jaxb.gener.Resource;
 import com.metamug.jaxb.gener.Sql;
+import com.metamug.jaxb.xslt.XslTransformer;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -43,6 +47,13 @@ public class JAXBParser {
 	    System.out.println("Reason: " + e.getMessage());
 	}		
        
+        File xsl = new File(JAXBParser.class.getResource("/resource.xsl").getFile());
+        File outHtml = new File(JAXBParser.class.getResource("/resource.html").getFile());
+        try {
+            XslTransformer.transform(xml, xsl, outHtml);
+        } catch (TransformerException ex) {
+            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public static void parse(){
