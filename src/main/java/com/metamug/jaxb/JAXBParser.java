@@ -89,5 +89,4 @@ public class JAXBParser {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
-    
 }
