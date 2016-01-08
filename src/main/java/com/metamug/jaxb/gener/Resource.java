@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2016.01.02 at 06:40:50 PM IST 
 //
-
-
 package com.metamug.jaxb.gener;
 
 import java.util.ArrayList;
@@ -18,12 +16,13 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for anonymous complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -41,8 +40,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -66,40 +65,39 @@ public class Resource {
 
     /**
      * Gets the value of the requestOrCreateOrRead property.
-     * 
+     *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the requestOrCreateOrRead property.
-     * 
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is
+     * not a <CODE>set</CODE> method for the requestOrCreateOrRead property.
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getRequestOrCreateOrRead().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Request }
+     * Objects of the following type(s) are allowed in the list      {@link Request }
      * {@link Create }
      * {@link Read }
      * {@link Update }
      * {@link Delete }
-     * 
-     * 
+     *
+     *
+     * @return
      */
     public List<Request> getRequestOrCreateOrRead() {
         if (requestOrCreateOrRead == null) {
-            requestOrCreateOrRead = new ArrayList<Request>();
+            requestOrCreateOrRead = new ArrayList<>();
         }
         return this.requestOrCreateOrRead;
     }
 
     /**
      * Gets the value of the version property.
-     * 
+     *
+     * @return
      */
     public float getVersion() {
         return version;
@@ -107,19 +105,18 @@ public class Resource {
 
     /**
      * Sets the value of the version property.
-     * 
+     *
+     * @param version
      */
-    public void setVersion(float value) {
-        this.version = value;
+    public void setVersion(float version) {
+        this.version = version;
     }
 
     /**
      * Gets the value of the table property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getTable() {
         return table;
@@ -127,11 +124,9 @@ public class Resource {
 
     /**
      * Sets the value of the table property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setTable(String value) {
         this.table = value;

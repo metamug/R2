@@ -1,4 +1,4 @@
-<Resource version="1.1" table="apple" >
+<Resource version="1.1">
 
 	<Request method="GET" id="1" out="json" >
 		<Sql>
@@ -30,7 +30,6 @@
 		<Sql on="item lt 1">select * from employee where employee_id=12
 		</Sql>
 	</Read>
-
 	
 	<!-- Table REST calls -->
 <!--	<Fetch>

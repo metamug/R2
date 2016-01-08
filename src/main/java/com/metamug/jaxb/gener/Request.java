@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2016.01.02 at 06:40:50 PM IST 
 //
-
-
 package com.metamug.jaxb.gener;
 
 import java.util.ArrayList;
@@ -17,12 +15,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for request complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for request complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType name="request">
  *   &lt;complexContent>
@@ -37,13 +36,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "request", propOrder = {
-    "sql"
-})
+@XmlType(name = "request", propOrder = {"sql"})
 @XmlSeeAlso({
     Create.class,
     Read.class,
@@ -60,59 +57,54 @@ public class Request {
     protected Long id;
     @XmlAttribute(name = "out")
     protected Out out;
-    
-    
-    public Request(){        
+
+    public Request() {
     }
-    
-    public Request(Method method){
+
+    public Request(Method method) {
         this.method = method;
     }
-    
-    public Request(Method method, SqlType sqlType){
+
+    public Request(Method method, SqlType sqlType) {
         this.method = method;
-        
-        for(Sql sql : this.sql){
-            sql.setType(sqlType);
+
+        for (Sql queryType : this.sql) {
+            queryType.setType(sqlType);
         }
     }
 
     /**
      * Gets the value of the sql property.
-     * 
+     *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the sql property.
-     * 
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is
+     * not a <CODE>set</CODE> method for the sql property.
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getSql().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Sql }
-     * 
-     * 
+     * Objects of the following type(s) are allowed in the list {@link Sql }
+     *
+     *
+     * @return 
      */
     public List<Sql> getSql() {
         if (sql == null) {
-            sql = new ArrayList<Sql>();
+            sql = new ArrayList<>();
         }
         return this.sql;
     }
 
     /**
      * Gets the value of the method property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Method }
-     *     
+     *
+     * @return possible object is {@link Method }
+     *
      */
     public Method getMethod() {
         if (method == null) {
@@ -124,11 +116,9 @@ public class Request {
 
     /**
      * Sets the value of the method property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Method }
-     *     
+     *
+     * @param value allowed object is {@link Method }
+     *
      */
     public void setMethod(Method value) {
         this.method = value;
@@ -136,11 +126,9 @@ public class Request {
 
     /**
      * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     *
+     * @return possible object is {@link Long }
+     *
      */
     public Long getId() {
         return id;
@@ -148,11 +136,9 @@ public class Request {
 
     /**
      * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     *
+     * @param value allowed object is {@link Long }
+     *
      */
     public void setId(Long value) {
         this.id = value;
@@ -160,11 +146,9 @@ public class Request {
 
     /**
      * Gets the value of the out property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Out }
-     *     
+     *
+     * @return possible object is {@link Out }
+     *
      */
     public Out getOut() {
         if (out == null) {
@@ -176,11 +160,9 @@ public class Request {
 
     /**
      * Sets the value of the out property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Out }
-     *     
+     *
+     * @param value allowed object is {@link Out }
+     *
      */
     public void setOut(Out value) {
         this.out = value;

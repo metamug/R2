@@ -4,19 +4,18 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2016.01.02 at 06:40:50 PM IST 
 //
-
-
 package com.metamug.jaxb.gener;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for sqlType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for sqlType.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
  * &lt;simpleType name="sqlType">
@@ -26,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
+ *
  */
 @XmlType(name = "sqlType")
 @XmlEnum
@@ -38,21 +37,21 @@ public enum SqlType {
     UPDATE("update");
     private final String value;
 
-    SqlType(String v) {
-        value = v;
+    SqlType(String queryType) {
+        value = queryType;
     }
 
     public String value() {
         return value;
     }
 
-    public static SqlType fromValue(String v) {
-        for (SqlType c: SqlType.values()) {
-            if (c.value.equals(v)) {
-                return c;
+    public static SqlType fromValue(String stringValue) {
+        for (SqlType sqlType : SqlType.values()) {
+            if (sqlType.value.equals(stringValue)) {
+                return sqlType;
             }
         }
-        throw new IllegalArgumentException(v);
+        throw new IllegalArgumentException(stringValue);
     }
 
 }

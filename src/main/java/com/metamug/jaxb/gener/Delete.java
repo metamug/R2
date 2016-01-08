@@ -4,20 +4,19 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2016.01.02 at 06:40:50 PM IST 
 //
-
-
 package com.metamug.jaxb.gener;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for delete complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for delete complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType name="delete">
  *   &lt;complexContent>
@@ -26,15 +25,14 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "delete")
-public class Delete
-    extends Request
-{
-    public Delete(){
+public class Delete extends Request {
+
+    public Delete() {
         super(Method.DELETE, SqlType.UPDATE);
     }
 
