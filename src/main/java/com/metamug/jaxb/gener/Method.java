@@ -4,19 +4,19 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2016.01.02 at 06:40:50 PM IST 
 //
-
-
 package com.metamug.jaxb.gener;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for method.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
+ * Java class for method.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ *
  * <pre>
  * &lt;simpleType name="method">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
+ *
  */
 @XmlType(name = "method")
 @XmlEnum

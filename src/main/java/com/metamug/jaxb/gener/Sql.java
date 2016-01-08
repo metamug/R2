@@ -41,9 +41,13 @@ public class Sql {
     @XmlValue
     protected String value;
     @XmlAttribute(name = "type")
-    protected SqlType type;
+    protected String type;
     @XmlAttribute(name = "on")
     protected String on;
+
+    public Sql() {
+        //System.out.println("SQLCreated!");
+    }
 
     /**
      * Gets the value of the value property.
@@ -71,9 +75,16 @@ public class Sql {
      * @return possible object is {@link SqlType }
      *
      */
-    public SqlType getType() {
+    /*public SqlType getType() {
         if (type == null) {
             return SqlType.QUERY;
+        } else {
+            return type;
+        }
+    }*/
+    public String getType() {
+        if (type == null) {
+            return "query";
         } else {
             return type;
         }
@@ -85,7 +96,7 @@ public class Sql {
      * @param value allowed object is {@link SqlType }
      *
      */
-    public void setType(SqlType value) {
+    public void setType(String value) {
         this.type = value;
     }
 

@@ -50,9 +50,9 @@ public enum Out {
     }
 
     public static Out fromValue(String stringValue) {
-        for (Out c : Out.values()) {
-            if (c.value.equals(stringValue)) {
-                return c;
+        for (Out outputType : Out.values()) {
+            if (outputType.value.equals(stringValue)) {
+                return outputType;
             }
         }
         throw new IllegalArgumentException(stringValue);

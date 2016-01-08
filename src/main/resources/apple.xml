@@ -1,17 +1,21 @@
-<Resource version="1.1">
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource version="1.1" table="apple" >
+
+	<desc>Contains records for data type apple.</desc>
 
 	<Request method="GET" id="1" out="json" >
 		<Sql>
 			select * from employee 
 			where employee_name = @param1 
-			and employee_id = @myId
+			and employee_id = @id
 		</Sql>
-                <Sql>
-                    select * from employee where employee_name = @param1
-                </Sql>
+        <Sql type="update">
+            update employee set employee_name = @param1 where employee_id=@id
+        </Sql>
 	</Request>
-	
+	       
 	<Create>
+		<desc>Request for creating an employee record.</desc>
 		<Sql>
 		insert into employee 
 		(employee_name, employee_id) 
@@ -30,16 +34,5 @@
 		<Sql on="item lt 1">select * from employee where employee_id=12
 		</Sql>
 	</Read>
-	
-	<!-- Table REST calls -->
-<!--	<Fetch>
-		<Select col="emp_id" as="Employee Id" />
-		<Select col="emp_name" as="emp_name" />
-	</Fetch>
 
-	<Create>
-		<Field col="emp_id" as="Employee Id" />
-		<Field col="emp_name" as="emp_name" />
-	</Create>
--->
 </Resource>
