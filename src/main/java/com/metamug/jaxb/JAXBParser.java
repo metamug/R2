@@ -1,10 +1,10 @@
+package com.metamug.jaxb;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.metamug.jaxb;
-
 import com.metamug.jaxb.gener.Request;
 import com.metamug.jaxb.gener.Resource;
 import com.metamug.jaxb.gener.Sql;
@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
  * @author anish
  */
 public class JAXBParser {
-    
+
     public static void main(String[] args) throws SAXException {
         File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/apple.xsd").getFile());
@@ -41,44 +41,47 @@ public class JAXBParser {
         Validator validator = schema.newValidator();
         try {
             validator.validate(xmlFile);
-            parse();
-            createHtml();
-        } catch (SAXException | IOException e) {
+            Resource resource = parse();
+            if (resource != null) {
+                createHtml(resource);
+            }
+        } catch (SAXException | IOException ex) {
             System.out.println(xmlFile.getSystemId() + " is NOT valid.");
-            System.out.println("Reason: " + e.getMessage());
+            System.out.println("Reason: " + ex.getMessage());
         }
     }
-    
-    public static void createHtml() {
+
+    public static void createHtml(Resource resource) {
         File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
         File xsl = new File(JAXBParser.class.getResource("/resource.xsl").getFile());
-        File outHtml = new File(JAXBParser.class.getResource("/resource.html").getFile());
+        File outHtml = new File("../rpx-parser/src/main/resources/" + resource.getTable() + ".html");
         try {
             XslTransformer.transform(xml, xsl, outHtml);
         } catch (TransformerException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public static void parse() {
+
+    public static Resource parse() {
+        Resource resource = new Resource();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            Resource resource = (Resource) jaxbUnmarshaller.unmarshal(
+            resource = (Resource) jaxbUnmarshaller.unmarshal(
                     JAXBParser.class.getResourceAsStream("/apple.xml"));
-            
+
             System.out.println("table: " + resource.getTable());
             System.out.println("    version: " + Float.toString(resource.getVersion()));
             System.out.println("    desc: " + resource.getDesc());
             System.out.print("\n--------------------------------------------------------------");
-            
+
             for (Request req : resource.getRequestOrCreateOrRead()) {
                 System.out.println("\n--------------------------------------------------------------");
                 System.out.print("    method: " + req.getMethod().value());
                 System.out.print("    out: " + req.getOut().value());
                 System.out.println("    id: " + req.getId());
                 System.out.println("    desc: " + req.getDesc());
-                
+
                 for (Sql sql : req.getSql()) {
                     System.out.println("    sqltype: " + sql.getType());
                     System.out.println("on: " + sql.getOn());
@@ -86,7 +89,8 @@ public class JAXBParser {
                 }
             }
         } catch (JAXBException ex) {
-            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return resource;
     }
 }
