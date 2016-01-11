@@ -16,8 +16,8 @@
     </xs:simpleType>	
 
     <xs:simpleType name="version">
-        <xs:restriction base="xs:float">
-            <xs:minInclusive value="0.1" />
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
         </xs:restriction>	
     </xs:simpleType>	
 

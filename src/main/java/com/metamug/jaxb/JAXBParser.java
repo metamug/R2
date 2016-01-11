@@ -11,8 +11,12 @@ import com.metamug.jaxb.gener.Sql;
 import com.metamug.jaxb.xslt.XslTransformer;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -50,6 +54,19 @@ public class JAXBParser {
             System.out.println("Reason: " + ex.getMessage());
         }
     }
+    
+    //try replacing keys in html with params using java
+    public List<String> getParamsFromSql(String sql){
+        StringBuilder sb = null;
+        List<String> list = new ArrayList<String>();
+        Pattern pattern = Pattern.compile("\\@(\\w+)");
+        Matcher matcher = pattern.matcher(sql);
+        while(matcher.find()){
+            list.add(sql.substring(matcher.start(1), matcher.end(1)));
+        }
+        
+        return list;
+    }
 
     public static void createHtml(Resource resource) {
         File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
@@ -71,7 +88,7 @@ public class JAXBParser {
                     JAXBParser.class.getResourceAsStream("/apple.xml"));
 
             System.out.println("table: " + resource.getTable());
-            System.out.println("    version: " + Float.toString(resource.getVersion()));
+            System.out.println("    version: " + resource.getVersion());
             System.out.println("    desc: " + resource.getDesc());
             System.out.print("\n--------------------------------------------------------------");
 

@@ -64,7 +64,7 @@ public class Resource {
     })
     protected List<Request> requestOrCreateOrRead;
     @XmlAttribute(name = "version", required = true)
-    protected float version;
+    protected String version;
     @XmlAttribute(name = "table", required = true)
     protected String table;
 
@@ -124,7 +124,7 @@ public class Resource {
      *
      * @return
      */
-    public float getVersion() {
+    public String getVersion() {
         return version;
     }
 
@@ -133,7 +133,7 @@ public class Resource {
      *
      * @param version
      */
-    public void setVersion(float version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 
