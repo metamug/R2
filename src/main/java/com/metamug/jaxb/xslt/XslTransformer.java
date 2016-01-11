@@ -5,7 +5,13 @@
  */
 package com.metamug.jaxb.xslt;
 
+import com.metamug.jaxb.JAXBParser;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -31,5 +37,20 @@ public class XslTransformer {
         System.out.println("---------------------------------------------");
         System.out.println("The generated HTML file is:" + htmlFile);
     }
-
+    
+    public static void replaceStringInFile(File file, String oldString, String newString){
+        //file reading
+        try {
+            FileReader fr = new FileReader(file);
+            String s;
+            
+            BufferedReader br = new BufferedReader(fr);
+            while ((s = br.readLine()) != null) {
+                s.replaceAll(oldString, newString);
+            // do something with the resulting line
+            }
+        }catch(IOException ix){
+            Logger.getLogger(XslTransformer.class.getName()).log(Level.SEVERE, null, ix);
+        }
+    }
 }
