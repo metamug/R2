@@ -60,6 +60,8 @@ public class JAXBParser {
         } catch (TransformerException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        //
     }
 
     public static Resource parse() {
@@ -82,10 +84,22 @@ public class JAXBParser {
                 System.out.println("    id: " + req.getId());
                 System.out.println("    desc: " + req.getDesc());
 
-                for (Sql sql : req.getSql()) {
-                    System.out.println("    sqltype: " + sql.getType());
-                    System.out.println("on: " + sql.getOn());
-                    System.out.println(sql.getValue().trim());
+                if(!req.getCode().isEmpty()){
+                    for(String code : req.getCode()){
+                        System.out.println("code: " + code);
+                    }
+                }else{
+                    System.out.println("Code List empty..-----------");
+                }
+                
+                if(!req.getSql().isEmpty()){
+                    for (Sql sql : req.getSql()) {
+                        System.out.println("    sqltype: " + sql.getType());
+                        System.out.println("on: " + sql.getOn());
+                        System.out.println(sql.getValue().trim());
+                    }
+                }else{
+                    System.out.println("Sql List empty..-----------");
                 }
             }
         } catch (JAXBException ex) {

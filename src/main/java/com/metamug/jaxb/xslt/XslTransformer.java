@@ -36,6 +36,7 @@ public class XslTransformer {
         System.out.println("---------------------------------------------");
         System.out.println("---------------------------------------------");
         System.out.println("The generated HTML file is:" + htmlFile);
+           
     }
     
     public static void replaceStringInFile(File file, String oldString, String newString){

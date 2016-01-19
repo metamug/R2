@@ -16,6 +16,7 @@
 	       
 	<Create>
 		<desc>Request for creating an employee record.</desc>
+                <code>function()</code>
 		<Sql>
 		insert into employee 
 		(employee_name, employee_id) 
@@ -25,9 +26,7 @@
 
 	<!--derived from request -->
 	<Read out="table" >
-		<Sql>
-		select * from employee
-		</Sql>
+            <code>getEmployees()</code>
 	</Read>
 	
 	<Read id="12" out="table" >

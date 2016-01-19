@@ -20,29 +20,12 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for request complex type.
  *
  * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType name="request">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="desc" type="{}desc" minOccurs="0"/>
- *         &lt;element name="Sql" type="{}sql" maxOccurs="unbounded"/>
- *       &lt;/sequence>
- *       &lt;attribute name="method" type="{}method" default="GET" />
- *       &lt;attribute name="id" type="{}id" />
- *       &lt;attribute name="out" type="{}out" default="json" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- *
- *
- */
+*/
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "request", propOrder = {
     "desc",
+    "code",
     "sql"
 })
 @XmlSeeAlso({
@@ -54,6 +37,7 @@ import javax.xml.bind.annotation.XmlType;
 public class Request {
 
     protected String desc;
+    protected List<String> code;
     @XmlElement(name = "Sql", required = true)
     protected List<Sql> sql;
     @XmlAttribute(name = "method")
@@ -70,47 +54,22 @@ public class Request {
     public Request(Method method) {
         this.method = method;
     }
+    
+    public List<String> getCode() {
+        if (code == null) {
+            code = new ArrayList<String>();
+        }
+        return this.code;
+    }
 
-    /**
-     * Gets the value of the desc property.
-     *
-     * @return possible object is {@link String }
-     *
-     */
     public String getDesc() {
         return desc;
     }
 
-    /**
-     * Sets the value of the desc property.
-     *
-     * @param value allowed object is {@link String }
-     *
-     */
     public void setDesc(String value) {
         this.desc = value;
     }
-
-    /**
-     * Gets the value of the sql property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is
-     * not a <CODE>set</CODE> method for the sql property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getSql().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list {@link Sql }
-     *
-     *
-     * @return
-     */
+ 
     public List<Sql> getSql() {
         if (sql == null) {
             sql = new ArrayList<>();
