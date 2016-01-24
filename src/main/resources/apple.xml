@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Resource version="1.1" table="apple">
 
-	<desc>Contains records for data type apple.</desc>
+	<desc>Contains records for data type apple</desc>
 
 	<Request method="GET" id="1" out="json" >
 		<Sql>
@@ -16,7 +16,12 @@
 	       
 	<Create>
 		<desc>Request for creating an employee record.</desc>
-                <code>function()</code>
+		<execute className="Apple" functionName="getApples">
+			<paramVar name="p" />
+			<paramVal>Value</paramVal>
+
+		</execute>
+			
 		<Sql>
 		insert into employee 
 		(employee_name, employee_id) 
@@ -26,7 +31,12 @@
 
 	<!--derived from request -->
 	<Read out="table" >
-            <code>getEmployees()</code>
+		<execute className="Apple" functionName="getApples">
+			<paramVar name="p" />
+                        <paramVar name="q" />
+			<paramVal>1000</paramVal>
+                        <paramVal>2000</paramVal>
+		</execute>
 	</Read>
 	
 	<Read id="12" out="table" >

@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "request", propOrder = {
     "desc",
-    "code",
+    "execute",
     "sql"
 })
 @XmlSeeAlso({
@@ -37,13 +37,17 @@ import javax.xml.bind.annotation.XmlType;
 public class Request {
 
     protected String desc;
-    protected List<String> code;
+    protected List<Execute> execute;
+    
     @XmlElement(name = "Sql", required = true)
     protected List<Sql> sql;
+    
     @XmlAttribute(name = "method")
     protected Method method;
+    
     @XmlAttribute(name = "id")
     protected Long id;
+    
     @XmlAttribute(name = "out")
     protected Out out;
 
@@ -55,11 +59,11 @@ public class Request {
         this.method = method;
     }
     
-    public List<String> getCode() {
-        if (code == null) {
-            code = new ArrayList<String>();
+    public List<Execute> getExecute() {
+        if (execute == null) {
+            execute = new ArrayList<Execute>();
         }
-        return this.code;
+        return this.execute;
     }
 
     public String getDesc() {
@@ -72,7 +76,7 @@ public class Request {
  
     public List<Sql> getSql() {
         if (sql == null) {
-            sql = new ArrayList<>();
+            sql = new ArrayList<Sql>();
         }
         return this.sql;
     }

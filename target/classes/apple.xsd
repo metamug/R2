@@ -19,6 +19,18 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1" />
         </xs:restriction>	
+    </xs:simpleType>
+
+    <xs:simpleType name="className">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+        </xs:restriction>   
+    </xs:simpleType>
+
+    <xs:simpleType name="functionName">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+        </xs:restriction>   
     </xs:simpleType>	
 
     <xs:simpleType name="table">
@@ -45,12 +57,6 @@
 </xs:element>
 
 <xs:simpleType name="desc">
-	<xs:restriction base="xs:string">
-		<xs:minLength value="1"/>
-	</xs:restriction>	
-</xs:simpleType>
-
-<xs:simpleType name="code">
 	<xs:restriction base="xs:string">
 		<xs:minLength value="1"/>
 	</xs:restriction>	
@@ -84,13 +90,39 @@
 <xs:complexType name="request">
 	<xs:sequence>
 		<xs:element name="desc" type="desc" minOccurs="0" maxOccurs="1" />
-                <xs:element name="code" type="code" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
 		<xs:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded" />
 	</xs:sequence>
 	<xs:attribute name="method" type="method" default="GET" />
 	<xs:attribute name="id" type="id" use="optional" />
 	<xs:attribute name="out" type="out" default="json" />
 </xs:complexType>	
+
+<xs:complexType name="execute">
+    <xs:sequence>
+        <xs:element name="paramVar" type="paramVar" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="paramVal" type="paramVal" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="className" type="className" use="required" />
+    <xs:attribute name="functionName" type="functionName" use="required" /> 
+</xs:complexType>
+
+<xs:complexType name="paramVar">
+    <xs:attribute name="name" type="paramVarName" use="required" />
+</xs:complexType>
+
+<xs:simpleType name="paramVarName">
+    <xs:restriction base="xs:string">
+        <xs:minLength value="1"/>
+        <xs:whiteSpace value="collapse" />
+    </xs:restriction>
+</xs:simpleType>    
+
+<xs:simpleType name="paramVal">
+    <xs:restriction base="xs:string">
+        <xs:minLength value="1"/>
+    </xs:restriction> 
+</xs:simpleType>    
 
     <xs:complexType name="create">
         <xs:complexContent>

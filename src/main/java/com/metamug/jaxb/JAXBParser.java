@@ -5,6 +5,8 @@ package com.metamug.jaxb;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.metamug.jaxb.gener.Execute;
+import com.metamug.jaxb.gener.ParamVar;
 import com.metamug.jaxb.gener.Request;
 import com.metamug.jaxb.gener.Resource;
 import com.metamug.jaxb.gener.Sql;
@@ -61,7 +63,6 @@ public class JAXBParser {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        //
     }
 
     public static Resource parse() {
@@ -75,31 +76,52 @@ public class JAXBParser {
             System.out.println("table: " + resource.getTable());
             System.out.println("    version: " + resource.getVersion());
             System.out.println("    desc: " + resource.getDesc());
-            System.out.print("\n--------------------------------------------------------------");
 
             for (Request req : resource.getRequestOrCreateOrRead()) {
                 System.out.println("\n--------------------------------------------------------------");
+                System.out.println("\n-----   ----   ------R E Q U E S T------   ---   ---   --");
+                System.out.println("\n--------------------------------------------------------------");
+                    
                 System.out.print("    method: " + req.getMethod().value());
                 System.out.print("    out: " + req.getOut().value());
                 System.out.println("    id: " + req.getId());
                 System.out.println("    desc: " + req.getDesc());
 
-                if(!req.getCode().isEmpty()){
-                    for(String code : req.getCode()){
-                        System.out.println("code: " + code);
+                if(!req.getExecute().isEmpty()){
+                    System.out.println("----------------------EXECUTE-----------------------");
+                    for(Execute execute : req.getExecute()){
+                        System.out.println("   className: " + execute.getClassName());
+                        System.out.println("   functionName: " + execute.getFunctionName());
+                        
+                        if(!execute.getParamVar().isEmpty()){
+                            for(ParamVar pvr : execute.getParamVar()){
+                                System.out.println("   varName: " + pvr.getName());
+                            }
+                        }else{
+                            System.out.println("ParamVar List is empty..-----------");
+                        }
+                        
+                        if(!execute.getParamVal().isEmpty()){
+                            for(String pvl : execute.getParamVal()){
+                                System.out.println("   paramValue: " + pvl);
+                            }
+                        }else{
+                            System.out.println("ParamVal List is empty..-----------");
+                        }
                     }
                 }else{
-                    System.out.println("Code List empty..-----------");
+                    System.out.println("------------------Execute List empty..------------------");
                 }
                 
                 if(!req.getSql().isEmpty()){
+                    System.out.println("----------------------SQL-----------------------");
                     for (Sql sql : req.getSql()) {
                         System.out.println("    sqltype: " + sql.getType());
                         System.out.println("on: " + sql.getOn());
                         System.out.println(sql.getValue().trim());
                     }
                 }else{
-                    System.out.println("Sql List empty..-----------");
+                    System.out.println("------------------Sql List empty..-------------------");
                 }
             }
         } catch (JAXBException ex) {
