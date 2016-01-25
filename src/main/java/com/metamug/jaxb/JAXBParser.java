@@ -76,6 +76,7 @@ public class JAXBParser {
             System.out.println("table: " + resource.getTable());
             System.out.println("    version: " + resource.getVersion());
             System.out.println("    desc: " + resource.getDesc());
+            System.out.println("    auth: " + Boolean.toString(resource.isAuth()));
 
             for (Request req : resource.getRequestOrCreateOrRead()) {
                 System.out.println("\n--------------------------------------------------------------");

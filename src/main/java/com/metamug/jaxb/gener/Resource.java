@@ -67,6 +67,8 @@ public class Resource {
     protected String version;
     @XmlAttribute(name = "table", required = true)
     protected String table;
+    @XmlAttribute(name = "auth")
+    protected Boolean auth;
 
     /**
      * Gets the value of the desc property.
@@ -92,18 +94,8 @@ public class Resource {
      * Gets the value of the requestOrCreateOrRead property.
      *
      * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is
-     * not a <CODE>set</CODE> method for the requestOrCreateOrRead property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getRequestOrCreateOrRead().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list null     {@link Request }
+     * Objects of the following type(s) are allowed in the list
+     * {@link Request }
      * {@link Create }
      * {@link Read }
      * {@link Update }
@@ -156,5 +148,34 @@ public class Resource {
     public void setTable(String value) {
         this.table = value;
     }
+    
+    /**
+     * Gets the value of the auth property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public boolean isAuth() {
+        if (auth == null) {
+            return false;
+        } else {
+            return auth;
+        }
+    }
+
+    /**
+     * Sets the value of the auth property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setAuth(Boolean value) {
+        this.auth = value;
+    }
+
 
 }
