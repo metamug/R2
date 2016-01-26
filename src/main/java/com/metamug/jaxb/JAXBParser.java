@@ -84,7 +84,6 @@ public class JAXBParser {
                 System.out.println("\n--------------------------------------------------------------");
                     
                 System.out.print("    method: " + req.getMethod().value());
-                System.out.print("    out: " + req.getOut().value());
                 System.out.println("    id: " + req.getId());
                 System.out.println("    desc: " + req.getDesc());
 
@@ -119,6 +118,7 @@ public class JAXBParser {
                     for (Sql sql : req.getSql()) {
                         System.out.println("    sqltype: " + sql.getType());
                         System.out.println("on: " + sql.getOn());
+                        System.out.println("class: " + sql.getClazz());
                         System.out.println(sql.getValue().trim());
                     }
                 }else{

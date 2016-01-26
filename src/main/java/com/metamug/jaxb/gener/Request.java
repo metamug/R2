@@ -48,9 +48,6 @@ public class Request {
     @XmlAttribute(name = "id")
     protected Long id;
     
-    @XmlAttribute(name = "out")
-    protected Out out;
-
     public Request() {
 
     }
@@ -123,30 +120,6 @@ public class Request {
      */
     public void setId(Long value) {
         this.id = value;
-    }
-
-    /**
-     * Gets the value of the out property.
-     *
-     * @return possible object is {@link Out }
-     *
-     */
-    public Out getOut() {
-        if (out == null) {
-            return Out.JSON;
-        } else {
-            return out;
-        }
-    }
-
-    /**
-     * Sets the value of the out property.
-     *
-     * @param value allowed object is {@link Out }
-     *
-     */
-    public void setOut(Out value) {
-        this.out = value;
     }
 
 }

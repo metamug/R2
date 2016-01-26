@@ -7,18 +7,16 @@
         </xs:restriction>	
     </xs:simpleType>
 
-    <xs:simpleType name="out">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="json"/>
-            <xs:enumeration value="xml"/>
-            <xs:enumeration value="table"/>
-        </xs:restriction>
-    </xs:simpleType>	
-
     <xs:simpleType name="version">
         <xs:restriction base="xs:string">
             <xs:minLength value="1" />
         </xs:restriction>	
+    </xs:simpleType>
+
+    <xs:simpleType name="class">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+        </xs:restriction>   
     </xs:simpleType>
 
     <xs:simpleType name="className">
@@ -77,6 +75,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute name="type" type="sqlType" default="query" />
                 <xs:attribute name="on" type="xs:string" />
+                <xs:attribute name="class" type="class" />
             </xs:extension>	
         </xs:simpleContent>				
     </xs:complexType>	
@@ -96,7 +95,6 @@
 	</xs:sequence>
 	<xs:attribute name="method" type="method" default="GET" />
 	<xs:attribute name="id" type="id" use="optional" />
-	<xs:attribute name="out" type="out" default="json" />
 </xs:complexType>	
 
 <xs:complexType name="execute">

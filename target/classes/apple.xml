@@ -3,8 +3,8 @@
 
 	<desc>Contains records for data type apple</desc>
 
-	<Request method="GET" id="1" out="json" >
-		<Sql>
+	<Request method="GET" id="1" >
+		<Sql class="com.mtg.Urls">
 			select * from employee 
 			where employee_name = @param1 
 			and employee_id = @id
@@ -30,7 +30,7 @@
 	</Create>
 
 	<!--derived from request -->
-	<Read out="table" >
+	<Read>
 		<execute className="Apple" functionName="getApples">
 			<paramVar name="p" />
                         <paramVar name="q" />
@@ -39,7 +39,7 @@
 		</execute>
 	</Read>
 	
-	<Read id="12" out="table" >
+	<Read id="12">
 		<Sql on="item lt 1">select * from employee where employee_id=12
 		</Sql>
 	</Read>
