@@ -123,7 +123,11 @@ public class Sql {
      *     
      */
     public String getClazz() {
-        return clazz;
+        if(this.getType().equals("query")){
+            return clazz;
+        }else{
+            return null;
+        }
     }
 
     /**
