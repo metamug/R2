@@ -67,9 +67,7 @@ public class Resource {
     protected String version;
     @XmlAttribute(name = "table", required = true)
     protected String table;
-    @XmlAttribute(name = "auth")
-    protected Boolean auth;
-
+   
     /**
      * Gets the value of the desc property.
      *
@@ -148,34 +146,5 @@ public class Resource {
     public void setTable(String value) {
         this.table = value;
     }
-    
-    /**
-     * Gets the value of the auth property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
-     */
-    public boolean isAuth() {
-        if (auth == null) {
-            return false;
-        } else {
-            return auth;
-        }
-    }
-
-    /**
-     * Sets the value of the auth property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
-     */
-    public void setAuth(Boolean value) {
-        this.auth = value;
-    }
-
-
+   
 }
