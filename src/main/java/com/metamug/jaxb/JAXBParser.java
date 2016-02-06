@@ -5,12 +5,13 @@ package com.metamug.jaxb;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.metamug.jaxb.docs.ApiDocGenerator;
 import com.metamug.jaxb.gener.Execute;
 import com.metamug.jaxb.gener.ParamVar;
 import com.metamug.jaxb.gener.Request;
 import com.metamug.jaxb.gener.Resource;
 import com.metamug.jaxb.gener.Sql;
-import com.metamug.jaxb.xslt.XslTransformer;
+import com.metamug.jaxb.docs.XslTransformer;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -51,6 +52,8 @@ public class JAXBParser {
             System.out.println(xmlFile.getSystemId() + " is NOT valid.");
             System.out.println("Reason: " + ex.getMessage());
         }
+        
+        ApiDocGenerator.generate("C:\\c4\\metamug\\RPXParser\\doctest");
     }
     
     public static void createHtml(Resource resource) {
@@ -61,10 +64,9 @@ public class JAXBParser {
             XslTransformer.transform(xml, xsl, outHtml);
         } catch (TransformerException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        }        
     }
-
+    
     public static Resource parse() {
         Resource resource = new Resource();
         try {

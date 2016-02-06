@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.metamug.jaxb.xslt;
+package com.metamug.jaxb.docs;
 
 import com.metamug.jaxb.JAXBParser;
 import java.io.BufferedReader;
