@@ -2,8 +2,8 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
     <xs:simpleType name="id">
-        <xs:restriction base="xs:long" >
-            <xs:minInclusive value="0" />
+        <xs:restriction base="xs:string" >
+            <xs:minLength value="1" />
         </xs:restriction>	
     </xs:simpleType>
 
