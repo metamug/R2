@@ -9,14 +9,14 @@
 			where employee_name = @param1 
 			and employee_id = @id
 		</Sql>
-                <Sql type="update">
-                        update employee set employee_name = @param1 where employee_id=@id
-                </Sql>
+        <Sql type="update">
+            update employee set employee_name = @param1 where employee_id=@id
+        </Sql>
 	</Request>
 	       
 	<Create>
 		<desc>Request for creating an employee record.</desc>
-		<execute className="Apple" functionName="getApples">
+		<execute className="com.mtg.Apple" functionName="createApple">
 			<paramVar name="p" />
 			<paramVal>Value</paramVal>
 
@@ -31,11 +31,11 @@
 
 	<!--derived from request -->
 	<Read>
-		<execute className="Apple" functionName="getApples">
+		<execute className="com.mtg.Apple" functionName="getApples">
 			<paramVar name="p" />
-                        <paramVar name="q" />
+            <paramVar name="q" />
 			<paramVal>1000</paramVal>
-                        <paramVal>2000</paramVal>
+            <paramVal>2000</paramVal>
 		</execute>
 	</Read>
 	

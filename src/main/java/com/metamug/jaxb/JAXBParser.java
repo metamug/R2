@@ -59,7 +59,8 @@ public class JAXBParser {
     public static void createHtml(Resource resource) {
         File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
         File xsl = new File(JAXBParser.class.getResource("/resource.xsl").getFile());
-        File outHtml = new File("../rpx-parser/src/main/resources/" + resource.getTable() + ".html");
+        File outHtml = new File("../rpx-parser/src/main/resources/"
+                + resource.getTable() + ".html");
         try {
             XslTransformer.transform(xml, xsl, outHtml);
         } catch (TransformerException ex) {
