@@ -3,7 +3,7 @@
 
 	<desc>Contains records for data type apple</desc>
 
-	<Request method="GET" id="1" >
+	<Request method="GET" item="true" >
 		<Sql class="com.mtg.Urls">
 			select * from employee 
 			where employee_name = @param1 
@@ -39,7 +39,7 @@
 		</execute>
 	</Read>
 	
-	<Read id="12">
+	<Read item="true">
 		<Sql on="item lt 1">select * from employee where employee_id=12
 		</Sql>
 	</Read>

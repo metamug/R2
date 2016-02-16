@@ -86,7 +86,7 @@ public class JAXBParser {
                 System.out.println("\n--------------------------------------------------------------");
                     
                 System.out.print("    method: " + req.getMethod().value());
-                System.out.println("    id: " + req.getId());
+                System.out.println("    isItem: " + Boolean.toString(req.isItem()));
                 System.out.println("    desc: " + req.getDesc());
 
                 if(!req.getExecute().isEmpty()){
