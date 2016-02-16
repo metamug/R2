@@ -64,7 +64,7 @@ public class Resource {
     })
     protected List<Request> requestOrCreateOrRead;
     @XmlAttribute(name = "version", required = true)
-    protected float version;
+    protected String version;
     @XmlAttribute(name = "table", required = true)
     protected String table;
 
@@ -92,18 +92,7 @@ public class Resource {
      * Gets the value of the requestOrCreateOrRead property.
      *
      * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is
-     * not a <CODE>set</CODE> method for the requestOrCreateOrRead property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getRequestOrCreateOrRead().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list null     {@link Request }
+     * Objects of the following type(s) are allowed in the list      {@link Request }
      * {@link Create }
      * {@link Read }
      * {@link Update }
@@ -124,7 +113,7 @@ public class Resource {
      *
      * @return
      */
-    public float getVersion() {
+    public String getVersion() {
         return version;
     }
 
@@ -133,7 +122,7 @@ public class Resource {
      *
      * @param version
      */
-    public void setVersion(float version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 

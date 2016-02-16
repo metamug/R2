@@ -44,9 +44,10 @@ public class Sql {
     protected String type;
     @XmlAttribute(name = "on")
     protected String on;
+    @XmlAttribute(name = "class")
+    protected String clazz;
 
     public Sql() {
-        //System.out.println("SQLCreated!");
     }
 
     /**
@@ -75,13 +76,6 @@ public class Sql {
      * @return possible object is {@link SqlType }
      *
      */
-    /*public SqlType getType() {
-        if (type == null) {
-            return SqlType.QUERY;
-        } else {
-            return type;
-        }
-    }*/
     public String getType() {
         if (type == null) {
             return "query";
@@ -118,6 +112,34 @@ public class Sql {
      */
     public void setOn(String value) {
         this.on = value;
+    }
+    
+    /**
+     * Gets the value of the clazz property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getClazz() {
+        if(this.getType().equals("query")){
+            return clazz;
+        }else{
+            return null;
+        }
+    }
+
+    /**
+     * Sets the value of the clazz property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setClazz(String value) {
+        this.clazz = value;
     }
 
 }
