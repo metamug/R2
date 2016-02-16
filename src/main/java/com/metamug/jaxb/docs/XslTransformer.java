@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.metamug.jaxb.xslt;
+package com.metamug.jaxb.docs;
 
+import com.metamug.jaxb.JAXBParser;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -32,6 +33,8 @@ public class XslTransformer {
         StreamSource in = new StreamSource(xmlFile);
         StreamResult out = new StreamResult(htmlFile);
         transformer.transform(in, out);
+        System.out.println("---------------------------------------------");
+        System.out.println("---------------------------------------------");
         System.out.println("The generated HTML file is:" + htmlFile);
            
     }
