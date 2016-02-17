@@ -45,8 +45,8 @@ public class Request {
     @XmlAttribute(name = "method")
     protected Method method;
     
-    @XmlAttribute(name = "id")
-    protected Long id;
+    @XmlAttribute(name = "item")
+    protected Boolean item;
     
     public Request() {
 
@@ -103,23 +103,31 @@ public class Request {
     }
 
     /**
-     * Gets the value of the id property.
-     *
-     * @return possible object is {@link Long }
-     *
+     * Gets the value of the item property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
      */
-    public Long getId() {
-        return id;
+    public boolean isItem() {
+        if (item == null) {
+            return false;
+        } else {
+            return item;
+        }
     }
 
     /**
-     * Sets the value of the id property.
-     *
-     * @param value allowed object is {@link Long }
-     *
+     * Sets the value of the item property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
      */
-    public void setId(Long value) {
-        this.id = value;
+    public void setItem(Boolean value) {
+        this.item = value;
     }
 
 }

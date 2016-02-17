@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-    <xs:simpleType name="id">
-        <xs:restriction base="xs:string" >
-            <xs:minLength value="1" />
-        </xs:restriction>	
-    </xs:simpleType>
-
     <xs:simpleType name="version">
         <xs:restriction base="xs:string">
             <xs:minLength value="1" />
-        </xs:restriction>	
+        </xs:restriction>   
     </xs:simpleType>
 
     <xs:simpleType name="class">
@@ -29,7 +23,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1" />
         </xs:restriction>   
-    </xs:simpleType>	
+    </xs:simpleType>    
 
     <xs:simpleType name="table">
         <xs:restriction base="xs:string">
@@ -37,28 +31,28 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:element name="Resource">
-        <xs:complexType>
-            <xs:sequence>			
-                <xs:element name="desc" type="desc" minOccurs="0" maxOccurs="1" />
-                <xs:choice maxOccurs="unbounded">
-                    <xs:element name="Request" type="request" />
-                    <xs:element name="Create" type="create" />
-                    <xs:element name="Read" type="read" />
-                    <xs:element name="Update" type="update" />
-                    <xs:element name="Delete" type="delete" />
-                </xs:choice>
-            </xs:sequence>	
-            <xs:attribute name="version" type="version" use="required" />
-            <xs:attribute name="table" type="table" use="required" />
+<xs:element name="Resource">
+    <xs:complexType>
+        <xs:sequence>           
+            <xs:element name="desc" type="desc" minOccurs="0" maxOccurs="1" />
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="Request" type="request" />
+                <xs:element name="Create" type="create" />
+                <xs:element name="Read" type="read" />
+                <xs:element name="Update" type="update" />
+                <xs:element name="Delete" type="delete" />
+            </xs:choice>
+        </xs:sequence>  
+        <xs:attribute name="version" type="version" use="required" />
+        <xs:attribute name="table" type="table" use="required" />
         </xs:complexType>
     </xs:element>
 
-    <xs:simpleType name="desc">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1"/>
-        </xs:restriction>	
-    </xs:simpleType>
+<xs:simpleType name="desc">
+    <xs:restriction base="xs:string">
+        <xs:minLength value="1"/>
+    </xs:restriction>   
+</xs:simpleType>
 
     <xs:simpleType name="method">
         <xs:restriction base="xs:string">
@@ -75,26 +69,26 @@
                 <xs:attribute name="type" type="sqlType" default="query" />
                 <xs:attribute name="on" type="xs:string" />
                 <xs:attribute name="class" type="class" />
-            </xs:extension>	
-        </xs:simpleContent>				
-    </xs:complexType>	
+            </xs:extension> 
+        </xs:simpleContent>             
+    </xs:complexType>   
 
     <xs:simpleType name="sqlType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="query"/>
             <xs:enumeration value="update"/>
         </xs:restriction>
-    </xs:simpleType>	
+    </xs:simpleType>    
 
-    <xs:complexType name="request">
-        <xs:sequence>
-            <xs:element name="desc" type="desc" minOccurs="0" maxOccurs="1" />
-            <xs:element name="execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded" />
-        </xs:sequence>
-        <xs:attribute name="method" type="method" default="GET" />
-        <xs:attribute name="id" type="id" use="optional" />
-    </xs:complexType>	
+<xs:complexType name="request">
+    <xs:sequence>
+        <xs:element name="desc" type="desc" minOccurs="0" maxOccurs="1" />
+        <xs:element name="execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="method" type="method" default="GET" />
+    <xs:attribute name="item" type="xs:boolean" default="false" />
+</xs:complexType>   
 
     <xs:complexType name="execute">
         <xs:sequence>
@@ -125,29 +119,29 @@
     <xs:complexType name="create">
         <xs:complexContent>
             <xs:extension base="request">
-            </xs:extension>	
-        </xs:complexContent>	
+            </xs:extension> 
+        </xs:complexContent>    
     </xs:complexType>
 
     <xs:complexType name="read">
         <xs:complexContent>
             <xs:extension base="request">
-            </xs:extension>	
-        </xs:complexContent>	
+            </xs:extension> 
+        </xs:complexContent>    
     </xs:complexType>
 
     <xs:complexType name="update">
         <xs:complexContent>
             <xs:extension base="request">
-            </xs:extension>	
-        </xs:complexContent>	
+            </xs:extension> 
+        </xs:complexContent>    
     </xs:complexType>
 
     <xs:complexType name="delete">
         <xs:complexContent>
             <xs:extension base="request">
-            </xs:extension>	
-        </xs:complexContent>	
+            </xs:extension> 
+        </xs:complexContent>    
     </xs:complexType>
 
-</xs:schema>	
+</xs:schema>    

@@ -101,7 +101,7 @@ public class JAXBParser {
             writer.writeStartElement("c:choose");
             for (Request req : resource.getRequestOrCreateOrRead()) {
                 writer.writeStartElement("c:when");
-                if (req.getId() != null) {
+                if (req.isItem()) {
                     writer.writeAttribute("test", enclose("not empty mtgReq.id and mtgReq.method eq '" + req.getMethod() + "'"));
                 } else {
                     writer.writeAttribute("test", enclose("empty mtgReq.id and mtgReq.method eq '" + req.getMethod() + "'"));

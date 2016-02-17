@@ -5,7 +5,6 @@
  */
 package com.metamug.jaxb.docs;
 
-import com.metamug.jaxb.JAXBParser;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
