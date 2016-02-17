@@ -70,7 +70,7 @@ public class JAXBParser {
             System.out.println(xmlFile.getSystemId() + " is NOT valid.");
             System.out.println("Reason: " + ex.getMessage());
         }
-        
+
         ApiDocGenerator.generate("C:\\c4\\metamug\\RPXParser\\doctest");
     }
 
