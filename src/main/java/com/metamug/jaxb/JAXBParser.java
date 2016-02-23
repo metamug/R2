@@ -5,14 +5,13 @@ package com.metamug.jaxb;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import com.metamug.jaxb.docs.ApiDocGenerator;
 import com.metamug.jaxb.docs.XslTransformer;
 import com.metamug.jaxb.gener.Execute;
 import com.metamug.jaxb.gener.ParamVar;
 import com.metamug.jaxb.gener.Request;
 import com.metamug.jaxb.gener.Resource;
 import com.metamug.jaxb.gener.Sql;
-import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
+import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,6 +33,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Source;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -52,8 +52,8 @@ public class JAXBParser {
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
     XMLStreamWriter writer;
 
-    public static void main(String[] args) throws SAXException {
-        File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
+    public static void main(String[] args) throws TransformerConfigurationException, SAXException {
+        File xml = new File(JAXBParser.class.getResource("/test.txt").getFile());
         File xsd = new File(JAXBParser.class.getResource("/apple.xsd").getFile());
         Source xmlFile = new StreamSource(xml);
         SchemaFactory schemaFactory = SchemaFactory
@@ -62,44 +62,44 @@ public class JAXBParser {
         Validator validator = schema.newValidator();
         try {
             validator.validate(xmlFile);
-            Resource resource = new JAXBParser().parse();
+            Resource resource = new JAXBParser().parse(xml);
             if (resource != null) {
-                createHtml(resource);
+                createHtml(resource,xml);
             }
         } catch (SAXException | IOException ex) {
             System.out.println(xmlFile.getSystemId() + " is NOT valid.");
             System.out.println("Reason: " + ex.getMessage());
         }
 
-        ApiDocGenerator.generate("C:\\c4\\metamug\\RPXParser\\doctest");
+//        ApiDocGenerator.generate("C:\\c4\\metamug\\RPXParser\\doctest");
     }
 
-    public static void createHtml(Resource resource) {
+    public static void createHtml(Resource resource,File xmlFile) {
         try {
-            File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
             File xsl = new File(JAXBParser.class.getResource("/resource.xsl").getFile());
             File outHtml = new File("../rpx-parser/src/main/resources/"
                     + resource.getTable() + ".html");
-            XslTransformer.transform(xml, xsl, outHtml);
+            XslTransformer.transform(xmlFile, xsl, outHtml);
         } catch (TransformerException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    public Resource parse() {
+    public Resource parse(File xmlFile) throws TransformerConfigurationException {
         Resource resource = new Resource();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            resource = (Resource) jaxbUnmarshaller.unmarshal(JAXBParser.class.getResourceAsStream("/apple.xml"));
+            resource = (Resource) jaxbUnmarshaller.unmarshal(xmlFile);
 
             output = new FileOutputStream("../rpx-parser/src/main/resources/" + resource.getTable() + ".jsp");
-            writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output));
+            writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
             writeEscapedCharacters("<%@include  file=\"../fragments/taglibs.jspf\"%>");
             writer.writeCharacters(System.lineSeparator());
             writer.writeStartElement("c:choose");
             for (Request req : resource.getRequestOrCreateOrRead()) {
+
                 writer.writeStartElement("c:when");
                 if (req.isItem()) {
                     writer.writeAttribute("test", enclose("not empty mtgReq.id and mtgReq.method eq '" + req.getMethod() + "'"));
