@@ -26,6 +26,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import org.apache.commons.io.FilenameUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -60,7 +61,7 @@ public class JAXBParser {
         File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
         File xsl = new File(JAXBParser.class.getResource("/resource.xsl").getFile());
         File outHtml = new File("../rpx-parser/src/main/resources/"
-                + resource.getTable() + ".html");
+                + FilenameUtils.removeExtension(xml.getName()) + ".html");
         try {
             XslTransformer.transform(xml, xsl, outHtml);
         } catch (TransformerException ex) {
