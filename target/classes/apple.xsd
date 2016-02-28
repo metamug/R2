@@ -19,12 +19,6 @@
         </xs:restriction>   
     </xs:simpleType>
 
-    <xs:simpleType name="table">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1" />
-        </xs:restriction>
-    </xs:simpleType>
-
 <xs:element name="Resource">
     <xs:complexType>
         <xs:sequence>           
@@ -38,7 +32,6 @@
             </xs:choice>
         </xs:sequence>  
         <xs:attribute name="version" type="version" use="required" />
-        <xs:attribute name="table" type="table" use="required" />
         </xs:complexType>
 </xs:element>
 
