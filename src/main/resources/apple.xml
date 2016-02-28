@@ -16,7 +16,7 @@
 	       
 	<Create>
 		<desc>Request for creating an employee record.</desc>
-		<execute className="com.mtg.Apple" functionName="createApple">
+		<execute className="com.mtg.Apple" >
 			<paramVar name="p" />
 			<paramVal>Value</paramVal>
 
@@ -31,7 +31,7 @@
 
 	<!--derived from request -->
 	<Read>
-		<execute className="com.mtg.Apple" functionName="getApples">
+		<execute className="com.mtg.Apple" >
 			<paramVar name="p" />
             <paramVar name="q" />
 			<paramVal>1000</paramVal>
