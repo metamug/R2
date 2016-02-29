@@ -30,7 +30,6 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="paramVal" type="{}paramVal" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *       &lt;attribute name="className" use="required" type="{}className" />
- *       &lt;attribute name="functionName" use="required" type="{}functionName" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -50,8 +49,6 @@ public class Execute {
     
     @XmlAttribute(name = "className", required = true)
     protected String className;
-    @XmlAttribute(name = "functionName", required = true)
-    protected String functionName;
 
     /**
      * Gets the value of the paramVar property.
@@ -133,30 +130,6 @@ public class Execute {
      */
     public void setClassName(String value) {
         this.className = value;
-    }
-
-    /**
-     * Gets the value of the functionName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getFunctionName() {
-        return functionName;
-    }
-
-    /**
-     * Sets the value of the functionName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setFunctionName(String value) {
-        this.functionName = value;
     }
 
 }

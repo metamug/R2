@@ -77,7 +77,6 @@ public class JAXBParser {
             resource = (Resource) jaxbUnmarshaller.unmarshal(
                     JAXBParser.class.getResourceAsStream("/apple.xml"));
 
-            System.out.println("table: " + resource.getTable());
             System.out.println("    version: " + resource.getVersion());
             System.out.println("    desc: " + resource.getDesc());
 
@@ -94,7 +93,6 @@ public class JAXBParser {
                     System.out.println("----------------------EXECUTE-----------------------");
                     for(Execute execute : req.getExecute()){
                         System.out.println("   className: " + execute.getClassName());
-                        System.out.println("   functionName: " + execute.getFunctionName());
                         
                         if(!execute.getParamVar().isEmpty()){
                             for(ParamVar pvr : execute.getParamVar()){
@@ -121,6 +119,9 @@ public class JAXBParser {
                     for (Sql sql : req.getSql()) {
                         System.out.println("    sqltype: " + sql.getType());
                         System.out.println("on: " + sql.getOn());
+                        System.out.println("class: " + sql.getClazz());
+                        System.out.println("startRow: " + String.valueOf(sql.getStartRow()));
+                        System.out.println("maxRow: " + String.valueOf(sql.getMaxRow()));
                         System.out.println("class: " + sql.getClazz());
                         System.out.println(sql.getValue().trim());
                     }

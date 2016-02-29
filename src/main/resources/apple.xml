@@ -4,7 +4,7 @@
 	<desc>Contains records for data type apple</desc>
 
 	<Request method="GET" item="true" >
-		<Sql class="com.mtg.Urls">
+		<Sql class="com.mtg.Urls" startRow="1" maxRow="50">
 			select * from employee 
 			where employee_name = @param1 
 			and employee_id = @id

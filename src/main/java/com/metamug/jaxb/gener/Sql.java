@@ -6,6 +6,7 @@
 //
 package com.metamug.jaxb.gener;
 
+import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -25,6 +26,9 @@ import javax.xml.bind.annotation.XmlValue;
  *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
  *       &lt;attribute name="type" type="{}sqlType" default="query" />
  *       &lt;attribute name="on" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="class" type="{}class" />
+ *       &lt;attribute name="startRow" type="{http://www.w3.org/2001/XMLSchema}integer" />
+ *       &lt;attribute name="maxRow" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *     &lt;/extension>
  *   &lt;/simpleContent>
  * &lt;/complexType>
@@ -46,6 +50,10 @@ public class Sql {
     protected String on;
     @XmlAttribute(name = "class")
     protected String clazz;
+    @XmlAttribute(name = "startRow")
+    protected BigInteger startRow;
+    @XmlAttribute(name = "maxRow")
+    protected BigInteger maxRow;
 
     public Sql() {
     }
@@ -141,5 +149,52 @@ public class Sql {
     public void setClazz(String value) {
         this.clazz = value;
     }
+    
+    /**
+     * Gets the value of the startRow property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *     
+     */
+    public BigInteger getStartRow() {
+        return startRow;
+    }
 
+    /**
+     * Sets the value of the startRow property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *     
+     */
+    public void setStartRow(BigInteger value) {
+        this.startRow = value;
+    }
+
+    /**
+     * Gets the value of the maxRow property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *     
+     */
+    public BigInteger getMaxRow() {
+        return maxRow;
+    }
+
+    /**
+     * Sets the value of the maxRow property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *     
+     */
+    public void setMaxRow(BigInteger value) {
+        this.maxRow = value;
+    }
 }

@@ -38,7 +38,6 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;/choice>
  *       &lt;/sequence>
  *       &lt;attribute name="version" use="required" type="{}version" />
- *       &lt;attribute name="table" use="required" type="{}table" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -65,8 +64,6 @@ public class Resource {
     protected List<Request> requestOrCreateOrRead;
     @XmlAttribute(name = "version", required = true)
     protected String version;
-    @XmlAttribute(name = "table", required = true)
-    protected String table;
    
     /**
      * Gets the value of the desc property.
@@ -125,26 +122,6 @@ public class Resource {
      */
     public void setVersion(String version) {
         this.version = version;
-    }
-
-    /**
-     * Gets the value of the table property.
-     *
-     * @return possible object is {@link String }
-     *
-     */
-    public String getTable() {
-        return table;
-    }
-
-    /**
-     * Sets the value of the table property.
-     *
-     * @param value allowed object is {@link String }
-     *
-     */
-    public void setTable(String value) {
-        this.table = value;
     }
    
 }

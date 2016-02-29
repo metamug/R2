@@ -56,6 +56,8 @@
                 <xs:attribute name="type" type="sqlType" default="query" />
                 <xs:attribute name="on" type="xs:string" />
                 <xs:attribute name="class" type="class" />
+                <xs:attribute name="startRow" type="xs:integer" />
+                <xs:attribute name="maxRow" type="xs:integer" />
             </xs:extension> 
         </xs:simpleContent>             
     </xs:complexType>   
