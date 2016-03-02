@@ -53,7 +53,7 @@ public class JAXBParser {
     XMLStreamWriter writer;
 
     public static void main(String[] args) throws TransformerConfigurationException, SAXException {
-        File xml = new File(JAXBParser.class.getResource("/test.txt").getFile());
+        File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/apple.xsd").getFile());
         Source xmlFile = new StreamSource(xml);
         SchemaFactory schemaFactory = SchemaFactory
