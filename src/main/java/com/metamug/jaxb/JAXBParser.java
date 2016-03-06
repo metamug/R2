@@ -47,11 +47,11 @@ import org.xml.sax.SAXException;
  * @author anish
  */
 public class JAXBParser {
-
+    
     OutputStream output;
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
     XMLStreamWriter writer;
-
+    
     public static void main(String[] args) throws TransformerConfigurationException, SAXException {
         File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/apple.xsd").getFile());
@@ -64,7 +64,7 @@ public class JAXBParser {
             validator.validate(xmlFile);
             Resource resource = new JAXBParser().parse(xml);
             if (resource != null) {
-                createHtml(resource,xml);
+                createHtml(resource, xml);
             }
         } catch (SAXException | IOException ex) {
             System.out.println(xmlFile.getSystemId() + " is NOT valid.");
@@ -73,33 +73,32 @@ public class JAXBParser {
 
 //        ApiDocGenerator.generate("C:\\c4\\metamug\\RPXParser\\doctest");
     }
-
-    public static void createHtml(Resource resource,File xmlFile) {
+    
+    public static void createHtml(Resource resource, File xmlFile) {
         try {
             File xsl = new File(JAXBParser.class.getResource("/resource.xsl").getFile());
             File outHtml = new File("../rpx-parser/src/main/resources/"
-                    + resource.getTable() + ".html");
+                    + xmlFile.getName().split("\\.")[0] + ".html");
             XslTransformer.transform(xmlFile, xsl, outHtml);
         } catch (TransformerException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
-
+    
     public Resource parse(File xmlFile) throws TransformerConfigurationException {
         Resource resource = new Resource();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             resource = (Resource) jaxbUnmarshaller.unmarshal(xmlFile);
-
-            output = new FileOutputStream("../rpx-parser/src/main/resources/" + resource.getTable() + ".jsp");
+            output = new FileOutputStream("../rpx-parser/src/main/resources/" + xmlFile.getName().split("\\.")[0] + ".jsp");
             writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
             writeEscapedCharacters("<%@include  file=\"../fragments/taglibs.jspf\"%>");
             writer.writeCharacters(System.lineSeparator());
             writer.writeStartElement("c:choose");
             for (Request req : resource.getRequestOrCreateOrRead()) {
-
+                
                 writer.writeStartElement("c:when");
                 if (req.isItem()) {
                     writer.writeAttribute("test", enclose("not empty mtgReq.id and mtgReq.method eq '" + req.getMethod() + "'"));
@@ -111,6 +110,12 @@ public class JAXBParser {
                         if (sql.getType().equalsIgnoreCase("query")) {
                             writer.writeStartElement("sql:query");
                             writer.writeAttribute("var", "result");
+                            if (sql.getStartRow() != null) {
+                                writer.writeAttribute("startRow", sql.getStartRow().toString());
+                            }
+                            if (sql.getMaxRow() != null) {
+                                writer.writeAttribute("maxRow", sql.getMaxRow().toString());
+                            }
                             writer.writeAttribute("dataSource", "jdbc/mtgMySQL");
                             String processSQL = processSQL(sql.getValue());
                             writeEscapedCharacters(processSQL);
@@ -128,9 +133,9 @@ public class JAXBParser {
                             writer.writeAttribute("value", enclose("result"));
                             writer.writeEndElement();
                         } else if (sql.getClazz() != null && sql.getType().equalsIgnoreCase("query")) {
-                            writer.writeStartElement("p:postProcess");
+                            writer.writeStartElement("code:execute");
                             writer.writeAttribute("className", sql.getClazz());
-                            writer.writeAttribute("value", enclose("result"));
+                            writer.writeAttribute("param", enclose("result"));
                             writer.writeEndElement();
                         }
                     }
@@ -139,7 +144,7 @@ public class JAXBParser {
                     for (Execute execute : req.getExecute()) {
                         writer.writeStartElement("code:execute");
                         writer.writeAttribute("className", execute.getClassName());
-                        writer.writeAttribute("methodName", execute.getFunctionName());
+                        writer.writeAttribute("param", enclose("mtgReq"));
                         if (!execute.getParamVal().isEmpty()) {
                             for (String pvl : execute.getParamVal()) {
                                 writeEscapedCharacters(MessageFormat.format("<code:param value=\"{0}\" />", pvl));
@@ -156,17 +161,17 @@ public class JAXBParser {
                 writer.writeCharacters(System.lineSeparator());
             }
             writer.writeStartElement("c:otherwise");
-
+            
             writer.writeStartElement("json:object");
             writer.writeAttribute("name", "data");
-
+            
             writer.writeEmptyElement("json:property");
             writer.writeAttribute("name", "Code");
             writer.writeAttribute("value", "405");
             writer.writeEmptyElement("json:property");
             writer.writeAttribute("name", "Message");
             writer.writeAttribute("value", "Method not allowed");
-
+            
             writer.writeEndElement();//end json:object
 
             writer.writeEndElement();//end c:otherwise
@@ -181,7 +186,7 @@ public class JAXBParser {
         }
         return resource;
     }
-
+    
     private void writeEscapedCharacters(String data) throws XMLStreamException, IOException, XPathExpressionException {
         writer.writeCharacters("");
         writer.flush();
@@ -189,13 +194,13 @@ public class JAXBParser {
         osw.write(data);
         osw.flush();
     }
-
+    
     private String enclose(String expression) {
         return "${" + expression + "}";
     }
-
+    
     private String processSQL(String query) {
-
+        
         StringBuilder builder = null;
         List<String> params = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\@(\\w+)");
@@ -215,7 +220,7 @@ public class JAXBParser {
         }
         return builder.toString();
     }
-
+    
     private String processParam(List<ParamVar> paramVar) {
         StringBuilder builder = new StringBuilder();
         for (ParamVar param : paramVar) {

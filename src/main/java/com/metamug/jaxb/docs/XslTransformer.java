@@ -32,8 +32,6 @@ public class XslTransformer {
         StreamSource in = new StreamSource(xmlFile);
         StreamResult out = new StreamResult(htmlFile);
         transformer.transform(in, out);
-        System.out.println("---------------------------------------------");
-        System.out.println("---------------------------------------------");
         System.out.println("The generated HTML file is:" + htmlFile);
            
     }

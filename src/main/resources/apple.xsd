@@ -19,18 +19,6 @@
         </xs:restriction>   
     </xs:simpleType>
 
-    <xs:simpleType name="functionName">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1" />
-        </xs:restriction>   
-    </xs:simpleType>    
-
-    <xs:simpleType name="table">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1" />
-        </xs:restriction>
-    </xs:simpleType>
-
 <xs:element name="Resource">
     <xs:complexType>
         <xs:sequence>           
@@ -44,7 +32,6 @@
             </xs:choice>
         </xs:sequence>  
         <xs:attribute name="version" type="version" use="required" />
-        <xs:attribute name="table" type="table" use="required" />
         </xs:complexType>
     </xs:element>
 
@@ -69,6 +56,8 @@
                 <xs:attribute name="type" type="sqlType" default="query" />
                 <xs:attribute name="on" type="xs:string" />
                 <xs:attribute name="class" type="class" />
+                <xs:attribute name="startRow" type="xs:int" />
+                <xs:attribute name="maxRow" type="xs:int" />
             </xs:extension> 
         </xs:simpleContent>             
     </xs:complexType>   
@@ -90,14 +79,13 @@
     <xs:attribute name="item" type="xs:boolean" default="false" />
 </xs:complexType>   
 
-    <xs:complexType name="execute">
-        <xs:sequence>
-            <xs:element name="paramVar" type="paramVar" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="paramVal" type="paramVal" minOccurs="0" maxOccurs="unbounded" />
-        </xs:sequence>
-        <xs:attribute name="className" type="className" use="required" />
-        <!--<xs:attribute name="functionName" type="functionName" use="required"/>--> 
-    </xs:complexType>
+<xs:complexType name="execute">
+    <xs:sequence>
+        <xs:element name="paramVar" type="paramVar" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="paramVal" type="paramVal" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="className" type="className" use="required" />
+</xs:complexType>
 
     <xs:complexType name="paramVar">
         <xs:attribute name="name" type="paramVarName" />
