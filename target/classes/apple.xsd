@@ -56,8 +56,6 @@
                 <xs:attribute name="type" type="sqlType" default="query" />
                 <xs:attribute name="on" type="xs:string" />
                 <xs:attribute name="class" type="class" />
-                <xs:attribute name="startRow" type="xs:integer" />
-                <xs:attribute name="maxRow" type="xs:integer" />
             </xs:extension> 
         </xs:simpleContent>             
     </xs:complexType>   
@@ -80,29 +78,8 @@
 </xs:complexType>   
 
 <xs:complexType name="execute">
-    <xs:sequence>
-        <xs:element name="paramVar" type="paramVar" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="paramVal" type="paramVal" minOccurs="0" maxOccurs="unbounded" />
-    </xs:sequence>
     <xs:attribute name="className" type="className" use="required" />
 </xs:complexType>
-
-<xs:complexType name="paramVar">
-    <xs:attribute name="name" type="paramVarName" use="required" />
-</xs:complexType>
-
-<xs:simpleType name="paramVarName">
-    <xs:restriction base="xs:string">
-        <xs:minLength value="1"/>
-        <xs:whiteSpace value="collapse" />
-    </xs:restriction>
-</xs:simpleType>    
-
-<xs:simpleType name="paramVal">
-    <xs:restriction base="xs:string">
-        <xs:minLength value="1"/>
-    </xs:restriction> 
-</xs:simpleType>    
 
     <xs:complexType name="create">
         <xs:complexContent>

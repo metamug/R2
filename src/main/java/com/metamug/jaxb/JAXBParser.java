@@ -7,7 +7,6 @@ package com.metamug.jaxb;
  */
 import com.metamug.jaxb.docs.ApiDocGenerator;
 import com.metamug.jaxb.gener.Execute;
-import com.metamug.jaxb.gener.ParamVar;
 import com.metamug.jaxb.gener.Request;
 import com.metamug.jaxb.gener.Resource;
 import com.metamug.jaxb.gener.Sql;
@@ -93,22 +92,6 @@ public class JAXBParser {
                     System.out.println("----------------------EXECUTE-----------------------");
                     for(Execute execute : req.getExecute()){
                         System.out.println("   className: " + execute.getClassName());
-                        
-                        if(!execute.getParamVar().isEmpty()){
-                            for(ParamVar pvr : execute.getParamVar()){
-                                System.out.println("   varName: " + pvr.getName());
-                            }
-                        }else{
-                            System.out.println("ParamVar List is empty..-----------");
-                        }
-                        
-                        if(!execute.getParamVal().isEmpty()){
-                            for(String pvl : execute.getParamVal()){
-                                System.out.println("   paramValue: " + pvl);
-                            }
-                        }else{
-                            System.out.println("ParamVal List is empty..-----------");
-                        }
                     }
                 }else{
                     System.out.println("------------------Execute List empty..------------------");
@@ -120,8 +103,6 @@ public class JAXBParser {
                         System.out.println("    sqltype: " + sql.getType());
                         System.out.println("on: " + sql.getOn());
                         System.out.println("class: " + sql.getClazz());
-                        System.out.println("startRow: " + String.valueOf(sql.getStartRow()));
-                        System.out.println("maxRow: " + String.valueOf(sql.getMaxRow()));
                         System.out.println("class: " + sql.getClazz());
                         System.out.println(sql.getValue().trim());
                     }

@@ -25,10 +25,6 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType name="execute">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="paramVar" type="{}paramVar" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element name="paramVal" type="{}paramVal" maxOccurs="unbounded" minOccurs="0"/>
- *       &lt;/sequence>
  *       &lt;attribute name="className" use="required" type="{}className" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,76 +34,13 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "execute", propOrder = {
-    "paramVar",
-    "paramVal"
-})
+@XmlType(name = "execute")
 public class Execute {
 
-    protected List<ParamVar> paramVar;
-    protected List<String> paramVal;
-    
     @XmlAttribute(name = "className", required = true)
     protected String className;
 
-    /**
-     * Gets the value of the paramVar property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the paramVar property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getParamVar().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ParamVar }
-     * 
-     * 
-     */
-    public List<ParamVar> getParamVar() {
-        if (paramVar == null) {
-            paramVar = new ArrayList<ParamVar>();
-        }
-        return this.paramVar;
-    }
-
-    /**
-     * Gets the value of the paramVal property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the paramVal property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getParamVal().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     * 
-     * 
-     */
-    public List<String> getParamVal() {
-        if (paramVal == null) {
-            paramVal = new ArrayList<String>();
-        }
-        return this.paramVal;
-    }
-
+    
     /**
      * Gets the value of the className property.
      * 
