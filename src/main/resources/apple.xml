@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Resource version="1.1" >
+<Resource version="1.0" >
 
     <desc>Contains records for data type apple</desc>
 
-	<Request method="GET" item="true" >
-		<Sql class="com.mtg.Urls" startRow="1" maxRow="50">
-			select * from employee 
-			where employee_name = @param1 
-			and employee_id = @id
-		</Sql>
+    <Request method="GET" item="true" >
+        <Sql class="com.mtg.Urls" startRow="1" maxRow="50">
+            select * from employee
+            where employee_name = @param1
+            and employee_id = @id
+        </Sql>
         <Sql type="update">
             update employee set employee_name = @param1 where employee_id=@id
         </Sql>
     </Request>
-	       
-	<Create>
-		<desc>Request for creating an employee record.</desc>
-		<execute className="com.mtg.Apple" >
-			<paramVar name="p" />
-			<paramVal>Value</paramVal>
 
-		</execute>
-			
+    <Create>
+        <desc>Request for creating an employee record.</desc>
+        <execute className="com.mtg.Apple" >
+            <paramVar name="p" />
+            <paramVal>Value</paramVal>
+
+        </execute>
+
         <Sql>
-            insert into employee 
-            (employee_name, employee_id) 
+            insert into employee
+            (employee_name, employee_id)
             values(@name, @id)
         </Sql>
     </Create>
 
-	<!--derived from request -->
-	<Read>
-		<execute className="com.mtg.Apple" >
-			<paramVar name="p" />
+    <!--derived from request -->
+    <Read>
+        <execute className="com.mtg.Apple" >
+            <paramVar name="p" />
             <paramVar name="q" />
             <paramVal>1000</paramVal>
             <paramVal>2000</paramVal>
         </execute>
     </Read>
-	
-	<Read item="true">
-		<Sql on="item lt 1">select * from employee where employee_id=12
-		</Sql>
-	</Read>
+
+    <Read item="true">
+        <Sql on="item lt 1">select * from employee where employee_id=12
+        </Sql>
+    </Read>
 
 </Resource>

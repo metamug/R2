@@ -5,6 +5,7 @@ package com.metamug.jaxb;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.metamug.jaxb.docs.ApiDocGenerator;
 import com.metamug.jaxb.docs.XslTransformer;
 import com.metamug.jaxb.gener.Execute;
 import com.metamug.jaxb.gener.ParamVar;
@@ -18,6 +19,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +43,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import javax.xml.xpath.XPathExpressionException;
+import org.apache.commons.io.FileUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -47,12 +51,12 @@ import org.xml.sax.SAXException;
  * @author anish
  */
 public class JAXBParser {
-    
+
     OutputStream output;
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
     XMLStreamWriter writer;
-    
-    public static void main(String[] args) throws TransformerConfigurationException, SAXException {
+
+    public static void main(String[] args) throws TransformerConfigurationException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException {
         File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/apple.xsd").getFile());
         Source xmlFile = new StreamSource(xml);
@@ -70,35 +74,36 @@ public class JAXBParser {
             System.out.println(xmlFile.getSystemId() + " is NOT valid.");
             System.out.println("Reason: " + ex.getMessage());
         }
-
-//        ApiDocGenerator.generate("C:\\c4\\metamug\\RPXParser\\doctest");
+        new ApiDocGenerator().generate("/opt/tomcat8/api/test");
     }
-    
+
     public static void createHtml(Resource resource, File xmlFile) {
         try {
             File xsl = new File(JAXBParser.class.getResource("/resource.xsl").getFile());
-            File outHtml = new File("../rpx-parser/src/main/resources/"
+            File outHtml = new File("/opt/tomcat8/api/test/docs/"
                     + xmlFile.getName().split("\\.")[0] + ".html");
             XslTransformer.transform(xmlFile, xsl, outHtml);
         } catch (TransformerException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
-    
+
     public Resource parse(File xmlFile) throws TransformerConfigurationException {
         Resource resource = new Resource();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             resource = (Resource) jaxbUnmarshaller.unmarshal(xmlFile);
-            output = new FileOutputStream("../rpx-parser/src/main/resources/" + xmlFile.getName().split("\\.")[0] + ".jsp");
+            if (!new File("/opt/tomcat8/api/test/WEB-INF/resources/v" + resource.getVersion()).exists()) {
+                Files.createDirectory(Paths.get("/opt/tomcat8/api/test/WEB-INF/resources/v" + resource.getVersion()));
+            }
+            output = new FileOutputStream("/opt/tomcat8/api/test/WEB-INF/resources/v" + resource.getVersion() + File.separator + xmlFile.getName().split("\\.")[0] + ".jsp");
             writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
             writeEscapedCharacters("<%@include  file=\"../fragments/taglibs.jspf\"%>");
             writer.writeCharacters(System.lineSeparator());
             writer.writeStartElement("c:choose");
             for (Request req : resource.getRequestOrCreateOrRead()) {
-                
+
                 writer.writeStartElement("c:when");
                 if (req.isItem()) {
                     writer.writeAttribute("test", enclose("not empty mtgReq.id and mtgReq.method eq '" + req.getMethod() + "'"));
@@ -161,17 +166,17 @@ public class JAXBParser {
                 writer.writeCharacters(System.lineSeparator());
             }
             writer.writeStartElement("c:otherwise");
-            
+
             writer.writeStartElement("json:object");
             writer.writeAttribute("name", "data");
-            
+
             writer.writeEmptyElement("json:property");
             writer.writeAttribute("name", "Code");
             writer.writeAttribute("value", "405");
             writer.writeEmptyElement("json:property");
             writer.writeAttribute("name", "Message");
             writer.writeAttribute("value", "Method not allowed");
-            
+
             writer.writeEndElement();//end json:object
 
             writer.writeEndElement();//end c:otherwise
@@ -186,7 +191,7 @@ public class JAXBParser {
         }
         return resource;
     }
-    
+
     private void writeEscapedCharacters(String data) throws XMLStreamException, IOException, XPathExpressionException {
         writer.writeCharacters("");
         writer.flush();
@@ -194,13 +199,13 @@ public class JAXBParser {
         osw.write(data);
         osw.flush();
     }
-    
+
     private String enclose(String expression) {
         return "${" + expression + "}";
     }
-    
+
     private String processSQL(String query) {
-        
+
         StringBuilder builder = null;
         List<String> params = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\@(\\w+)");
@@ -208,7 +213,6 @@ public class JAXBParser {
         while (match.find()) {
             params.add(query.substring(match.start(1), match.end(1)));
         }
-//        System.out.println(params);
         builder = new StringBuilder(query.replaceAll("\\@\\w+", "?"));
         for (String param : params) {
             if (param.equals("id")) {
@@ -220,7 +224,7 @@ public class JAXBParser {
         }
         return builder.toString();
     }
-    
+
     private String processParam(List<ParamVar> paramVar) {
         StringBuilder builder = new StringBuilder();
         for (ParamVar param : paramVar) {
@@ -232,5 +236,10 @@ public class JAXBParser {
             builder.append("\n");
         }
         return builder.toString();
+    }
+
+    private static void versionControl(String oldVersion, String newVersion, String appName) throws IOException {
+        String OUTPUT_FOLDER = "/opt/tomcat8/api/";
+        FileUtils.copyDirectory(new File(OUTPUT_FOLDER + appName + "/WEB-INF/resources/" + oldVersion), new File(OUTPUT_FOLDER + appName + "/WEB-INF/resources/" + newVersion));
     }
 }
