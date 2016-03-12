@@ -50,6 +50,7 @@ public class ApiDocGenerator {
             }
             output = new FileOutputStream(appDirectory + "/index" + ".html");
             writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
+            writeEscapedCharacters("<!DOCTYPE html>");
             writer.writeStartElement("html");
             writer.writeStartElement("head");
             writer.writeStartElement("meta");
