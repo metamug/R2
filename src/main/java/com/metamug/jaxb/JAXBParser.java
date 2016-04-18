@@ -8,7 +8,6 @@ package com.metamug.jaxb;
 import com.metamug.jaxb.docs.ApiDocGenerator;
 import com.metamug.jaxb.docs.XslTransformer;
 import com.metamug.jaxb.gener.Execute;
-import com.metamug.jaxb.gener.ParamVar;
 import com.metamug.jaxb.gener.Request;
 import com.metamug.jaxb.gener.Resource;
 import com.metamug.jaxb.gener.Sql;
@@ -72,16 +71,16 @@ public class JAXBParser {
             }
         } catch (SAXException | IOException ex) {
             System.out.println(xmlFile.getSystemId() + " is NOT valid.");
-            System.out.println("Reason: " + ex.getMessage());
+            System.out.println("Reason:" + ex.getMessage().split("\\:")[1]);
         }
         new ApiDocGenerator().generate("/opt/tomcat8/api/test");
     }
 
-    public static void createHtml(Resource resource, File xmlFile) {
+    public static void createHtml(Resource resource, File xmlFile) throws IOException {
         try {
             File xsl = new File(JAXBParser.class.getResource("/resource.xsl").getFile());
-            File outHtml = new File("/opt/tomcat8/api/test/docs/"
-                    + xmlFile.getName().split("\\.")[0] + ".html");
+            Files.createDirectory(Paths.get("/opt/tomcat8/api/test/docs/v" + resource.getVersion()));
+            File outHtml = new File("/opt/tomcat8/api/test/docs/v" + resource.getVersion() + "/" + xmlFile.getName().split("\\.")[0] + ".html");
             XslTransformer.transform(xmlFile, xsl, outHtml);
         } catch (TransformerException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
@@ -99,7 +98,7 @@ public class JAXBParser {
             }
             output = new FileOutputStream("/opt/tomcat8/api/test/WEB-INF/resources/v" + resource.getVersion() + File.separator + xmlFile.getName().split("\\.")[0] + ".jsp");
             writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
-            writeEscapedCharacters("<%@include  file=\"../fragments/taglibs.jspf\"%>");
+            writeEscapedCharacters("<%@include  file=\"../../fragments/taglibs.jspf\"%>");
             writer.writeCharacters(System.lineSeparator());
             writer.writeStartElement("c:choose");
             for (Request req : resource.getRequestOrCreateOrRead()) {
@@ -115,12 +114,6 @@ public class JAXBParser {
                         if (sql.getType().equalsIgnoreCase("query")) {
                             writer.writeStartElement("sql:query");
                             writer.writeAttribute("var", "result");
-                            if (sql.getStartRow() != null) {
-                                writer.writeAttribute("startRow", sql.getStartRow().toString());
-                            }
-                            if (sql.getMaxRow() != null) {
-                                writer.writeAttribute("maxRow", sql.getMaxRow().toString());
-                            }
                             writer.writeAttribute("dataSource", "jdbc/mtgMySQL");
                             String processSQL = processSQL(sql.getValue());
                             writeEscapedCharacters(processSQL);
@@ -150,15 +143,15 @@ public class JAXBParser {
                         writer.writeStartElement("code:execute");
                         writer.writeAttribute("className", execute.getClassName());
                         writer.writeAttribute("param", enclose("mtgReq"));
-                        if (!execute.getParamVal().isEmpty()) {
-                            for (String pvl : execute.getParamVal()) {
-                                writeEscapedCharacters(MessageFormat.format("<code:param value=\"{0}\" />", pvl));
-                            }
-                        }
-                        if (!execute.getParamVar().isEmpty()) {
-                            String processParam = processParam(execute.getParamVar());
-                            writeEscapedCharacters(processParam);
-                        }
+//                        if (!execute.getParamVal().isEmpty()) {
+//                            for (String pvl : execute.getParamVal()) {
+//                                writeEscapedCharacters(MessageFormat.format("<code:param value=\"{0}\" />", pvl));
+//                            }
+//                        }
+//                        if (!execute.getParamVar().isEmpty()) {
+//                            String processParam = processParam(execute.getParamVar());
+//                            writeEscapedCharacters(processParam);
+//                        }
                         writer.writeEndElement();
                     }
                 }
@@ -225,19 +218,18 @@ public class JAXBParser {
         return builder.toString();
     }
 
-    private String processParam(List<ParamVar> paramVar) {
-        StringBuilder builder = new StringBuilder();
-        for (ParamVar param : paramVar) {
-            if (param.getName().equals("id")) {
-                builder.append("<code:param value=\"${mtgReq.id}\"/>");
-            } else {
-                builder.append(MessageFormat.format("<code:param value=\"$'{'mtgReq.params.{0}'}\" />", param.getName()));
-            }
-            builder.append("\n");
-        }
-        return builder.toString();
-    }
-
+//    private String processParam(List<ParamVar> paramVar) {
+//        StringBuilder builder = new StringBuilder();
+//        for (ParamVar param : paramVar) {
+//            if (param.getName().equals("id")) {
+//                builder.append("<code:param value=\"${mtgReq.id}\"/>");
+//            } else {
+//                builder.append(MessageFormat.format("<code:param value=\"$'{'mtgReq.params.{0}'}\" />", param.getName()));
+//            }
+//            builder.append("\n");
+//        }
+//        return builder.toString();
+//    }
     private static void versionControl(String oldVersion, String newVersion, String appName) throws IOException {
         String OUTPUT_FOLDER = "/opt/tomcat8/api/";
         FileUtils.copyDirectory(new File(OUTPUT_FOLDER + appName + "/WEB-INF/resources/" + oldVersion), new File(OUTPUT_FOLDER + appName + "/WEB-INF/resources/" + newVersion));
