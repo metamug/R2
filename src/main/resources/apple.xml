@@ -4,6 +4,9 @@
 	<desc>Contains records for data type apple</desc>
 
 	<Request method="GET" item="true" >
+		<param paramName="t" blank="true" min="1" exists="table.column" />
+                <param paramName="t" min="1" max="100" />
+                
 		<Sql className="com.mtg.Urls">
 			select * from employee 
 			where employee_name = @param1 

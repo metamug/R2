@@ -13,6 +13,18 @@
         </xs:restriction>   
     </xs:simpleType>
 
+    <xs:simpleType name="paramName">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+        </xs:restriction>   
+    </xs:simpleType>
+
+    <xs:simpleType name="exists">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="3" />
+        </xs:restriction>   
+    </xs:simpleType>
+
 <xs:element name="Resource">
     <xs:complexType>
         <xs:sequence>           
@@ -26,7 +38,7 @@
             </xs:choice>
         </xs:sequence>  
         <xs:attribute name="version" type="version" use="required" />
-        </xs:complexType>
+    </xs:complexType>
 </xs:element>
 
 <xs:simpleType name="desc">
@@ -64,12 +76,22 @@
 <xs:complexType name="request">
     <xs:sequence>
         <xs:element name="desc" type="desc" minOccurs="0" maxOccurs="1" />
+        <xs:element name="param" type="param" minOccurs="0" maxOccurs="unbounded" />
         <xs:element name="execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
         <xs:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="method" type="method" default="GET" />
     <xs:attribute name="item" type="xs:boolean" default="false" />
-</xs:complexType>   
+</xs:complexType>  
+
+<xs:complexType name="param">
+    <xs:attribute name="paramName" type="paramName" use="required" />
+    <xs:attribute name="blank" type="xs:boolean" default="false" />
+    <xs:attribute name="num" type="xs:boolean" default="false" />
+    <xs:attribute name="max" type="xs:string" />
+    <xs:attribute name="min" type="xs:string" />
+    <xs:attribute name="exists" type="exists" />
+</xs:complexType> 
 
 <xs:complexType name="execute">
     <xs:attribute name="className" type="className" use="required" />

@@ -11,6 +11,7 @@ import com.metamug.jaxb.gener.Request;
 import com.metamug.jaxb.gener.Resource;
 import com.metamug.jaxb.gener.Sql;
 import com.metamug.jaxb.docs.XslTransformer;
+import com.metamug.jaxb.gener.Param;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -81,17 +82,33 @@ public class JAXBParser {
 
             for (Request req : resource.getRequestOrCreateOrRead()) {
                 System.out.println("\n--------------------------------------------------------------");
-                System.out.println("\n-----   ----   ------R E Q U E S T------   ---   ---   --");
+                System.out.println("\n-----   ----   ------R E Q U E S T------   ----   -----");
                 System.out.println("\n--------------------------------------------------------------");
                     
                 System.out.print("    method: " + req.getMethod().value());
                 System.out.println("    isItem: " + Boolean.toString(req.isItem()));
                 System.out.println("    desc: " + req.getDesc());
 
+                if(!req.getParam().isEmpty()){
+                    System.out.println("----------------------PARAMS-----------------------");
+                    for(Param param : req.getParam()){
+                        System.out.println("   paramName: " + param.getParamName());
+                        System.out.println("   isBlank? : " + Boolean.toString(param.isBlank()));
+                        System.out.println("   isNum? : " + Boolean.toString(param.isNum()));
+                        System.out.println("   min: " + param.getMin());
+                        System.out.println("   max: " + param.getMax());
+                        System.out.println("   exists: " + param.getExists());
+                        System.out.println("--------------------------------------------");
+                    }
+                }else{
+                    System.out.println("------------------Param List empty..------------------");
+                }
+                
                 if(!req.getExecute().isEmpty()){
                     System.out.println("----------------------EXECUTE-----------------------");
                     for(Execute execute : req.getExecute()){
                         System.out.println("   className: " + execute.getClassName());
+                        System.out.println("--------------------------------------------");
                     }
                 }else{
                     System.out.println("------------------Execute List empty..------------------");
@@ -104,6 +121,7 @@ public class JAXBParser {
                         System.out.println("on: " + sql.getOn());
                         System.out.println("className: " + sql.getClassName());
                         System.out.println(sql.getValue().trim());
+                        System.out.println("--------------------------------------------");
                     }
                 }else{
                     System.out.println("------------------Sql List empty..-------------------");
