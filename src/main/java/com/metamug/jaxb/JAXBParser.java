@@ -71,16 +71,16 @@ public class JAXBParser {
             }
         } catch (SAXException | IOException ex) {
             System.out.println(xmlFile.getSystemId() + " is NOT valid.");
-            System.out.println("Reason:" + ex.getMessage().split("\\:")[1]);
+            System.out.println("Reason:" + ex.getLocalizedMessage());
         }
-        new ApiDocGenerator().generate("/opt/tomcat8/api/test");
+        new ApiDocGenerator().generate("/opt/tomcat8/api/semanticweb");
     }
 
     public static void createHtml(Resource resource, File xmlFile) throws IOException {
         try {
             File xsl = new File(JAXBParser.class.getResource("/resource.xsl").getFile());
-            Files.createDirectory(Paths.get("/opt/tomcat8/api/test/docs/v" + resource.getVersion()));
-            File outHtml = new File("/opt/tomcat8/api/test/docs/v" + resource.getVersion() + "/" + xmlFile.getName().split("\\.")[0] + ".html");
+            Files.createDirectory(Paths.get("/opt/tomcat8/api/semanticweb/docs/v" + resource.getVersion()));
+            File outHtml = new File("/opt/tomcat8/api/semanticweb/docs/v" + resource.getVersion() + "/" + xmlFile.getName().split("\\.")[0] + ".html");
             XslTransformer.transform(xmlFile, xsl, outHtml);
         } catch (TransformerException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
@@ -93,10 +93,10 @@ public class JAXBParser {
             JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             resource = (Resource) jaxbUnmarshaller.unmarshal(xmlFile);
-            if (!new File("/opt/tomcat8/api/test/WEB-INF/resources/v" + resource.getVersion()).exists()) {
-                Files.createDirectory(Paths.get("/opt/tomcat8/api/test/WEB-INF/resources/v" + resource.getVersion()));
+            if (!new File("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion()).exists()) {
+                Files.createDirectory(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion()));
             }
-            output = new FileOutputStream("/opt/tomcat8/api/test/WEB-INF/resources/v" + resource.getVersion() + File.separator + xmlFile.getName().split("\\.")[0] + ".jsp");
+            output = new FileOutputStream("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + xmlFile.getName().split("\\.")[0] + ".jsp");
             writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
             writeEscapedCharacters("<%@include  file=\"../../fragments/taglibs.jspf\"%>");
             writer.writeCharacters(System.lineSeparator());
@@ -126,13 +126,13 @@ public class JAXBParser {
                             writeEscapedCharacters(processSQL);
                             writer.writeEndElement();
                         }
-                        if (sql.getClazz() == null && sql.getType().equalsIgnoreCase("query")) {
+                        if (sql.getClassName() == null && sql.getType().equalsIgnoreCase("query")) {
                             writer.writeStartElement("mtg:out");
                             writer.writeAttribute("value", enclose("result"));
                             writer.writeEndElement();
-                        } else if (sql.getClazz() != null && sql.getType().equalsIgnoreCase("query")) {
+                        } else if (sql.getClassName() != null && sql.getType().equalsIgnoreCase("query")) {
                             writer.writeStartElement("code:execute");
-                            writer.writeAttribute("className", sql.getClazz());
+                            writer.writeAttribute("className", sql.getClassName());
                             writer.writeAttribute("param", enclose("result"));
                             writer.writeEndElement();
                         }

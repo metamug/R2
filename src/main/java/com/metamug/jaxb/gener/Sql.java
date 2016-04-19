@@ -23,9 +23,9 @@ import javax.xml.bind.annotation.XmlValue;
  * &lt;complexType name="sql">
  *   &lt;simpleContent>
  *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="type" type="{}sqlType" default="query" />
+ *       &lt;attribute name="type" type="{}String" default="query" />
  *       &lt;attribute name="on" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="class" type="{}class" />
+ *       &lt;attribute name="className" type="{}className" />
  *     &lt;/extension>
  *   &lt;/simpleContent>
  * &lt;/complexType>
@@ -45,8 +45,8 @@ public class Sql {
     protected String type;
     @XmlAttribute(name = "on")
     protected String on;
-    @XmlAttribute(name = "class")
-    protected String clazz;
+    @XmlAttribute(name = "className")
+    protected String className;
 
     public Sql() {
     }
@@ -74,7 +74,7 @@ public class Sql {
     /**
      * Gets the value of the type property.
      *
-     * @return possible object is {@link SqlType }
+     * @return possible object is {@link String }
      *
      */
     public String getType() {
@@ -88,7 +88,7 @@ public class Sql {
     /**
      * Sets the value of the type property.
      *
-     * @param value allowed object is {@link SqlType }
+     * @param value allowed object is {@link String }
      *
      */
     public void setType(String value) {
@@ -121,10 +121,10 @@ public class Sql {
      * @return possible object is {@link String }
      *
      */
-    public String getClazz() {
-        if (this.getType().equals("query")) {
-            return clazz;
-        } else {
+    public String getClassName() {
+        if(this.getType().equals("query")){
+            return className;
+        }else{
             return null;
         }
     }
@@ -135,8 +135,8 @@ public class Sql {
      * @param value allowed object is {@link String }
      *
      */
-    public void setClazz(String value) {
-        this.clazz = value;
+    public void setClassName(String value) {
+        this.className = value;
     }
 
 }
