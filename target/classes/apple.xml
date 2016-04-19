@@ -4,14 +4,14 @@
 	<desc>Contains records for data type apple</desc>
 
 	<Request method="GET" item="true" >
-		<Sql class="com.mtg.Urls">
+		<Sql className="com.mtg.Urls">
 			select * from employee 
 			where employee_name = @param1 
 			and employee_id = @id
 		</Sql>
-        <Sql type="update">
-            update employee set employee_name = @param1 where employee_id=@id
-        </Sql>
+                <Sql type="update">
+                    update employee set employee_name = @param1 where employee_id=@id
+                </Sql>
 	</Request>
 	       
 	<Create>

@@ -102,8 +102,7 @@ public class JAXBParser {
                     for (Sql sql : req.getSql()) {
                         System.out.println("    sqltype: " + sql.getType());
                         System.out.println("on: " + sql.getOn());
-                        System.out.println("class: " + sql.getClazz());
-                        System.out.println("class: " + sql.getClazz());
+                        System.out.println("className: " + sql.getClassName());
                         System.out.println(sql.getValue().trim());
                     }
                 }else{

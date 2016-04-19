@@ -7,12 +7,6 @@
         </xs:restriction>   
     </xs:simpleType>
 
-    <xs:simpleType name="class">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1" />
-        </xs:restriction>   
-    </xs:simpleType>
-
     <xs:simpleType name="className">
         <xs:restriction base="xs:string">
             <xs:minLength value="1" />
@@ -55,7 +49,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute name="type" type="sqlType" default="query" />
                 <xs:attribute name="on" type="xs:string" />
-                <xs:attribute name="class" type="class" />
+                <xs:attribute name="className" type="className" />
             </xs:extension> 
         </xs:simpleContent>             
     </xs:complexType>   

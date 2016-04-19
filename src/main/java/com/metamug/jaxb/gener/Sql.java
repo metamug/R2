@@ -6,7 +6,6 @@
 //
 package com.metamug.jaxb.gener;
 
-import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -24,9 +23,9 @@ import javax.xml.bind.annotation.XmlValue;
  * &lt;complexType name="sql">
  *   &lt;simpleContent>
  *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="type" type="{}sqlType" default="query" />
+ *       &lt;attribute name="type" type="{}String" default="query" />
  *       &lt;attribute name="on" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="class" type="{}class" />
+ *       &lt;attribute name="className" type="{}className" />
  *     &lt;/extension>
  *   &lt;/simpleContent>
  * &lt;/complexType>
@@ -46,8 +45,8 @@ public class Sql {
     protected String type;
     @XmlAttribute(name = "on")
     protected String on;
-    @XmlAttribute(name = "class")
-    protected String clazz;
+    @XmlAttribute(name = "className")
+    protected String className;
 
     public Sql() {
     }
@@ -75,7 +74,7 @@ public class Sql {
     /**
      * Gets the value of the type property.
      *
-     * @return possible object is {@link SqlType }
+     * @return possible object is {@link String }
      *
      */
     public String getType() {
@@ -89,7 +88,7 @@ public class Sql {
     /**
      * Sets the value of the type property.
      *
-     * @param value allowed object is {@link SqlType }
+     * @param value allowed object is {@link String }
      *
      */
     public void setType(String value) {
@@ -124,9 +123,9 @@ public class Sql {
      *     {@link String }
      *     
      */
-    public String getClazz() {
+    public String getClassName() {
         if(this.getType().equals("query")){
-            return clazz;
+            return className;
         }else{
             return null;
         }
@@ -140,8 +139,8 @@ public class Sql {
      *     {@link String }
      *     
      */
-    public void setClazz(String value) {
-        this.clazz = value;
+    public void setClassName(String value) {
+        this.className = value;
     }
     
 }
