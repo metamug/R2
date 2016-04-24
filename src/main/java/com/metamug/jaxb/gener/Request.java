@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "request", propOrder = {
     "desc",
+    "param",
     "execute",
     "sql"
 })
@@ -37,6 +38,9 @@ import javax.xml.bind.annotation.XmlType;
 public class Request {
 
     protected String desc;
+    
+    protected List<Param> param;
+    
     protected List<Execute> execute;
     
     @XmlElement(name = "Sql", required = true)
@@ -54,6 +58,13 @@ public class Request {
 
     public Request(Method method) {
         this.method = method;
+    }
+    
+    public List<Param> getParam() {
+        if (param == null) {
+            param = new ArrayList<Param>();
+        }
+        return this.param;
     }
     
     public List<Execute> getExecute() {

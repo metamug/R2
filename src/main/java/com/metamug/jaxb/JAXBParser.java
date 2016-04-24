@@ -5,7 +5,6 @@ package com.metamug.jaxb;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import com.metamug.jaxb.docs.ApiDocGenerator;
 import com.metamug.jaxb.docs.XslTransformer;
 import com.metamug.jaxb.gener.Execute;
 import com.metamug.jaxb.gener.Request;
@@ -42,7 +41,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -70,17 +69,18 @@ public class JAXBParser {
                 createHtml(resource, xml);
             }
         } catch (SAXException | IOException ex) {
-            System.out.println(xmlFile.getSystemId() + " is NOT valid.");
-            System.out.println("Reason:" + ex.getLocalizedMessage());
+            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
-        new ApiDocGenerator().generate("/opt/tomcat8/api/semanticweb");
+//        new ApiDocGenerator().generate("/opt/tomcat8/api/semanticweb");
     }
 
     public static void createHtml(Resource resource, File xmlFile) throws IOException {
         try {
             File xsl = new File(JAXBParser.class.getResource("/resource.xsl").getFile());
-            Files.createDirectory(Paths.get("/opt/tomcat8/api/semanticweb/docs/v" + resource.getVersion()));
-            File outHtml = new File("/opt/tomcat8/api/semanticweb/docs/v" + resource.getVersion() + "/" + xmlFile.getName().split("\\.")[0] + ".html");
+            if (!new File("/opt/tomcat8/api/semanticweb/docs/v" + resource.getVersion()).exists()) {
+                Files.createDirectory(Paths.get("/opt/tomcat8/api/semanticweb/docs/v" + resource.getVersion()));
+            }
+            File outHtml = new File("/opt/tomcat8/api/semanticweb/docs/v" + resource.getVersion() + "/" + FilenameUtils.removeExtension(xmlFile.getName()) + ".html");
             XslTransformer.transform(xmlFile, xsl, outHtml);
         } catch (TransformerException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
@@ -96,9 +96,21 @@ public class JAXBParser {
             if (!new File("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion()).exists()) {
                 Files.createDirectory(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion()));
             }
-            output = new FileOutputStream("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + xmlFile.getName().split("\\.")[0] + ".jsp");
+            output = new FileOutputStream("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(xmlFile.getName()) + ".jsp");
             writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
             writeEscapedCharacters("<%@include  file=\"../../fragments/taglibs.jspf\"%>");
+            writer.writeCharacters(System.lineSeparator());
+            writeEscapedCharacters("<%\n"
+                    + "    String header = request.getHeader(\"Accept\");\n"
+                    + "    log(header);\n"
+                    + "    if (header != null && Arrays.asList(header.split(\"/\")).contains(\"xml\")) {\n"
+                    + "        response.setContentType(\"application/xml;charset=UTF-8\");\n"
+                    + "    } else if (header != null && Arrays.asList(header.split(\"/\")).contains(\"table\")) {\n"
+                    + "        response.setContentType(\"text/html;charset=UTF-8\");\n"
+                    + "    } else {\n"
+                    + "        response.setContentType(\"application/json;charset=UTF-8\");\n"
+                    + "    }\n"
+                    + "%>");
             writer.writeCharacters(System.lineSeparator());
             writer.writeStartElement("c:choose");
             for (Request req : resource.getRequestOrCreateOrRead()) {
@@ -129,6 +141,8 @@ public class JAXBParser {
                         if (sql.getClassName() == null && sql.getType().equalsIgnoreCase("query")) {
                             writer.writeStartElement("mtg:out");
                             writer.writeAttribute("value", enclose("result"));
+                            writer.writeAttribute("type", enclose("header.accept"));
+                            writer.writeAttribute("tableName", FilenameUtils.removeExtension(xmlFile.getName()));
                             writer.writeEndElement();
                         } else if (sql.getClassName() != null && sql.getType().equalsIgnoreCase("query")) {
                             writer.writeStartElement("code:execute");
@@ -230,8 +244,8 @@ public class JAXBParser {
 //        }
 //        return builder.toString();
 //    }
-    private static void versionControl(String oldVersion, String newVersion, String appName) throws IOException {
-        String OUTPUT_FOLDER = "/opt/tomcat8/api/";
-        FileUtils.copyDirectory(new File(OUTPUT_FOLDER + appName + "/WEB-INF/resources/" + oldVersion), new File(OUTPUT_FOLDER + appName + "/WEB-INF/resources/" + newVersion));
-    }
+//    private static void versionControl(String oldVersion, String newVersion, String appName) throws IOException {
+//        String OUTPUT_FOLDER = "/opt/tomcat8/api/";
+//        FileUtils.copyDirectory(new File(OUTPUT_FOLDER + appName + "/WEB-INF/resources/" + oldVersion), new File(OUTPUT_FOLDER + appName + "/WEB-INF/resources/" + newVersion));
+//    }
 }
