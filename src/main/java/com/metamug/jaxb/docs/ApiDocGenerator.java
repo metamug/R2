@@ -27,7 +27,7 @@ import javax.xml.xpath.XPathExpressionException;
  * @author anish
  */
 public class ApiDocGenerator {
-    
+        
     public static void generate(String appDirectory) {
 
         try {
