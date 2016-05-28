@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource version="1.0" >
+
+	<Request method="GET" >
+		<execute className="com.metamug.testmvn.RqstTest1" />
+	</Request>	
+
+	<Request method="POST" >
+		<execute className="com.metamug.testmvn.RqstTest2" />
+	</Request>	
+
+	<Request method="PUT" >
+		<execute className="com.metamug.testmvn.RqstTest3" />
+	</Request>	
+
+	<Request method="DELETE" >
+		<execute className="com.metamug.testmvn.RqstTest4" />
+	</Request>	
+
+</Resource>

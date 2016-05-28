@@ -102,10 +102,9 @@ public class JAXBParser {
             writer.writeCharacters(System.lineSeparator());
             writeEscapedCharacters("<%\n"
                     + "    String header = request.getHeader(\"Accept\");\n"
-                    + "    log(header);\n"
                     + "    if (header != null && Arrays.asList(header.split(\"/\")).contains(\"xml\")) {\n"
                     + "        response.setContentType(\"application/xml;charset=UTF-8\");\n"
-                    + "    } else if (header != null && Arrays.asList(header.split(\"/\")).contains(\"table\")) {\n"
+                    + "    } else if (header != null && Arrays.asList(header.split(\"/\")).contains(\"html\")) {\n"
                     + "        response.setContentType(\"text/html;charset=UTF-8\");\n"
                     + "    } else {\n"
                     + "        response.setContentType(\"application/json;charset=UTF-8\");\n"
