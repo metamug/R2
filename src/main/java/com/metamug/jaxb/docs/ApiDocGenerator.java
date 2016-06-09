@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,21 +33,21 @@ public class ApiDocGenerator {
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
     XMLStreamWriter writer;
 
-    public void generate(String appDirectory) {
+    public void generate(String appDirectory) throws IOException {
 
         try {
-            List<String> htmlFilenameList = new ArrayList<>();
+            List<File> htmlFilenameList = new ArrayList<>();
+            File docsDirectory = new File(appDirectory + "/docs");
+            File[] versionDirecotries = docsDirectory.listFiles();
+            for (File versions : versionDirecotries) {
+                File[] versionFile = versions.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        return name.toLowerCase().endsWith(".html");
+                    }
+                });
 
-            File directory = new File(appDirectory + "/docs");
-            File[] listOfFiles = directory.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.toLowerCase().endsWith(".html");
-                }
-            });
-            directory.listFiles((File dir, String name) -> name.toLowerCase().endsWith(".html"));
-            for (File file : listOfFiles) {
-                htmlFilenameList.add(file.getName());
+                htmlFilenameList.addAll(Arrays.asList(versionFile));
             }
             output = new FileOutputStream(appDirectory + "/index" + ".html");
             writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
@@ -82,14 +83,13 @@ public class ApiDocGenerator {
             if (!htmlFilenameList.isEmpty()) {
                 writer.writeStartElement("div");
                 writer.writeAttribute("class", "list-group col-md-4");
-                for (String name : htmlFilenameList) {
+                for (File resourceDoc : htmlFilenameList) {
                     writer.writeStartElement("a");
                     writer.writeAttribute("class", "list-group-item");
-                    writer.writeAttribute("href", "docs\\" + name);
-                    writeEscapedCharacters(name);
+                    writer.writeAttribute("href", "docs\\" + resourceDoc.getParentFile().getName() + File.separator + resourceDoc.getName());
+                    writeEscapedCharacters(resourceDoc.getName());
                     writer.writeEndElement();   //Endo of </a>
                 }
-
                 writer.writeEndElement();   //Endo of </div class="list-group">
             } else {
                 writer.writeStartElement("h4");
@@ -99,9 +99,7 @@ public class ApiDocGenerator {
             writer.writeEndElement();   //End of </div class="container">
             writer.writeEndElement();   //End of </body>
             writer.writeEndElement();   //End of </html>
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ApiDocGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (XMLStreamException | XPathExpressionException | IOException ex) {
+        } catch (FileNotFoundException | XMLStreamException | XPathExpressionException ex) {
             Logger.getLogger(ApiDocGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

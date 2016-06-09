@@ -5,6 +5,7 @@ package com.metamug.jaxb;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.metamug.jaxb.docs.ApiDocGenerator;
 import com.metamug.jaxb.docs.XslTransformer;
 import com.metamug.jaxb.gener.Execute;
 import com.metamug.jaxb.gener.Request;
@@ -30,6 +31,7 @@ import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -42,7 +44,9 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.xml.sax.SAXException;
+import util.XmlUtil;
 
 /**
  *
@@ -55,23 +59,26 @@ public class JAXBParser {
     XMLStreamWriter writer;
 
     public static void main(String[] args) throws TransformerConfigurationException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException {
-        File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
+        File xml = new File(JAXBParser.class.getResource("/movies.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
-        Source xmlFile = new StreamSource(xml);
-        SchemaFactory schemaFactory = SchemaFactory
-                .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = schemaFactory.newSchema(xsd);
         Validator validator = schema.newValidator();
         try {
+            XmlUtil.escapeSql(xml);
+            Source xmlFile = new StreamSource(xml);
             validator.validate(xmlFile);
+
             Resource resource = new JAXBParser().parse(xml);
             if (resource != null) {
                 createHtml(resource, xml);
             }
         } catch (SAXException | IOException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        } catch (ParserConfigurationException | TransformerException ex) {
+            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        new ApiDocGenerator().generate("/opt/tomcat8/api/semanticweb");
+        new ApiDocGenerator().generate("/opt/tomcat8/api/semanticweb");
     }
 
     public static void createHtml(Resource resource, File xmlFile) throws IOException {
@@ -104,8 +111,6 @@ public class JAXBParser {
                     + "    String header = request.getHeader(\"Accept\");\n"
                     + "    if (header != null && Arrays.asList(header.split(\"/\")).contains(\"xml\")) {\n"
                     + "        response.setContentType(\"application/xml;charset=UTF-8\");\n"
-                    + "    } else if (header != null && Arrays.asList(header.split(\"/\")).contains(\"html\")) {\n"
-                    + "        response.setContentType(\"text/html;charset=UTF-8\");\n"
                     + "    } else {\n"
                     + "        response.setContentType(\"application/json;charset=UTF-8\");\n"
                     + "    }\n"
@@ -126,14 +131,14 @@ public class JAXBParser {
                             writer.writeStartElement("sql:query");
                             writer.writeAttribute("var", "result");
                             writer.writeAttribute("dataSource", "jdbc/mtgMySQL");
-                            String processSQL = processSQL(sql.getValue());
+                            String processSQL = processSQL(StringEscapeUtils.unescapeXml(sql.getValue()));
                             writeEscapedCharacters(processSQL);
                             writer.writeEndElement();
                         } else {
                             writer.writeStartElement("sql:update");
                             writer.writeAttribute("var", "result");
                             writer.writeAttribute("dataSource", "jdbc/mtgMySQL");
-                            String processSQL = processSQL(sql.getValue());
+                            String processSQL = processSQL(StringEscapeUtils.unescapeXml(sql.getValue()));
                             writeEscapedCharacters(processSQL);
                             writer.writeEndElement();
                         }

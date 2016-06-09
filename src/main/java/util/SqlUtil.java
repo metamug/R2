@@ -18,29 +18,28 @@ import java.util.regex.Pattern;
  * @author anish
  */
 public class SqlUtil {
-    
-    public static List<String> getSqlParamsFromResource(Resource res){
+
+    public static List<String> getSqlParamsFromResource(Resource res) {
         List<String> sqlList = new ArrayList<>();
-        
+
         for (Request req : res.getRequestOrCreateOrRead()) {
             for (Sql sql : req.getSql()) {
                 sqlList.add(sql.getValue().trim());
             }
         }
-        
+
         return sqlList;
     }
-    
+
     //try replacing keys in html with params using java
-    public static List<String> getParamsFromSql(String sql){
-        StringBuilder sb = null;
+    public static List<String> getParamsFromSql(String sql) {
         List<String> list = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\@(\\w+)");
         Matcher matcher = pattern.matcher(sql);
-        while(matcher.find()){
+        while (matcher.find()) {
             list.add(sql.substring(matcher.start(1), matcher.end(1)));
         }
-        
+
         return list;
     }
 }
