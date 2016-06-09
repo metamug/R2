@@ -16,6 +16,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -48,8 +49,7 @@ public class XmlUtil {
             Node sql = sqlElements.item(i);
             Element e = (Element) sql;
             String originalQuery = e.getTextContent();
-            String modifiedQuery = originalQuery.replace("<", "&lt;");
-            modifiedQuery = modifiedQuery.replace(">", "&gt;");
+            String modifiedQuery = StringEscapeUtils.escapeXml(originalQuery);
             e.setTextContent(modifiedQuery);
         }
 
