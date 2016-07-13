@@ -116,10 +116,12 @@ public class Sql {
     }
 
     /**
-     * Gets the value of the clazz property.
-     *
-     * @return possible object is {@link String }
-     *
+     * Gets the value of the className property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
     public String getClassName() {
         if (this.getType().equals("query")) {
@@ -130,10 +132,12 @@ public class Sql {
     }
 
     /**
-     * Sets the value of the clazz property.
-     *
-     * @param value allowed object is {@link String }
-     *
+     * Sets the value of the className property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
     public void setClassName(String value) {
         this.className = value;

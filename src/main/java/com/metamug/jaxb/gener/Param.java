@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;attribute name="num" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
  *       &lt;attribute name="max" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="min" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="pattern" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="exists" type="{}exists" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -48,6 +49,8 @@ public class Param {
     protected String max;
     @XmlAttribute(name = "min")
     protected String min;
+    @XmlAttribute(name = "pattern")
+    protected String pattern;
     @XmlAttribute(name = "exists")
     protected String exists;
 
@@ -177,6 +180,30 @@ public class Param {
      */
     public void setMin(String value) {
         this.min = value;
+    }
+    
+    /**
+     * Gets the value of the pattern property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPattern() {
+        return pattern;
+    }
+
+    /**
+     * Sets the value of the pattern property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPattern(String value) {
+        this.pattern = value;
     }
 
     /**
