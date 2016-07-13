@@ -49,6 +49,8 @@ public class XmlUtil {
             Node sql = sqlElements.item(i);
             Element e = (Element) sql;
             String originalQuery = e.getTextContent();
+            System.out.println(e.getAttribute("on"));
+            System.out.println(e.getTextContent());
             String modifiedQuery = StringEscapeUtils.escapeXml(originalQuery);
             e.setTextContent(modifiedQuery);
         }

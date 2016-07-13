@@ -12,8 +12,8 @@
             where employee_name = @param1
             and employee_id = @id
         </Sql>
-        <Sql type="update">
-            update employee set employee_name = @param1 where employee_id=@id
+        <Sql type="update" when="@abc lt 3 and @def not empty">
+            update employee set employee_name = @param1 where employee_id lt 3
         </Sql>
     </Request>
 
@@ -44,7 +44,8 @@
     </Read>
 
     <Read item="true">
-        <Sql on="item lt 1">select * from employee where employee_id=12
+        <Sql when="@item gt 1">
+            select * from employee where employee_id=12
         </Sql>
     </Read>
 </Resource>

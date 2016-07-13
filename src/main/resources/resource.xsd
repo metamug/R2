@@ -60,7 +60,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute name="type" type="sqlType" default="query" />
-                <xs:attribute name="on" type="xs:string" />
+                <xs:attribute name="when" type="xs:string" />
                 <xs:attribute name="className" type="className" />
             </xs:extension>
         </xs:simpleContent>

@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
@@ -31,7 +32,6 @@ import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -44,9 +44,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.xml.sax.SAXException;
-import util.XmlUtil;
 
 /**
  *
@@ -59,13 +57,13 @@ public class JAXBParser {
     XMLStreamWriter writer;
 
     public static void main(String[] args) throws TransformerConfigurationException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException {
-        File xml = new File(JAXBParser.class.getResource("/movies.xml").getFile());
+        File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = schemaFactory.newSchema(xsd);
         Validator validator = schema.newValidator();
         try {
-            XmlUtil.escapeSql(xml);
+//            XmlUtil.escapeSql(xml);
             Source xmlFile = new StreamSource(xml);
             validator.validate(xmlFile);
 
@@ -75,7 +73,7 @@ public class JAXBParser {
             }
         } catch (SAXException | IOException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        } catch (ParserConfigurationException | TransformerException ex) {
+        } catch (TransformerException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
         new ApiDocGenerator().generate("/opt/tomcat8/api/semanticweb");
@@ -129,19 +127,23 @@ public class JAXBParser {
                     for (Sql sql : req.getSql()) {
                         if (sql.getType().equalsIgnoreCase("query")) {
                             writer.writeStartElement("sql:query");
-                            writer.writeAttribute("var", "result");
-                            writer.writeAttribute("dataSource", "jdbc/mtgMySQL");
-                            String processSQL = processSQL(StringEscapeUtils.unescapeXml(sql.getValue()));
-                            writeEscapedCharacters(processSQL);
-                            writer.writeEndElement();
                         } else {
                             writer.writeStartElement("sql:update");
-                            writer.writeAttribute("var", "result");
-                            writer.writeAttribute("dataSource", "jdbc/mtgMySQL");
-                            String processSQL = processSQL(StringEscapeUtils.unescapeXml(sql.getValue()));
-                            writeEscapedCharacters(processSQL);
-                            writer.writeEndElement();
                         }
+                        writer.writeAttribute("var", "result");
+                        writer.writeAttribute("dataSource", "jdbc/mtgMySQL");
+                        if (sql.getWhen() != null) {
+                            writer.writeStartElement("c:if");
+                            writer.writeAttribute("test", enclose(sql.getWhen().replace("@", "mtgReq.params.")));
+                            String processSQL = processSQL(sql.getValue());
+                            writeEscapedCharacters(processSQL);
+                            writer.writeEndElement(); //End of <c:if>
+                        } else {
+                            String processSQL = processSQL(sql.getValue());
+                            writeEscapedCharacters(processSQL);
+                        }
+                        writer.writeEndElement();
+
                         if (sql.getClassName() == null && sql.getType().equalsIgnoreCase("query")) {
                             writer.writeStartElement("mtg:out");
                             writer.writeAttribute("value", enclose("result"));
@@ -195,6 +197,27 @@ public class JAXBParser {
             writer.writeEndElement();//end c:choose for resource
             writer.flush();
             writer.close();
+            List<String> newLines = new ArrayList<>();
+            for (String line : Files.readAllLines(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(xmlFile.getName()) + ".jsp"), StandardCharsets.UTF_8)) {
+                String modifiedStr = line;
+                if (line.toLowerCase().contains(" lte ") || line.toLowerCase().contains(" lte")) {
+                    modifiedStr = line.replace(" lte ", " <= ");
+                }
+                if (line.toLowerCase().contains(" gte ") || line.toLowerCase().contains(" gte")) {
+                    modifiedStr = modifiedStr.replace(" gte ", " >= ");
+                }
+                if (line.toLowerCase().contains(" ne ")) {
+                    modifiedStr = modifiedStr.replace(" ne ", " != ");
+                }
+                if (line.toLowerCase().contains(" lt ") || line.toLowerCase().contains(" lt")) {
+                    modifiedStr = modifiedStr.replace(" lt ", " < ");
+                }
+                if (line.toLowerCase().contains(" gt ") || line.toLowerCase().contains(" gt")) {
+                    modifiedStr = modifiedStr.replace(" gt ", " > ");
+                }
+                newLines.add(modifiedStr);
+            }
+            Files.write(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(xmlFile.getName()) + ".jsp"), newLines, StandardCharsets.UTF_8);
         } catch (JAXBException | FileNotFoundException | XMLStreamException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException | XPathExpressionException ex) {
@@ -216,7 +239,6 @@ public class JAXBParser {
     }
 
     private String processSQL(String query) {
-
         StringBuilder builder = null;
         List<String> params = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\@(\\w+)");
