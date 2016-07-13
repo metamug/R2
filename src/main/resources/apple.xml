@@ -5,7 +5,7 @@
 
 	<Request method="GET" item="true" >
 		<param paramName="t" blank="true" min="1" exists="table.column" />
-                <param paramName="t" min="1" max="100" />
+                <param paramName="t" min="1" max="100" pattern="pat341./1@[]^" />
                 
 		<Sql className="com.mtg.Urls">
 			select * from employee 
@@ -34,7 +34,7 @@
 	</Read>
 	
 	<Read item="true">
-		<Sql on="item lt 1">select * from employee where employee_id=12
+		<Sql when="item lt 1">select * from employee where employee_id=12
 		</Sql>
 	</Read>
 

@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlValue;
  *   &lt;simpleContent>
  *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
  *       &lt;attribute name="type" type="{}String" default="query" />
- *       &lt;attribute name="on" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="when" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="className" type="{}className" />
  *     &lt;/extension>
  *   &lt;/simpleContent>
@@ -43,8 +43,8 @@ public class Sql {
     protected String value;
     @XmlAttribute(name = "type")
     protected String type;
-    @XmlAttribute(name = "on")
-    protected String on;
+    @XmlAttribute(name = "when")
+    protected String when;
     @XmlAttribute(name = "className")
     protected String className;
 
@@ -96,27 +96,27 @@ public class Sql {
     }
 
     /**
-     * Gets the value of the on property.
+     * Gets the value of the when property.
      *
      * @return possible object is {@link String }
      *
      */
-    public String getOn() {
-        return on;
+    public String getWhen() {
+        return when;
     }
 
     /**
-     * Sets the value of the on property.
+     * Sets the value of the when property.
      *
      * @param value allowed object is {@link String }
      *
      */
-    public void setOn(String value) {
-        this.on = value;
+    public void setWhen(String value) {
+        this.when = value;
     }
     
     /**
-     * Gets the value of the clazz property.
+     * Gets the value of the className property.
      * 
      * @return
      *     possible object is
@@ -132,7 +132,7 @@ public class Sql {
     }
 
     /**
-     * Sets the value of the clazz property.
+     * Sets the value of the className property.
      * 
      * @param value
      *     allowed object is

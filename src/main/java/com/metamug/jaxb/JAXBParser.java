@@ -97,6 +97,7 @@ public class JAXBParser {
                         System.out.println("   isNum? : " + Boolean.toString(param.isNum()));
                         System.out.println("   min: " + param.getMin());
                         System.out.println("   max: " + param.getMax());
+                        System.out.println("   pattern: " + param.getPattern());
                         System.out.println("   exists: " + param.getExists());
                         System.out.println("--------------------------------------------");
                     }
@@ -118,7 +119,7 @@ public class JAXBParser {
                     System.out.println("----------------------SQL-----------------------");
                     for (Sql sql : req.getSql()) {
                         System.out.println("    sqltype: " + sql.getType());
-                        System.out.println("on: " + sql.getOn());
+                        System.out.println("on: " + sql.getWhen());
                         System.out.println("className: " + sql.getClassName());
                         System.out.println(sql.getValue().trim());
                         System.out.println("--------------------------------------------");
