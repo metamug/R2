@@ -92,11 +92,14 @@ public class JAXBParser {
                 if(!req.getParam().isEmpty()){
                     System.out.println("----------------------PARAMS-----------------------");
                     for(Param param : req.getParam()){
-                        System.out.println("   paramName: " + param.getParamName());
+                        System.out.println("   paramName: " + param.getName());
+                        System.out.println("   isRequired? : " + Boolean.toString(param.isRequired()));
                         System.out.println("   isBlank? : " + Boolean.toString(param.isBlank()));
                         System.out.println("   isNum? : " + Boolean.toString(param.isNum()));
                         System.out.println("   min: " + param.getMin());
                         System.out.println("   max: " + param.getMax());
+                        System.out.println("   minLength: " + param.getMinLen());
+                        System.out.println("   maxLength: " + param.getMaxLen());
                         System.out.println("   pattern: " + param.getPattern());
                         System.out.println("   exists: " + param.getExists());
                         System.out.println("--------------------------------------------");

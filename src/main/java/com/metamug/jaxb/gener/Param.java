@@ -12,80 +12,50 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 
-/**
- * <p>Java class for param complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
- * <pre>
- * &lt;complexType name="param">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="paramName" use="required" type="{}paramName" />
- *       &lt;attribute name="blank" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
- *       &lt;attribute name="num" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
- *       &lt;attribute name="max" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="min" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="pattern" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="exists" type="{}exists" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "param")
 public class Param {
 
-    @XmlAttribute(name = "paramName", required = true)
-    protected String paramName;
+    @XmlAttribute(name = "name", required = true)
+    protected String name;
     @XmlAttribute(name = "blank")
     protected Boolean blank;
-    @XmlAttribute(name = "num")
-    protected Boolean num;
+    @XmlAttribute(name = "isNum")
+    protected Boolean isNum;
+    @XmlAttribute(name = "required")
+    protected Boolean required;    
     @XmlAttribute(name = "max")
     protected String max;
     @XmlAttribute(name = "min")
     protected String min;
+    @XmlAttribute(name = "maxLen")
+    protected String maxLen;
+    @XmlAttribute(name = "minLen")
+    protected String minLen;
     @XmlAttribute(name = "pattern")
     protected String pattern;
     @XmlAttribute(name = "exists")
     protected String exists;
-
-    /**
-     * Gets the value of the paramName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getParamName() {
-        return paramName;
+    
+    /*public boolean isValid(Param paramFromRequest){
+        Param p = paramFromRequest;
+        if(!name.equals(p.getName())){
+            return false;
+        }
+        if(){
+            
+        }
+        return true;
+    }*/
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String value) {
+        this.name = value;
     }
 
-    /**
-     * Sets the value of the paramName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setParamName(String value) {
-        this.paramName = value;
-    }
-
-    /**
-     * Gets the value of the blank property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
-     */
     public boolean isBlank() {
         if (blank == null) {
             return false;
@@ -94,66 +64,38 @@ public class Param {
         }
     }
 
-    /**
-     * Sets the value of the blank property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
-     */
     public void setBlank(Boolean value) {
         this.blank = value;
     }
 
-    /**
-     * Gets the value of the num property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
-     */
     public boolean isNum() {
-        if (num == null) {
+        if (isNum == null) {
             return false;
         } else {
-            return num;
+            return isNum;
         }
     }
 
-    /**
-     * Sets the value of the num property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
-     */
     public void setNum(Boolean value) {
-        this.num = value;
+        this.isNum = value;
+    }
+    
+    public boolean isRequired() {
+        if (required == null) {
+            return false;
+        } else {
+            return required;
+        }
     }
 
-    /**
-     * Gets the value of the max property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
+    public void setRequired(Boolean value) {
+        this.required = value;
+    }
+
     public String getMax() {
         return max;
     }
 
-    /**
-     * Sets the value of the max property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
     public void setMax(String value) {
         this.max = value;
     }
@@ -180,6 +122,46 @@ public class Param {
      */
     public void setMin(String value) {
         this.min = value;
+    }
+    
+    public String getMaxLen() {
+        return maxLen;
+    }
+
+    /**
+     * Sets the value of the maxLen property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setMaxLen(String value) {
+        this.maxLen = value;
+    }
+
+    /**
+     * Gets the value of the minLen property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getMinLen() {
+        return minLen;
+    }
+
+    /**
+     * Sets the value of the minLen property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setMinLen(String value) {
+        this.minLen = value;
     }
     
     /**

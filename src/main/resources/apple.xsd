@@ -85,11 +85,14 @@
 </xs:complexType>  
 
 <xs:complexType name="param">
-    <xs:attribute name="paramName" type="paramName" use="required" />
+    <xs:attribute name="name" type="paramName" use="required" />
     <xs:attribute name="blank" type="xs:boolean" default="false" />
-    <xs:attribute name="num" type="xs:boolean" default="false" />
+    <xs:attribute name="isNum" type="xs:boolean" default="false" />
+    <xs:attribute name="required" type="xs:boolean" default="false" />
     <xs:attribute name="max" type="xs:string" />
     <xs:attribute name="min" type="xs:string" />
+    <xs:attribute name="maxLen" type="xs:string" />
+    <xs:attribute name="minLen" type="xs:string" />
     <xs:attribute name="pattern" type="xs:string" />
     <xs:attribute name="exists" type="exists" />
 </xs:complexType> 
