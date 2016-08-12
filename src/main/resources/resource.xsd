@@ -90,6 +90,7 @@
         <xs:attribute name="num" type="xs:boolean" default="false" />
         <xs:attribute name="max" type="xs:string" />
         <xs:attribute name="min" type="xs:string" />
+        <xs:attribute name="pattern" type="xs:string" />
         <xs:attribute name="exists" type="exists" />
     </xs:complexType>
 

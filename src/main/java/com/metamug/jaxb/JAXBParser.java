@@ -8,6 +8,7 @@ package com.metamug.jaxb;
 import com.metamug.jaxb.docs.ApiDocGenerator;
 import com.metamug.jaxb.docs.XslTransformer;
 import com.metamug.jaxb.gener.Execute;
+import com.metamug.jaxb.gener.Param;
 import com.metamug.jaxb.gener.Request;
 import com.metamug.jaxb.gener.Resource;
 import com.metamug.jaxb.gener.Sql;
@@ -57,13 +58,12 @@ public class JAXBParser {
     XMLStreamWriter writer;
 
     public static void main(String[] args) throws TransformerConfigurationException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException {
-        File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
+        File xml = new File(JAXBParser.class.getResource("/movies.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = schemaFactory.newSchema(xsd);
         Validator validator = schema.newValidator();
         try {
-//            XmlUtil.escapeSql(xml);
             Source xmlFile = new StreamSource(xml);
             validator.validate(xmlFile);
 
@@ -200,10 +200,10 @@ public class JAXBParser {
             List<String> newLines = new ArrayList<>();
             for (String line : Files.readAllLines(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(xmlFile.getName()) + ".jsp"), StandardCharsets.UTF_8)) {
                 String modifiedStr = line;
-                if (line.toLowerCase().contains(" lte ") || line.toLowerCase().contains(" lte")) {
-                    modifiedStr = line.replace(" lte ", " <= ");
+                if (line.toLowerCase().contains(" le ") || line.toLowerCase().contains(" le")) {
+                    modifiedStr = line.replace(" le ", " <= ");
                 }
-                if (line.toLowerCase().contains(" gte ") || line.toLowerCase().contains(" gte")) {
+                if (line.toLowerCase().contains(" ge ") || line.toLowerCase().contains(" ge")) {
                     modifiedStr = modifiedStr.replace(" gte ", " >= ");
                 }
                 if (line.toLowerCase().contains(" ne ")) {
@@ -258,20 +258,63 @@ public class JAXBParser {
         return builder.toString();
     }
 
-//    private String processParam(List<ParamVar> paramVar) {
-//        StringBuilder builder = new StringBuilder();
-//        for (ParamVar param : paramVar) {
-//            if (param.getName().equals("id")) {
-//                builder.append("<code:param value=\"${mtgReq.id}\"/>");
-//            } else {
-//                builder.append(MessageFormat.format("<code:param value=\"$'{'mtgReq.params.{0}'}\" />", param.getName()));
+    private String processParam(List<Param> paramVar) {
+        StringBuilder builder = new StringBuilder();
+        for (Param param : paramVar) {
+            if (param.getParamName().equals("id")) {
+                builder.append("<code:param value=\"${mtgReq.id}\"/>");
+            } else {
+                builder.append(MessageFormat.format("<code:param value=\"$'{'mtgReq.params.{0}'}\" />", param.getParamName()));
+            }
+            builder.append("\n");
+        }
+        return builder.toString();
+    }
+//    public boolean isValid(Param param, String value) {
+//
+//        if ("".equals(value)) {
+//            if (!param.isBlank()) {
+//                return false;
 //            }
-//            builder.append("\n");
 //        }
-//        return builder.toString();
-//    }
-//    private static void versionControl(String oldVersion, String newVersion, String appName) throws IOException {
-//        String OUTPUT_FOLDER = "/opt/tomcat8/api/";
-//        FileUtils.copyDirectory(new File(OUTPUT_FOLDER + appName + "/WEB-INF/resources/" + oldVersion), new File(OUTPUT_FOLDER + appName + "/WEB-INF/resources/" + newVersion));
+//        if (param.isNum()) {
+//            String regex = "[0-9]+";
+//            if (!value.matches(regex)) {
+//                return false;
+//            }
+//            if (null != param.getMax()) {
+//                long val = Long.parseLong(value);
+//                long maxVal = Long.parseLong(param.getMax());
+//                if (val > maxVal) {
+//                    return false;
+//                }
+//            }
+//            if (null != param.getMin()) {
+//                long val = Long.parseLong(value);
+//                long minVal = Long.parseLong(param.getMin());
+//                if (val < minVal) {
+//                    return false;
+//                }
+//            }
+//        } else {
+//            if (null != param.getPattern()) {
+//                if (!value.matches(param.getPattern())) {
+//                    return false;
+//                }
+//            }
+//            if (null != param.getMaxLen()) {
+//                int maxLength = Integer.parseInt(param.getMaxLen());
+//                if (value.length() > maxLength) {
+//                    return false;
+//                }
+//            }
+//            if (null != param.getMinLen()) {
+//                int minLength = Integer.parseInt(param.getMinLen());
+//                if (value.length() < minLength) {
+//                    return false;
+//                }
+//            }
+//        }
+//        return true;
 //    }
 }

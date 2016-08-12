@@ -3,40 +3,40 @@
 
     <desc>Contains records for data type apple</desc>
 
-	<Request method="GET" item="true" >
-		<param paramName="t" blank="true" min="1" exists="table.column" />
-                <param paramName="t" min="1" max="100" pattern="pat341./1@[]^" />
-                
-		<Sql className="com.mtg.Urls">
-			select * from employee 
-			where employee_name = @param1 
-			and employee_id = @id
-		</Sql>
-                <Sql type="update">
-                    update employee set employee_name = @param1 where employee_id=@id
-                </Sql>
-	</Request>
-	       
-	<Create>
-		<desc>Request for creating an employee record.</desc>
-		<execute className="com.mtg.Apple" />
-			
-		<Sql>
-		insert into employee 
-		(employee_name, employee_id) 
-		values(@name, @id)
-		</Sql>
-	</Create>
+    <Request method="GET" item="true" >
+        <param paramName="t" blank="true" min="1" exists="table.column" />
+        <param paramName="t" min="1" max="100" pattern="pat341./1@[]^" />
 
-	<!--derived from request -->
-	<Read>
-		<execute className="com.mtg.Apple" />
-	</Read>
-	
-	<Read item="true">
-		<Sql when="item lt 1">select * from employee where employee_id=12
-		</Sql>
-	</Read>
+        <Sql className="com.mtg.Urls">
+            select * from employee
+            where employee_name = @param1
+            and employee_id = @id
+        </Sql>
+        <Sql type="update">
+            update employee set employee_name = @param1 where employee_id=@id
+        </Sql>
+    </Request>
+
+    <Create>
+        <desc>Request for creating an employee record.</desc>
+        <execute className="com.mtg.Apple" />
+
+        <Sql>
+            insert into employee
+            (employee_name, employee_id)
+            values(@name, @id)
+        </Sql>
+    </Create>
+
+    <!--derived from request -->
+    <Read>
+        <execute className="com.mtg.Apple" />
+    </Read>
+
+    <Read item="true">
+        <Sql when="item lt 1">select * from employee where employee_id=12
+        </Sql>
+    </Read>
 
     <Create>
         <desc>Request for creating an employee record.</desc>

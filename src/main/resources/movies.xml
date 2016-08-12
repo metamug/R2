@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource version="1.1">
+    <desc>Contains information about movies.</desc>
+    <Request method="GET">
+        <Sql>
+            SELECT * FROM movie where rating le 3
+        </Sql>
+    </Request>
+    <Request method="GET" item="true">
+        <Sql>
+            SELECT * FROM movie where id=@id
+        </Sql>
+    </Request>
+    <Request method="POST">
+        <Sql type="update">
+            INSERT INTO movie (name, rating) VALUES (@p, @q)
+        </Sql>
+    </Request>
+    <Request method="PUT" item="true">
+        <Sql type="update">
+            UPDATE movie SET rating=@rating WHERE id=@id
+        </Sql>
+    </Request>
+    <Request method="DELETE" item="true">
+        <Sql type="update">
+            DELETE FROM movie WHERE id=@id
+        </Sql>
+    </Request>
+</Resource>
