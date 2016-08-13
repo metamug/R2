@@ -37,16 +37,6 @@ public class Param {
     @XmlAttribute(name = "exists")
     protected String exists;
     
-    /*public boolean isValid(Param paramFromRequest){
-        Param p = paramFromRequest;
-        if(!name.equals(p.getName())){
-            return false;
-        }
-        if(){
-            
-        }
-        return true;
-    }*/
     
     public String getName() {
         return name;

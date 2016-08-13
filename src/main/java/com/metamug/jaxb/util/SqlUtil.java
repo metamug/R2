@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package util;
+package com.metamug.jaxb.util;
 
 import com.metamug.jaxb.gener.Request;
 import com.metamug.jaxb.gener.Resource;

@@ -12,6 +12,7 @@ import com.metamug.jaxb.gener.Resource;
 import com.metamug.jaxb.gener.Sql;
 import com.metamug.jaxb.docs.XslTransformer;
 import com.metamug.jaxb.gener.Param;
+import com.metamug.jaxb.util.InputValidationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -135,5 +136,51 @@ public class JAXBParser {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resource;
+    }
+    
+    public void validateParam(Param param, String value) throws InputValidationException{
+        if("".equals(value)){
+            if(!param.isBlank()){
+                throw new InputValidationException("Parameter is empty!");
+            }
+        }
+        if(param.isNum()){
+            String regex = "[0-9]+";
+            if(!value.matches(regex)){
+                throw new InputValidationException("Parameter is not a number!");
+            }
+            if(null != param.getMax()){
+                long val = Long.parseLong(value);
+                long maxVal = Long.parseLong(param.getMax());
+                if(val > maxVal){
+                    throw new InputValidationException("Parameter value exceeds maximum value!");
+                }
+            }
+            if(null != param.getMin()){
+                long val = Long.parseLong(value);
+                long minVal = Long.parseLong(param.getMin());
+                if(val < minVal){
+                    throw new InputValidationException("Parameter value is less than minimum value!");
+                }
+            }
+        }else{
+            if(null != param.getPattern()){
+                if(!value.matches(param.getPattern())){
+                    throw new InputValidationException("Parameter value does not match given regex pattern!");
+                }
+            }
+            if(null != param.getMaxLen()){
+                int maxLength = Integer.parseInt(param.getMaxLen());
+                if(value.length() > maxLength){
+                    throw new InputValidationException("Parameter length is greater than maximum length!");
+                }
+            }
+            if(null != param.getMinLen()){
+                int minLength = Integer.parseInt(param.getMinLen());
+                if(value.length() < minLength){
+                    throw new InputValidationException("Parameter length is smaller than minimum length!");
+                }
+            }
+        }        
     }
 }
