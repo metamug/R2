@@ -138,7 +138,7 @@ public class JAXBParser {
         return resource;
     }
     
-    public void validateParam(Param param, String value) throws InputValidationException{
+    public static void validateParam(Param param, String value) throws InputValidationException{
         if("".equals(value)){
             if(!param.isBlank()){
                 throw new InputValidationException("Parameter is empty!");
