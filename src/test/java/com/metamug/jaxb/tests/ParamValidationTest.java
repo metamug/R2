@@ -18,7 +18,7 @@ import org.junit.Test;
  * @author anish
  */
 public class ParamValidationTest {
-    Param param1,param2,param3;
+    Param param1, param2, param3, regexParam1;
     
     @Before
     public void init(){
@@ -36,6 +36,9 @@ public class ParamValidationTest {
         
         param3 = new Param();
         param3.setBlank(Boolean.TRUE);
+        
+        regexParam1 = new Param();
+        regexParam1.setPattern("[a-zA-Z]{3}");
     }
     
     @Test(expected=InputValidationException.class)
@@ -58,6 +61,11 @@ public class ParamValidationTest {
         JAXBParser.validateParam(param2, "No");
     }
     
+    @Test(expected=InputValidationException.class)
+    public void InvalidTest5() throws InputValidationException{
+        JAXBParser.validateParam(param2, "123");
+    }
+    
     @Test
     public void ValidTest1() throws InputValidationException{
         JAXBParser.validateParam(param1, "param123");
@@ -66,5 +74,7 @@ public class ParamValidationTest {
         JAXBParser.validateParam(param2, "12");
         
         JAXBParser.validateParam(param3, "");
+        
+        JAXBParser.validateParam(regexParam1, "abc");
     }
 }
