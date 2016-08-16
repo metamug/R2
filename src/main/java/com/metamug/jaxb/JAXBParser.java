@@ -58,7 +58,7 @@ public class JAXBParser {
     XMLStreamWriter writer;
 
     public static void main(String[] args) throws TransformerConfigurationException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException {
-        File xml = new File(JAXBParser.class.getResource("/movies.xml").getFile());
+        File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = schemaFactory.newSchema(xsd);
@@ -116,12 +116,15 @@ public class JAXBParser {
             writer.writeCharacters(System.lineSeparator());
             writer.writeStartElement("c:choose");
             for (Request req : resource.getRequestOrCreateOrRead()) {
-
                 writer.writeStartElement("c:when");
                 if (req.isItem()) {
                     writer.writeAttribute("test", enclose("not empty mtgReq.id and mtgReq.method eq '" + req.getMethod() + "'"));
                 } else {
                     writer.writeAttribute("test", enclose("empty mtgReq.id and mtgReq.method eq '" + req.getMethod() + "'"));
+                }
+                for (Param param : req.getParam()) {
+                    boolean valid = isValid(param, "hello");
+                    System.out.println(valid);
                 }
                 if (!req.getSql().isEmpty()) {
                     for (Sql sql : req.getSql()) {
@@ -163,15 +166,6 @@ public class JAXBParser {
                         writer.writeStartElement("code:execute");
                         writer.writeAttribute("className", execute.getClassName());
                         writer.writeAttribute("param", enclose("mtgReq"));
-//                        if (!execute.getParamVal().isEmpty()) {
-//                            for (String pvl : execute.getParamVal()) {
-//                                writeEscapedCharacters(MessageFormat.format("<code:param value=\"{0}\" />", pvl));
-//                            }
-//                        }
-//                        if (!execute.getParamVar().isEmpty()) {
-//                            String processParam = processParam(execute.getParamVar());
-//                            writeEscapedCharacters(processParam);
-//                        }
                         writer.writeEndElement();
                     }
                 }
@@ -258,63 +252,63 @@ public class JAXBParser {
         return builder.toString();
     }
 
-    private String processParam(List<Param> paramVar) {
-        StringBuilder builder = new StringBuilder();
-        for (Param param : paramVar) {
-            if (param.getParamName().equals("id")) {
-                builder.append("<code:param value=\"${mtgReq.id}\"/>");
-            } else {
-                builder.append(MessageFormat.format("<code:param value=\"$'{'mtgReq.params.{0}'}\" />", param.getParamName()));
+    public boolean isValid(Param param, String str) {
+        if ("".equals(str)) {
+            if (!param.isBlank()) {
+                return false;
             }
-            builder.append("\n");
         }
-        return builder.toString();
+        if (param.isNum()) {
+            String regex = "[0-9]+";
+            if (!str.matches(regex)) {
+                return false;
+            }
+            if (null != param.getMax()) {
+                long val = Long.parseLong(str);
+                long maxVal = Long.parseLong(param.getMax());
+                if (val > maxVal) {
+                    return false;
+                }
+            }
+            if (null != param.getMin()) {
+                long val = Long.parseLong(str);
+                long minVal = Long.parseLong(param.getMin());
+                if (val < minVal) {
+                    return false;
+                }
+            }
+        } else {
+            if (null != param.getPattern()) {
+                if (!str.matches(param.getPattern())) {
+                    return false;
+                }
+            }
+            if (null != param.getMaxLen()) {
+                int maxLength = Integer.parseInt(param.getMaxLen());
+                if (str.length() > maxLength) {
+                    return false;
+                }
+            }
+            if (null != param.getMinLen()) {
+                int minLength = Integer.parseInt(param.getMinLen());
+                if (str.length() < minLength) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
-//    public boolean isValid(Param param, String value) {
-//
-//        if ("".equals(value)) {
-//            if (!param.isBlank()) {
-//                return false;
+
+//     private String processParam(List<Param> paramVar) {
+//        StringBuilder builder = new StringBuilder();
+//        for (Param param : paramVar) {
+//            if (param.getParamName().equals("id")) {
+//                builder.append("<code:param value=\"${mtgReq.id}\"/>");
+//            } else {
+//                builder.append(MessageFormat.format("<code:param value=\"$'{'mtgReq.params.{0}'}\" />", param.getParamName()));
 //            }
+//            builder.append("\n");
 //        }
-//        if (param.isNum()) {
-//            String regex = "[0-9]+";
-//            if (!value.matches(regex)) {
-//                return false;
-//            }
-//            if (null != param.getMax()) {
-//                long val = Long.parseLong(value);
-//                long maxVal = Long.parseLong(param.getMax());
-//                if (val > maxVal) {
-//                    return false;
-//                }
-//            }
-//            if (null != param.getMin()) {
-//                long val = Long.parseLong(value);
-//                long minVal = Long.parseLong(param.getMin());
-//                if (val < minVal) {
-//                    return false;
-//                }
-//            }
-//        } else {
-//            if (null != param.getPattern()) {
-//                if (!value.matches(param.getPattern())) {
-//                    return false;
-//                }
-//            }
-//            if (null != param.getMaxLen()) {
-//                int maxLength = Integer.parseInt(param.getMaxLen());
-//                if (value.length() > maxLength) {
-//                    return false;
-//                }
-//            }
-//            if (null != param.getMinLen()) {
-//                int minLength = Integer.parseInt(param.getMinLen());
-//                if (value.length() < minLength) {
-//                    return false;
-//                }
-//            }
-//        }
-//        return true;
+//        return builder.toString();
 //    }
 }

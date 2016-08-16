@@ -89,7 +89,8 @@ public class Resource {
      * Gets the value of the requestOrCreateOrRead property.
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list      {@link Request }
+     * Objects of the following type(s) are allowed in the list
+     * {@link Request }
      * {@link Create }
      * {@link Read }
      * {@link Update }
@@ -122,5 +123,5 @@ public class Resource {
     public void setVersion(String version) {
         this.version = version;
     }
-
+   
 }

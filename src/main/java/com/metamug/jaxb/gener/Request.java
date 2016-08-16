@@ -69,7 +69,7 @@ public class Request {
     
     public List<Execute> getExecute() {
         if (execute == null) {
-            execute = new ArrayList<>();
+            execute = new ArrayList<Execute>();
         }
         return this.execute;
     }
@@ -84,7 +84,7 @@ public class Request {
  
     public List<Sql> getSql() {
         if (sql == null) {
-            sql = new ArrayList<>();
+            sql = new ArrayList<Sql>();
         }
         return this.sql;
     }
