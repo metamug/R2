@@ -122,10 +122,10 @@ public class JAXBParser {
                 } else {
                     writer.writeAttribute("test", enclose("empty mtgReq.id and mtgReq.method eq '" + req.getMethod() + "'"));
                 }
-                for (Param param : req.getParam()) {
-                    boolean valid = isValid(param, "hello");
-                    System.out.println(valid);
-                }
+//                for (Param param : req.getParam()) {
+//                    boolean valid = isValid(param, "hello");
+//                    System.out.println(valid);
+//                }
                 if (!req.getSql().isEmpty()) {
                     for (Sql sql : req.getSql()) {
                         if (sql.getType().equalsIgnoreCase("query")) {
@@ -173,7 +173,9 @@ public class JAXBParser {
                 writer.writeCharacters(System.lineSeparator());
             }
             writer.writeStartElement("c:otherwise");
-
+            writeEscapedCharacters("<%\n"
+                    + "            response.setStatus(405);\n"
+                    + "        %>");
             writer.writeStartElement("json:object");
             writer.writeAttribute("name", "data");
 
