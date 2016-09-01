@@ -29,13 +29,7 @@
     <xs:complexType>
         <xs:sequence>           
             <xs:element name="desc" type="desc" minOccurs="0" maxOccurs="1" />
-            <xs:choice maxOccurs="unbounded">
-                <xs:element name="Request" type="request" />
-                <xs:element name="Create" type="create" />
-                <xs:element name="Read" type="read" />
-                <xs:element name="Update" type="update" />
-                <xs:element name="Delete" type="delete" />
-            </xs:choice>
+            <xs:element name="Request" type="request" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>  
         <xs:attribute name="version" type="version" use="required" />
     </xs:complexType>
@@ -100,33 +94,5 @@
 <xs:complexType name="execute">
     <xs:attribute name="className" type="className" use="required" />
 </xs:complexType>
-
-    <xs:complexType name="create">
-        <xs:complexContent>
-            <xs:extension base="request">
-            </xs:extension> 
-        </xs:complexContent>    
-    </xs:complexType>
-
-    <xs:complexType name="read">
-        <xs:complexContent>
-            <xs:extension base="request">
-            </xs:extension> 
-        </xs:complexContent>    
-    </xs:complexType>
-
-    <xs:complexType name="update">
-        <xs:complexContent>
-            <xs:extension base="request">
-            </xs:extension> 
-        </xs:complexContent>    
-    </xs:complexType>
-
-    <xs:complexType name="delete">
-        <xs:complexContent>
-            <xs:extension base="request">
-            </xs:extension> 
-        </xs:complexContent>    
-    </xs:complexType>
 
 </xs:schema>    

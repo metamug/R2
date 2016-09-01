@@ -81,7 +81,7 @@ public class JAXBParser {
             System.out.println("    version: " + resource.getVersion());
             System.out.println("    desc: " + resource.getDesc());
 
-            for (Request req : resource.getRequestOrCreateOrRead()) {
+            for (Request req : resource.getRequest()) {
                 System.out.println("\n--------------------------------------------------------------");
                 System.out.println("\n-----   ----   ------R E Q U E S T------   ----   -----");
                 System.out.println("\n--------------------------------------------------------------");

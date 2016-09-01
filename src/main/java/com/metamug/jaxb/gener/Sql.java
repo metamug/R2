@@ -12,27 +12,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
-/**
- * <p>
- * Java class for sql complex type.
- *
- * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType name="sql">
- *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="type" type="{}String" default="query" />
- *       &lt;attribute name="when" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="className" type="{}className" />
- *     &lt;/extension>
- *   &lt;/simpleContent>
- * &lt;/complexType>
- * </pre>
- *
- *
- */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sql", propOrder = {
     "value"
@@ -42,7 +22,7 @@ public class Sql {
     @XmlValue
     protected String value;
     @XmlAttribute(name = "type")
-    protected String type;
+    protected SqlType type;
     @XmlAttribute(name = "when")
     protected String when;
     @XmlAttribute(name = "className")
@@ -77,9 +57,9 @@ public class Sql {
      * @return possible object is {@link String }
      *
      */
-    public String getType() {
+    public SqlType getType() {
         if (type == null) {
-            return "query";
+            return SqlType.QUERY;
         } else {
             return type;
         }
@@ -91,7 +71,7 @@ public class Sql {
      * @param value allowed object is {@link String }
      *
      */
-    public void setType(String value) {
+    public void setType(SqlType value) {
         this.type = value;
     }
 
@@ -124,11 +104,7 @@ public class Sql {
      *     
      */
     public String getClassName() {
-        if(this.getType().equals("query")){
-            return className;
-        }else{
-            return null;
-        }
+        return className;
     }
 
     /**

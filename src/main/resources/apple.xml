@@ -5,20 +5,21 @@
 
 	<Request method="GET" item="true" >
 		<param name="t" blank="true" min="1" exists="table.column" />
-                <param name="u" min="1" max="100" pattern="pat341./1@[]^" />
-                <param name="v" minLen="5" maxLen="50" />
+        <param name="u" min="1" max="100" pattern="pat341./1@[]^" />
+        <param name="v" minLen="5" maxLen="50" />
                 
 		<Sql className="com.mtg.Urls">
 			select * from employee 
 			where employee_name = @param1 
 			and employee_id = @id
 		</Sql>
-                <Sql type="update">
-                    update employee set employee_name = @param1 where employee_id=@id
-                </Sql>
+             
+        <Sql type="update">
+            update employee set employee_name = @param1 where employee_id=@id
+        </Sql>
 	</Request>
 	       
-	<Create>
+	<Request>
 		<desc>Request for creating an employee record.</desc>
 		<execute className="com.mtg.Apple" />
 			
@@ -27,16 +28,16 @@
 		(employee_name, employee_id) 
 		values(@name, @id)
 		</Sql>
-	</Create>
+	</Request>
 
 	<!--derived from request -->
-	<Read>
+	<Request>
 		<execute className="com.mtg.Apple" />
-	</Read>
+	</Request>
 	
-	<Read item="true">
+	<Request item="true">
 		<Sql when="item lt 1">select * from employee where employee_id=12
 		</Sql>
-	</Read>
+	</Request>
 
 </Resource>

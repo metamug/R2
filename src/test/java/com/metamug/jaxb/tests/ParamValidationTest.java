@@ -8,8 +8,6 @@ package com.metamug.jaxb.tests;
 import com.metamug.jaxb.JAXBParser;
 import com.metamug.jaxb.gener.Param;
 import com.metamug.jaxb.util.InputValidationException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.Before;
 import org.junit.Test;
 

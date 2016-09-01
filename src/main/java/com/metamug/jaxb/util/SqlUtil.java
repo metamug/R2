@@ -22,7 +22,7 @@ public class SqlUtil {
     public static List<String> getSqlParamsFromResource(Resource res){
         List<String> sqlList = new ArrayList<>();
         
-        for (Request req : res.getRequestOrCreateOrRead()) {
+        for (Request req : res.getRequest()) {
             for (Sql sql : req.getSql()) {
                 sqlList.add(sql.getValue().trim());
             }

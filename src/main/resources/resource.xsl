@@ -58,6 +58,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            
                             <xsl:for-each select="Request">
                                 <tr>
                                     <td>Request</td>
@@ -84,102 +85,7 @@
                                     </td>
                                 </tr>
                             </xsl:for-each>
-                            <xsl:for-each select="Create">
-                                <tr class="table-success">
-                                    <td>Create</td>
-                                    <td>
-                                        <xsl:choose>
-                                            <xsl:when test='string-length(desc)>0'>
-                                                <xsl:value-of select="desc"/>
-                                            </xsl:when>
-                                            <xsl:otherwise>Not Given
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </td>
-                                    <td>POST</td>
-                                    <td>
-                                        <xsl:choose>
-                                            <xsl:when test='string-length(@out)>0'>
-                                                <xsl:value-of select="@out"/>
-                                            </xsl:when>
-                                            <xsl:otherwise>json
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </td>
-                                </tr>
-                            </xsl:for-each>
-                            <xsl:for-each select="Read">
-                                <tr class="table-info">
-                                    <td>Read</td>
-                                    <td>
-                                        <xsl:choose>
-                                            <xsl:when test='string-length(desc)>0'>
-                                                <xsl:value-of select="desc"/>
-                                            </xsl:when>
-                                            <xsl:otherwise>Not Given
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </td>
-                                    <td>GET</td>
-                                    <td>
-                                        <xsl:choose>
-                                            <xsl:when test='string-length(@out)>0'>
-                                                <xsl:value-of select="@out"/>
-                                            </xsl:when>
-                                            <xsl:otherwise>json
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </td>
-                                </tr>
-                            </xsl:for-each>
-                            <xsl:for-each select="Update">
-                                <tr class="table-warning">
-                                    <td>Update</td>
-                                    <td>
-                                        <xsl:choose>
-                                            <xsl:when test='string-length(desc)>0'>
-                                                <xsl:value-of select="desc"/>
-                                            </xsl:when>
-                                            <xsl:otherwise>Not Given
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </td>
-                                    <td>PUT</td>
-                                    <td>
-                                        <xsl:choose>
-                                            <xsl:when test='string-length(@out)>0'>
-                                                <xsl:value-of select="@out"/>
-                                            </xsl:when>
-                                            <xsl:otherwise>json
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </td>
-                                </tr>
-                            </xsl:for-each>
-                            <xsl:for-each select="Delete">
-                                <tr class="table-danger">
-                                    <td>Delete</td>
-                                    <td>
-                                        <xsl:choose>
-                                            <xsl:when test='string-length(desc)>0'>
-                                                <xsl:value-of select="desc"/>
-                                            </xsl:when>
-                                            <xsl:otherwise>Not Given
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </td>
-                                    <td>DELETE</td>
-                                    <td>
-                                        <xsl:choose>
-                                            <xsl:when test='string-length(@out)>0'>
-                                                <xsl:value-of select="@out"/>
-                                            </xsl:when>
-                                            <xsl:otherwise>json
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </td>
-                                </tr>
-                            </xsl:for-each>
+                            
                         </tbody>
                     </table>
                 </div>
