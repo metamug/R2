@@ -4,9 +4,9 @@
     <desc>Contains records for data type apple</desc>
 
     <Request method="GET" item="true" >
-        <param name="t" blank="true" min="1" exists="table.column" />
-        <param name="u" min="1" max="100" pattern="pat341./1@[]^" />
-        <param name="v" minLen="5" maxLen="50" />
+        <!--<param name="t" blank="true" min="1" exists="table.column" />-->
+        <!--<param name="u" min="1" max="100" pattern="[a-z]" />-->
+        <param name="v" minLen="3" maxLen="3" />
 
         <Sql className="com.mtg.Urls">
             select * from employee

@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -58,6 +59,8 @@ public class JAXBParser {
     XMLStreamWriter writer;
 
     public static void main(String[] args) throws TransformerConfigurationException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException {
+//        String str = "hellO";
+//        System.out.println(str.matches("[a-z+"));
         File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -122,10 +125,9 @@ public class JAXBParser {
                 } else {
                     writer.writeAttribute("test", enclose("empty mtgReq.id and mtgReq.method eq '" + req.getMethod() + "'"));
                 }
-//                for (Param param : req.getParam()) {
-//                    boolean valid = isValid(param, "hello");
-//                    System.out.println(valid);
-//                }
+                for (Param param : req.getParam()) {
+                    isValid(param, "hell");
+                }
                 if (!req.getSql().isEmpty()) {
                     for (Sql sql : req.getSql()) {
                         if (sql.getType().equalsIgnoreCase("query")) {
@@ -200,7 +202,7 @@ public class JAXBParser {
                     modifiedStr = line.replace(" le ", " <= ");
                 }
                 if (line.toLowerCase().contains(" ge ") || line.toLowerCase().contains(" ge")) {
-                    modifiedStr = modifiedStr.replace(" gte ", " >= ");
+                    modifiedStr = modifiedStr.replace(" ge ", " >= ");
                 }
                 if (line.toLowerCase().contains(" ne ")) {
                     modifiedStr = modifiedStr.replace(" ne ", " != ");
@@ -217,6 +219,12 @@ public class JAXBParser {
         } catch (JAXBException | FileNotFoundException | XMLStreamException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException | XPathExpressionException ex) {
+            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PatternSyntaxException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidInputException ex) {
+            System.out.println(ex.getMessage());
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resource;
@@ -254,51 +262,50 @@ public class JAXBParser {
         return builder.toString();
     }
 
-    public boolean isValid(Param param, String str) {
+    public void isValid(Param param, String str) throws PatternSyntaxException, InvalidInputException {
         if ("".equals(str)) {
             if (!param.isBlank()) {
-                return false;
+                throw new InvalidInputException(param.getName() + " doesn't take blank input");
             }
         }
         if (param.isNum()) {
             String regex = "[0-9]+";
             if (!str.matches(regex)) {
-                return false;
+                throw new InvalidInputException(param.getName() + " accepts only numeric input value");
             }
             if (null != param.getMax()) {
                 long val = Long.parseLong(str);
                 long maxVal = Long.parseLong(param.getMax());
                 if (val > maxVal) {
-                    return false;
+                    throw new InvalidInputException("Max value allowed for " + param.getName() + " is " + maxVal);
                 }
             }
             if (null != param.getMin()) {
                 long val = Long.parseLong(str);
                 long minVal = Long.parseLong(param.getMin());
                 if (val < minVal) {
-                    return false;
+                    throw new InvalidInputException("Min value allowed for " + param.getName() + " is " + minVal);
                 }
             }
         } else {
             if (null != param.getPattern()) {
                 if (!str.matches(param.getPattern())) {
-                    return false;
+                    throw new InvalidInputException("Input value doesn't match with specified pattern of " + param.getName() + " parameter");
                 }
             }
             if (null != param.getMaxLen()) {
                 int maxLength = Integer.parseInt(param.getMaxLen());
                 if (str.length() > maxLength) {
-                    return false;
+                    throw new InvalidInputException("Input value can be " + maxLength + " character long for " + param.getName() + " parameter");
                 }
             }
             if (null != param.getMinLen()) {
                 int minLength = Integer.parseInt(param.getMinLen());
                 if (str.length() < minLength) {
-                    return false;
+                    throw new InvalidInputException("Input value must be " + minLength + " character long for " + param.getName() + " parameter");
                 }
             }
         }
-        return true;
     }
 
 //     private String processParam(List<Param> paramVar) {
