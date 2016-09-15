@@ -3,14 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.metamug.jaxb.util;
+package com.metamug.jaxb;
 
 /**
  *
  * @author anish
  */
-public class InputValidationException extends Exception{
-    public InputValidationException(String message){
+public class InputValidationException extends Exception {
+
+    public InputValidationException(String message) {
         super(message);
     }
 }
