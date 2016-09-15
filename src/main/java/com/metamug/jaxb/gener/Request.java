@@ -12,15 +12,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-/**
- * <p>
- * Java class for request complex type.
- *
- * <p>
-*/
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "request", propOrder = {
@@ -29,31 +22,18 @@ import javax.xml.bind.annotation.XmlType;
     "execute",
     "sql"
 })
-@XmlSeeAlso({
-    Create.class,
-    Read.class,
-    Update.class,
-    Delete.class
-})
 public class Request {
-
-    protected String desc;
-    
+    protected String desc;    
     protected List<Param> param;
-    
     protected List<Execute> execute;
-    
-    @XmlElement(name = "Sql", required = true)
+    @XmlElement(name = "Sql")
     protected List<Sql> sql;
-    
     @XmlAttribute(name = "method")
     protected Method method;
-    
     @XmlAttribute(name = "item")
     protected Boolean item;
     
     public Request() {
-
     }
 
     public Request(Method method) {
