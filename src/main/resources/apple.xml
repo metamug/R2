@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Resource version="1.1" >
 
-	<desc>Contains records for data type apple</desc>
+	<Desc>Contains records for data type apple</Desc>
 
 	<Request method="GET" item="true" >
-		<param name="t" blank="true" min="1" exists="table.column" />
-        <param name="u" min="1" max="100" pattern="pat341./1@[]^" />
-        <param name="v" minLen="5" maxLen="50" />
+		<Param name="t" blank="true" min="1" exists="table.column" />
+                <Param name="u" min="1" max="100" pattern="pat341./1@[]^" />
+                <Param name="v" minLen="5" maxLen="50" />
                 
 		<Sql className="com.mtg.Urls">
 			select * from employee 
@@ -20,8 +20,8 @@
 	</Request>
 	       
 	<Request>
-		<desc>Request for creating an employee record.</desc>
-		<execute className="com.mtg.Apple" />
+		<Desc>Request for creating an employee record.</Desc>
+		<Execute className="com.mtg.Apple" />
 			
 		<Sql>
 		insert into employee 
@@ -32,7 +32,7 @@
 
 	<!--derived from request -->
 	<Request>
-		<execute className="com.mtg.Apple" />
+		<Execute className="com.mtg.Apple" />
 	</Request>
 	
 	<Request item="true">

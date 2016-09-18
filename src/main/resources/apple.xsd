@@ -28,7 +28,7 @@
 <xs:element name="Resource">
     <xs:complexType>
         <xs:sequence>           
-            <xs:element name="desc" type="desc" minOccurs="0" maxOccurs="1" />
+            <xs:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
             <xs:element name="Request" type="request" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>  
         <xs:attribute name="version" type="version" use="required" />
@@ -69,9 +69,9 @@
 
 <xs:complexType name="request">
     <xs:sequence>
-        <xs:element name="desc" type="desc" minOccurs="0" maxOccurs="1" />
-        <xs:element name="param" type="param" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
+        <xs:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
         <xs:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="method" type="method" default="GET" />
