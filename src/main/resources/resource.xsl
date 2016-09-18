@@ -29,8 +29,8 @@
                                 </th>
                                 <td>
                                     <xsl:choose>
-                                        <xsl:when test='string-length(desc)>0'>
-                                            <xsl:value-of select="desc"/>
+                                        <xsl:when test='string-length(Desc)>0'>
+                                            <xsl:value-of select="Desc"/>
                                         </xsl:when>
                                         <xsl:otherwise>Not Given
                                         </xsl:otherwise>
@@ -64,8 +64,8 @@
                                     <td>Request</td>
                                     <td>
                                         <xsl:choose>
-                                            <xsl:when test='string-length(desc)>0'>
-                                                <xsl:value-of select="desc"/>
+                                            <xsl:when test='string-length(Desc)>0'>
+                                                <xsl:value-of select="Desc"/>
                                             </xsl:when>
                                             <xsl:otherwise>Not Given
                                             </xsl:otherwise>
@@ -76,8 +76,8 @@
                                     </td>
                                     <td>
                                         <xsl:choose>
-                                            <xsl:when test='string-length(@out)>0'>
-                                                <xsl:value-of select="@out"/>
+                                            <xsl:when test='string-length(@Out)>0'>
+                                                <xsl:value-of select="@Out"/>
                                             </xsl:when>
                                             <xsl:otherwise>json
                                             </xsl:otherwise>
