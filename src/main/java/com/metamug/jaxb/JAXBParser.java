@@ -123,7 +123,7 @@ public class JAXBParser {
                     System.out.println("----------------------SQL-----------------------");
                     for (Sql sql : req.getSql()) {
                         System.out.println("    sqltype: " + sql.getType());
-                        System.out.println("on: " + sql.getWhen());
+                        System.out.println("when: " + sql.getWhen());
                         System.out.println("className: " + sql.getClassName());
                         System.out.println(sql.getValue().trim());
                         System.out.println("--------------------------------------------");
