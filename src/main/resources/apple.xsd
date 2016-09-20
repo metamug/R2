@@ -19,6 +19,13 @@
         </xs:restriction>   
     </xs:simpleType>
 
+    <xs:simpleType name="status">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="100"/>
+            <xs:maxInclusive value="599"/>
+        </xs:restriction>
+    </xs:simpleType>    
+
     <xs:simpleType name="exists">
         <xs:restriction base="xs:string">
             <xs:minLength value="3" />
@@ -53,7 +60,7 @@
     <xs:complexType name="sql" >
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="type" type="sqlType" default="query" />
+                <xs:attribute name="type" type="sqlType" use="required" />
                 <xs:attribute name="when" type="xs:string" />
                 <xs:attribute name="className" type="className" />
             </xs:extension> 
@@ -73,6 +80,7 @@
         <xs:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded" />
         <xs:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
         <xs:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Status" type="status" minOccurs="0" maxOccurs="1" />
     </xs:sequence>
     <xs:attribute name="method" type="method" default="GET" />
     <xs:attribute name="item" type="xs:boolean" default="false" />

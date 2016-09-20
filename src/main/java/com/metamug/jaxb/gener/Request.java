@@ -20,14 +20,20 @@ import javax.xml.bind.annotation.XmlType;
     "desc",
     "param",
     "execute",
-    "sql"
+    "sql",
+    "status"
 })
 public class Request {
-    protected String desc;    
+    @XmlElement(name = "Desc")
+    protected String desc; 
+    @XmlElement(name = "Param")
     protected List<Param> param;
+    @XmlElement(name = "Execute")
     protected List<Execute> execute;
     @XmlElement(name = "Sql")
     protected List<Sql> sql;
+    @XmlElement(name = "Status")
+    protected Integer status;
     @XmlAttribute(name = "method")
     protected Method method;
     @XmlAttribute(name = "item")
@@ -67,6 +73,30 @@ public class Request {
             sql = new ArrayList<Sql>();
         }
         return this.sql;
+    }
+    
+    /**
+     * Gets the value of the status property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets the value of the status property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setStatus(Integer value) {
+        this.status = value;
     }
 
     /**

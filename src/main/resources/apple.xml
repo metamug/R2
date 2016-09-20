@@ -8,7 +8,7 @@
                 <Param name="u" min="1" max="100" pattern="pat341./1@[]^" />
                 <Param name="v" minLen="5" maxLen="50" />
                 
-		<Sql className="com.mtg.Urls">
+		<Sql type="query" className="com.mtg.Urls">
 			select * from employee 
 			where employee_name = @param1 
 			and employee_id = @id
@@ -23,11 +23,13 @@
 		<Desc>Request for creating an employee record.</Desc>
 		<Execute className="com.mtg.Apple" />
 			
-		<Sql>
+		<Sql type="update">
 		insert into employee 
 		(employee_name, employee_id) 
 		values(@name, @id)
 		</Sql>
+	
+		<Status>201</Status>
 	</Request>
 
 	<!--derived from request -->
@@ -36,7 +38,7 @@
 	</Request>
 	
 	<Request item="true">
-		<Sql when="item lt 1">select * from employee where employee_id=12
+		<Sql type="query" when="item lt 1">select * from employee where employee_id=12
 		</Sql>
 	</Request>
 

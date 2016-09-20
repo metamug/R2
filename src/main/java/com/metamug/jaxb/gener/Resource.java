@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "Resource")
 public class Resource {
 
+    @XmlElement(name = "Desc")
     protected String desc;
     @XmlElement(name = "Request", required = true)
     protected List<Request> request;

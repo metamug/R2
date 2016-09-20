@@ -131,6 +131,11 @@ public class JAXBParser {
                 }else{
                     System.out.println("------------------Sql List empty..-------------------");
                 }
+                if(req.getStatus()!=null){
+                    System.out.println("Status Code: " + Integer.toString(req.getStatus()));
+                }else{
+                    System.out.println("Status Code: " + "not specified");
+                }
             }
         } catch (JAXBException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
