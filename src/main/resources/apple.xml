@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Resource version="1.0">
 
-    <desc>Contains records for data type apple</desc>
+    <Desc>Contains records for data type apple</Desc>
 
     <Request method="GET" item="true" >
-        <param name="t" blank="true" min="1" exists="table.column" />
-        <param name="u" min="1" max="100" pattern="[a-z]+" />
-        <param name="v" minLen="2" maxLen="50" />
+        <Param name="t" blank="true" min="1" exists="table.column" />
+        <Param name="u" min="1" max="100" pattern="[a-z]+" />
+        <Param name="v" minLen="2" maxLen="50" />
 
-        <Sql className="com.mtg.Urls">
+        <Sql type="query" className="com.mtg.Urls">
             select * from employee
             where employee_name = @param1
             and employee_id = @id
@@ -17,21 +17,36 @@
         <Sql type="update">
             update employee set employee_name = @param1 where employee_id=@id
         </Sql>
+        <Status>200</Status>
+        <!--<Status>201</Status>-->
     </Request>
-    <Request>
-        <desc>Request for creating an employee record.</desc>
-        <execute className="com.mtg.Apple" />
 
-        <Sql>
+    <Request>
+        <Desc>Request for creating an employee record.</Desc>
+        <Execute className="com.mtg.Apple" />
+
+        <Sql type="update">
             insert into employee
             (employee_name, employee_id)
             values(@name, @id)
+        </Sql>
+
+        <Status>201</Status>
+    </Request>
+
+    <!--derived from request -->
+    <Request>
+        <Execute className="com.mtg.Apple" />
+    </Request>
+
+    <Request item="true">
+        <Sql type="query" when="item lt 1">select * from employee where employee_id=12
         </Sql>
     </Request>
 
     <!--derived from request -->
     <Request>
-        <execute className="com.mtg.Apple" />
+        <Execute className="com.mtg.Apple" />
     </Request>
 
     <Request item="true">
@@ -40,8 +55,8 @@
     </Request>
 
     <Create>
-        <desc>Request for creating an employee record.</desc>
-        <execute className="com.mtg.Apple" />
+        <Desc>Request for creating an employee record.</Desc>
+        <Execute className="com.mtg.Apple" />
 
         <Sql>
             insert into employee
@@ -61,8 +76,8 @@
     </Request>
 
     <Create>
-        <desc>Request for creating an employee record.</desc>
-        <execute className="com.mtg.Apple" />
+        <Desc>Request for creating an employee record.</Desc>
+        <Execute className="com.mtg.Apple" />
 
         <Sql>
             insert into employee
@@ -73,7 +88,7 @@
 
     <!--derived from request -->
     <Read>
-        <execute className="com.mtg.Apple" />
+        <Execute className="com.mtg.Apple" />
     </Read>
 
     <Read item="true">
@@ -82,8 +97,8 @@
     </Read>
 
     <Create>
-        <desc>Request for creating an employee record.</desc>
-        <execute className="com.mtg.Apple" />
+        <Desc>Request for creating an employee record.</Desc>
+        <Execute className="com.mtg.Apple" />
 
         <Sql>
             insert into employee
@@ -93,8 +108,8 @@
     </Create>
 
     <Create>
-        <desc>Request for creating an employee record.</desc>
-        <execute className="com.mtg.Apple" />
+        <Desc>Request for creating an employee record.</Desc>
+        <Execute className="com.mtg.Apple" />
         <Sql>
             insert into employee
             (employee_name, employee_id)
@@ -104,7 +119,7 @@
 
     <!--derived from request -->
     <Read>
-        <execute className="com.mtg.Apple" />
+        <Execute className="com.mtg.Apple" />
     </Read>
 
     <Read item="true">

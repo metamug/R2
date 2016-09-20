@@ -194,7 +194,7 @@ public class JAXBParser {
                 }
                 if (!req.getSql().isEmpty()) {
                     for (Sql sql : req.getSql()) {
-                        if (sql.getType().value().equalsIgnoreCase("update")) {
+                        if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("update")) {
                             writer.writeStartElement("sql:update");
                         } else {
                             writer.writeStartElement("sql:query");
@@ -213,13 +213,13 @@ public class JAXBParser {
                         }
                         writer.writeEndElement();
 
-                        if (sql.getClassName() == null && sql.getType().value().equalsIgnoreCase("query")) {
+                        if (sql.getClassName() == null && sql.getType() != null && sql.getType().value().equalsIgnoreCase("query")) {
                             writer.writeStartElement("mtg:out");
                             writer.writeAttribute("value", enclose("result"));
                             writer.writeAttribute("type", enclose("header.accept"));
                             writer.writeAttribute("tableName", FilenameUtils.removeExtension(xmlFile.getName()));
                             writer.writeEndElement();
-                        } else if (sql.getClassName() != null && sql.getType().value().equalsIgnoreCase("query")) {
+                        } else if (sql.getClassName() != null && sql.getType() != null && sql.getType().value().equalsIgnoreCase("query")) {
                             writer.writeStartElement("code:execute");
                             writer.writeAttribute("className", sql.getClassName());
                             writer.writeAttribute("param", enclose("result"));
@@ -235,6 +235,23 @@ public class JAXBParser {
                         writer.writeEndElement();
                     }
                 }
+                writer.writeCharacters(System.lineSeparator());
+                if (req.getStatus() != null) {
+                    writeEscapedCharacters("<%\n response.setStatus(" + req.getStatus() + ");\n%>");
+                } else {
+                    // Not covered GET request since 200 Status is set by default upon successful attempt
+                    switch (req.getMethod().value().toLowerCase()) {
+                        case "post":
+                            writeEscapedCharacters("<%\n response.setStatus(201);\n%>");
+                            break;
+                        case "put":
+                            writeEscapedCharacters("<%\n response.setStatus(202);\n%>");
+                            break;
+                        case "delete":
+                            writeEscapedCharacters("<%\n response.setStatus(410);\n%>");
+                    }
+                }
+                writer.writeCharacters(System.lineSeparator());
                 writer.writeEndElement();//end c:when for resource
                 writer.writeCharacters(System.lineSeparator());
             }

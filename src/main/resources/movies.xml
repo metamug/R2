@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Resource version="1.1">
-    <desc>Contains information about movies.</desc>
+    <Desc>Contains information about movies.</Desc>
     <Request method="GET">
-        <Sql>
+        <Sql type="query">
             SELECT * FROM movie where rating le 3
         </Sql>
     </Request>
@@ -15,15 +15,18 @@
         <Sql type="update">
             INSERT INTO movie (name, rating) VALUES (@p, @q)
         </Sql>
+        <Status>201</Status>
     </Request>
     <Request method="PUT" item="true">
         <Sql type="update">
             UPDATE movie SET rating=@rating WHERE id=@id
         </Sql>
+        <Status>202</Status>
     </Request>
     <Request method="DELETE" item="true">
         <Sql type="update">
             DELETE FROM movie WHERE id=@id
         </Sql>
+        <Status>410</Status>
     </Request>
 </Resource>

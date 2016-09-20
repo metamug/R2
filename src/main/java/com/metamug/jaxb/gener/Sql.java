@@ -20,7 +20,7 @@ public class Sql {
 
     @XmlValue
     protected String value;
-    @XmlAttribute(name = "type")
+    @XmlAttribute(name = "type", required = true)
     protected SqlType type;
     @XmlAttribute(name = "when")
     protected String when;
@@ -57,11 +57,7 @@ public class Sql {
      *
      */
     public SqlType getType() {
-        if (type == null) {
-            return SqlType.QUERY;
-        } else {
-            return type;
-        }
+        return type;
     }
 
     /**

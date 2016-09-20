@@ -28,7 +28,7 @@
     <xs:element name="Resource">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="desc" type="desc" minOccurs="0" maxOccurs="1" />
+                <xs:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
                 <xs:choice maxOccurs="unbounded">
                     <xs:element name="Request" type="request" />
                     <xs:element name="Create" type="create" />
@@ -72,13 +72,21 @@
             <xs:enumeration value="update"/>
         </xs:restriction>
     </xs:simpleType>
+    
+    <xs:complexType name="status">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 
     <xs:complexType name="request">
         <xs:sequence>
-            <xs:element name="desc" type="desc" minOccurs="0" maxOccurs="1" />
-            <xs:element name="param" type="param" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
+            <xs:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Status" type="status" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
         <xs:attribute name="method" type="method" default="GET" />
         <xs:attribute name="item" type="xs:boolean" default="false" />
