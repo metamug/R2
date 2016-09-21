@@ -194,6 +194,10 @@ public class JAXBParser {
                 }
                 if (!req.getSql().isEmpty()) {
                     for (Sql sql : req.getSql()) {
+                        if (sql.getWhen() != null) {
+                            writer.writeStartElement("c:if");
+                            writer.writeAttribute("test", enclose(sql.getWhen().replace("@", "mtgReq.params.")));
+                        }
                         if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("update")) {
                             writer.writeStartElement("sql:update");
                         } else {
@@ -201,18 +205,9 @@ public class JAXBParser {
                         }
                         writer.writeAttribute("var", "result");
                         writer.writeAttribute("dataSource", "jdbc/mtgMySQL");
-                        if (sql.getWhen() != null) {
-                            writer.writeStartElement("c:if");
-                            writer.writeAttribute("test", enclose(sql.getWhen().replace("@", "mtgReq.params.")));
-                            String processSQL = processSQL(sql.getValue());
-                            writeEscapedCharacters(processSQL);
-                            writer.writeEndElement(); //End of <c:if>
-                        } else {
-                            String processSQL = processSQL(sql.getValue());
-                            writeEscapedCharacters(processSQL);
-                        }
+                        String processSQL = processSQL(sql.getValue());
+                        writeEscapedCharacters(processSQL);
                         writer.writeEndElement();
-
                         if (sql.getClassName() == null && sql.getType() != null && sql.getType().value().equalsIgnoreCase("query")) {
                             writer.writeStartElement("mtg:out");
                             writer.writeAttribute("value", enclose("result"));
@@ -224,6 +219,9 @@ public class JAXBParser {
                             writer.writeAttribute("className", sql.getClassName());
                             writer.writeAttribute("param", enclose("result"));
                             writer.writeEndElement();
+                        }
+                        if (sql.getWhen() != null) {
+                            writer.writeEndElement(); //End of <c:if>
                         }
                     }
                 }

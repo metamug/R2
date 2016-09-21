@@ -2,13 +2,11 @@
 <Resource version="1.1">
     <Desc>Contains information about movies.</Desc>
     <Request method="GET">
-        <Sql type="query">
-            SELECT * FROM movie where rating le 3
+        <Sql type="query" when="@movieId eq null">
+            SELECT * FROM movie
         </Sql>
-    </Request>
-    <Request method="GET" item="true">
-        <Sql>
-            SELECT * FROM movie where id=@id
+        <Sql type="query" when="@movieId gt 0">
+            SELECT * FROM movie where id=@movieId
         </Sql>
     </Request>
     <Request method="POST">
