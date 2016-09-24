@@ -38,7 +38,7 @@ public class JAXBParser {
 
     public static void main(String[] args) throws SAXException {
         File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
-        File xsd = new File(JAXBParser.class.getResource("/apple.xsd").getFile());
+        File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
         Source xmlFile = new StreamSource(xml);
         SchemaFactory schemaFactory = SchemaFactory
                 .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);

@@ -1,60 +1,104 @@
-<html>
-<head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-<title></title>
-</head>
-<body>
-<div class="container" style="padding-top:25px">
-<table class="table table-striped">
-<tbody>
-<tr>
-<th scope="row" style="width:200px">
-                                    Resource Name
-                                </th><td></td>
-</tr>
-<tr>
-<th scope="row" style="width:200px">
-                                    Resource Description
-                                </th><td>Contains records for data type apple</td>
-</tr>
-<tr>
-<th scope="row" style="width:200px">
-                                    API Version:
-                                </th><td>1.1</td>
-</tr>
-</tbody>
-</table>
-<table class="table table-striped">
-<thead class="thead-inverse">
-<tr>
-<th>Type</th><th>Description</th><th>Method</th><th>Output</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Request</td><td>Not Given
-                                            </td><td>GET</td><td>json
-                                            </td>
-</tr>
-<tr>
-<td>Request</td><td>Request for creating an employee record.</td><td></td><td>json
-                                            </td>
-</tr>
-<tr>
-<td>Request</td><td>Not Given
-                                            </td><td></td><td>json
-                                            </td>
-</tr>
-<tr>
-<td>Request</td><td>Not Given
-                                            </td><td></td><td>json
-                                            </td>
-</tr>
-</tbody>
-</table>
-</div>
-</body>
+<html xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fn="http://www.w3.org/2005/xpath-functions">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+      <title></title>
+   </head>
+   <body>
+      <div class="container" style="padding-top:25px">
+         <table class="table table-striped">
+            <tbody>
+               <tr>
+                  <th scope="row" style="width:200px">
+                     Resource Name
+                     
+                  </th>
+                  <td id="resName"></td>
+               </tr>
+               <tr>
+                  <th scope="row" style="width:200px">
+                     Resource Description
+                     
+                  </th>
+                  <td>Contains records for data type apple</td>
+               </tr>
+               <tr>
+                  <th scope="row" style="width:200px">
+                     API Version:
+                     
+                  </th>
+                  <td>1.1</td>
+               </tr>
+            </tbody>
+         </table>
+         <table class="table table-striped">
+            <thead class="thead-inverse">
+               <tr>
+                  <th>Type</th>
+                  <th>Parameter</th>
+                  <th>Method</th>
+                  <th>Condition</th>
+                  <th>Output</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td>
+                     Query
+                     
+                  </td>
+                  <td>@param1<br>@id<br></td>
+                  <td>GET</td>
+                  <td></td>
+                  <td>json
+                     
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     Update
+                     
+                  </td>
+                  <td>@param1<br>@id<br></td>
+                  <td>GET</td>
+                  <td></td>
+                  <td>json
+                     
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     Update
+                     
+                  </td>
+                  <td>@name<br>@id<br></td>
+                  <td></td>
+                  <td></td>
+                  <td>json
+                     
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     Query
+                     
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>item lt 1</td>
+                  <td>json
+                     
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+      </div><script>
+                    var url = window.location.href;
+                    var resName = url.substr(url.lastIndexOf('/')+1);
+                    var resNameDiv = document.getElementById('resName');
+                    resName = resName.slice(0,-5);
+                    resNameDiv.innerHTML = resName;
+                </script></body>
 </html>

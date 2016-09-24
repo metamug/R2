@@ -27,6 +27,8 @@ public class XslTransformer {
 
     public static void transform(File xmlFile, File xslFile, File htmlFile)
             throws TransformerConfigurationException, TransformerException {
+        System.setProperty("javax.xml.transform.TransformerFactory",
+                           "net.sf.saxon.TransformerFactoryImpl");
         TransformerFactory factory = TransformerFactory.newInstance();
         StreamSource xslStream = new StreamSource(xslFile);
         Transformer transformer = factory.newTransformer(xslStream);
