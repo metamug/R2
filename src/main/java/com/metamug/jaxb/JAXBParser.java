@@ -78,64 +78,54 @@ public class JAXBParser {
             resource = (Resource) jaxbUnmarshaller.unmarshal(
                     JAXBParser.class.getResourceAsStream("/apple.xml"));
 
-            System.out.println("    version: " + resource.getVersion());
-            System.out.println("    desc: " + resource.getDesc());
+            System.out.println("    Version: " + resource.getVersion());
+            System.out.println("    Desc: " + resource.getDesc());
 
             for (Request req : resource.getRequest()) {
-                System.out.println("\n--------------------------------------------------------------");
                 System.out.println("\n-----   ----   ------R E Q U E S T------   ----   -----");
-                System.out.println("\n--------------------------------------------------------------");
                     
-                System.out.print("    method: " + req.getMethod().value());
-                System.out.println("    isItem: " + Boolean.toString(req.isItem()));
-                System.out.println("    desc: " + req.getDesc());
-
-                if(!req.getParam().isEmpty()){
-                    System.out.println("----------------------PARAMS-----------------------");
-                    for(Param param : req.getParam()){
-                        System.out.println("   paramName: " + param.getName());
-                        System.out.println("   isRequired? : " + Boolean.toString(param.isRequired()));
-                        System.out.println("   isBlank? : " + Boolean.toString(param.isBlank()));
-                        System.out.println("   isNum? : " + Boolean.toString(param.isNum()));
-                        System.out.println("   min: " + param.getMin());
-                        System.out.println("   max: " + param.getMax());
-                        System.out.println("   minLength: " + param.getMinLen());
-                        System.out.println("   maxLength: " + param.getMaxLen());
-                        System.out.println("   pattern: " + param.getPattern());
-                        System.out.println("   exists: " + param.getExists());
-                        System.out.println("--------------------------------------------");
+                System.out.print("    Method: " + req.getMethod().value());
+                System.out.println("    Item: " + Boolean.toString(req.isItem()));
+               
+                if(!req.getDescOrParamOrExecute().isEmpty()){
+                    for(Object child : req.getDescOrParamOrExecute()){
+                        if(child instanceof String){
+                            System.out.println("    Desc: " + (String)child);
+                        }
+                        else if(child instanceof Param){
+                            Param param = (Param)child;
+                            System.out.println("---PARAM:---");
+                            System.out.println("   paramName: " + param.getName());
+                            System.out.println("   isRequired? : " + Boolean.toString(param.isRequired()));
+                            System.out.println("   isBlank? : " + Boolean.toString(param.isBlank()));
+                            System.out.println("   isNum? : " + Boolean.toString(param.isNum()));
+                            System.out.println("   min: " + param.getMin());
+                            System.out.println("   max: " + param.getMax());
+                            System.out.println("   minLength: " + param.getMinLen());
+                            System.out.println("   maxLength: " + param.getMaxLen());
+                            System.out.println("   pattern: " + param.getPattern());
+                            System.out.println("   exists: " + param.getExists());
+                            System.out.println("---^^^^^^---");
+                        }
+                        else if(child instanceof Execute){
+                            System.out.println("---EXECUTE---");
+                            System.out.println("   ClassName: " + ((Execute) child).getClassName());
+                            System.out.println("---^^^^^^^---");
+                        }
+                        else if(child instanceof Sql){
+                            Sql sql = (Sql)child;
+                            System.out.println("---SQL---");
+                            System.out.println("    sqltype: " + sql.getType());
+                            System.out.println("When: " + sql.getWhen());
+                            System.out.println("ClassName: " + sql.getClassName());
+                            System.out.println(sql.getValue().trim());
+                            System.out.println("---^^^---");
+                        }
                     }
                 }else{
-                    System.out.println("------------------Param List empty..------------------");
+                    System.out.println("No Child Elements!");
                 }
-                
-                if(!req.getExecute().isEmpty()){
-                    System.out.println("----------------------EXECUTE-----------------------");
-                    for(Execute execute : req.getExecute()){
-                        System.out.println("   className: " + execute.getClassName());
-                        System.out.println("--------------------------------------------");
-                    }
-                }else{
-                    System.out.println("------------------Execute List empty..------------------");
-                }
-                
-                if(!req.getSql().isEmpty()){
-                    System.out.println("----------------------SQL-----------------------");
-                    for (Sql sql : req.getSql()) {
-                        System.out.println("    sqltype: " + sql.getType());
-                        System.out.println("when: " + sql.getWhen());
-                        System.out.println("className: " + sql.getClassName());
-                        System.out.println(sql.getValue().trim());
-                        System.out.println("--------------------------------------------");
-                    }
-                }else{
-                    System.out.println("------------------Sql List empty..-------------------");
-                }
-                if(req.getStatus()!=null){
-                    System.out.println("Status Code: " + Integer.toString(req.getStatus()));
-                }else{
-                    System.out.println("Status Code: " + "not specified");
-                }
+                System.out.println("\n-----   ----   -- ///////////////////// --   ----   -----");             
             }
         } catch (JAXBException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);

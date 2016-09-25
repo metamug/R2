@@ -12,29 +12,23 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "request", propOrder = {
-    "desc",
-    "param",
-    "execute",
-    "sql",
-    "status"
+@XmlType(name = "request",  propOrder = {
+    "descOrParamOrExecute"
 })
 public class Request {
-    @XmlElement(name = "Desc")
-    protected String desc; 
-    @XmlElement(name = "Param")
-    protected List<Param> param;
-    @XmlElement(name = "Execute")
-    protected List<Execute> execute;
-    @XmlElement(name = "Sql")
-    protected List<Sql> sql;
-    @XmlElement(name = "Status")
-    protected Integer status;
-    @XmlAttribute(name = "method")
+    @XmlElements({
+        @XmlElement(name = "Desc", type = String.class),
+        @XmlElement(name = "Param", type = Param.class),
+        @XmlElement(name = "Execute", type = Execute.class),
+        @XmlElement(name = "Sql", type = Sql.class)
+    })
+    protected List<Object> descOrParamOrExecute;
+    @XmlAttribute(name = "method", required = true)
     protected Method method;
     @XmlAttribute(name = "item")
     protected Boolean item;
@@ -46,78 +40,32 @@ public class Request {
         this.method = method;
     }
     
-    public List<Param> getParam() {
-        if (param == null) {
-            param = new ArrayList<Param>();
+    public List<Object> getDescOrParamOrExecute() {
+        if (descOrParamOrExecute == null) {
+            descOrParamOrExecute = new ArrayList<Object>();
         }
-        return this.param;
-    }
-    
-    public List<Execute> getExecute() {
-        if (execute == null) {
-            execute = new ArrayList<Execute>();
-        }
-        return this.execute;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String value) {
-        this.desc = value;
-    }
- 
-    public List<Sql> getSql() {
-        if (sql == null) {
-            sql = new ArrayList<Sql>();
-        }
-        return this.sql;
+        return this.descOrParamOrExecute;
     }
     
     /**
-     * Gets the value of the status property.
+     * Gets the value of the method property.
      * 
      * @return
      *     possible object is
-     *     {@link Integer }
+     *     {@link Method }
      *     
-     */
-    public Integer getStatus() {
-        return status;
-    }
-
-    /**
-     * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer }
-     *     
-     */
-    public void setStatus(Integer value) {
-        this.status = value;
-    }
-
-    /**
-     * Gets the value of the method property.
-     *
-     * @return possible object is {@link Method }
-     *
      */
     public Method getMethod() {
-        if (method == null) {
-            return Method.GET;
-        } else {
-            return method;
-        }
+        return method;
     }
 
     /**
      * Sets the value of the method property.
-     *
-     * @param value allowed object is {@link Method }
-     *
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Method }
+     *     
      */
     public void setMethod(Method value) {
         this.method = value;

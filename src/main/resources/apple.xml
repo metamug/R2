@@ -19,25 +19,24 @@
         </Sql>
 	</Request>
 	       
-	<Request>
+	<Request method="POST">
 		<Desc>Request for creating an employee record.</Desc>
-		<Execute className="com.mtg.Apple" />
-			
 		<Sql type="update">
 		insert into employee 
 		(employee_name, employee_id) 
 		values(@name, @id)
 		</Sql>
-	
-		<Status>201</Status>
+
+		<Execute className="com.mtg.Apple" />
+		
 	</Request>
 
 	<!--derived from request -->
-	<Request>
+	<Request method="GET" >
 		<Execute className="com.mtg.Apple" />
 	</Request>
 	
-	<Request item="true">
+	<Request method="GET" item="true">
 		<Sql type="query" when="item lt 1">select * from employee where employee_id=12
 		</Sql>
 	</Request>
