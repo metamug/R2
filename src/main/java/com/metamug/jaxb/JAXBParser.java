@@ -80,14 +80,57 @@ public class JAXBParser {
 
             System.out.println("    Version: " + resource.getVersion());
             System.out.println("    Desc: " + resource.getDesc());
-
+            
             for (Request req : resource.getRequest()) {
                 System.out.println("\n-----   ----   ------R E Q U E S T------   ----   -----");
                     
                 System.out.print("    Method: " + req.getMethod().value());
                 System.out.println("    Item: " + Boolean.toString(req.isItem()));
-               
-                if(!req.getDescOrParamOrExecute().isEmpty()){
+                System.out.println("    Desc: " + req.getDesc());
+                if(null!=req.getStatus()){    
+                    System.out.println("    Status: " + Integer.toString(req.getStatus()));
+                }else{
+                    System.out.println("    Status: not specified");
+                }
+                    
+                if(!req.getParam().isEmpty()){
+                    System.out.println("---PARAMS:---");
+                    for(Param param : req.getParam()){
+                        System.out.println("   paramName: " + param.getName());
+                        System.out.println("   isRequired? : " + Boolean.toString(param.isRequired()));
+                        System.out.println("   isBlank? : " + Boolean.toString(param.isBlank()));
+                        System.out.println("   isNum? : " + Boolean.toString(param.isNum()));
+                        System.out.println("   min: " + param.getMin());
+                        System.out.println("   max: " + param.getMax());
+                        System.out.println("   minLength: " + param.getMinLen());
+                        System.out.println("   maxLength: " + param.getMaxLen());
+                        System.out.println("   pattern: " + param.getPattern());
+                        System.out.println("   exists: " + param.getExists());
+                    }
+                    System.out.println("---^^^^^^^---");
+                }else{
+                    System.out.println("///Param List Empty///");
+                }
+                if(!req.getExecute().isEmpty()){
+                    System.out.println("---EXECUTE---");
+                    for(Execute ex : req.getExecute()){
+                        System.out.println("   ClassName: " + ex.getClassName());
+                    }
+                    System.out.println("---^^^^^^^---");
+                }else{
+                    System.out.println("///Execute List Empty///");
+                }
+                if(!req.getSql().isEmpty()){
+                    System.out.println("---SQL---");
+                    for(Sql sql : req.getSql()){
+                        System.out.println("    sqltype: " + sql.getType());
+                        System.out.println("When: " + sql.getWhen());
+                        System.out.println("ClassName: " + sql.getClassName());
+                        System.out.println(sql.getValue().trim());
+                    }
+                    System.out.println("---^^^---");
+                }
+                /*if(!req.getDescOrParamOrExecute().isEmpty()){
                     for(Object child : req.getDescOrParamOrExecute()){
                         if(child instanceof String){
                             System.out.println("    Desc: " + (String)child);
@@ -124,7 +167,7 @@ public class JAXBParser {
                     }
                 }else{
                     System.out.println("No Child Elements!");
-                }
+                }*/
                 System.out.println("\n-----   ----   -- ///////////////////// --   ----   -----");             
             }
         } catch (JAXBException ex) {

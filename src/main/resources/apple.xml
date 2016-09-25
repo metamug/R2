@@ -3,7 +3,7 @@
 
 	<Desc>Contains records for data type apple</Desc>
 
-	<Request method="GET" item="true" >
+	<Request method="GET" item="true" status="200">
 		<Param name="t" blank="true" min="1" exists="table.column" />
                 <Param name="u" min="1" max="100" pattern="pat341./1@[]^" />
                 <Param name="v" minLen="5" maxLen="50" />
@@ -19,7 +19,7 @@
         </Sql>
 	</Request>
 	       
-	<Request method="POST">
+	<Request method="POST" status="201">
 		<Desc>Request for creating an employee record.</Desc>
 		<Sql type="update">
 		insert into employee 

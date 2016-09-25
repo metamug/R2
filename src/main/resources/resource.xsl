@@ -57,7 +57,7 @@
                         <thead class="thead-inverse">
                             <tr>
                                 <th>Type</th>
-                                <!--<th>Description</th>-->
+                                <th>Description</th>
                                 <th>Parameter</th>
                                 <th>Method</th>
                                 <th>Condition</th>
@@ -80,12 +80,15 @@
                                                 </xsl:otherwise>
                                             </xsl:choose>
                                         </td>
+                                        <!--TD for description-->
+                                        <td>
+                                            <xsl:value-of select="../Desc"/>
+                                        </td>
                                         <!--TD for parameter list-->
                                         <td>
-                                            <xsl:analyze-string select="." regex="(@\w+)">
+                                            <xsl:analyze-string select="." regex="@(\w+)">
                                                 <xsl:matching-substring>
-                                                    <xsl:value-of select="regex-group(1)"/>
-                                                    <br></br>
+                                                    <xsl:value-of select="concat(regex-group(1),', ')"/>
                                                 </xsl:matching-substring>
                                                 <xsl:non-matching-substring>
                                                 </xsl:non-matching-substring>
@@ -95,8 +98,9 @@
                                         <td>
                                             <xsl:value-of select="../@method"/>
                                         </td>
+                                        <!--TD for condition-->
                                         <td>
-                                            <xsl:value-of select="@when"/>
+                                            <xsl:value-of select="replace(@when,'@','')"/>
                                         </td>
                                         <!--TD for output format-->
                                         <td>
@@ -120,7 +124,7 @@
                     var resNameDiv = document.getElementById('resName');
                     resName = resName.slice(0,-5);
                     resNameDiv.innerHTML = resName;
-                </script>    
+                </script>
             </body>
         </html>
     </xsl:template>
