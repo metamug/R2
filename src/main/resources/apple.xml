@@ -14,9 +14,9 @@
 			and employee_id = @id
 		</Sql>
              
-        <Sql type="update">
-            update employee set employee_name = @param1 where employee_id=@id
-        </Sql>
+                <Sql type="update">
+                    update employee set employee_name = @param2 where employee_id=@id
+                </Sql>
 	</Request>
 	       
 	<Request method="POST" status="201">
