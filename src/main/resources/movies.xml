@@ -2,10 +2,10 @@
 <Resource version="1.1">
     <Desc>Contains information about movies.</Desc>
     <Request method="GET">
-        <Desc>Get all the tasks entered today.</Desc>
         <Sql type="query" when="@movieId eq null">
             SELECT * FROM movie
         </Sql>
+        <Desc>Get all the tasks entered today.</Desc>
         <Sql type="query" when="@movieId gt 0">
             SELECT * FROM movie where id=@movieId
         </Sql>

@@ -69,24 +69,16 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!--    <xs:complexType name="status">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>-->
-
     <xs:complexType name="request">
-        <xs:sequence>
+        <xs:choice maxOccurs="unbounded">
             <xs:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
             <xs:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded" />
-            <!--<xs:element name="Status" type="status" minOccurs="0" maxOccurs="1" />-->
-        </xs:sequence>
-        <xs:attribute name="method" type="method" default="GET" />
+        </xs:choice>
+        <xs:attribute name="method" type="method" use="required" />
+        <xs:attribute name="status" type="xs:int"/>
         <xs:attribute name="item" type="xs:boolean" default="false" />
-        <xs:attribute name="status" type="xs:int" default="200" />
     </xs:complexType>
 
     <xs:complexType name="param">

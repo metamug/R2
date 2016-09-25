@@ -17,114 +17,128 @@
         <Sql type="update">
             update employee set employee_name = @param1 where employee_id=@id
         </Sql>
-        <Status>200</Status>
-        <!--<Status>201</Status>-->
     </Request>
 
-    <Request>
+    <Request method="POST">
         <Desc>Request for creating an employee record.</Desc>
-        <Execute className="com.mtg.Apple" />
-
         <Sql type="update">
             insert into employee
             (employee_name, employee_id)
             values(@name, @id)
         </Sql>
-
-        <Status>201</Status>
-    </Request>
-
-    <!--derived from request -->
-    <Request>
         <Execute className="com.mtg.Apple" />
     </Request>
 
-    <Request item="true">
+    <!--derived from request -->
+    <Request method="GET" >
+        <Execute className="com.mtg.Apple" />
+    </Request>
+
+    <Request method="GET" item="true">
         <Sql type="query" when="item lt 1">select * from employee where employee_id=12
         </Sql>
     </Request>
 
-    <!--derived from request -->
-    <Request>
-        <Execute className="com.mtg.Apple" />
-    </Request>
+    <Sql type="update">
+        insert into employee
+        (employee_name, employee_id)
+        values(@name, @id)
+    </Sql>
 
-    <Request item="true">
-        <Sql when="item lt 1">select * from employee where employee_id=12
-        </Sql>
-    </Request>
+    <Status>201</Status>
+</Request>
 
-    <Create>
-        <Desc>Request for creating an employee record.</Desc>
-        <Execute className="com.mtg.Apple" />
+<!--derived from request -->
+<Request>
+    <Execute className="com.mtg.Apple" />
+</Request>
 
-        <Sql>
-            insert into employee
-            (employee_name, employee_id)
-            values(@name, @id)
-        </Sql>
-    </Create>
-    <Request>
-        <Sql className="com.mtg.Urls">
-            select * from employee
-            where employee_name = @param1
-            and employee_id = @id
-        </Sql>
-        <Sql type="update">
-            update employee set employee_name = @param1 where employee_id=@id
-        </Sql>
-    </Request>
+<Request item="true">
+    <Sql type="query" when="item lt 1">select * from employee where employee_id=12
+    </Sql>
+</Request>
 
-    <Create>
-        <Desc>Request for creating an employee record.</Desc>
-        <Execute className="com.mtg.Apple" />
+<!--derived from request -->
+<Request>
+    <Execute className="com.mtg.Apple" />
+</Request>
 
-        <Sql>
-            insert into employee
-            (employee_name, employee_id)
-            values(@name, @id)
-        </Sql>
-    </Create>
+<Request item="true">
+    <Sql when="item lt 1">select * from employee where employee_id=12
+    </Sql>
+</Request>
 
-    <!--derived from request -->
-    <Read>
-        <Execute className="com.mtg.Apple" />
-    </Read>
+<Create>
+    <Desc>Request for creating an employee record.</Desc>
+    <Execute className="com.mtg.Apple" />
 
-    <Read item="true">
-        <Sql when="item lt 1">select * from employee where employee_id=12
-        </Sql>
-    </Read>
+    <Sql>
+        insert into employee
+        (employee_name, employee_id)
+        values(@name, @id)
+    </Sql>
+</Create>
+<Request>
+    <Sql className="com.mtg.Urls">
+        select * from employee
+        where employee_name = @param1
+        and employee_id = @id
+    </Sql>
+    <Sql type="update">
+        update employee set employee_name = @param1 where employee_id=@id
+    </Sql>
+</Request>
 
-    <Create>
-        <Desc>Request for creating an employee record.</Desc>
-        <Execute className="com.mtg.Apple" />
+<Create>
+    <Desc>Request for creating an employee record.</Desc>
+    <Execute className="com.mtg.Apple" />
 
-        <Sql>
-            insert into employee
-            (employee_name, employee_id)
-            values(@name, @id)
-        </Sql>
-    </Create>
+    <Sql>
+        insert into employee
+        (employee_name, employee_id)
+        values(@name, @id)
+    </Sql>
+</Create>
 
-    <Create>
-        <Desc>Request for creating an employee record.</Desc>
-        <Execute className="com.mtg.Apple" />
-        <Sql>
-            insert into employee
-            (employee_name, employee_id)
-            values(@name, @id)
-        </Sql>
-    </Create>
+<!--derived from request -->
+<Read>
+    <Execute className="com.mtg.Apple" />
+</Read>
 
-    <!--derived from request -->
-    <Read>
-        <Execute className="com.mtg.Apple" />
-    </Read>
+<Read item="true">
+    <Sql when="item lt 1">select * from employee where employee_id=12
+    </Sql>
+</Read>
 
-    <Read item="true">
-        <Sql when="@item gt 1">
-            select * from employee where employee_id=12
-        </Sql>
-    </Read>
+<Create>
+    <Desc>Request for creating an employee record.</Desc>
+    <Execute className="com.mtg.Apple" />
+
+    <Sql>
+        insert into employee
+        (employee_name, employee_id)
+        values(@name, @id)
+    </Sql>
+</Create>
+
+<Create>
+    <Desc>Request for creating an employee record.</Desc>
+    <Execute className="com.mtg.Apple" />
+    <Sql>
+        insert into employee
+        (employee_name, employee_id)
+        values(@name, @id)
+    </Sql>
+</Create>
+
+<!--derived from request -->
+<Read>
+    <Execute className="com.mtg.Apple" />
+</Read>
+
+<Read item="true">
+    <Sql when="@item gt 1">
+        select * from employee where employee_id=12
+    </Sql>
+</Read>
 </Resource>

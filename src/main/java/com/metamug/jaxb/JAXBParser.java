@@ -189,9 +189,9 @@ public class JAXBParser {
                 } else {
                     writer.writeAttribute("test", enclose("empty mtgReq.id and mtgReq.method eq '" + req.getMethod() + "'"));
                 }
-                for (Param param : req.getParam()) {
-                    isValid(param, "hell");
-                }
+//                for (Param param : req.getParam()) {
+//                    isValid(param, "hell");
+//                }
                 if (!req.getSql().isEmpty()) {
                     for (Sql sql : req.getSql()) {
                         if (sql.getWhen() != null) {
@@ -302,10 +302,11 @@ public class JAXBParser {
         } catch (PatternSyntaxException ex) {
             System.out.println(ex.getMessage());
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InputValidationException ex) {
-            System.out.println(ex.getMessage());
-            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
+//        catch (InputValidationException ex) {
+//            System.out.println(ex.getMessage());
+//            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         return resource;
     }
 

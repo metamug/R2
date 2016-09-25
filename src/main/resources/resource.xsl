@@ -10,7 +10,8 @@
             <head>
                 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous"/>
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css"
+                      integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous"/>
                 <title>
                     <xsl:value-of select="@table"/>
                 </title>
@@ -23,7 +24,7 @@
                                 <th scope="row" style="width:200px">
                                     Resource Name
                                 </th>
-                                <td>
+                                <td id="resName">
                                     <xsl:value-of select="@table"/>
                                 </td>
                             </tr>
@@ -117,6 +118,13 @@
                         </tbody>
                     </table>
                 </div>
+                <script>
+                    var url = window.location.href;
+                    var resName = url.substr(url.lastIndexOf('/')+1);
+                    var resNameDiv = document.getElementById('resName');
+                    resName = resName.slice(0,-5);
+                    resNameDiv.innerHTML = resName;
+                </script>
             </body>
         </html>
     </xsl:template>

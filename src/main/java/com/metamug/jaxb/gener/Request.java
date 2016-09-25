@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -20,7 +21,7 @@ import javax.xml.bind.annotation.XmlType;
     "param",
     "execute",
     "sql",
-    "status"
+    "descOrParamOrExecute"
 })
 public class Request {
 
@@ -32,18 +33,32 @@ public class Request {
     protected List<Execute> execute;
     @XmlElement(name = "Sql")
     protected List<Sql> sql;
-    @XmlElement(name = "Status")
+    @XmlAttribute(name = "status")
     protected Integer status;
     @XmlAttribute(name = "method")
     protected Method method;
     @XmlAttribute(name = "item")
     protected Boolean item;
+    @XmlElements({
+        @XmlElement(name = "Desc", type = String.class),
+        @XmlElement(name = "Param", type = Param.class),
+        @XmlElement(name = "Execute", type = Execute.class),
+        @XmlElement(name = "Sql", type = Sql.class)
+    })
+    protected List<Object> descOrParamOrExecute;
 
     public Request() {
     }
 
     public Request(Method method) {
         this.method = method;
+    }
+
+    public List<Object> getDescOrParamOrExecute() {
+        if (descOrParamOrExecute == null) {
+            descOrParamOrExecute = new ArrayList<>();
+        }
+        return this.descOrParamOrExecute;
     }
 
     public List<Param> getParam() {
@@ -102,11 +117,7 @@ public class Request {
      *
      */
     public Method getMethod() {
-        if (method == null) {
-            return Method.GET;
-        } else {
-            return method;
-        }
+        return method;
     }
 
     /**

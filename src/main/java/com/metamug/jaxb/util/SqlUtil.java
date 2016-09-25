@@ -23,8 +23,10 @@ public class SqlUtil {
         List<String> sqlList = new ArrayList<>();
         
         for (Request req : res.getRequest()) {
-            for (Sql sql : req.getSql()) {
-                sqlList.add(sql.getValue().trim());
+            for (Object sql : req.getDescOrParamOrExecute()) {
+                if(sql instanceof Sql){
+                    sqlList.add(((Sql)sql).getValue().trim());
+                }
             }
         }
         
