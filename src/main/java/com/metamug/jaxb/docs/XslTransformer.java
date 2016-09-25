@@ -26,6 +26,7 @@ public class XslTransformer {
 
     public static void transform(File xmlFile, File xslFile, File htmlFile)
             throws TransformerConfigurationException, TransformerException {
+        System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
         TransformerFactory factory = TransformerFactory.newInstance();
         StreamSource xslStream = new StreamSource(xslFile);
         Transformer transformer = factory.newTransformer(xslStream);
@@ -33,21 +34,21 @@ public class XslTransformer {
         StreamResult out = new StreamResult(htmlFile);
         transformer.transform(in, out);
         System.out.println("The generated HTML file is:" + htmlFile);
-           
+
     }
-    
-    public static void replaceStringInFile(File file, String oldString, String newString){
+
+    public static void replaceStringInFile(File file, String oldString, String newString) {
         //file reading
         try {
             FileReader fr = new FileReader(file);
             String s;
-            
+
             BufferedReader br = new BufferedReader(fr);
             while ((s = br.readLine()) != null) {
                 s.replaceAll(oldString, newString);
-            // do something with the resulting line
+                // do something with the resulting line
             }
-        }catch(IOException ix){
+        } catch (IOException ix) {
             Logger.getLogger(XslTransformer.class.getName()).log(Level.SEVERE, null, ix);
         }
     }

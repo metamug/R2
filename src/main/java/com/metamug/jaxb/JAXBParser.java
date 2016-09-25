@@ -124,6 +124,7 @@ public class JAXBParser {
     XMLStreamWriter writer;
 
     public static void main(String[] args) throws TransformerConfigurationException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException {
+
         File xml = new File(JAXBParser.class.getResource("/movies.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -158,16 +159,16 @@ public class JAXBParser {
         }
     }
 
-    public Resource parse(File xmlFile) throws TransformerConfigurationException {
+    public Resource parse(File resourceFile) throws TransformerConfigurationException {
         Resource resource = new Resource();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            resource = (Resource) jaxbUnmarshaller.unmarshal(xmlFile);
+            resource = (Resource) jaxbUnmarshaller.unmarshal(resourceFile);
             if (!new File("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion()).exists()) {
                 Files.createDirectory(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion()));
             }
-            output = new FileOutputStream("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(xmlFile.getName()) + ".jsp");
+            output = new FileOutputStream("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp");
             writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
             writeEscapedCharacters("<%@include  file=\"../../fragments/taglibs.jspf\"%>");
             writer.writeCharacters(System.lineSeparator());
@@ -189,7 +190,6 @@ public class JAXBParser {
                     writer.writeAttribute("test", enclose("empty mtgReq.id and mtgReq.method eq '" + req.getMethod() + "'"));
                 }
                 for (Param param : req.getParam()) {
-
                     isValid(param, "hell");
                 }
                 if (!req.getSql().isEmpty()) {
@@ -212,7 +212,7 @@ public class JAXBParser {
                             writer.writeStartElement("mtg:out");
                             writer.writeAttribute("value", enclose("result"));
                             writer.writeAttribute("type", enclose("header.accept"));
-                            writer.writeAttribute("tableName", FilenameUtils.removeExtension(xmlFile.getName()));
+                            writer.writeAttribute("tableName", FilenameUtils.removeExtension(resourceFile.getName()));
                             writer.writeEndElement();
                         } else if (sql.getClassName() != null && sql.getType() != null && sql.getType().value().equalsIgnoreCase("query")) {
                             writer.writeStartElement("code:execute");
@@ -275,7 +275,7 @@ public class JAXBParser {
             writer.flush();
             writer.close();
             List<String> newLines = new ArrayList<>();
-            for (String line : Files.readAllLines(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(xmlFile.getName()) + ".jsp"), StandardCharsets.UTF_8)) {
+            for (String line : Files.readAllLines(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp"), StandardCharsets.UTF_8)) {
                 String modifiedStr = line;
                 if (line.toLowerCase().contains(" le ") || line.toLowerCase().contains(" le")) {
                     modifiedStr = line.replace(" le ", " <= ");
@@ -294,7 +294,7 @@ public class JAXBParser {
                 }
                 newLines.add(modifiedStr);
             }
-            Files.write(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(xmlFile.getName()) + ".jsp"), newLines, StandardCharsets.UTF_8);
+            Files.write(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp"), newLines, StandardCharsets.UTF_8);
         } catch (JAXBException | FileNotFoundException | XMLStreamException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException | XPathExpressionException ex) {

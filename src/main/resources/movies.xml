@@ -2,6 +2,7 @@
 <Resource version="1.1">
     <Desc>Contains information about movies.</Desc>
     <Request method="GET">
+        <Desc>Get all the tasks entered today.</Desc>
         <Sql type="query" when="@movieId eq null">
             SELECT * FROM movie
         </Sql>
@@ -9,22 +10,26 @@
             SELECT * FROM movie where id=@movieId
         </Sql>
     </Request>
-    <Request method="POST">
+    <Request method="GET" status="288">
+        <Sql type="query" when="@q eq 1">
+            SELECT task_id, task_hour, task_val
+            from tbl_task
+            order by task_hour asc
+        </Sql>
+    </Request>
+    <Request method="POST" status="201">
         <Sql type="update">
             INSERT INTO movie (name, rating) VALUES (@p, @q)
         </Sql>
-        <Status>201</Status>
     </Request>
-    <Request method="PUT" item="true">
+    <Request method="PUT" item="true" status="202">
         <Sql type="update">
             UPDATE movie SET rating=@rating WHERE id=@id
         </Sql>
-        <Status>202</Status>
     </Request>
-    <Request method="DELETE" item="true">
+    <Request method="DELETE" item="true" status="410">
         <Sql type="update">
             DELETE FROM movie WHERE id=@id
         </Sql>
-        <Status>410</Status>
     </Request>
 </Resource>

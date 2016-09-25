@@ -1,5 +1,9 @@
-<?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions">
 
     <xsl:template match="Resource">
         <html>
@@ -29,7 +33,7 @@
                                 </th>
                                 <td>
                                     <xsl:choose>
-                                        <xsl:when test='string-length(Desc)>0'>
+                                        <xsl:when test='string-length(Desc) &gt; 0'>
                                             <xsl:value-of select="Desc"/>
                                         </xsl:when>
                                         <xsl:otherwise>Not Given
@@ -53,37 +57,62 @@
                             <tr>
                                 <th>Type</th>
                                 <th>Description</th>
+                                <th>Parameter</th>
                                 <th>Method</th>
+                                <th>Condition</th>
                                 <th>Output</th>
                             </tr>
                         </thead>
                         <tbody>
 
                             <xsl:for-each select="Request">
-                                <tr>
-                                    <td>Request</td>
-                                    <td>
-                                        <xsl:choose>
-                                            <xsl:when test='string-length(Desc)>0'>
-                                                <xsl:value-of select="Desc"/>
-                                            </xsl:when>
-                                            <xsl:otherwise>Not Given
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </td>
-                                    <td>
-                                        <xsl:value-of select="@method"/>
-                                    </td>
-                                    <td>
-                                        <xsl:choose>
-                                            <xsl:when test='string-length(@Out)>0'>
-                                                <xsl:value-of select="@Out"/>
-                                            </xsl:when>
-                                            <xsl:otherwise>json
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </td>
-                                </tr>
+                                <xsl:for-each select="Sql">
+                                    <tr>
+                                        <!--TD for query-type-->
+                                        <td>
+                                            <xsl:choose>
+                                                <xsl:when test="contains(@type,'query')">
+                                                    Query
+                                                </xsl:when>
+                                                <xsl:otherwise>
+                                                    Update
+                                                </xsl:otherwise>
+                                            </xsl:choose>
+                                        </td>
+                                        <!--TD for description-->
+                                        <td>
+                                            <xsl:value-of select="../Desc"/>
+                                        </td>
+                                        <!--TD for parameter list-->
+                                        <td>
+                                            <xsl:analyze-string select="." regex="@(\w+)">
+                                                <xsl:matching-substring>
+                                                    <xsl:value-of select="concat(regex-group(1),', ')"/>
+                                                </xsl:matching-substring>
+                                                <xsl:non-matching-substring>
+                                                </xsl:non-matching-substring>
+                                            </xsl:analyze-string>
+                                        </td>
+                                        <!--TD for request method-->
+                                        <td>
+                                            <xsl:value-of select="../@method"/>
+                                        </td>
+                                        <!--TD for condition-->
+                                        <td>
+                                            <xsl:value-of select="replace(@when,'@','')"/>
+                                        </td>
+                                        <!--TD for output format-->
+                                        <td>
+                                            <xsl:choose>
+                                                <xsl:when test='string-length(@Out) &gt; 0'>
+                                                    <xsl:value-of select="@Out"/>
+                                                </xsl:when>
+                                                <xsl:otherwise>json
+                                                </xsl:otherwise>
+                                            </xsl:choose>
+                                        </td>
+                                    </tr>
+                                </xsl:for-each>
                             </xsl:for-each>
                         </tbody>
                     </table>

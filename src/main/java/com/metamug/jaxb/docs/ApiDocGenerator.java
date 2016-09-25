@@ -56,19 +56,19 @@ public class ApiDocGenerator {
             writer.writeStartElement("head");
             writer.writeStartElement("meta");
             writer.writeAttribute("charset", "utf-8");
-            writer.writeEndElement();
+            writer.writeEndElement();//End </meta>
             writer.writeStartElement("meta");
             writer.writeAttribute("http-equiv", "X-UA-Compatible");
             writer.writeAttribute("content", "IE=edge");
-            writer.writeEndElement();
+            writer.writeEndElement(); //End </meta>
             writer.writeStartElement("meta");
             writer.writeAttribute("name", "viewport");
             writer.writeAttribute("content", "width=device-width, initial-scale=1, shrink-to-fit=no");
-            writer.writeEndElement();
+            writer.writeEndElement();//End </meta>
             writer.writeStartElement("link");
             writer.writeAttribute("href", "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css");
             writer.writeAttribute("rel", "stylesheet");
-            writer.writeEndElement();
+            writer.writeEndElement(); //End</meta>
             writer.writeStartElement("title");
             writeEscapedCharacters("Welcome");
             writer.writeEndElement();   //End of </title>
