@@ -208,13 +208,13 @@ public class JAXBParser {
                         String processSQL = processSQL(sql.getValue());
                         writeEscapedCharacters(processSQL);
                         writer.writeEndElement();
-                        if (sql.getClassName() == null && sql.getType() != null && sql.getType().value().equalsIgnoreCase("query")) {
+                        if (sql.getClassName() == null && sql.getType().value().equalsIgnoreCase("query")) {
                             writer.writeStartElement("mtg:out");
                             writer.writeAttribute("value", enclose("result"));
                             writer.writeAttribute("type", enclose("header.accept"));
                             writer.writeAttribute("tableName", FilenameUtils.removeExtension(resourceFile.getName()));
                             writer.writeEndElement();
-                        } else if (sql.getClassName() != null && sql.getType() != null && sql.getType().value().equalsIgnoreCase("query")) {
+                        } else if (sql.getClassName() != null && sql.getType().value().equalsIgnoreCase("query")) {
                             writer.writeStartElement("code:execute");
                             writer.writeAttribute("className", sql.getClassName());
                             writer.writeAttribute("param", enclose("result"));
