@@ -51,73 +51,82 @@
                     </table>
                     
                     <xsl:for-each select="Request">
-                        <br></br>
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <b>REQUEST</b>
-                            </div>    
-                            <div class="panel-body">
-                                <div>
-                                    <xsl:choose>
-                                        <xsl:when test='string-length(Desc) &gt; 0'>
-                                            <b><xsl:value-of select="Desc"/></b>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            No description
-                                        </xsl:otherwise>        
-                                    </xsl:choose>
-                                </div>
-                                <br></br>    
-                                <table class="table borderless">
-                                    <tbody>
-                                        <tr>
-                                            <td class="col-md-6">Method</td>
-                                            <td class="col-md-6"><b><xsl:value-of select="@method"/></b></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="col-md-6">Item</td>
-                                            <td class="col-md-6">
-                                                <xsl:choose>
-                                                    <xsl:when test='string-length(@item) &gt; 0'>
-                                                        <b><xsl:value-of select="@item"/></b>
-                                                    </xsl:when>
-                                                    <xsl:otherwise>
-                                                        <b>false</b>
-                                                    </xsl:otherwise>    
-                                                </xsl:choose>    
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="col-md-6">Status</td>
-                                            <td class="col-md-6">
-                                                <xsl:choose>
-                                                    <xsl:when test='string-length(@status) &gt; 0'>
-                                                        <b><xsl:value-of select="@status"/></b>
-                                                    </xsl:when>
-                                                    <xsl:otherwise>
-                                                        <b>not specified</b>
-                                                    </xsl:otherwise>    
-                                                </xsl:choose>    
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="col-md-6">Param/s</td>
-                                            <td id="paramList" class="col-md-6">
-                                                <xsl:choose>
-                                                    <xsl:when test="Param">
-                                                        <xsl:for-each select="Param">
-                                                            <xsl:value-of select="@name"/>,
-                                                        </xsl:for-each>
-                                                    </xsl:when>
-                                                    <xsl:otherwise>
-                                                        <b>not specified</b>
-                                                    </xsl:otherwise>
-                                                </xsl:choose>
-                                            </td>
-                                        </tr>    
-                                    </tbody>
-                                </table>    
-                            </div>    
+                        
+                        <div class="col-md-6">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <b>REQUEST</b>
+                                </div>    
+                                <div class="panel-body">
+                                    <div>
+                                        <xsl:choose>
+                                            <xsl:when test='string-length(Desc) &gt; 0'>
+                                                <b><xsl:value-of select="Desc"/></b>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                No description
+                                            </xsl:otherwise>        
+                                        </xsl:choose>
+                                    </div>
+                                    <br></br>    
+                                    <table class="table borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td class="col-md-6">Method</td>
+                                                <td class="col-md-6"><b><xsl:value-of select="@method"/></b></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-6">Item</td>
+                                                <td class="col-md-6">
+                                                    <xsl:choose>
+                                                        <xsl:when test='string-length(@item) &gt; 0'>
+                                                            <b><xsl:value-of select="@item"/></b>
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+                                                            <b>false</b>
+                                                        </xsl:otherwise>    
+                                                    </xsl:choose>    
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-6">Status</td>
+                                                <td class="col-md-6">
+                                                    <xsl:choose>
+                                                        <xsl:when test='string-length(@status) &gt; 0'>
+                                                            <b><xsl:value-of select="@status"/></b>
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+                                                            <b>not specified</b>
+                                                        </xsl:otherwise>    
+                                                    </xsl:choose>    
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-6">Param(s)</td>
+                                                <td id="paramList" class="col-md-6">
+                                                    <xsl:choose>
+                                                        <xsl:when test="Param">
+                                                            <xsl:for-each select="Param">
+                                                                <xsl:value-of select="@name"/>,
+                                                            </xsl:for-each>
+                                                <!--            <xsl:analyze-string select="." regex="@(\w+)">
+                                                                <xsl:matching-substring>
+                                                                    <xsl:value-of select="concat(regex-group(1),', ')"/>
+                                                                </xsl:matching-substring>
+                                                                <xsl:non-matching-substring>
+                                                                </xsl:non-matching-substring>
+                                                            </xsl:analyze-string>-->
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+                                                            <b>not specified</b>
+                                                        </xsl:otherwise>
+                                                    </xsl:choose>
+                                                </td>
+                                            </tr>    
+                                        </tbody>
+                                    </table>    
+                                </div>    
+                            </div>
                         </div>    
                     </xsl:for-each>    
                     

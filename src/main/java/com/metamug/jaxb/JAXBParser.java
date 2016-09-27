@@ -106,6 +106,7 @@ public class JAXBParser {
                         System.out.println("   maxLength: " + param.getMaxLen());
                         System.out.println("   pattern: " + param.getPattern());
                         System.out.println("   exists: " + param.getExists());
+                        System.out.println(" ++++++ ");
                     }
                     System.out.println("---^^^^^^^---");
                 }else{

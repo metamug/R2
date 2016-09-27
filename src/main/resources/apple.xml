@@ -6,15 +6,18 @@
 	<Request method="GET" item="true" status="200">
 		<Param name="t" blank="true" min="1" exists="table.column" />
                 <Param name="u" min="1" max="100" pattern="pat341./1@[]^" />
-                <Param name="v" minLen="5" maxLen="50" />
+                <Param name="v" minLen="1" maxLen="500" />
+                <Param name="param1" minLen="5" maxLen="50" />
                 
-		<Sql type="query" className="com.mtg.Urls">
+                <Sql when="@q eq 1" type="query">
+                    select * from employee where employee_name = @v
+                </Sql>
+		<Sql type="query" when="@q eq 2" className="com.mtg.Urls">
 			select * from employee 
 			where employee_name = @param1 
 			and employee_id = @id
 		</Sql>
-             
-                <Sql type="update">
+                <Sql when="@q eq 3" type="update">
                     update employee set employee_name = @param2 where employee_id=@id
                 </Sql>
 	</Request>
