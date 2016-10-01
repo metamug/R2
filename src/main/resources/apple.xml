@@ -35,12 +35,17 @@
 	</Request>
 
 	<!--derived from request -->
-	<Request method="GET" >
+	<Request method="PUT" item="true">
 		<Execute className="com.mtg.Apple" />
 	</Request>
 	
-	<Request method="GET" item="true">
+	<Request method="GET" item="false">
 		<Sql type="query" when="item lt 1">select * from employee where employee_id=12
+		</Sql>
+	</Request>
+
+        <Request method="DELETE" item="true">
+		<Sql type="update">delete * from employee where employee_id=@id
 		</Sql>
 	</Request>
 
