@@ -52,14 +52,14 @@
                     
                     <xsl:for-each select="Request">
                         
-                        <div class="col-md-8">
+                        <div class="col-md-8" style="padding-top:10px">
 
                         <xsl:choose>    
                             <xsl:when test="contains(@item,'true')" >                      
                                 <div class="panel panel-success">
                                     
                                 <div class="panel-heading">
-                                    <b>ITEM REQUEST</b>
+                                    <span style="font-weight:bold">ITEM REQUEST</span>
                                     
                                     <xsl:choose>
                                         <xsl:when test="contains(@method,'GET')">
@@ -87,6 +87,9 @@
                                 </div>    
                                 <div class="panel-body">
                                     <div>
+                                        <div style="color:darkgrey;font-weight:bold;">
+                                                Description
+                                        </div>
                                         <xsl:choose>
                                             <xsl:when test='string-length(Desc) &gt; 0'>
                                                 <xsl:value-of select="Desc"/>
@@ -96,29 +99,31 @@
                                             </xsl:otherwise>        
                                         </xsl:choose>
                                     </div>
-                                    <br></br>    
-                                    <table class="table borderless">
-                                        <tbody>
-                                            <tr>
-                                                <td class="col-md-6">Status</td>
-                                                <td class="col-md-6">
-                                                    <xsl:choose>
-                                                        <xsl:when test='string-length(@status) &gt; 0'>
-                                                            <xsl:value-of select="@status"/>
-                                                        </xsl:when>    
-                                                    </xsl:choose>    
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="col-md-6">Param(s)</td>
-                                                <td id="paramList" class="col-md-6">
-                                                    <xsl:choose>
-                                                        <xsl:when test="Param">
-                                                            <xsl:for-each select="Param">
-                                                                <span class="label label-primary" style="margin-right:5px"> 
-                                                                    <xsl:value-of select="@name"/>
-                                                                </span>
-                                                            </xsl:for-each>
+                                    <div style="padding-top:12px">
+                                        <div style="color:darkgrey;font-weight:bold;">
+                                            Response Status
+                                        </div>
+                                        <xsl:choose>
+                                            <xsl:when test='string-length(@status) &gt; 0'>
+                                                <xsl:value-of select="@status"/>
+                                            </xsl:when>    
+                                            <xsl:otherwise>
+                                                <div>-</div>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
+                                    </div>
+                                    <div style="padding-top:12px">
+                                        <div style="color:darkgrey;font-weight:bold;">
+                                            Param(s)
+                                        </div>
+                                        <div style="padding-top:8px;font-size:16px;">
+                                            <xsl:choose>
+                                                <xsl:when test="Param">
+                                                    <xsl:for-each select="Param">
+                                                        <span class="label label-primary" style="margin-right:5px"> 
+                                                            <xsl:value-of select="@name"/>
+                                                        </span>
+                                                    </xsl:for-each>
                                                 <!--        <xsl:analyze-string select="." regex="@(\w+)">
                                                                 <xsl:matching-substring>
                                                                     <xsl:value-of select="concat(regex-group(1),', ')"/>
@@ -126,20 +131,18 @@
                                                                 <xsl:non-matching-substring>
                                                                 </xsl:non-matching-substring>
                                                             </xsl:analyze-string>-->
-                                                        </xsl:when>
-                                                    </xsl:choose>
-                                                </td>
-                                            </tr>    
-                                        </tbody>
-                                    </table>    
+                                                </xsl:when>
+                                            </xsl:choose>
+                                        </div>     
+                                    </div>
+                                        
                                 </div>    
-                            </div>
-                            
+                            </div>                            
                             </xsl:when>
                             <xsl:otherwise>
                                 <div class="panel panel-info">
                                 <div class="panel-heading">
-                                    <b>COLLECTION REQUEST</b>
+                                    <span style="font-weight:bold">COLLECTION REQUEST</span>
                                     
                                     <xsl:choose>
                                         <xsl:when test="contains(@method,'GET')">
@@ -167,6 +170,9 @@
                                 </div>    
                                 <div class="panel-body">
                                     <div>
+                                        <div style="color:darkgrey;font-weight:bold;">
+                                            Description
+                                        </div>
                                         <xsl:choose>
                                             <xsl:when test='string-length(Desc) &gt; 0'>
                                                 <xsl:value-of select="Desc"/>
@@ -176,29 +182,31 @@
                                             </xsl:otherwise>        
                                         </xsl:choose>
                                     </div>
-                                    <br></br>    
-                                    <table class="table borderless">
-                                        <tbody>
-                                            <tr>
-                                                <td class="col-md-6">Status</td>
-                                                <td class="col-md-6">
-                                                    <xsl:choose>
-                                                        <xsl:when test='string-length(@status) &gt; 0'>
-                                                            <xsl:value-of select="@status"/>
-                                                        </xsl:when>    
-                                                    </xsl:choose>    
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="col-md-6">Param(s)</td>
-                                                <td id="paramList" class="col-md-6">
-                                                    <xsl:choose>
-                                                        <xsl:when test="Param">
-                                                            <xsl:for-each select="Param">
-                                                                <span class="label label-primary" style="margin-right:5px"> 
-                                                                    <xsl:value-of select="@name"/>
-                                                                </span>
-                                                            </xsl:for-each>
+                                    <div style="padding-top:12px">
+                                        <div style="color:darkgrey;font-weight:bold;">
+                                            Response Status
+                                        </div>
+                                        <xsl:choose>
+                                            <xsl:when test='string-length(@status) &gt; 0'>
+                                                <xsl:value-of select="@status"/>
+                                            </xsl:when>    
+                                            <xsl:otherwise>
+                                                <div>-</div>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
+                                    </div>  
+                                    <div style="padding-top:12px">
+                                        <div style="color:darkgrey;font-weight:bold;">
+                                            Param(s)
+                                        </div>
+                                        <div style="padding-top:8px;font-size:16px;">
+                                            <xsl:choose>
+                                                <xsl:when test="Param">
+                                                    <xsl:for-each select="Param">
+                                                        <span class="label label-primary" style="margin-right:5px"> 
+                                                            <xsl:value-of select="@name"/>
+                                                        </span>
+                                                    </xsl:for-each>
                                                 <!--        <xsl:analyze-string select="." regex="@(\w+)">
                                                                 <xsl:matching-substring>
                                                                     <xsl:value-of select="concat(regex-group(1),', ')"/>
@@ -206,12 +214,11 @@
                                                                 <xsl:non-matching-substring>
                                                                 </xsl:non-matching-substring>
                                                             </xsl:analyze-string>-->
-                                                        </xsl:when>
-                                                    </xsl:choose>
-                                                </td>
-                                            </tr>    
-                                        </tbody>
-                                    </table>    
+                                                </xsl:when>
+                                            </xsl:choose>
+                                        </div>     
+                                    </div>    
+                                                                           
                                 </div>    
                             </div>
                             </xsl:otherwise>                               
@@ -293,9 +300,6 @@
                     resName = resName.slice(0,-5);
                     resNameDiv.innerHTML = resName;
                     document.title = resName;
-                    //var paramListDiv = document.getElementById('paramList');
-                    //var paramList = paramListDiv.innerHTML.trim();
-                    //paramListDiv.innerHTML = (paramList.slice(0,-1)); 
                 </script>
             </body>
         </html>
