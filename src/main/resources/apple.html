@@ -58,7 +58,7 @@
                         Param(s)
                         
                      </div>
-                     <div style="padding-top:8px;font-size:16px;"><span class="label label-primary" style="margin-right:5px">t</span><span class="label label-primary" style="margin-right:5px">u</span><span class="label label-primary" style="margin-right:5px">v</span><span class="label label-primary" style="margin-right:5px">param1</span></div>
+                     <div class="paramList" style="padding-top:8px;font-size:16px;"><span class="label label-primary" style="margin-right:5px">t</span><span class="label label-primary" style="margin-right:5px">u</span><span class="label label-primary" style="margin-right:5px">v</span><span class="label label-primary" style="margin-right:5px">param1</span><span class="label label-primary" style="margin-right:5px">q</span><span class="label label-primary" style="margin-right:5px">q</span><span class="label label-primary" style="margin-right:5px">q</span><span class="label label-primary" style="margin-right:5px">v</span><span class="label label-primary" style="margin-right:5px">param1</span><span class="label label-primary" style="margin-right:5px">id</span><span class="label label-primary" style="margin-right:5px">param2</span><span class="label label-primary" style="margin-right:5px">id</span></div>
                   </div>
                </div>
             </div>
@@ -88,7 +88,7 @@
                         Param(s)
                         
                      </div>
-                     <div style="padding-top:8px;font-size:16px;"></div>
+                     <div class="paramList" style="padding-top:8px;font-size:16px;"><span class="label label-primary" style="margin-right:5px">name</span><span class="label label-primary" style="margin-right:5px">id</span></div>
                   </div>
                </div>
             </div>
@@ -120,7 +120,7 @@
                         Param(s)
                         
                      </div>
-                     <div style="padding-top:8px;font-size:16px;"></div>
+                     <div class="paramList" style="padding-top:8px;font-size:16px;"></div>
                   </div>
                </div>
             </div>
@@ -152,7 +152,7 @@
                         Param(s)
                         
                      </div>
-                     <div style="padding-top:8px;font-size:16px;"></div>
+                     <div class="paramList" style="padding-top:8px;font-size:16px;"><span class="label label-primary" style="margin-right:5px">item</span></div>
                   </div>
                </div>
             </div>
@@ -184,7 +184,7 @@
                         Param(s)
                         
                      </div>
-                     <div style="padding-top:8px;font-size:16px;"></div>
+                     <div class="paramList" style="padding-top:8px;font-size:16px;"><span class="label label-primary" style="margin-right:5px">id</span></div>
                   </div>
                </div>
             </div>
@@ -195,6 +195,14 @@
                     var resNameDiv = document.getElementById('resName');
                     resName = resName.slice(0,-5);
                     resNameDiv.innerHTML = resName;
-                    document.title = resName;
+                    document.title = resName;                    
+                    var paramListClasses = document.getElementsByClassName("paramList");
+                    var i;
+                    for (i = 0; i < paramListClasses.length; i++) {                        
+                        var paramList = paramListClasses[i].childNodes;
+                        var j;
+                        for(j = 0; j < paramList.length; j++){                            
+                        }
+                    }
                 </script></body>
 </html>

@@ -40,7 +40,7 @@
 	</Request>
 	
 	<Request method="GET" item="false">
-		<Sql type="query" when="item lt 1">select * from employee where employee_id=12
+		<Sql type="query" when="@item lt 1">select * from employee where employee_id=12
 		</Sql>
 	</Request>
 

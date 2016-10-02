@@ -116,7 +116,7 @@
                                         <div style="color:darkgrey;font-weight:bold;">
                                             Param(s)
                                         </div>
-                                        <div style="padding-top:8px;font-size:16px;">
+                                        <div class="paramList" style="padding-top:8px;font-size:16px;">
                                             <xsl:choose>
                                                 <xsl:when test="Param">
                                                     <xsl:for-each select="Param">
@@ -124,15 +124,34 @@
                                                             <xsl:value-of select="@name"/>
                                                         </span>
                                                     </xsl:for-each>
-                                                <!--        <xsl:analyze-string select="." regex="@(\w+)">
-                                                                <xsl:matching-substring>
-                                                                    <xsl:value-of select="concat(regex-group(1),', ')"/>
-                                                                </xsl:matching-substring>
-                                                                <xsl:non-matching-substring>
-                                                                </xsl:non-matching-substring>
-                                                            </xsl:analyze-string>-->
                                                 </xsl:when>
                                             </xsl:choose>
+                                            
+                                            <xsl:for-each select="Sql">
+                                                <xsl:choose>
+                                                    <xsl:when test="@when">
+                                                        <xsl:analyze-string select="@when" regex="@(\w+)">
+                                                            <xsl:matching-substring>
+                                                                <span class="label label-primary" style="margin-right:5px">
+                                                                    <xsl:value-of select="regex-group(1)"/>
+                                                                </span>    
+                                                            </xsl:matching-substring>
+                                                            <xsl:non-matching-substring>
+                                                            </xsl:non-matching-substring>
+                                                        </xsl:analyze-string>
+                                                    </xsl:when>
+                                                </xsl:choose>
+                                            </xsl:for-each>                                            
+                                                
+                                            <xsl:analyze-string select="." regex="@(\w+)">
+                                                <xsl:matching-substring>
+                                                    <span class="label label-primary" style="margin-right:5px">
+                                                        <xsl:value-of select="regex-group(1)"/>
+                                                    </span>
+                                                </xsl:matching-substring>
+                                                <xsl:non-matching-substring>
+                                                </xsl:non-matching-substring>
+                                            </xsl:analyze-string>
                                         </div>     
                                     </div>
                                         
@@ -199,7 +218,7 @@
                                         <div style="color:darkgrey;font-weight:bold;">
                                             Param(s)
                                         </div>
-                                        <div style="padding-top:8px;font-size:16px;">
+                                        <div class="paramList" style="padding-top:8px;font-size:16px;">
                                             <xsl:choose>
                                                 <xsl:when test="Param">
                                                     <xsl:for-each select="Param">
@@ -207,15 +226,34 @@
                                                             <xsl:value-of select="@name"/>
                                                         </span>
                                                     </xsl:for-each>
-                                                <!--        <xsl:analyze-string select="." regex="@(\w+)">
-                                                                <xsl:matching-substring>
-                                                                    <xsl:value-of select="concat(regex-group(1),', ')"/>
-                                                                </xsl:matching-substring>
-                                                                <xsl:non-matching-substring>
-                                                                </xsl:non-matching-substring>
-                                                            </xsl:analyze-string>-->
                                                 </xsl:when>
                                             </xsl:choose>
+                                            
+                                            <xsl:for-each select="Sql">
+                                                <xsl:choose>
+                                                    <xsl:when test="@when">
+                                                        <xsl:analyze-string select="@when" regex="@(\w+)">
+                                                            <xsl:matching-substring>
+                                                                <span class="label label-primary" style="margin-right:5px">
+                                                                    <xsl:value-of select="regex-group(1)"/>
+                                                                </span>    
+                                                            </xsl:matching-substring>
+                                                            <xsl:non-matching-substring>
+                                                            </xsl:non-matching-substring>
+                                                        </xsl:analyze-string>
+                                                    </xsl:when>
+                                                </xsl:choose>
+                                            </xsl:for-each>
+                                                
+                                            <xsl:analyze-string select="." regex="@(\w+)">
+                                                <xsl:matching-substring>
+                                                    <span class="label label-primary" style="margin-right:5px">
+                                                        <xsl:value-of select="regex-group(1)"/>
+                                                    </span>    
+                                                </xsl:matching-substring>
+                                                <xsl:non-matching-substring>
+                                                </xsl:non-matching-substring>
+                                            </xsl:analyze-string>
                                         </div>     
                                     </div>    
                                                                            
@@ -227,8 +265,8 @@
                         </div>    
                     </xsl:for-each>    
                     
-                    <!--
-                    <table class="table table-striped">
+                    
+                    <!--<table class="table table-striped">
                         <thead class="thead-inverse">
                             <tr>
                                 <th>Type</th>
@@ -299,7 +337,15 @@
                     var resNameDiv = document.getElementById('resName');
                     resName = resName.slice(0,-5);
                     resNameDiv.innerHTML = resName;
-                    document.title = resName;
+                    document.title = resName;                    
+                    var paramListClasses = document.getElementsByClassName("paramList");
+                    var i;
+                    for (i = 0; i &lt; paramListClasses.length; i++) {                        
+                        var paramList = paramListClasses[i].childNodes;
+                        var j;
+                        for(j = 0; j &lt; paramList.length; j++){                            
+                        }
+                    }
                 </script>
             </body>
         </html>
