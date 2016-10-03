@@ -89,6 +89,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -124,7 +125,6 @@ public class JAXBParser {
     XMLStreamWriter writer;
 
     public static void main(String[] args) throws TransformerConfigurationException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException {
-
         File xml = new File(JAXBParser.class.getResource("/movies.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -189,15 +189,19 @@ public class JAXBParser {
                 } else {
                     writer.writeAttribute("test", enclose("empty mtgReq.id and mtgReq.method eq '" + req.getMethod() + "'"));
                 }
+                writer.writeStartElement("c:catch");//Start of <c:catch>
+                writer.writeAttribute("var", "exception");
 //                for (Param param : req.getParam()) {
 //                    isValid(param, "hell");
 //                }
                 if (!req.getSql().isEmpty()) {
-                    for (Sql sql : req.getSql()) {
+                    for (Iterator<Sql> iterator = req.getSql().iterator(); iterator.hasNext();) {
+                        Sql sql = iterator.next();
                         if (sql.getWhen() != null) {
                             writer.writeStartElement("c:if");
                             writer.writeAttribute("test", enclose(sql.getWhen().replace("@", "mtgReq.params.")));
                         }
+
                         if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("update")) {
                             writer.writeStartElement("sql:update");
                         } else {
@@ -207,21 +211,36 @@ public class JAXBParser {
                         writer.writeAttribute("dataSource", "jdbc/mtgMySQL");
                         String processSQL = processSQL(sql.getValue());
                         writeEscapedCharacters(processSQL);
-                        writer.writeEndElement();
-                        if (sql.getClassName() == null && sql.getType().value().equalsIgnoreCase("query")) {
+                        writer.writeEndElement();//End of <sql:query/update>
+
+                        if (sql.getWhen() != null) {
+                            if (sql.getClassName() == null && sql.getType().value().equalsIgnoreCase("query")) {
+                                writer.writeStartElement("mtg:out");
+                                writer.writeAttribute("value", enclose("result"));
+                                writer.writeAttribute("type", enclose("header.accept"));
+                                writer.writeAttribute("tableName", FilenameUtils.removeExtension(resourceFile.getName()));
+                                writer.writeEndElement();
+                            } else if (sql.getClassName() != null && sql.getType().value().equalsIgnoreCase("query")) {
+                                writer.writeStartElement("code:execute");
+                                writer.writeAttribute("className", sql.getClassName());
+                                writer.writeAttribute("param", enclose("result"));
+                                writer.writeEndElement();
+                            }
+                            if (sql.getWhen() != null) {
+                                writer.writeEndElement(); //End of <c:if>
+                            }
+                        } else if (sql.getClassName() == null && !iterator.hasNext() && sql.getType().value().equalsIgnoreCase("query")) {
                             writer.writeStartElement("mtg:out");
                             writer.writeAttribute("value", enclose("result"));
                             writer.writeAttribute("type", enclose("header.accept"));
                             writer.writeAttribute("tableName", FilenameUtils.removeExtension(resourceFile.getName()));
                             writer.writeEndElement();
-                        } else if (sql.getClassName() != null && sql.getType().value().equalsIgnoreCase("query")) {
+
+                        } else if (sql.getClassName() != null && !iterator.hasNext() && sql.getType().value().equalsIgnoreCase("query")) {
                             writer.writeStartElement("code:execute");
                             writer.writeAttribute("className", sql.getClassName());
                             writer.writeAttribute("param", enclose("result"));
                             writer.writeEndElement();
-                        }
-                        if (sql.getWhen() != null) {
-                            writer.writeEndElement(); //End of <c:if>
                         }
                     }
                 }
@@ -250,13 +269,34 @@ public class JAXBParser {
                     }
                 }
                 writer.writeCharacters(System.lineSeparator());
+                writer.writeEndElement();//End of </c:catch>
+
+                //Display exception caught in above <c:catch> block
+                writer.writeStartElement("c:if");
+                writer.writeAttribute("test", enclose("exception != null"));
+                writer.writeCharacters(System.lineSeparator());
+                writeEscapedCharacters("<%\n response.setStatus(500);\n%>");
+                writer.writeStartElement("json:object");
+                writer.writeAttribute("name", "data");
+                writer.writeAttribute("escapeXml", "false");
+
+                writer.writeEmptyElement("json:property");
+                writer.writeAttribute("name", "Code");
+                writer.writeAttribute("value", "500");
+                writer.writeEmptyElement("json:property");
+                writer.writeAttribute("name", "Message");
+                writer.writeAttribute("value", enclose("exception.message.replaceAll('(\\\\\\r|\\\\\\n|\\\\\\r\\\\\\n|\\\\\\s)+',' ')"));
+
+                writer.writeEndElement();//end json:object
+                writer.writeCharacters(System.lineSeparator());
+                writer.writeEndElement();//End of </c:if> for displaying exception message
+                writer.writeCharacters(System.lineSeparator());
                 writer.writeEndElement();//end c:when for resource
                 writer.writeCharacters(System.lineSeparator());
             }
             writer.writeStartElement("c:otherwise");
-            writeEscapedCharacters("<%\n"
-                    + "            response.setStatus(405);\n"
-                    + "        %>");
+            writer.writeCharacters(System.lineSeparator());
+            writeEscapedCharacters("<%\n response.setStatus(405);\n%>");
             writer.writeStartElement("json:object");
             writer.writeAttribute("name", "data");
 

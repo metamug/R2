@@ -30,7 +30,7 @@
             <xs:sequence>
                 <xs:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
                 <xs:choice maxOccurs="unbounded">
-                    <xs:element name="Request" type="request" />
+                    <xs:element name="Request" type="request"/>
                 </xs:choice>
             </xs:sequence>
             <xs:attribute name="version" type="version" use="required" />
@@ -92,6 +92,7 @@
         <xs:attribute name="minLen" type="xs:string" />
         <xs:attribute name="pattern" type="xs:string" />
         <xs:attribute name="exists" type="exists" />
+        <xs:attribute name="default" type="xs:string" />
     </xs:complexType>
 
     <xs:complexType name="execute">

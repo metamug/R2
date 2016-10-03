@@ -35,6 +35,8 @@ public class Param {
     protected String pattern;
     @XmlAttribute(name = "exists")
     protected String exists;
+    @XmlAttribute(name = "default")
+    protected String defaults;
 
     public String getName() {
         return name;
@@ -180,5 +182,23 @@ public class Param {
      */
     public void setExists(String value) {
         this.exists = value;
+    }
+
+    /**
+     * Gets the value of the default property
+     *
+     * @return
+     */
+    public String getDefault() {
+        return defaults;
+    }
+
+    /**
+     * Sets the value of the default property
+     *
+     * @param value
+     */
+    public void setDefault(String value) {
+        this.defaults = value;
     }
 }

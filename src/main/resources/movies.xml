@@ -2,19 +2,22 @@
 <Resource version="1.1">
     <Desc>Contains information about movies.</Desc>
     <Request method="GET">
-        <Sql type="query" when="@movieId eq null">
+        <Sql  type="query">
             SELECT * FROM movie
         </Sql>
         <Desc>Get all the tasks entered today.</Desc>
-        <Sql type="query" when="@movieId gt 0">
+        <Sql  className="com.test.metamug" type="query">
             SELECT * FROM movie where id=@movieId
         </Sql>
     </Request>
-    <Request method="GET" status="288">
-        <Sql type="query" when="@q eq 1">
-            SELECT task_id, task_hour, task_val
-            from tbl_task
-            order by task_hour asc
+    <Request method="GET">
+        <Sql when ="@id eq null" type="query" className="com.mtg.Urls">
+            select * from employee
+            where employee_name = @param1
+            and employee_id = @id
+        </Sql>
+        <Sql when="@id ne null" type="update">
+            update employee set employee_name = @param1 where employee_id=@id
         </Sql>
     </Request>
     <Request method="POST" status="201">
