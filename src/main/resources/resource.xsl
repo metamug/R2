@@ -337,15 +337,30 @@
                     var resNameDiv = document.getElementById('resName');
                     resName = resName.slice(0,-5);
                     resNameDiv.innerHTML = resName;
-                    document.title = resName;                    
-                    var paramListClasses = document.getElementsByClassName("paramList");
-                    var i;
-                    for (i = 0; i &lt; paramListClasses.length; i++) {                        
+                    document.title = resName;        
+                                
+                    /*var paramListClasses = document.getElementsByClassName("paramList");
+                    for (var i = 0; i &lt; paramListClasses.length; i++) {
+                        //console.log(paramListClasses[i]);
+                        var unique = [];
                         var paramList = paramListClasses[i].childNodes;
-                        var j;
-                        for(j = 0; j &lt; paramList.length; j++){                            
+                        for(var j = 0; j &lt; paramList.length; j++){
+                            var param = paramList[j];
+                            if(unique.length &gt; 0){
+                                for(var k = 0; k &lt; unique.length; k++){
+                                  //  console.log(param.innerHTML);
+                                    if(unique[k] === param.innerHTML){
+                                        paramList.removeChild(param);
+                                    }else{
+                                        unique.push(param);
+                                    }
+                                }
+                            }else{
+                                unique.push(param);
+                            }
                         }
-                    }
+                    //    console.log(unique);
+                    }*/
                 </script>
             </body>
         </html>
