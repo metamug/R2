@@ -275,19 +275,21 @@ public class JAXBParser {
                 writer.writeStartElement("c:if");
                 writer.writeAttribute("test", enclose("exception != null"));
                 writer.writeCharacters(System.lineSeparator());
-                writeEscapedCharacters("<%\n response.setStatus(500);\n%>");
-                writer.writeStartElement("json:object");
-                writer.writeAttribute("name", "data");
-                writer.writeAttribute("escapeXml", "false");
-
-                writer.writeEmptyElement("json:property");
-                writer.writeAttribute("name", "Code");
-                writer.writeAttribute("value", "500");
-                writer.writeEmptyElement("json:property");
-                writer.writeAttribute("name", "Message");
-                writer.writeAttribute("value", enclose("exception.message.replaceAll('(\\\\\\r|\\\\\\n|\\\\\\r\\\\\\n|\\\\\\s)+',' ')"));
-
-                writer.writeEndElement();//end json:object
+//                writeEscapedCharacters("<%\n response.setStatus(500);\n%>");
+//                writer.writeStartElement("json:object");
+//                writer.writeAttribute("name", "data");
+//                writer.writeAttribute("escapeXml", "false");
+//
+//                writer.writeEmptyElement("json:property");
+//                writer.writeAttribute("name", "Code");
+//                writer.writeAttribute("value", "500");
+//                writer.writeEmptyElement("json:property");
+//                writer.writeAttribute("name", "Message");
+////                writer.writeAttribute("value", enclose("exception.message.replaceAll('(\\\\r|\\\\n|\\\\r\\\\n|\\\\s)+',' ')"));
+//                writer.writeAttribute("value", enclose("exception.message.replaceAll('(\\\\\\r|\\\\\\n|\\\\\\r\\\\\\n|\\\\\\s)+',' ')"));
+//                writer.writeEndElement();//end json:object
+                writeEscapedCharacters("<%\n response.setStatus(500);\n"
+                        + "out.println(\"{\\\"Code\\\":\\\"500\\\",\\\"Message\\\": \\\"\" + pageContext.getAttribute(\"exception\").toString().replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n%>");
                 writer.writeCharacters(System.lineSeparator());
                 writer.writeEndElement();//End of </c:if> for displaying exception message
                 writer.writeCharacters(System.lineSeparator());
