@@ -196,8 +196,8 @@
                     resName = resName.slice(0,-5);
                     resNameDiv.innerHTML = resName;
                     document.title = resName;        
-                                
-                    /*var paramListClasses = document.getElementsByClassName("paramList");
+                                /*
+                    var paramListClasses = document.getElementsByClassName("paramList");
                     for (var i = 0; i < paramListClasses.length; i++) {
                         //console.log(paramListClasses[i]);
                         var unique = [];
@@ -207,15 +207,18 @@
                             if(unique.length > 0){
                                 for(var k = 0; k < unique.length; k++){
                                   //  console.log(param.innerHTML);
+                                    console.log("unique[k]: "+unique[k]);
                                     if(unique[k] === param.innerHTML){
-                                        paramList.removeChild(param);
+                                        //paramList.removeChild(param);
+                                        param.parentNode.removeChild(param);
                                     }else{
-                                        unique.push(param);
+                                        unique.push(param.innerHTML);
                                     }
                                 }
                             }else{
-                                unique.push(param);
+                                unique.push(param.innerHTML);
                             }
+                            console.log("unique: "+unique);
                         }
                     //    console.log(unique);
                     }*/
