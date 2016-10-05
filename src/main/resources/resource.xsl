@@ -353,8 +353,10 @@
                                     if(unique[k] === param.innerHTML){
                                         //paramList.removeChild(param);
                                         param.parentNode.removeChild(param);
+                                        //break;
                                     }else{
                                         unique.push(param.innerHTML);
+                                        break;
                                     }
                                 }
                             }else{
