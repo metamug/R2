@@ -338,7 +338,7 @@
                     resName = resName.slice(0,-5);
                     resNameDiv.innerHTML = resName;
                     document.title = resName;        
-                                /*
+                                
                     var paramListClasses = document.getElementsByClassName("paramList");
                     for (var i = 0; i &lt; paramListClasses.length; i++) {
                         //console.log(paramListClasses[i]);
@@ -346,26 +346,29 @@
                         var paramList = paramListClasses[i].childNodes;
                         for(var j = 0; j &lt; paramList.length; j++){
                             var param = paramList[j];
-                            if(unique.length &gt; 0){
-                                for(var k = 0; k &lt; unique.length; k++){
-                                  //  console.log(param.innerHTML);
-                                    console.log("unique[k]: "+unique[k]);
-                                    if(unique[k] === param.innerHTML){
-                                        //paramList.removeChild(param);
-                                        param.parentNode.removeChild(param);
-                                        //break;
-                                    }else{
-                                        unique.push(param.innerHTML);
-                                        break;
-                                    }
-                                }
-                            }else{
-                                unique.push(param.innerHTML);
-                            }
-                            console.log("unique: "+unique);
+                            unique.push(param.innerHTML);
+                        //    param.parentNode.removeChild(param);
+                            unique = eliminateDuplicates(unique);
                         }
-                    //    console.log(unique);
-                    }*/
+                        //console.log("unique: "+unique);
+                        for(var j=0; j &lt; unique.length; j++){
+                            
+                        }                                            
+                    }
+                    function eliminateDuplicates(arr) {
+                            var i,
+                            len=arr.length,
+                            out=[],
+                            obj={};
+
+                            for (i=0;i &lt; len;i++) {
+                                obj[arr[i]]=0;
+                            }
+                            for (i in obj) {
+                                out.push(i);
+                            }
+                            return out;
+                    }
                 </script>
             </body>
         </html>
