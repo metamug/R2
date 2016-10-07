@@ -145,7 +145,7 @@
                                                 
                                             <xsl:analyze-string select="." regex="@(\w+)">
                                                 <xsl:matching-substring>
-                                                    <span class="label label-primary" style="margin-right:5px">
+                                                    <span>
                                                         <xsl:value-of select="regex-group(1)"/>
                                                     </span>
                                                 </xsl:matching-substring>
@@ -222,7 +222,7 @@
                                             <xsl:choose>
                                                 <xsl:when test="Param">
                                                     <xsl:for-each select="Param">
-                                                        <span class="label label-primary" style="margin-right:5px"> 
+                                                        <span> 
                                                             <xsl:value-of select="@name"/>
                                                         </span>
                                                     </xsl:for-each>
@@ -270,7 +270,8 @@
                         <thead class="thead-inverse">
                             <tr>
                                 <th>Type</th>
-                                <th>Description</th>
+                                <th>Description
+</th>
                                 <th>Parameter</th>
                                 <th>Method</th>
                                 <th>Condition</th>
@@ -347,27 +348,30 @@
                         for(var j = 0; j &lt; paramList.length; j++){
                             var param = paramList[j];
                             unique.push(param.innerHTML);
-                        //    param.parentNode.removeChild(param);
                             unique = eliminateDuplicates(unique);
                         }
                         //console.log("unique: "+unique);
+                        var l = paramList.length;
+                        for(var j=l-1; j &gt;= 0; j--){
+                            paramList[j].parentNode.removeChild(paramList[j]);
+                        }
                         for(var j=0; j &lt; unique.length; j++){
-                            
-                        }                                            
+                            var span = document.createElement('span');
+                            span.classList.add('label','label-primary');
+                            span.innerHTML = unique[j];
+                            span.style['margin-right'] = '5px';
+                            paramListClasses[i].appendChild(span);
+                        }                                                                                        
                     }
                     function eliminateDuplicates(arr) {
-                            var i,
-                            len=arr.length,
-                            out=[],
-                            obj={};
-
-                            for (i=0;i &lt; len;i++) {
-                                obj[arr[i]]=0;
-                            }
-                            for (i in obj) {
-                                out.push(i);
-                            }
-                            return out;
+                        var i, len=arr.length, out=[], obj={};
+                        for (i=0;i &lt; len;i++) {
+                            obj[arr[i]]=0;
+                        }
+                        for (i in obj) {
+                            out.push(i);
+                        }
+                        return out;
                     }
                 </script>
             </body>

@@ -58,7 +58,7 @@
                         Param(s)
                         
                      </div>
-                     <div class="paramList" style="padding-top:8px;font-size:16px;"><span class="label label-primary" style="margin-right:5px">t</span><span class="label label-primary" style="margin-right:5px">u</span><span class="label label-primary" style="margin-right:5px">v</span><span class="label label-primary" style="margin-right:5px">param1</span><span class="label label-primary" style="margin-right:5px">q</span><span class="label label-primary" style="margin-right:5px">q</span><span class="label label-primary" style="margin-right:5px">q</span><span class="label label-primary" style="margin-right:5px">v</span><span class="label label-primary" style="margin-right:5px">param1</span><span class="label label-primary" style="margin-right:5px">id</span><span class="label label-primary" style="margin-right:5px">param2</span><span class="label label-primary" style="margin-right:5px">id</span></div>
+                     <div class="paramList" style="padding-top:8px;font-size:16px;"><span class="label label-primary" style="margin-right:5px">t</span><span class="label label-primary" style="margin-right:5px">u</span><span class="label label-primary" style="margin-right:5px">v</span><span class="label label-primary" style="margin-right:5px">param1</span><span class="label label-primary" style="margin-right:5px">q</span><span class="label label-primary" style="margin-right:5px">q</span><span class="label label-primary" style="margin-right:5px">q</span><span>v</span><span>param1</span><span>id</span><span>param2</span><span>id</span></div>
                   </div>
                </div>
             </div>
@@ -184,7 +184,7 @@
                         Param(s)
                         
                      </div>
-                     <div class="paramList" style="padding-top:8px;font-size:16px;"><span class="label label-primary" style="margin-right:5px">id</span></div>
+                     <div class="paramList" style="padding-top:8px;font-size:16px;"><span>id</span></div>
                   </div>
                </div>
             </div>
@@ -205,27 +205,30 @@
                         for(var j = 0; j < paramList.length; j++){
                             var param = paramList[j];
                             unique.push(param.innerHTML);
-                        //    param.parentNode.removeChild(param);
                             unique = eliminateDuplicates(unique);
                         }
-                        console.log("unique: "+unique);
+                        //console.log("unique: "+unique);
+                        var l = paramList.length;
+                        for(var j=l-1; j >= 0; j--){
+                            paramList[j].parentNode.removeChild(paramList[j]);
+                        }
                         for(var j=0; j < unique.length; j++){
-                            
-                        }                                            
+                            var span = document.createElement('span');
+                            span.classList.add('label','label-primary');
+                            span.innerHTML = unique[j];
+                            span.style['margin-right'] = '5px';
+                            paramListClasses[i].appendChild(span);
+                        }                                                                                        
                     }
                     function eliminateDuplicates(arr) {
-                            var i,
-                            len=arr.length,
-                            out=[],
-                            obj={};
-
-                            for (i=0;i < len;i++) {
-                                obj[arr[i]]=0;
-                            }
-                            for (i in obj) {
-                                out.push(i);
-                            }
-                            return out;
+                        var i, len=arr.length, out=[], obj={};
+                        for (i=0;i < len;i++) {
+                            obj[arr[i]]=0;
+                        }
+                        for (i in obj) {
+                            out.push(i);
+                        }
+                        return out;
                     }
                 </script></body>
 </html>
