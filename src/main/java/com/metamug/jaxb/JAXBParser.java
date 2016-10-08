@@ -201,7 +201,21 @@ public class JAXBParser {
                             writer.writeStartElement("c:if");
                             writer.writeAttribute("test", enclose(sql.getWhen().replace("@", "mtgReq.params.")));
                         }
-
+                        //Collect string representation date-time values from parameters to convert them into Util.Date
+                        List<String> dateParams = getDateParams(sql.getValue());
+                        if (!dateParams.isEmpty()) {
+                            writer.writeCharacters(System.lineSeparator());
+                            for (String dateParam : dateParams) {
+                                // <fmt:parseDate value = "${mtgReq.params.rDate}" pattern = "yyyy-mm-dd HH:mm:ss" type = "both" var = "myDate" / >
+                                if (dateParam.contains("Date")) {
+                                    writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "}\" pattern=\"yyyy-mm-dd\" type=\"both\" var=\"" + dateParam + "D\"/>");
+                                } else if (dateParam.contains("Time")) {
+                                    writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "\"}\" pattern=\"yyyy-mm-dd\" type=\"both\" var=\"" + dateParam + "T\"/>");
+                                } else if (dateParam.contains("DateTime")) {
+                                    writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "\"}\" pattern=\"yyyy-mm-dd\" type=\"both\" var=\"" + dateParam + "TS\"/>");
+                                }
+                            }
+                        }
                         if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("update")) {
                             writer.writeStartElement("sql:update");
                         } else {
@@ -275,19 +289,6 @@ public class JAXBParser {
                 writer.writeStartElement("c:if");
                 writer.writeAttribute("test", enclose("exception != null"));
                 writer.writeCharacters(System.lineSeparator());
-//                writeEscapedCharacters("<%\n response.setStatus(500);\n%>");
-//                writer.writeStartElement("json:object");
-//                writer.writeAttribute("name", "data");
-//                writer.writeAttribute("escapeXml", "false");
-//
-//                writer.writeEmptyElement("json:property");
-//                writer.writeAttribute("name", "Code");
-//                writer.writeAttribute("value", "500");
-//                writer.writeEmptyElement("json:property");
-//                writer.writeAttribute("name", "Message");
-////                writer.writeAttribute("value", enclose("exception.message.replaceAll('(\\\\r|\\\\n|\\\\r\\\\n|\\\\s)+',' ')"));
-//                writer.writeAttribute("value", enclose("exception.message.replaceAll('(\\\\\\r|\\\\\\n|\\\\\\r\\\\\\n|\\\\\\s)+',' ')"));
-//                writer.writeEndElement();//end json:object
                 writeEscapedCharacters("<%\n response.setStatus(500);\n"
                         + "out.println(\"{\\\"Code\\\":\\\"500\\\",\\\"Message\\\": \\\"\" + pageContext.getAttribute(\"exception\").toString().replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n%>");
                 writer.writeCharacters(System.lineSeparator());
@@ -376,12 +377,28 @@ public class JAXBParser {
         for (String param : params) {
             if (param.equals("id")) {
                 builder.append("<sql:param value=\"${mtgReq.id}\"/>");
+            } else if (param.contains("Date")) {
+                builder.append(MessageFormat.format("<sql:dateParam value=\"$'{'{0}'}\" type=\"DATE\"/>", param + "D"));
+            } else if (param.contains("Time")) {
+                builder.append(MessageFormat.format("<sql:dateParam value=\"$'{'{0}'}\" type=\"TIME\"/>", param + "T"));
+            } else if (param.contains("DateTime") || param.contains("Timestamp")) {
+                builder.append(MessageFormat.format("<sql:dateParam value=\"$'{'{0}'}\" type=\"TIMESTAMP\"/>", param + "TS"));
             } else {
                 builder.append(MessageFormat.format("<sql:param value=\"$'{'mtgReq.params.{0}'}\" />", param));
             }
             builder.append("\n");
         }
         return builder.toString();
+    }
+
+    private List<String> getDateParams(String query) {
+        List<String> params = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\\@(\\w+)");
+        Matcher match = pattern.matcher(query);
+        while (match.find()) {
+            params.add(query.substring(match.start(1), match.end(1)));
+        }
+        return params;
     }
 
     public static void isValid(Param param, String str) throws PatternSyntaxException, InputValidationException {

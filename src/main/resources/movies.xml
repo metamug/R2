@@ -2,11 +2,11 @@
 <Resource version="1.1">
     <Desc>Contains information about movies.</Desc>
     <Request method="GET">
-        <Sql  type="query">
+        <Sql when="@q eq 1" type="query">
             SELECT * FROM movie
         </Sql>
         <Desc>Get all the tasks entered today.</Desc>
-        <Sql  className="com.test.metamug" type="query">
+        <Sql when="@q eq 2" type="query">
             SELECT * FROM movie where id=@movieId
         </Sql>
     </Request>
@@ -22,7 +22,7 @@
     </Request>
     <Request method="POST" status="201">
         <Sql type="update">
-            INSERT INTO movie (name, rating) VALUES (@p, @q)
+            INSERT INTO movie (`name`, `rating`,release`) VALUES (@p, @q,@rDate)
         </Sql>
     </Request>
     <Request method="PUT" item="true" status="202">
