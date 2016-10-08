@@ -28,7 +28,14 @@
                      API Version:
                      
                   </th>
-                  <td>1.1</td>
+                  <td id="resVersion">1.1</td>
+               </tr>
+               <tr>
+                  <th scope="row" style="width:200px">
+                     Resource URI:
+                     
+                  </th>
+                  <td id="resUri"></td>
                </tr>
             </tbody>
          </table>
@@ -195,7 +202,12 @@
                     var resNameDiv = document.getElementById('resName');
                     resName = resName.slice(0,-5);
                     resNameDiv.innerHTML = resName;
-                    document.title = resName;        
+                    document.title = resName;
+                    
+                    var uriDiv = document.getElementById('resUri');
+                    var version = document.getElementById('resVersion').innerHTML;
+                    var uri = "/v"+version+"/"+resName;
+                    uriDiv.innerHTML = uri;       
                                 
                     var paramListClasses = document.getElementsByClassName("paramList");
                     for (var i = 0; i < paramListClasses.length; i++) {

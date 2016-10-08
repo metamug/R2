@@ -43,8 +43,16 @@
                                 <th scope="row" style="width:200px">
                                     API Version:
                                 </th>
-                                <td>
+                                <td id="resVersion">
                                     <xsl:value-of select="@version"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="width:200px">
+                                    Resource URI:
+                                </th>
+                                <td id="resUri">
+                                    
                                 </td>
                             </tr>
                         </tbody>
@@ -264,73 +272,7 @@
                             
                         </div>    
                     </xsl:for-each>    
-                    
-                    
-                    <!--<table class="table table-striped">
-                        <thead class="thead-inverse">
-                            <tr>
-                                <th>Type</th>
-                                <th>Description
-</th>
-                                <th>Parameter</th>
-                                <th>Method</th>
-                                <th>Condition</th>
-                                <th>Output</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <xsl:for-each select="Request">
-                                <xsl:for-each select="Sql">
-                                    <tr>-->
-                                        <!--TD for query-type
-                                        <td>
-                                            <xsl:choose>
-                                                <xsl:when test="contains(@type,'query')">
-                                                    Query
-                                                </xsl:when>
-                                                <xsl:otherwise>
-                                                    Update
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </td>-->
-                                        <!--TD for description
-                                        <td>
-                                            <xsl:value-of select="../Desc"/>
-                                        </td>-->
-                                        <!--TD for parameter list
-                                        <td>
-                                            <xsl:analyze-string select="." regex="@(\w+)">
-                                                <xsl:matching-substring>
-                                                    <xsl:value-of select="concat(regex-group(1),', ')"/>
-                                                </xsl:matching-substring>
-                                                <xsl:non-matching-substring>
-                                                </xsl:non-matching-substring>
-                                            </xsl:analyze-string>
-                                        </td>-->
-                                        <!--TD for request method
-                                        <td>
-                                            <xsl:value-of select="../@method"/>
-                                        </td>-->
-                                        <!--TD for condition
-                                        <td>
-                                            <xsl:value-of select="replace(@when,'@','')"/>
-                                        </td>-->
-                                        <!--TD for output format
-                                        <td>
-                                            <xsl:choose>
-                                                <xsl:when test='string-length(@Out) &gt; 0'>
-                                                    <xsl:value-of select="@Out"/>
-                                                </xsl:when>
-                                                <xsl:otherwise>json
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </td>
-                                    </tr>
-                                </xsl:for-each>
-                            </xsl:for-each>
-                        </tbody>
-                    </table>-->
+                 
                 </div>
                 <script>
                     var url = window.location.href;
@@ -338,7 +280,12 @@
                     var resNameDiv = document.getElementById('resName');
                     resName = resName.slice(0,-5);
                     resNameDiv.innerHTML = resName;
-                    document.title = resName;        
+                    document.title = resName;
+                    
+                    var uriDiv = document.getElementById('resUri');
+                    var version = document.getElementById('resVersion').innerHTML;
+                    var uri = "/v"+version+"/"+resName;
+                    uriDiv.innerHTML = uri;       
                                 
                     var paramListClasses = document.getElementsByClassName("paramList");
                     for (var i = 0; i &lt; paramListClasses.length; i++) {
