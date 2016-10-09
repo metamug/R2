@@ -210,9 +210,9 @@ public class JAXBParser {
                                 if (dateParam.contains("Date")) {
                                     writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "}\" pattern=\"yyyy-mm-dd\" type=\"both\" var=\"" + dateParam + "D\"/>");
                                 } else if (dateParam.contains("Time")) {
-                                    writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "\"}\" pattern=\"yyyy-mm-dd\" type=\"both\" var=\"" + dateParam + "T\"/>");
+                                    writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "\"}\" pattern=\"HH:mm:ss\" type=\"both\" var=\"" + dateParam + "T\"/>");
                                 } else if (dateParam.contains("DateTime")) {
-                                    writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "\"}\" pattern=\"yyyy-mm-dd\" type=\"both\" var=\"" + dateParam + "TS\"/>");
+                                    writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "\"}\" pattern=\"yyyy-mm-dd HH:mm:ss\" type=\"both\" var=\"" + dateParam + "TS\"/>");
                                 }
                             }
                         }

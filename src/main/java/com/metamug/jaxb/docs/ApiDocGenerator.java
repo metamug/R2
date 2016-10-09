@@ -46,47 +46,52 @@ public class ApiDocGenerator {
                         return name.toLowerCase().endsWith(".html");
                     }
                 });
-
-                htmlFilenameList.addAll(Arrays.asList(versionFile));
+                if (versionFile != null) {
+                    htmlFilenameList.addAll(Arrays.asList(versionFile));
+                }
             }
-            output = new FileOutputStream(appDirectory + "/index" + ".html");
+            output = new FileOutputStream(appDirectory + "/docs/list" + ".html");
             writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
             writeEscapedCharacters("<!DOCTYPE html>");
-            writer.writeStartElement("html");
+//            writer.writeStartElement("html");
             writer.writeStartElement("head");
-            writer.writeStartElement("meta");
-            writer.writeAttribute("charset", "utf-8");
-            writer.writeEndElement();//End </meta>
-            writer.writeStartElement("meta");
-            writer.writeAttribute("http-equiv", "X-UA-Compatible");
-            writer.writeAttribute("content", "IE=edge");
-            writer.writeEndElement(); //End </meta>
-            writer.writeStartElement("meta");
-            writer.writeAttribute("name", "viewport");
-            writer.writeAttribute("content", "width=device-width, initial-scale=1, shrink-to-fit=no");
-            writer.writeEndElement();//End </meta>
+//            writer.writeStartElement("meta");
+//            writer.writeAttribute("charset", "utf-8");
+//            writer.writeEndElement();//End </meta>
+//            writer.writeStartElement("meta");
+//            writer.writeAttribute("http-equiv", "X-UA-Compatible");
+//            writer.writeAttribute("content", "IE=edge");
+//            writer.writeEndElement(); //End </meta>
+//            writer.writeStartElement("meta");
+//            writer.writeAttribute("name", "viewport");
+//            writer.writeAttribute("content", "width=device-width, initial-scale=1, shrink-to-fit=no");
+//            writer.writeEndElement();//End </meta>
             writer.writeStartElement("link");
-            writer.writeAttribute("href", "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css");
             writer.writeAttribute("rel", "stylesheet");
-            writer.writeEndElement(); //End</meta>
+            writer.writeAttribute("href", "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
+            writer.writeAttribute("integrity", "sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u");
+            writer.writeAttribute("crossorigin", "anonymous");
+            writer.writeEndElement(); //End </link>
             writer.writeStartElement("title");
-            writeEscapedCharacters("Welcome");
+            writeEscapedCharacters("Listing");
             writer.writeEndElement();   //End of </title>
             writer.writeEndElement();   //End of </head>
             writer.writeStartElement("body");
             writer.writeStartElement("div");
             writer.writeAttribute("class", "container");
-            writer.writeAttribute("style", "padding-top:25px");
-            writer.writeStartElement("h2");
+            writer.writeAttribute("style", "padding-top:5px");
+            writer.writeStartElement("h5");
             writeEscapedCharacters("Resource List:");
-            writer.writeEndElement();
+            writer.writeEndElement();//End of </h5>
             if (!htmlFilenameList.isEmpty()) {
                 writer.writeStartElement("div");
+                writer.writeAttribute("height", "100%");
                 writer.writeAttribute("class", "list-group col-md-4");
                 for (File resourceDoc : htmlFilenameList) {
                     writer.writeStartElement("a");
                     writer.writeAttribute("class", "list-group-item");
-                    writer.writeAttribute("href", "docs\\" + resourceDoc.getParentFile().getName() + File.separator + resourceDoc.getName());
+                    writer.writeAttribute("href", resourceDoc.getParentFile().getName() + File.separator + resourceDoc.getName());
+                    writer.writeAttribute("target", "description");
                     writeEscapedCharacters(resourceDoc.getName());
                     writer.writeEndElement();   //Endo of </a>
                 }
@@ -98,7 +103,7 @@ public class ApiDocGenerator {
             }
             writer.writeEndElement();   //End of </div class="container">
             writer.writeEndElement();   //End of </body>
-            writer.writeEndElement();   //End of </html>
+//            writer.writeEndElement();   //End of </html>
         } catch (FileNotFoundException | XMLStreamException | XPathExpressionException ex) {
             Logger.getLogger(ApiDocGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
