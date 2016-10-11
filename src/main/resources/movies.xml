@@ -9,6 +9,9 @@
         <Sql when="@q eq 2" type="query">
             SELECT * FROM movie where id=@movieId
         </Sql>
+        <Sql when="@q eq 3" type="query">
+            SELECT `name`,`rating` from movie where `release` ge @fromDate and `release` le @toDate
+        </Sql>
     </Request>
     <Request method="GET">
         <Sql when ="@id eq null" type="query" className="com.mtg.Urls">
@@ -22,7 +25,7 @@
     </Request>
     <Request method="POST" status="201">
         <Sql type="update">
-            INSERT INTO movie (`name`, `rating`,release`) VALUES (@p, @q,@rDate)
+            INSERT INTO movie (`name`, `rating`,`release`) VALUES (@p, @q,@rDate)
         </Sql>
     </Request>
     <Request method="PUT" item="true" status="202">

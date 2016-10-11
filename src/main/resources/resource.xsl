@@ -10,49 +10,32 @@
             <head>
                 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
                       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
             </head>
             <body>
                 <div class="container" style="padding-top:25px">
-                    <table class="table table-striped">
-                        <tbody>
-                            <tr>
-                                <th scope="row" style="width:200px">
-                                    Resource Name
-                                </th>
-                                <td id="resName">
-                                    <xsl:value-of select="@table"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row"  style="width:200px">
-                                    Resource Description
-                                </th>
-                                <td>
-                                    <xsl:choose>
-                                        <xsl:when test='string-length(Desc) &gt; 0'>
-                                            <xsl:value-of select="Desc"/>
-                                        </xsl:when>
-                                        <xsl:otherwise>Not Given
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width:200px">
-                                    API Version:
-                                </th>
-                                <td>
-                                    <xsl:value-of select="@version"/>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
+                    <div class="panel-body">
+                        <span id="resName" style="color:darkgrey;font-weight:bold;margin-right:5px">
+                           ABC 
+                        </span>
+                        <span class="badge">
+                           <xsl:value-of select="@version"/>
+                        </span>
+                        <div>
+                           <xsl:choose>
+                               <xsl:when test='string-length(Desc) &gt; 0'>
+                                   <xsl:value-of select="Desc"/>
+                               </xsl:when>
+                               <xsl:otherwise>Not Given
+                               </xsl:otherwise>
+                           </xsl:choose>
+                        </div>
+                     </div>
+                    
                     <xsl:for-each select="Request">
                         
-                        <div class="col-md-8" style="padding-top:10px">
+                        <div class="col-md-12" style="padding-top:10px">
 
                         <xsl:choose>    
                             <xsl:when test="contains(@item,'true')" >                      
@@ -60,30 +43,21 @@
                                     
                                 <div class="panel-heading">
                                     <span style="font-weight:bold">ITEM REQUEST</span>
-                                    
-                                    <xsl:choose>
-                                        <xsl:when test="contains(@method,'GET')">
-                                            <div style="font-size:14px" class="label label-success pull-right">
-                                                GET
-                                            </div>    
-                                        </xsl:when>
-                                        <xsl:when test="contains(@method,'POST')">
-                                            <div style="font-size:14px" class="label label-info pull-right">
-                                                POST
-                                            </div>    
-                                        </xsl:when>
-                                        <xsl:when test="contains(@method,'PUT')">
-                                            <div style="font-size:14px" class="label label-warning pull-right">
-                                                PUT
-                                            </div>    
-                                        </xsl:when>
-                                        <xsl:when test="contains(@method,'DELETE')">
-                                            <div style="font-size:14px" class="label label-danger pull-right">
-                                                DELETE
-                                            </div>    
-                                        </xsl:when>
-                                    </xsl:choose>
-                                    
+                                    <span class="pull-right" style="font-size:14px">
+                                        <div class="badge">
+                                            <xsl:choose>
+                                                <xsl:when test='string-length(@status) &gt; 0'>
+                                                    <xsl:value-of select="@status"/>
+                                                </xsl:when>    
+                                                <xsl:otherwise>
+                                                    <div>200</div>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
+                                        </div>
+                                        <div class="label label-success">   
+                                            <xsl:value-of select="@method"/>
+                                        </div>
+                                    </span>                                    
                                 </div>    
                                 <div class="panel-body">
                                     <div>
@@ -97,19 +71,6 @@
                                             <xsl:otherwise>
                                                 <div>-</div>
                                             </xsl:otherwise>        
-                                        </xsl:choose>
-                                    </div>
-                                    <div style="padding-top:12px">
-                                        <div style="color:darkgrey;font-weight:bold;">
-                                            Response Status
-                                        </div>
-                                        <xsl:choose>
-                                            <xsl:when test='string-length(@status) &gt; 0'>
-                                                <xsl:value-of select="@status"/>
-                                            </xsl:when>    
-                                            <xsl:otherwise>
-                                                <div>-</div>
-                                            </xsl:otherwise>
                                         </xsl:choose>
                                     </div>
                                     <div style="padding-top:12px">
@@ -264,73 +225,7 @@
                             
                         </div>    
                     </xsl:for-each>    
-                    
-                    
-                    <!--<table class="table table-striped">
-                        <thead class="thead-inverse">
-                            <tr>
-                                <th>Type</th>
-                                <th>Description
-</th>
-                                <th>Parameter</th>
-                                <th>Method</th>
-                                <th>Condition</th>
-                                <th>Output</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-            <xsl:for-each select="Request">
-                <xsl:for-each select="Sql">
-                    <tr>
-                    TD for query-type
-                    <td>
-                        <xsl:choose>
-                            <xsl:when test="contains(@type,'query')">
-                                Query
-                            </xsl:when>
-                            <xsl:otherwise>
-                                Update
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </td>
-                    TD for description
-                    <td>
-                        <xsl:value-of select="../Desc"/>
-                    </td>
-                    TD for parameter list
-                    <td>
-                        <xsl:analyze-string select="." regex="@(\w+)">
-                            <xsl:matching-substring>
-                                <xsl:value-of select="concat(regex-group(1),', ')"/>
-                            </xsl:matching-substring>
-                            <xsl:non-matching-substring>
-                            </xsl:non-matching-substring>
-                        </xsl:analyze-string>
-                    </td>
-                   TD for request method
-                                        <td>
-                                            <xsl:value-of select="../@method"/>
-                                        </td>
-                                        TD for condition
-                                        <td>
-                                            <xsl:value-of select="replace(@when,'@','')"/>
-                                        </td>
-                                        TD for output format
-                                        <td>
-                                            <xsl:choose>
-                                                <xsl:when test='string-length(@Out) &gt; 0'>
-                                                    <xsl:value-of select="@Out"/>
-                                                </xsl:when>
-                                                <xsl:otherwise>json
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </td>
-                                    </tr>
-                                </xsl:for-each>
-                            </xsl:for-each>
-                        </tbody>
-                    </table>-->
+                 
                 </div>
                 <script>
                     var url = window.location.href;
@@ -338,7 +233,12 @@
                     var resNameDiv = document.getElementById('resName');
                     resName = resName.slice(0,-5);
                     resNameDiv.innerHTML = resName;
-                    document.title = resName;        
+                    document.title = resName;
+                    
+                    var uriDiv = document.getElementById('resUri');
+                    var version = document.getElementById('resVersion').innerHTML;
+                    var uri = "/v"+version+"/"+resName;
+                    uriDiv.innerHTML = uri;       
                                 
                     var paramListClasses = document.getElementsByClassName("paramList");
                     for (var i = 0; i &lt; paramListClasses.length; i++) {

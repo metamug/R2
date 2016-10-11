@@ -206,14 +206,14 @@ public class JAXBParser {
                         if (!dateParams.isEmpty()) {
                             writer.writeCharacters(System.lineSeparator());
                             for (String dateParam : dateParams) {
-                                // <fmt:parseDate value = "${mtgReq.params.rDate}" pattern = "yyyy-mm-dd HH:mm:ss" type = "both" var = "myDate" / >
                                 if (dateParam.contains("Date")) {
-                                    writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "}\" pattern=\"yyyy-mm-dd\" type=\"both\" var=\"" + dateParam + "D\"/>");
+                                    writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "}\" pattern=\"yyyy-MM-dd\" type=\"both\" var=\"" + dateParam + "D\"/>");
                                 } else if (dateParam.contains("Time")) {
                                     writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "\"}\" pattern=\"HH:mm:ss\" type=\"both\" var=\"" + dateParam + "T\"/>");
                                 } else if (dateParam.contains("DateTime")) {
-                                    writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "\"}\" pattern=\"yyyy-mm-dd HH:mm:ss\" type=\"both\" var=\"" + dateParam + "TS\"/>");
+                                    writeEscapedCharacters("<fmt:parseDate value=\"${mtgReq.params." + dateParam + "\"}\" pattern=\"yyyy-MM-dd HH:mm:ss\" type=\"both\" var=\"" + dateParam + "TS\"/>");
                                 }
+                                writer.writeCharacters(System.lineSeparator());
                             }
                         }
                         if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("update")) {
@@ -396,7 +396,10 @@ public class JAXBParser {
         Pattern pattern = Pattern.compile("\\@(\\w+)");
         Matcher match = pattern.matcher(query);
         while (match.find()) {
-            params.add(query.substring(match.start(1), match.end(1)));
+            String param = query.substring(match.start(1), match.end(1));
+            if (param.contains("Date") || param.contains("Time") || param.contains("DateTime") || param.contains("Timestamp")) {
+                params.add(param);
+            }
         }
         return params;
     }

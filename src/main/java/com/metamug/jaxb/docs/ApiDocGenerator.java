@@ -53,36 +53,24 @@ public class ApiDocGenerator {
             output = new FileOutputStream(appDirectory + "/docs/list" + ".html");
             writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
             writeEscapedCharacters("<!DOCTYPE html>");
-//            writer.writeStartElement("html");
             writer.writeStartElement("head");
-//            writer.writeStartElement("meta");
-//            writer.writeAttribute("charset", "utf-8");
-//            writer.writeEndElement();//End </meta>
-//            writer.writeStartElement("meta");
-//            writer.writeAttribute("http-equiv", "X-UA-Compatible");
-//            writer.writeAttribute("content", "IE=edge");
-//            writer.writeEndElement(); //End </meta>
-//            writer.writeStartElement("meta");
-//            writer.writeAttribute("name", "viewport");
-//            writer.writeAttribute("content", "width=device-width, initial-scale=1, shrink-to-fit=no");
-//            writer.writeEndElement();//End </meta>
             writer.writeStartElement("link");
             writer.writeAttribute("rel", "stylesheet");
             writer.writeAttribute("href", "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
             writer.writeAttribute("integrity", "sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u");
             writer.writeAttribute("crossorigin", "anonymous");
             writer.writeEndElement(); //End </link>
-            writer.writeStartElement("title");
-            writeEscapedCharacters("Listing");
-            writer.writeEndElement();   //End of </title>
-            writer.writeEndElement();   //End of </head>
+            writer.writeEndElement(); //End of </head>
             writer.writeStartElement("body");
             writer.writeStartElement("div");
             writer.writeAttribute("class", "container");
             writer.writeAttribute("style", "padding-top:5px");
-            writer.writeStartElement("h5");
-            writeEscapedCharacters("Resource List:");
-            writer.writeEndElement();//End of </h5>
+            writer.writeStartElement("div");
+            writer.writeAttribute("class", "page-header");
+            writer.writeStartElement("h4");
+            writeEscapedCharacters("Resources");
+            writer.writeEndElement();//End of </h4>
+            writer.writeEndElement();//End of </div class="page-header">
             if (!htmlFilenameList.isEmpty()) {
                 writer.writeStartElement("div");
                 writer.writeAttribute("height", "100%");
@@ -96,14 +84,9 @@ public class ApiDocGenerator {
                     writer.writeEndElement();   //Endo of </a>
                 }
                 writer.writeEndElement();   //Endo of </div class="list-group">
-            } else {
-                writer.writeStartElement("h4");
-                writeEscapedCharacters("No resources created!");
-                writer.writeEndElement();   //Endo of </h4>
             }
             writer.writeEndElement();   //End of </div class="container">
             writer.writeEndElement();   //End of </body>
-//            writer.writeEndElement();   //End of </html>
         } catch (FileNotFoundException | XMLStreamException | XPathExpressionException ex) {
             Logger.getLogger(ApiDocGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
