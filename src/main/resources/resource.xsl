@@ -19,8 +19,10 @@
                         <span id="resName" style="color:darkgrey;font-weight:bold;margin-right:5px">
                            ABC 
                         </span>
-                        <span class="badge">
+                        <span id="resVersion" class="badge">
                            <xsl:value-of select="@version"/>
+                        </span>
+                        <span id="resUri" style="font-weight:bold;" class="text text-success pull-right">                            
                         </span>
                         <div>
                            <xsl:choose>
@@ -44,7 +46,7 @@
                                 <div class="panel-heading">
                                     <span style="font-weight:bold">ITEM REQUEST</span>
                                     <span class="pull-right" style="font-size:14px">
-                                        <div class="badge">
+                                        <div class="badge" style="margin-right:10px;">
                                             <xsl:choose>
                                                 <xsl:when test='string-length(@status) &gt; 0'>
                                                     <xsl:value-of select="@status"/>
@@ -54,9 +56,31 @@
                                                 </xsl:otherwise>
                                             </xsl:choose>
                                         </div>
-                                        <div class="label label-success">   
+                                        <xsl:choose>
+                                            <xsl:when test="contains(@method,'GET')">
+                                                <div class="label label-success" style="font-size:14px">
+                                                    GET
+                                                </div>    
+                                            </xsl:when>
+                                            <xsl:when test="contains(@method,'POST')">
+                                                <div class="label label-info" style="font-size:14px">
+                                                    POST
+                                                </div>    
+                                            </xsl:when>
+                                            <xsl:when test="contains(@method,'PUT')">
+                                                <div class="label label-warning" style="font-size:14px">
+                                                    PUT
+                                                </div>    
+                                            </xsl:when>
+                                            <xsl:when test="contains(@method,'DELETE')">
+                                                <div class="label label-danger" style="font-size:14px">
+                                                    DELETE
+                                                </div>    
+                                            </xsl:when>
+                                        </xsl:choose>
+                                        <!--<div class="label label-success">   
                                             <xsl:value-of select="@method"/>
-                                        </div>
+                                        </div>-->
                                     </span>                                    
                                 </div>    
                                 <div class="panel-body">
@@ -123,30 +147,40 @@
                                 <div class="panel panel-info">
                                 <div class="panel-heading">
                                     <span style="font-weight:bold">COLLECTION REQUEST</span>
-                                    
-                                    <xsl:choose>
-                                        <xsl:when test="contains(@method,'GET')">
-                                            <div class="label label-success pull-right" style="font-size:14px">
-                                                GET
-                                            </div>    
-                                        </xsl:when>
-                                        <xsl:when test="contains(@method,'POST')">
-                                            <div class="label label-info pull-right" style="font-size:14px">
-                                                POST
-                                            </div>    
-                                        </xsl:when>
-                                        <xsl:when test="contains(@method,'PUT')">
-                                            <div class="label label-warning pull-right" style="font-size:14px">
-                                                PUT
-                                            </div>    
-                                        </xsl:when>
-                                        <xsl:when test="contains(@method,'DELETE')">
-                                            <div class="label label-danger pull-right" style="font-size:14px">
-                                                DELETE
-                                            </div>    
-                                        </xsl:when>
-                                    </xsl:choose>
-                                    
+                                    <span class="pull-right" style="font-size:14px">
+                                        <div class="badge" style="margin-right:10px;">
+                                            <xsl:choose>
+                                                <xsl:when test='string-length(@status) &gt; 0'>
+                                                    <xsl:value-of select="@status"/>
+                                                </xsl:when>    
+                                                <xsl:otherwise>
+                                                    <div>200</div>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
+                                        </div>
+                                        <xsl:choose>
+                                            <xsl:when test="contains(@method,'GET')">
+                                                <div class="label label-success" style="font-size:14px">
+                                                    GET
+                                                </div>    
+                                            </xsl:when>
+                                            <xsl:when test="contains(@method,'POST')">
+                                                <div class="label label-info" style="font-size:14px">
+                                                    POST
+                                                </div>    
+                                            </xsl:when>
+                                            <xsl:when test="contains(@method,'PUT')">
+                                                <div class="label label-warning" style="font-size:14px">
+                                                    PUT
+                                                </div>    
+                                            </xsl:when>
+                                            <xsl:when test="contains(@method,'DELETE')">
+                                                <div class="label label-danger" style="font-size:14px">
+                                                    DELETE
+                                                </div>    
+                                            </xsl:when>
+                                        </xsl:choose>
+                                    </span>
                                 </div>    
                                 <div class="panel-body">
                                     <div>
@@ -162,19 +196,6 @@
                                             </xsl:otherwise>        
                                         </xsl:choose>
                                     </div>
-                                    <div style="padding-top:12px">
-                                        <div style="color:darkgrey;font-weight:bold;">
-                                            Response Status
-                                        </div>
-                                        <xsl:choose>
-                                            <xsl:when test='string-length(@status) &gt; 0'>
-                                                <xsl:value-of select="@status"/>
-                                            </xsl:when>    
-                                            <xsl:otherwise>
-                                                <div>-</div>
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </div>  
                                     <div style="padding-top:12px">
                                         <div style="color:darkgrey;font-weight:bold;">
                                             Param(s)
@@ -229,11 +250,11 @@
                 </div>
                 <script>
                     var url = window.location.href;
-                    var resName = url.substr(url.lastIndexOf('/')+1);
+                    var resName = url.substr(url.lastIndexOf('/')+1).toUpperCase();
                     var resNameDiv = document.getElementById('resName');
                     resName = resName.slice(0,-5);
                     resNameDiv.innerHTML = resName;
-                    document.title = resName;
+                    document.title = resName.toLowerCase();
                     
                     var uriDiv = document.getElementById('resUri');
                     var version = document.getElementById('resVersion').innerHTML;
