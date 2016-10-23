@@ -103,10 +103,8 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.Source;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
@@ -125,24 +123,30 @@ public class JAXBParser {
     XMLStreamWriter writer;
 
     public static void main(String[] args) throws TransformerConfigurationException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException {
-        File xml = new File(JAXBParser.class.getResource("/movies.xml").getFile());
+//        try {
+//            JSONObject jsonParams = null;
+//            System.out.println(jsonParams.toString());
+//        } catch (Exception ex) {
+//            System.out.println(ex.getClass().toString().contains("NullPointerException"));
+//        }
+        File xml = new File(JAXBParser.class.getResource("/mail.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = schemaFactory.newSchema(xsd);
         Validator validator = schema.newValidator();
-        try {
-            Source xmlFile = new StreamSource(xml);
-            validator.validate(xmlFile);
-
-            Resource resource = new JAXBParser().parse(xml);
-            if (resource != null) {
-                createHtml(resource, xml);
-            }
-        } catch (SAXException | IOException ex) {
-            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        } catch (TransformerException ex) {
-            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            Source xmlFile = new StreamSource(xml);
+//            validator.validate(xmlFile);
+//
+//            Resource resource = new JAXBParser().parse(xml);
+//            if (resource != null) {
+//                createHtml(resource, xml);
+//            }
+//        } catch (SAXException | IOException ex) {
+//            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+//        } catch (TransformerException ex) {
+//            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         new ApiDocGenerator().generate("/opt/tomcat8/api/semanticweb");
     }
 

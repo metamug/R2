@@ -81,7 +81,12 @@ public class ApiDocGenerator {
                     writer.writeAttribute("href", resourceDoc.getParentFile().getName() + File.separator + resourceDoc.getName());
                     writer.writeAttribute("target", "description");
                     writeEscapedCharacters(resourceDoc.getName());
-                    writer.writeEndElement();   //Endo of </a>
+//                    <span class="badge">1.0</span>
+                    writer.writeStartElement("span");
+                    writer.writeAttribute("class", "badge");
+                    writeEscapedCharacters(resourceDoc.getParentFile().getName().replace("v", ""));
+                    writer.writeEndElement();//End of </span>
+                    writer.writeEndElement();   //End of </a>
                 }
                 writer.writeEndElement();   //Endo of </div class="list-group">
             }
