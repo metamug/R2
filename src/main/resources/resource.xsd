@@ -86,13 +86,13 @@
         <xs:attribute name="blank" type="xs:boolean" default="false" />
         <xs:attribute name="isNum" type="xs:boolean" default="false" />
         <xs:attribute name="required" type="xs:boolean" default="false" />
-        <xs:attribute name="max" type="xs:string" />
-        <xs:attribute name="min" type="xs:string" />
-        <xs:attribute name="maxLen" type="xs:string" />
-        <xs:attribute name="minLen" type="xs:string" />
+        <xs:attribute name="max" type="xs:double" />
+        <xs:attribute name="min" type="xs:double" />
+        <xs:attribute name="maxLen" type="xs:int" />
+        <xs:attribute name="minLen" type="xs:int" />
         <xs:attribute name="pattern" type="xs:string" />
         <xs:attribute name="exists" type="exists" />
-        <xs:attribute name="default" type="xs:string" />
+        <xs:attribute name="defaultValue" type="xs:string" />
     </xs:complexType>
 
     <xs:complexType name="execute">

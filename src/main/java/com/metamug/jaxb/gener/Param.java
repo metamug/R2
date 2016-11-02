@@ -35,8 +35,8 @@ public class Param {
     protected String pattern;
     @XmlAttribute(name = "exists")
     protected String exists;
-    @XmlAttribute(name = "default")
-    protected String defaults;
+    @XmlAttribute(name = "defaultValue")
+    protected String defaultValue;
 
     public String getName() {
         return name;
@@ -174,6 +174,14 @@ public class Param {
         return exists;
     }
 
+    public Boolean getIsNum() {
+        return isNum;
+    }
+
+    public void setIsNum(Boolean isNum) {
+        this.isNum = isNum;
+    }
+
     /**
      * Sets the value of the exists property.
      *
@@ -189,8 +197,8 @@ public class Param {
      *
      * @return
      */
-    public String getDefault() {
-        return defaults;
+    public String getDefaultValue() {
+        return defaultValue;
     }
 
     /**
@@ -198,7 +206,7 @@ public class Param {
      *
      * @param value
      */
-    public void setDefault(String value) {
-        this.defaults = value;
+    public void setDefaultValue(String value) {
+        this.defaultValue = value;
     }
 }

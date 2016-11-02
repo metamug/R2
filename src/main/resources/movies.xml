@@ -2,6 +2,7 @@
 <Resource version="1.1">
     <Desc>Contains information about movies.</Desc>
     <Request method="GET">
+        <Param name="q" pattern="[1-3]"/>
         <Sql when="@q eq 1" type="query">
             SELECT * FROM movie
         </Sql>
@@ -24,6 +25,7 @@
         </Sql>
     </Request>
     <Request method="POST" status="201">
+        <Param name="q" max="5" />
         <Sql type="update">
             INSERT INTO movie (`name`, `rating`,`release`) VALUES (@p, @q,@rDate)
         </Sql>

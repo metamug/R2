@@ -103,8 +103,10 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.Source;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
@@ -123,30 +125,24 @@ public class JAXBParser {
     XMLStreamWriter writer;
 
     public static void main(String[] args) throws TransformerConfigurationException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException {
-//        try {
-//            JSONObject jsonParams = null;
-//            System.out.println(jsonParams.toString());
-//        } catch (Exception ex) {
-//            System.out.println(ex.getClass().toString().contains("NullPointerException"));
-//        }
-        File xml = new File(JAXBParser.class.getResource("/mail.xml").getFile());
+        File xml = new File(JAXBParser.class.getResource("/movies.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = schemaFactory.newSchema(xsd);
         Validator validator = schema.newValidator();
-//        try {
-//            Source xmlFile = new StreamSource(xml);
-//            validator.validate(xmlFile);
-//
-//            Resource resource = new JAXBParser().parse(xml);
-//            if (resource != null) {
-//                createHtml(resource, xml);
-//            }
-//        } catch (SAXException | IOException ex) {
-//            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-//        } catch (TransformerException ex) {
-//            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            Source xmlFile = new StreamSource(xml);
+            validator.validate(xmlFile);
+
+            Resource resource = new JAXBParser().parse(xml);
+            if (resource != null) {
+                createHtml(resource, xml);
+            }
+        } catch (SAXException | IOException ex) {
+            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
         new ApiDocGenerator().generate("/opt/tomcat8/api/semanticweb");
     }
 
@@ -195,9 +191,10 @@ public class JAXBParser {
                 }
                 writer.writeStartElement("c:catch");//Start of <c:catch>
                 writer.writeAttribute("var", "exception");
-//                for (Param param : req.getParam()) {
-//                    isValid(param, "hell");
-//                }
+                for (Param param : req.getParam()) {
+                    writer.writeCharacters(System.lineSeparator());
+                    writeEscapedCharacters(processParam(param));
+                }
                 if (!req.getSql().isEmpty()) {
                     for (Iterator<Sql> iterator = req.getSql().iterator(); iterator.hasNext();) {
                         Sql sql = iterator.next();
@@ -293,8 +290,21 @@ public class JAXBParser {
                 writer.writeStartElement("c:if");
                 writer.writeAttribute("test", enclose("exception != null"));
                 writer.writeCharacters(System.lineSeparator());
-                writeEscapedCharacters("<%\n response.setStatus(500);\n"
-                        + "out.println(\"{\\\"Code\\\":\\\"500\\\",\\\"Message\\\": \\\"\" + pageContext.getAttribute(\"exception\").toString().replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n%>");
+                writeEscapedCharacters("\n"
+                        + "            <%\n"
+                        + "                Exception ex = (Exception) pageContext.getAttribute(\"exception\");\n"
+                        + "                String cause = ex.getCause().toString();\n"
+                        + "                if (cause.contains(\"InputValidationException\")) {\n"
+                        + "                    response.setStatus(412);\n"
+                        + "                    out.println(\"{\\\"Code\\\":\\\"412\\\",\\\"Message\\\": \\\"\" + ex.getMessage().replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n"
+                        + "                } else if (cause.contains(\"MySQLSyntaxErrorException\")) {\n"
+                        + "                    response.setStatus(422);\n"
+                        + "                    out.println(\"{\\\"Code\\\":\\\"422\\\",\\\"Message\\\": \\\"\" + ex.getMessage().replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n"
+                        + "                } else {\n"
+                        + "                    response.setStatus(500);\n"
+                        + "                    out.println(\"{\\\"Code\\\":\\\"500\\\",\\\"Message\\\": \\\"\" + ex.getMessage().replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n"
+                        + "                }\n"
+                        + "            %>");
                 writer.writeCharacters(System.lineSeparator());
                 writer.writeEndElement();//End of </c:if> for displaying exception message
                 writer.writeCharacters(System.lineSeparator());
@@ -347,13 +357,8 @@ public class JAXBParser {
         } catch (IOException | XPathExpressionException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         } catch (PatternSyntaxException ex) {
-            System.out.println(ex.getMessage());
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        catch (InputValidationException ex) {
-//            System.out.println(ex.getMessage());
-//            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         return resource;
     }
 
@@ -408,62 +413,38 @@ public class JAXBParser {
         return params;
     }
 
-    public static void isValid(Param param, String str) throws PatternSyntaxException, InputValidationException {
-        if ("".equals(str)) {
-            if (!param.isBlank()) {
-                throw new InputValidationException(param.getName() + " doesn't take blank input");
-            }
+    private String processParam(Param param) {
+        //name,blank,isNum,required,max,min.maxLen,minLen.pattern,exists,defaultValue,value
+        //name,isBlank,isNum,isRequired,max,min,maxLen,minLen,pattern,exists,defaultValue,value
+        StringBuilder builder = new StringBuilder();
+        builder.append("<p:param name=\"").append(param.getName()).append("\" ");
+        builder.append("isBlank=\"").append(param.isBlank()).append("\" ");
+        builder.append("isNum=\"").append(param.isNum()).append("\" ");
+        builder.append("isRequired=\"").append(param.isRequired()).append("\" ");
+        builder.append("value=\"").append("${mtgReq.params.").append(param.getName()).append("}\" ");
+        if (param.getMax() != null) {
+            builder.append("max=\"").append(param.getMax()).append("\" ");
         }
-        if (param.isNum()) {
-            String regex = "[0-9]+";
-            if (!str.matches(regex)) {
-                throw new InputValidationException(param.getName() + " accepts only numeric input value");
-            }
-            if (null != param.getMax()) {
-                long val = Long.parseLong(str);
-                long maxVal = Long.parseLong(param.getMax());
-                if (val > maxVal) {
-                    throw new InputValidationException("Max value allowed for " + param.getName() + " is " + maxVal);
-                }
-            }
-            if (null != param.getMin()) {
-                long val = Long.parseLong(str);
-                long minVal = Long.parseLong(param.getMin());
-                if (val < minVal) {
-                    throw new InputValidationException("Min value allowed for " + param.getName() + " is " + minVal);
-                }
-            }
-        } else {
-            if (null != param.getPattern()) {
-                if (!str.matches(param.getPattern())) {
-                    throw new InputValidationException("Input value doesn't match with specified pattern of " + param.getName() + " parameter");
-                }
-            }
-            if (null != param.getMaxLen()) {
-                int maxLength = Integer.parseInt(param.getMaxLen());
-                if (str.length() > maxLength) {
-                    throw new InputValidationException("Input value can be " + maxLength + " character long for " + param.getName() + " parameter");
-                }
-            }
-            if (null != param.getMinLen()) {
-                int minLength = Integer.parseInt(param.getMinLen());
-                if (str.length() < minLength) {
-                    throw new InputValidationException("Input value must be " + minLength + " character long for " + param.getName() + " parameter");
-                }
-            }
+        if (param.getMaxLen() != null) {
+            builder.append("maxLen=\"").append(param.getMaxLen()).append("\" ");
         }
-    }
+        if (param.getMin() != null) {
+            builder.append("min=\"").append(param.getMin()).append("\" ");
+        }
+        if (param.getMaxLen() != null) {
+            builder.append("minLen=\"").append(param.getMinLen()).append("\" ");
+        }
+        if (param.getPattern() != null) {
+            builder.append("pattern=\"").append(param.getPattern()).append("\" ");
+        }
+        if (param.getExists() != null) {
+            builder.append("exists=\"").append(param.getExists()).append("\" ");
+        }
+        if (param.getDefaultValue() != null) {
+            builder.append("defaultValue=\"").append(param.getDefaultValue()).append("\" ");
+        }
 
-//     private String processParam(List<Param> paramVar) {
-//        StringBuilder builder = new StringBuilder();
-//        for (Param param : paramVar) {
-//            if (param.getParamName().equals("id")) {
-//                builder.append("<code:param value=\"${mtgReq.id}\"/>");
-//            } else {
-//                builder.append(MessageFormat.format("<code:param value=\"$'{'mtgReq.params.{0}'}\" />", param.getParamName()));
-//            }
-//            builder.append("\n");
-//        }
-//        return builder.toString();
-//    }
+        builder.append("/>");
+        return builder.toString();
+    }
 }
