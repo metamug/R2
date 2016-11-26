@@ -290,21 +290,31 @@ public class JAXBParser {
                 writer.writeStartElement("c:if");
                 writer.writeAttribute("test", enclose("exception != null"));
                 writer.writeCharacters(System.lineSeparator());
-                writeEscapedCharacters("\n"
-                        + "            <%\n"
-                        + "                Exception ex = (Exception) pageContext.getAttribute(\"exception\");\n"
-                        + "                String cause = ex.getCause().toString();\n"
-                        + "                if (cause.contains(\"InputValidationException\")) {\n"
-                        + "                    response.setStatus(412);\n"
-                        + "                    out.println(\"{\\\"Code\\\":\\\"412\\\",\\\"Message\\\": \\\"\" + ex.getMessage().replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n"
-                        + "                } else if (cause.contains(\"MySQLSyntaxErrorException\")) {\n"
-                        + "                    response.setStatus(422);\n"
-                        + "                    out.println(\"{\\\"Code\\\":\\\"422\\\",\\\"Message\\\": \\\"\" + ex.getMessage().replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n"
-                        + "                } else {\n"
-                        + "                    response.setStatus(500);\n"
-                        + "                    out.println(\"{\\\"Code\\\":\\\"500\\\",\\\"Message\\\": \\\"\" + ex.getMessage().replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n"
-                        + "                }\n"
-                        + "            %>");
+                writeEscapedCharacters("<%\n"
+                        + "Exception ex = (Exception) pageContext.getAttribute(\"exception\");\n"
+                        + "if(ex.getCause()!=null){\n"
+                        + "    String cause = ex.getCause().toString();\n"
+                        + "    if (cause.contains(\"InputValidationException\")) {\n"
+                        + "        response.setStatus(412);\n"
+                        + "        out.println(\"{\\\"Code\\\":\\\"412\\\",\\\"Message\\\": \\\"\" + ex.getMessage().replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n"
+                        + "    } else if (cause.contains(\"MySQLSyntaxErrorException\")) {\n"
+                        + "        response.setStatus(422);\n"
+                        + "        out.println(\"{\\\"Code\\\":\\\"422\\\",\\\"Message\\\": \\\"\" + cause.split(\": \")[1].replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n"
+                        + "    } else if (cause.contains(\"MySQLIntegrityConstraintViolationException\")){\n"
+                        + "        response.setStatus(422);\n"
+                        + "        out.println(\"{\\\"Code\\\":\\\"422\\\",\\\"Message\\\": \\\"\" + cause.split(\": \")[1].replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n"
+                        + "    } else if(cause.contains(\"NumberFormatException\")){\n"
+                        + "        response.setStatus(422);\n"
+                        + "        out.println(\"{\\\"Code\\\":\\\"422\\\",\\\"Message\\\": \\\"\" + ex.getMessage().replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n"
+                        + "    } else{\n"
+                        + "        response.setStatus(500);\n"
+                        + "        out.println(\"{\\\"Code\\\":\\\"500\\\",\\\"Message\\\": \\\"\" + ex.getMessage().split(\": \")[1].replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n"
+                        + "    }\n"
+                        + "} else{\n"
+                        + "    response.setStatus(500);\n"
+                        + "    out.println(\"{\\\"Code\\\":\\\"500\\\",\\\"Message\\\": \\\"\" + ex.getMessage().replaceAll(\"(\\\\s|\\\\n|\\\\r|\\\\n\\\\r)+\", \" \") + \"\\\"}\");\n"
+                        + "}\n"
+                        + "%>");
                 writer.writeCharacters(System.lineSeparator());
                 writer.writeEndElement();//End of </c:if> for displaying exception message
                 writer.writeCharacters(System.lineSeparator());
