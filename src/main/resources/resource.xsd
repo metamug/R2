@@ -30,7 +30,7 @@
             <xs:sequence>
                 <xs:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
                 <xs:choice maxOccurs="unbounded">
-                    <xs:element name="Request" type="request" />
+                    <xs:element name="Request" type="request"/>
                 </xs:choice>
             </xs:sequence>
             <xs:attribute name="version" type="version" use="required" />
@@ -84,14 +84,15 @@
     <xs:complexType name="param">
         <xs:attribute name="name" type="paramName" use="required" />
         <xs:attribute name="blank" type="xs:boolean" default="false" />
-        <xs:attribute name="isNum" type="xs:boolean" default="false" />
+        <xs:attribute name="num" type="xs:boolean" default="false" />
         <xs:attribute name="required" type="xs:boolean" default="false" />
-        <xs:attribute name="max" type="xs:string" />
-        <xs:attribute name="min" type="xs:string" />
-        <xs:attribute name="maxLen" type="xs:string" />
-        <xs:attribute name="minLen" type="xs:string" />
+        <xs:attribute name="max" type="xs:double" />
+        <xs:attribute name="min" type="xs:double" />
+        <xs:attribute name="maxLen" type="xs:int" />
+        <xs:attribute name="minLen" type="xs:int" />
         <xs:attribute name="pattern" type="xs:string" />
         <xs:attribute name="exists" type="exists" />
+        <xs:attribute name="value" type="xs:string" />
     </xs:complexType>
 
     <xs:complexType name="execute">
