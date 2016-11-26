@@ -19,7 +19,7 @@ public class Param {
     protected String name;
     @XmlAttribute(name = "blank")
     protected Boolean blank;
-    @XmlAttribute(name = "isNum")
+    @XmlAttribute(name = "num")
     protected Boolean isNum;
     @XmlAttribute(name = "required")
     protected Boolean required;
@@ -35,7 +35,7 @@ public class Param {
     protected String pattern;
     @XmlAttribute(name = "exists")
     protected String exists;
-    @XmlAttribute(name = "defaultValue")
+    @XmlAttribute(name = "value")
     protected String defaultValue;
 
     public String getName() {
@@ -46,36 +46,24 @@ public class Param {
         this.name = value;
     }
 
-    public boolean isBlank() {
-        if (blank == null) {
-            return false;
-        } else {
-            return blank;
-        }
+    public Object isBlank() {
+        return blank;
     }
 
     public void setBlank(Boolean value) {
         this.blank = value;
     }
 
-    public boolean isNum() {
-        if (isNum == null) {
-            return false;
-        } else {
-            return isNum;
-        }
+    public Object isNum() {
+        return isNum;
     }
 
     public void setNum(Boolean value) {
         this.isNum = value;
     }
 
-    public boolean isRequired() {
-        if (required == null) {
-            return false;
-        } else {
-            return required;
-        }
+    public Object isRequired() {
+        return required;
     }
 
     public void setRequired(Boolean value) {

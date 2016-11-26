@@ -418,9 +418,15 @@ public class JAXBParser {
         //name,isBlank,isNum,isRequired,max,min,maxLen,minLen,pattern,exists,defaultValue,value
         StringBuilder builder = new StringBuilder();
         builder.append("<p:param name=\"").append(param.getName()).append("\" ");
-        builder.append("isBlank=\"").append(param.isBlank()).append("\" ");
-        builder.append("isNum=\"").append(param.isNum()).append("\" ");
-        builder.append("isRequired=\"").append(param.isRequired()).append("\" ");
+        if (param.isBlank() != null) {
+            builder.append("isBlank=\"").append(param.isBlank()).append("\" ");
+        }
+        if (param.isNum() != null) {
+            builder.append("isNum=\"").append(param.isNum()).append("\" ");
+        }
+        if (param.isRequired() != null) {
+            builder.append("isRequired=\"").append(param.isRequired()).append("\" ");
+        }
         builder.append("value=\"").append("${mtgReq.params.").append(param.getName()).append("}\" ");
         if (param.getMax() != null) {
             builder.append("max=\"").append(param.getMax()).append("\" ");

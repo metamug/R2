@@ -2,7 +2,7 @@
 <Resource version="1.1">
     <Desc>Contains information about movies.</Desc>
     <Request method="GET">
-        <Param name="q" pattern="\d" num="true" min="3" max="5"/>
+        <Param name="q" required="true" num="true" value="1"/>
         <Sql when="@q eq 1" type="query">
             SELECT * FROM movie
         </Sql>
