@@ -41,7 +41,7 @@ public class JAXBParser {
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
         Source xmlFile = new StreamSource(xml);
         SchemaFactory schemaFactory = SchemaFactory
-                .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+                .newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
         Schema schema = schemaFactory.newSchema(xsd);
         Validator validator = schema.newValidator();
         try {
@@ -97,9 +97,9 @@ public class JAXBParser {
                     System.out.println("---PARAMS:---");
                     for(Param param : req.getParam()){
                         System.out.println("   paramName: " + param.getName());
-                        System.out.println("   isRequired? : " + Boolean.toString(param.isRequired()));
-                        System.out.println("   isBlank? : " + Boolean.toString(param.isBlank()));
-                        System.out.println("   isNum? : " + Boolean.toString(param.isNum()));
+                        System.out.println("   isRequired? : " + Boolean.toString((Boolean)param.isRequired()));
+                        System.out.println("   isBlank? : " + Boolean.toString((Boolean)param.isBlank()));
+                        System.out.println("   isNum? : " + Boolean.toString((Boolean)param.isNum()));
                         System.out.println("   min: " + param.getMin());
                         System.out.println("   max: " + param.getMax());
                         System.out.println("   minLength: " + param.getMinLen());
@@ -179,11 +179,11 @@ public class JAXBParser {
     
     public static void validateParam(Param param, String value) throws InputValidationException{
         if("".equals(value)){
-            if(!param.isBlank()){
+            if(!(Boolean)param.isBlank()){
                 throw new InputValidationException("Parameter is empty!");
             }
         }
-        if(param.isNum()){
+        if((Boolean)param.isNum()){
             String regex = "[0-9]+";
             if(!value.matches(regex)){
                 throw new InputValidationException("Parameter is not a number!");
