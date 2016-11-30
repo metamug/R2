@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-
     <xs:simpleType name="version">
         <xs:restriction base="xs:string">
             <xs:minLength value="1" />
@@ -35,6 +34,11 @@
             </xs:sequence>
             <xs:attribute name="version" type="version" use="required" />
         </xs:complexType>
+        <xs:unique name="Request">
+            <xs:selector xpath="Request"/>
+            <xs:field xpath="@method"/>
+            <xs:field xpath="@item"/>
+        </xs:unique>
     </xs:element>
 
     <xs:simpleType name="desc">

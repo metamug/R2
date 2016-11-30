@@ -96,7 +96,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -127,7 +126,8 @@ public class JAXBParser {
     public static void main(String[] args) throws TransformerConfigurationException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException {
         File xml = new File(JAXBParser.class.getResource("/movies.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+//        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
         Schema schema = schemaFactory.newSchema(xsd);
         Validator validator = schema.newValidator();
         try {
@@ -138,8 +138,12 @@ public class JAXBParser {
             if (resource != null) {
                 createHtml(resource, xml);
             }
-        } catch (SAXException | IOException ex) {
-            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        } catch (SAXException ex) {
+            if (ex.getMessage().contains(": ")) {
+                Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage().split(": ")[1]);
+            } else {
+                Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage());
+            }
         } catch (TransformerException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -364,9 +368,7 @@ public class JAXBParser {
             Files.write(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp"), newLines, StandardCharsets.UTF_8);
         } catch (JAXBException | FileNotFoundException | XMLStreamException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | XPathExpressionException ex) {
-            Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PatternSyntaxException ex) {
+        } catch (IOException | XPathExpressionException | PatternSyntaxException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resource;
