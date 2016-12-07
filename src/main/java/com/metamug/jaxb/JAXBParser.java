@@ -140,7 +140,7 @@ public class JAXBParser {
             }
         } catch (SAXException ex) {
             if (ex.getMessage().contains(": ")) {
-                Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage().split(": ")[1]);
+                Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, "Can't have multiple item/collection Request(s)");
             } else {
                 Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage());
             }
@@ -271,6 +271,25 @@ public class JAXBParser {
                         writer.writeEndElement();
                     }
                 }
+                if (needDefaultCase(req)) {
+                    StringBuilder testCondition = new StringBuilder();
+//                    ${not(mtgReq.params.q eq 3) and not(mtgReq.params.q eq 2) and not(mtgReq.params.q eq 1)}
+                    for (int i = 0; i < req.getSql().size(); i++) {
+                        Sql sql = req.getSql().get(i);
+                        testCondition.append("not(").append(sql.getWhen().replace("@", "mtgReq.params.")).append(") ");
+                        if ((i + 1) < req.getSql().size()) {
+                            testCondition.append("and ");
+                        }
+                    }
+                    writer.writeStartElement("c:if");
+                    writer.writeAttribute("test", enclose(testCondition.toString()));
+                    writer.writeCharacters(System.lineSeparator());
+                    writeEscapedCharacters("                <%\n"
+                            + "                    response.setStatus(204);\n"
+                            + "                %>");
+                    writer.writeCharacters(System.lineSeparator());
+                    writer.writeEndElement();
+                }
                 writer.writeCharacters(System.lineSeparator());
                 if (req.getStatus() != null) {
                     writeEscapedCharacters("<%\n response.setStatus(" + req.getStatus() + ");\n%>");
@@ -387,14 +406,13 @@ public class JAXBParser {
     }
 
     private String processSQL(String query) {
-        StringBuilder builder = null;
         List<String> params = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\@(\\w+)");
         Matcher match = pattern.matcher(query);
         while (match.find()) {
             params.add(query.substring(match.start(1), match.end(1)));
         }
-        builder = new StringBuilder(query.replaceAll("\\@\\w+", "?"));
+        StringBuilder builder = new StringBuilder(query.replaceAll("\\@\\w+", "?"));
         for (String param : params) {
             if (param.equals("id")) {
                 builder.append("<sql:param value=\"${mtgReq.id}\"/>");
@@ -464,5 +482,17 @@ public class JAXBParser {
 
         builder.append("/>");
         return builder.toString();
+    }
+
+    private boolean needDefaultCase(Request req) {
+        int count = 0;
+        for (Sql sql : req.getSql()) {
+            if (sql.getWhen() != null && !sql.getWhen().isEmpty()) {
+                count++;
+            } else {
+                return false;
+            }
+        }
+        return ((count == req.getSql().size()) && req.getExecute().isEmpty());
     }
 }
