@@ -4,7 +4,7 @@
       xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" >
     <mtg:Request method="">
         <mtg:Sql type="" >
-            
+            select * from somewhere
         </mtg:Sql>
     </mtg:Request>
 </mtg:Resource>
