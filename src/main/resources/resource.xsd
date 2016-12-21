@@ -4,6 +4,7 @@
            targetNamespace="http://xml.metamug.net/resource/1.0" 
            elementFormDefault="qualified" >
     <xs:simpleType name="version">
+
         <xs:restriction base="xs:string">
             <xs:minLength value="1" />
         </xs:restriction>
@@ -77,6 +78,11 @@
     </xs:simpleType>
 
     <xs:complexType name="request">
+        <xs:annotation>
+            <xs:documentation>
+                For processing incoming request and sending back response.
+            </xs:documentation>
+        </xs:annotation>
         <xs:choice maxOccurs="unbounded">
             <xs:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
             <xs:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded" />
@@ -89,6 +95,11 @@
     </xs:complexType>
 
     <xs:complexType name="param">
+        <xs:annotation>
+            <xs:documentation>
+                To perform validation on the parameters recieved.
+            </xs:documentation>
+        </xs:annotation>
         <xs:attribute name="name" type="paramName" use="required" />
         <xs:attribute name="blank" type="xs:boolean" default="false" />
         <xs:attribute name="num" type="xs:boolean" default="false" />

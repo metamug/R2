@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 public class JAXBParser {
 
     public static void main(String[] args) throws SAXException {
-        File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
+        File xml = new File(JAXBParser.class.getResource("/test.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
         Source xmlFile = new StreamSource(xml);
         SchemaFactory schemaFactory = SchemaFactory
@@ -55,7 +55,7 @@ public class JAXBParser {
             System.out.println("Reason: " + ex.getMessage());
         }
         
-        ApiDocGenerator.generate("C:\\c4\\metamug\\RPXParser\\doctest");
+        //ApiDocGenerator.generate("C:\\c4\\metamug\\RPXParser\\doctest");
     }
     
     public static void createHtml(Resource resource) {
