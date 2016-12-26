@@ -97,7 +97,7 @@
     <xs:complexType name="param">
         <xs:annotation>
             <xs:documentation>
-                To perform validation on the parameters recieved.
+                To perform validation on the parameters received.
             </xs:documentation>
         </xs:annotation>
         <xs:attribute name="name" type="paramName" use="required" />

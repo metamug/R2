@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * @author anish
  */
 public class JAXBParser {
-
+/*
     public static void main(String[] args) throws SAXException {
         File xml = new File(JAXBParser.class.getResource("/test.xml").getFile());
         File xsd = new File(JAXBParser.class.getResource("/resource.xsd").getFile());
@@ -56,7 +56,7 @@ public class JAXBParser {
         }
         
         //ApiDocGenerator.generate("C:\\c4\\metamug\\RPXParser\\doctest");
-    }
+    }*/
     
     public static void createHtml(Resource resource) {
         File xml = new File(JAXBParser.class.getResource("/apple.xml").getFile());
@@ -70,7 +70,13 @@ public class JAXBParser {
         }        
     }
     
-    public static Resource parse() {
+    public static Resource parseFromXml(String xmlPath) throws JAXBException{
+        JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        return (Resource) jaxbUnmarshaller.unmarshal(JAXBParser.class.getResourceAsStream(xmlPath));
+    }
+    
+    /*public static Resource parse() {
         Resource resource = new Resource();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);
@@ -168,14 +174,14 @@ public class JAXBParser {
                     }
                 }else{
                     System.out.println("No Child Elements!");
-                }*/
+                }
                 System.out.println("\n-----   ----   -- ///////////////////// --   ----   -----");             
             }
         } catch (JAXBException ex) {
             Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resource;
-    }
+    }*/
     
     public static void validateParam(Param param, String value) throws InputValidationException{
         if("".equals(value)){
