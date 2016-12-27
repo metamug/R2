@@ -5,7 +5,7 @@
     <mtg:Desc>This works</mtg:Desc>
     <mtg:Request method="POST">
         <mtg:Param name="param1" required="true" ></mtg:Param>
-        <mtg:Sql type="update" when="@a > 1">        
+        <mtg:Sql type="update" when="$a gt 1">        
         </mtg:Sql>
     </mtg:Request>
     

@@ -4,9 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2016.01.07 at 10:53:17 AM IST 
 //
-//@javax.xml.bind.annotation.XmlSchema(
-  //      namespace = "http://xml.metamug.net/resource/1.0"
-//)
 package com.metamug.jaxb.gener;
 
 import java.util.ArrayList;
@@ -23,12 +20,12 @@ import javax.xml.bind.annotation.XmlType;
     "desc",
     "request"
 })
-@XmlRootElement( namespace = "http://xml.metamug.net/resource/1.0", name = "Resource")
+@XmlRootElement( name = "Resource")
 public class Resource {
 
     @XmlElement(name = "Desc")
     protected String desc;
-    @XmlElement(name = "Request", required = true)
+    @XmlElement(name = "Request")
     protected List<Request> request;
     @XmlAttribute(name = "version", required = true)
     protected String version;
