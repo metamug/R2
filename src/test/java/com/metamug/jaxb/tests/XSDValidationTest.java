@@ -35,6 +35,7 @@ public class XSDValidationTest {
     private static String RES_DESC;
     
     private static String REQ_METHOD;
+    private static String REQ_DESC;
     
     private static String PARAM_NAME;
     private static String PARAM_REQUIRED;
@@ -46,14 +47,13 @@ public class XSDValidationTest {
     
     @Before
     public void init(){
-        //initialize test values
-        
         XML_FILE_PATH = "/test.xml";
         
         RES_VER = "1.0";
         RES_DESC = "This works";
     
         REQ_METHOD = "POST";
+        REQ_DESC = "POST Desc 1";
         
         PARAM_NAME = "param1";
         PARAM_REQUIRED = "true";
@@ -61,7 +61,7 @@ public class XSDValidationTest {
         SQL_TYPE = "update";
         SQL_WHEN = "$a gt 1";
         
-        testArray = new String[]{RES_VER,RES_DESC,REQ_METHOD,PARAM_NAME,
+        testArray = new String[]{RES_VER,RES_DESC,REQ_METHOD,REQ_DESC,PARAM_NAME,
                                         PARAM_REQUIRED,SQL_TYPE,SQL_WHEN};
     }
     
@@ -92,6 +92,7 @@ public class XSDValidationTest {
         }
         
         String method = null;
+        String reqDesc = null;
         String paramName = null;
         String paramRequired = null;
         String sqlType = null;
@@ -99,7 +100,9 @@ public class XSDValidationTest {
         
         List<Request> requests = rs.getRequest();
         if(!requests.isEmpty()){
+            //int counter = 1;
             for(Request request : requests){
+                reqDesc = request.getDesc();
                 method = request.getMethod().value();
                 for(Param p : request.getParam()){
                     paramName = p.getName();
@@ -113,9 +116,8 @@ public class XSDValidationTest {
         }else{
             Assert.fail("No <Request> element found!");
         }
-        
         String[] resultArray = new String[]{rs.getVersion(),rs.getDesc(),
-                        method,paramName,paramRequired,sqlType,sqlWhen};
+                        method,reqDesc,paramName,paramRequired,sqlType,sqlWhen};
         
         Assert.assertArrayEquals(testArray, resultArray);
     }
