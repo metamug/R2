@@ -5,6 +5,7 @@
  */
 package com.metamug.objectreturn.tests;
 
+import com.metamug.objectreturn.Converter;
 import com.metamug.objectreturn.tests.testclasses.Customer;
 import com.metamug.objectreturn.tests.testclasses.PhoneNumber;
 import javax.xml.bind.JAXBContext;
@@ -15,35 +16,29 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ObjectReturnTest {
-   
-    //private final String className = "com.metamug.objectreturn.tests.testclasses.Customer";
+    private final String TYPE_JSON = "application/json";
+    private final String TYPE_XML = "application/xml";
     private Customer customer;
     
     @Before
     public void init(){
         customer = new Customer(1,"Kaustubh","Gosling");
-        //customer = new Customer();
-        
         PhoneNumber pn = new PhoneNumber();
         pn.setNum("9128992849");
         pn.setType("mobile");
-        
         customer.addPhoneNumber(pn);
         customer.getClass();
     }
     
-    //method(object, accept-type)
-    
     @Test
     public void ObjectToJsonTest() throws ClassNotFoundException, JAXBException{
-        Object returnedObject = customer;
-        //Class jaxbClass = Class.forName(className);
-        JAXBContext jc = JAXBContext.newInstance(returnedObject.getClass());
-        Marshaller marshaller = jc.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.setProperty(MarshallerProperties.MEDIA_TYPE, "application/json");
-        marshaller.setProperty(MarshallerProperties.JSON_INCLUDE_ROOT, false);
-        marshaller.marshal(customer, System.out);
+        String resultJson = Converter.convert(customer, TYPE_JSON);
+        System.out.println(resultJson);
     } 
     
+    @Test
+    public void ObjectToXmlTest() throws JAXBException{
+        String resultXml = Converter.convert(customer, TYPE_XML);
+        System.out.println(resultXml);
+    }
 }

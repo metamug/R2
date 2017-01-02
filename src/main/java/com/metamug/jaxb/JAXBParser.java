@@ -5,30 +5,18 @@ package com.metamug.jaxb;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import com.metamug.jaxb.docs.ApiDocGenerator;
-import com.metamug.jaxb.gener.Execute;
-import com.metamug.jaxb.gener.Request;
 import com.metamug.jaxb.gener.Resource;
-import com.metamug.jaxb.gener.Sql;
 import com.metamug.jaxb.docs.XslTransformer;
 import com.metamug.jaxb.gener.Param;
 import com.metamug.jaxb.util.InputValidationException;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import org.apache.commons.io.FilenameUtils;
-import org.xml.sax.SAXException;
 
 /**
  *
