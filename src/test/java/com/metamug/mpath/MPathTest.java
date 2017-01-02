@@ -6,21 +6,12 @@
 package com.metamug.mpath;
 
 import java.io.IOException;
-import java.io.StringReader;
-
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import org.json.JSONObject;
 import org.json.XML;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -50,7 +41,11 @@ public class MPathTest {
       "               {\n" +
       "                   \"name\": \"connectionTimeout\",\n" +
       "                   \"D\": \"20000\"\n" +
-      "               }\n" +
+      "               },\n" +
+      "               {\n" +
+      "                   \"name\": \"connectionTimeout_Again!\",\n" +
+      "                   \"D\": \"60000\"\n" +
+      "               }\n" +      
       "           ]\n" +
       "       }\n" +
       "   }\n" +
@@ -59,20 +54,28 @@ public class MPathTest {
     @Before
     public void init(){
         JSONObject jobj = new JSONObject(TEST_JSON);
+        //System.out.println(jobj);
         testXml = XML.toString(jobj);
-        System.out.println(testXml);
     }
     
     @Test
-    public void MPathTest() throws XPathExpressionException, IOException, SAXException, ParserConfigurationException{
-        String xPathExpression = "/Port/Number";
-        String mPathKey = "Port.ExtendedProperties.Property[0].D";
-        String value = MPathUtil.getValueFromJson(TEST_JSON, mPathKey);
-        //System.out.println(testXml);
-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-            .parse(new InputSource(new StringReader(testXml)));
-        XPath xPath =  XPathFactory.newInstance().newXPath();
-        NodeList nodeList = (NodeList) xPath.compile(xPathExpression).evaluate(
-                        doc, XPathConstants.NODESET);
+    public void MPathTest() throws XPathExpressionException, IOException,
+                                    SAXException, ParserConfigurationException{
+        String xPath3 = "/Port/ThreadPool/Max";
+        
+        String mKey1 = "Port.ExtendedProperties.Property[0].D";
+        String mKey2 = "Port.ExtendedProperties.Property[1].D";
+        String mKey3 = "Port.ThreadPool.Max";
+        String jsonVal1 = MPathUtil.getValueFromJson(TEST_JSON, mKey1);
+        String jsonVal2 = MPathUtil.getValueFromJson(TEST_JSON, mKey2);
+        String jsonVal3 = MPathUtil.getValueFromJson(TEST_JSON, mKey3);
+        System.out.println(jsonVal1);
+        System.out.println(jsonVal2);
+        System.out.println("JSON Val 3: "+jsonVal3);
+        
+        String xmlVal3 = MPathUtil.getValueFromXml(testXml, xPath3);
+        System.out.println("XML Val 3: "+xmlVal3);
+        
+        System.out.println(testXml);
     }
 }
