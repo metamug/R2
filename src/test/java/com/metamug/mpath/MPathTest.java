@@ -61,7 +61,7 @@ public class MPathTest {
     @Test
     public void MPathTest() throws XPathExpressionException, IOException,
                                     SAXException, ParserConfigurationException{
-        String xPath3 = "/Port/ThreadPool/Max";
+        //String xPath3 = "/Port/ThreadPool/Max";
         
         String mKey1 = "Port.ExtendedProperties.Property[0].D";
         String mKey2 = "Port.ExtendedProperties.Property[1].D";
@@ -73,7 +73,7 @@ public class MPathTest {
         System.out.println(jsonVal2);
         System.out.println("JSON Val 3: "+jsonVal3);
         
-        String xmlVal3 = MPathUtil.getValueFromXml(testXml, xPath3);
+        String xmlVal3 = MPathUtil.getValueFromXml(testXml, mKey3);
         System.out.println("XML Val 3: "+xmlVal3);
         
         System.out.println(testXml);

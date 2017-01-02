@@ -9,6 +9,8 @@ import com.github.wnameless.json.flattener.JsonFlattener;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -49,6 +51,16 @@ public class MPathUtil {
     public static String getXPathFromMPath(String mPath){
         String str = mPath.replace(".", "/");
         return "/"+str;
+    }
+    
+    public static Integer getIndexFromArrayNotation(String mPath){
+        Pattern pattern = Pattern.compile("[(.*?)]");
+        Matcher matcher = pattern.matcher(mPath);
+        if(matcher.find()){
+            return Integer.parseInt(matcher.group(1));
+        }else{
+            return null;
+        }
     }
 }
 /*
