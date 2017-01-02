@@ -8,10 +8,7 @@ package com.metamug.objectreturn.tests;
 import com.metamug.objectreturn.Converter;
 import com.metamug.objectreturn.tests.testclasses.Customer;
 import com.metamug.objectreturn.tests.testclasses.PhoneNumber;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.junit.Before;
 import org.junit.Test;
 
