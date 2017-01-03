@@ -63,7 +63,7 @@ public class MPathTest {
             "                </Sql>\n" +
             "                <Sql when=\"@q eq 3\" type=\"update\">\n" +
             "                    <content>update employee set employee_name = @param2 where employee_id=@id\n" +
-            "                </content>Other content</Sql>\n" +
+            "                </content></Sql>\n" +
             "	</Request>\n" +
             "	       \n" +
             "	<Request method=\"POST\" status=\"201\">\n" +
@@ -84,12 +84,29 @@ public class MPathTest {
             "</Resource>\n" +
             "";
     
+    public static final String TEST_XML2 = "<Resource version=\"1.1\" >\n" +
+            "\n" +
+            "	<Desc>Contains records for data type apple</Desc>\n" +
+            "\n" +
+            "	<Request method=\"GET\" item=\"true\" status=\"200\">\n" +
+            "		<Param name=\"t\" blank=\"true\" min=\"1\" exists=\"table.column\" />\n" +
+            "                \n" +
+            "                <Sql when=\"@q eq 1\" type=\"query\">\n" +
+            "                    select * from employee where employee_name = @v\n" +
+            "                </Sql>\n" +
+            "                <Sql when=\"@q eq 3\" type=\"update\">\n" +
+            "                    <content>update employee set employee_name = @param2 where employee_id=@id\n" +
+            "                </content>Illegal Content</Sql>\n" +
+            "	</Request>\n" +
+            "	       \n" +
+            "	</Resource>";
+    
     @Ignore
     @Test
     public void TestCase1() throws XPathExpressionException, IOException,
                                     SAXException, ParserConfigurationException{
         
-        String testXml = XML.toString(new JSONObject(TEST_JSON));
+        String equivalentXml = XML.toString(new JSONObject(TEST_JSON));
         String mKey1 = "Port.ExtendedProperties.Property[0].D";
         String mKey2 = "Port.ExtendedProperties.Property[1].D";
         String mKey3 = "Port.ThreadPool.Max";
@@ -100,9 +117,9 @@ public class MPathTest {
         System.out.println("json 2: "+jsonVal2);
         System.out.println("JSON Val 3: "+jsonVal3);
         */
-        Object xmlVal1 = MPathUtil.getValueFromXml(testXml, mKey1);
-        Object xmlVal2 = MPathUtil.getValueFromXml(testXml, mKey2);
-        Object xmlVal3 = MPathUtil.getValueFromXml(testXml, mKey3);
+        Object xmlVal1 = MPathUtil.getValueFromXml(equivalentXml, mKey1);
+        Object xmlVal2 = MPathUtil.getValueFromXml(equivalentXml, mKey2);
+        Object xmlVal3 = MPathUtil.getValueFromXml(equivalentXml, mKey3);
         /*
         System.out.println("x1: "+xmlVal1);
         System.out.println("x2: "+xmlVal2);
@@ -113,24 +130,42 @@ public class MPathTest {
         
     }
     
+    @Ignore
     @Test
     public void TestCase2() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException{
-        String testJson = (XML.toJSONObject(TEST_XML)).toString();
+        String equivalentJson = (XML.toJSONObject(TEST_XML)).toString();
         String mKey1 = "Resource.Request[0].method";
-        String mKey2 = "Resource.Request[1].Sql.content";
-        String mKey3 = "Resource.Request[0].Sql[1].content[0]";
+        String mKey2Xml = "Resource.Request[1].Sql";
+        String mKey2Json = "Resource.Request[1].Sql.content";
+        String mKey3 = "Resource.Request[0].Sql[1].content";
         String mKey4 = "Resource.Desc";
+        String mKey5 = "Resource.version";
         //System.out.println(TEST_XML);
         String xmlVal1 = (MPathUtil.getValueFromXml(TEST_XML, mKey1)).toString();
-        String xmlVal2 = (MPathUtil.getValueFromXml(TEST_XML, mKey2)).toString();
-        String jsonVal1 = (MPathUtil.getValueFromJson(testJson, mKey1)).toString();
-        String jsonVal2 = (MPathUtil.getValueFromJson(testJson, mKey2)).toString();
+        String xmlVal2 = (MPathUtil.getValueFromXml(TEST_XML, mKey2Xml)).toString();
+        String jsonVal1 = (MPathUtil.getValueFromJson(equivalentJson, mKey1)).toString();
+        String jsonVal2 = (MPathUtil.getValueFromJson(equivalentJson, mKey2Json)).toString();
         String xmlVal3 = (MPathUtil.getValueFromXml(TEST_XML, mKey3)).toString();
-        String jsonVal3 = (MPathUtil.getValueFromJson(testJson, mKey3)).toString();
+        String jsonVal3 = (MPathUtil.getValueFromJson(equivalentJson, mKey3)).toString();
         String xmlVal4 = (MPathUtil.getValueFromXml(TEST_XML, mKey4)).toString();
-        String jsonVal4 = (MPathUtil.getValueFromJson(testJson, mKey4)).toString();
+        String jsonVal4 = (MPathUtil.getValueFromJson(equivalentJson, mKey4)).toString();
+        String xmlVal5 = (MPathUtil.getValueFromXml(TEST_XML, mKey5)).toString();
+        String jsonVal5 = (MPathUtil.getValueFromJson(equivalentJson, mKey5)).toString();
         
-        Assert.assertArrayEquals(new String[]{xmlVal1,xmlVal2,xmlVal3,xmlVal4},
-                        new String[]{jsonVal1,jsonVal2,jsonVal3,jsonVal4});
+        Assert.assertArrayEquals(new String[]{xmlVal1,xmlVal2,xmlVal3,xmlVal4,xmlVal5},
+                        new String[]{jsonVal1,jsonVal2,jsonVal3,jsonVal4,jsonVal5});
+    }
+    
+    @Test
+    public void FailCase1() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException{
+        //System.out.println(TEST_XML2);
+        String mKey1 = "Resource.Request.Sql[1]";
+        Assert.assertNull(MPathUtil.getValueFromXml(TEST_XML2, mKey1));
+    }
+    
+    @Test
+    public void FailCase2() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException{
+        String garbageMKey = "ChangeMeToTestGarbageValues";
+        Assert.assertNull(MPathUtil.getValueFromXml(TEST_XML, garbageMKey));
     }
 }

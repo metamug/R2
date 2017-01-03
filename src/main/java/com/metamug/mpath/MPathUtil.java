@@ -33,7 +33,11 @@ public class MPathUtil {
         String jobjStr = jobj.toString();
         Map<String,Object> flatMap = JsonFlattener.flattenAsMap(jobjStr);
         //System.out.println("jobj:\n"+flatMap);
+        Object value = flatMap.get(mPath);
+        if(null == value){
+            value = flatMap.get(mPath+".content");
+        }
         
-        return flatMap.get(mPath);
+        return value;
     }
 }
