@@ -57,14 +57,13 @@ public class MPathTest {
             "\n" +
             "	<Request method=\"GET\" item=\"true\" status=\"200\">\n" +
             "		<Param name=\"t\" blank=\"true\" min=\"1\" exists=\"table.column\" />\n" +
-            "                <Param name=\"u\" min=\"1\" max=\"100\" pattern=\"pat341./1@[]^\" />\n" +
             "                \n" +
             "                <Sql when=\"@q eq 1\" type=\"query\">\n" +
             "                    select * from employee where employee_name = @v\n" +
             "                </Sql>\n" +
             "                <Sql when=\"@q eq 3\" type=\"update\">\n" +
-            "                    update employee set employee_name = @param2 where employee_id=@id\n" +
-            "                </Sql>\n" +
+            "                    <content>update employee set employee_name = @param2 where employee_id=@id\n" +
+            "                </content>Other content</Sql>\n" +
             "	</Request>\n" +
             "	       \n" +
             "	<Request method=\"POST\" status=\"201\">\n" +
@@ -118,10 +117,20 @@ public class MPathTest {
     public void TestCase2() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException{
         String testJson = (XML.toJSONObject(TEST_XML)).toString();
         String mKey1 = "Resource.Request[0].method";
+        String mKey2 = "Resource.Request[1].Sql.content";
+        String mKey3 = "Resource.Request[0].Sql[1].content[0]";
+        String mKey4 = "Resource.Desc";
         //System.out.println(TEST_XML);
         String xmlVal1 = (MPathUtil.getValueFromXml(TEST_XML, mKey1)).toString();
+        String xmlVal2 = (MPathUtil.getValueFromXml(TEST_XML, mKey2)).toString();
         String jsonVal1 = (MPathUtil.getValueFromJson(testJson, mKey1)).toString();
+        String jsonVal2 = (MPathUtil.getValueFromJson(testJson, mKey2)).toString();
+        String xmlVal3 = (MPathUtil.getValueFromXml(TEST_XML, mKey3)).toString();
+        String jsonVal3 = (MPathUtil.getValueFromJson(testJson, mKey3)).toString();
+        String xmlVal4 = (MPathUtil.getValueFromXml(TEST_XML, mKey4)).toString();
+        String jsonVal4 = (MPathUtil.getValueFromJson(testJson, mKey4)).toString();
         
-        Assert.assertArrayEquals(new String[]{xmlVal1}, new String[]{jsonVal1});
+        Assert.assertArrayEquals(new String[]{xmlVal1,xmlVal2,xmlVal3,xmlVal4},
+                        new String[]{jsonVal1,jsonVal2,jsonVal3,jsonVal4});
     }
 }
