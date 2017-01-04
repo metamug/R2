@@ -11,7 +11,6 @@ import javax.xml.xpath.XPathExpressionException;
 import org.json.JSONObject;
 import org.json.XML;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -101,7 +100,6 @@ public class MPathTest {
             "	       \n" +
             "	</Resource>";
     
-    @Ignore
     @Test
     public void TestCase1() throws XPathExpressionException, IOException,
                                     SAXException, ParserConfigurationException{
@@ -130,7 +128,6 @@ public class MPathTest {
         
     }
     
-    @Ignore
     @Test
     public void TestCase2() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException{
         String equivalentJson = (XML.toJSONObject(TEST_XML)).toString();
