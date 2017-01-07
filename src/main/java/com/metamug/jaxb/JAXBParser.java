@@ -139,8 +139,10 @@ public class JAXBParser {
                 createHtml(resource, xml);
             }
         } catch (SAXException ex) {
-            if (ex.getMessage().contains(": ")) {
+            if (ex.getMessage().contains("cvc-identity-constraint")) {
                 Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, "Can't have multiple item/collection Request(s)");
+            } else if (ex.getMessage().contains(": ")) {
+                Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage().split(": ")[1]);
             } else {
                 Logger.getLogger(JAXBParser.class.getName()).log(Level.SEVERE, ex.getMessage());
             }
@@ -154,7 +156,7 @@ public class JAXBParser {
         try {
             File xsl = new File(JAXBParser.class.getResource("/resource.xsl").getFile());
             if (!new File("/opt/tomcat8/api/semanticweb/docs/v" + resource.getVersion()).exists()) {
-                Files.createDirectory(Paths.get("/opt/tomcat8/api/semanticweb/docs/v" + resource.getVersion()));
+                Files.createDirectories(Paths.get("/opt/tomcat8/api/semanticweb/docs/v" + resource.getVersion()));
             }
             File outHtml = new File("/opt/tomcat8/api/semanticweb/docs/v" + resource.getVersion() + "/" + FilenameUtils.removeExtension(xmlFile.getName()) + ".html");
             XslTransformer.transform(xmlFile, xsl, outHtml);
@@ -170,7 +172,7 @@ public class JAXBParser {
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             resource = (Resource) jaxbUnmarshaller.unmarshal(resourceFile);
             if (!new File("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion()).exists()) {
-                Files.createDirectory(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion()));
+                Files.createDirectories(Paths.get("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion()));
             }
             output = new FileOutputStream("/opt/tomcat8/api/semanticweb/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp");
             writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
@@ -204,7 +206,7 @@ public class JAXBParser {
                         Sql sql = iterator.next();
                         if (sql.getWhen() != null) {
                             writer.writeStartElement("c:if");
-                            writer.writeAttribute("test", enclose(sql.getWhen().replace("@", "mtgReq.params.")));
+                            writer.writeAttribute("test", enclose(sql.getWhen().replace("$", "mtgReq.params.")));
                         }
                         //Collect string representation date-time values from parameters to convert them into Util.Date
                         List<String> dateParams = getDateParams(sql.getValue());
@@ -276,7 +278,7 @@ public class JAXBParser {
 //                    ${not(mtgReq.params.q eq 3) and not(mtgReq.params.q eq 2) and not(mtgReq.params.q eq 1)}
                     for (int i = 0; i < req.getSql().size(); i++) {
                         Sql sql = req.getSql().get(i);
-                        testCondition.append("not(").append(sql.getWhen().replace("@", "mtgReq.params.")).append(") ");
+                        testCondition.append("not(").append(sql.getWhen().replace("$", "mtgReq.params.")).append(") ");
                         if ((i + 1) < req.getSql().size()) {
                             testCondition.append("and ");
                         }
@@ -407,12 +409,12 @@ public class JAXBParser {
 
     private String processSQL(String query) {
         List<String> params = new ArrayList<>();
-        Pattern pattern = Pattern.compile("\\@(\\w+)");
+        Pattern pattern = Pattern.compile("\\$(\\w+)");
         Matcher match = pattern.matcher(query);
         while (match.find()) {
             params.add(query.substring(match.start(1), match.end(1)));
         }
-        StringBuilder builder = new StringBuilder(query.replaceAll("\\@\\w+", "?"));
+        StringBuilder builder = new StringBuilder(query.replaceAll("\\$\\w+", "?"));
         for (String param : params) {
             if (param.equals("id")) {
                 builder.append("<sql:param value=\"${mtgReq.id}\"/>");
@@ -432,7 +434,7 @@ public class JAXBParser {
 
     private List<String> getDateParams(String query) {
         List<String> params = new ArrayList<>();
-        Pattern pattern = Pattern.compile("\\@(\\w+)");
+        Pattern pattern = Pattern.compile("\\$(\\w+)");
         Matcher match = pattern.matcher(query);
         while (match.find()) {
             String param = query.substring(match.start(1), match.end(1));
@@ -495,4 +497,5 @@ public class JAXBParser {
         }
         return ((count == req.getSql().size()) && req.getExecute().isEmpty());
     }
+
 }
