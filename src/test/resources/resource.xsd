@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://xml.metamug.net/resource/1.0"
-           targetNamespace="http://xml.metamug.net/resource/1.0"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns="http://xml.metamug.net/resource/1.0" 
+           targetNamespace="http://xml.metamug.net/resource/1.0" 
            elementFormDefault="qualified" >
     <xs:simpleType name="version">
 
@@ -97,7 +97,7 @@
     <xs:complexType name="param">
         <xs:annotation>
             <xs:documentation>
-                To perform validation on the parameters received.
+                To perform validation on the parameters recieved.
             </xs:documentation>
         </xs:annotation>
         <xs:attribute name="name" type="paramName" use="required" />
@@ -106,9 +106,9 @@
         <xs:attribute name="required" type="xs:boolean" default="false" />
         <xs:attribute name="max" type="xs:double" />
         <xs:attribute name="min" type="xs:double" />
-        <xs:attribute name="maxlen" type="xs:int" />
-        <xs:attribute name="minlen" type="xs:int" />
-        <xs:attribute name="pametamttern" type="xs:string" />
+        <xs:attribute name="maxLen" type="xs:int" />
+        <xs:attribute name="minLen" type="xs:int" />
+        <xs:attribute name="pattern" type="xs:string" />
         <xs:attribute name="exists" type="exists" />
         <xs:attribute name="value" type="xs:string" />
     </xs:complexType>

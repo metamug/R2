@@ -133,7 +133,7 @@
                                                     <xsl:for-each select="Sql">
                                                         <xsl:choose>
                                                             <xsl:when test="@when">
-                                                                <xsl:analyze-string select="@when" regex="@(\w+)">
+                                                                <xsl:analyze-string select="@when" regex="$(\w+)">
                                                                     <xsl:matching-substring>
                                                                         <span class="label label-primary" style="margin-right:5px">
                                                                             <xsl:value-of select="regex-group(1)"/>
@@ -146,7 +146,7 @@
                                                         </xsl:choose>
                                                     </xsl:for-each>
 
-                                                    <xsl:analyze-string select="." regex="@(\w+)">
+                                                    <xsl:analyze-string select="." regex="$(\w+)">
                                                         <xsl:matching-substring>
                                                             <span>
                                                                 <xsl:value-of select="regex-group(1)"/>
@@ -232,7 +232,7 @@
                                                     <xsl:for-each select="Sql">
                                                         <xsl:choose>
                                                             <xsl:when test="@when">
-                                                                <xsl:analyze-string select="@when" regex="@(\w+)">
+                                                                <xsl:analyze-string select="@when" regex="$(\w+)">
                                                                     <xsl:matching-substring>
                                                                         <span class="label label-primary" style="margin-right:5px">
                                                                             <xsl:value-of select="regex-group(1)"/>
@@ -245,7 +245,7 @@
                                                         </xsl:choose>
                                                     </xsl:for-each>
 
-                                                    <xsl:analyze-string select="." regex="@(\w+)">
+                                                    <xsl:analyze-string select="." regex="$(\w+)">
                                                         <xsl:matching-substring>
                                                             <span class="label label-primary" style="margin-right:5px">
                                                                 <xsl:value-of select="regex-group(1)"/>
