@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<mtg:Resource xmlns:mtg="http://xml.metamug.net/resource/1.0"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" version="1.1">
+    <mtg:Desc> Contains information about movies.</mtg:Desc>
+    <mtg:Request method="GET">
+        <mtg:Param name="q" required="true" num="true" value="1"/>
+        <mtg:Sql when="$q eq 1" type="query">
+            SELECT * FROM movie
+        </mtg:Sql>
+        <mtg:Desc>Get all the tasks entered today.</mtg:Desc>
+        <mtg:Sql when="$q eq 2" type="query">
+            SELECT * FROM movie where id=$movieId
+        </mtg:Sql>
+        <mtg:Sql when="$q eq 3" type="query">
+            SELECT `name`,`rating` from movie where `release` ge $fromDate and `release` le $toDate
+        </mtg:Sql>
+        <mtg:Param name="q" max="5" />
+        <mtg:Sql type="update" className="com.mtg.Urls">
+            INSERT INTO movie (`name`, `rating`,`release`) VALUES ($p, $q,$rDate)
+        </mtg:Sql>
+    </mtg:Request>
+    <mtg:Request method="POST">
+        <mtg:Execute className="com.mtg.Apple" />
+    </mtg:Request>
+    <mtg:Request method="DELETE" item="true" status="410">
+        <mtg:Sql type="update">
+            DELETE FROM movie WHERE id=$id
+        </mtg:Sql>
+    </mtg:Request>
+</mtg:Resource>
