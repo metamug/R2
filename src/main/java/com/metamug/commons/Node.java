@@ -1,4 +1,4 @@
-    /**
+/**
  * ***********************************************************************
  * Freeware Licence Agreement
  *
@@ -51,154 +51,96 @@
  *
  * This Agreement shall be governed by the laws of the State of Maharastra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharastra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.jaxb.tests;
+package com.metamug.commons;
 
-import com.metamug.parser.RPXParser;
-import com.metamug.schema.Execute;
-import com.metamug.schema.Param;
-import com.metamug.schema.Request;
-import com.metamug.schema.Resource;
-import com.metamug.schema.Sql;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import javax.xml.bind.JAXBException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.xml.sax.SAXException;
+import java.util.HashSet;
 
 /**
  *
- * @author deepak+anish
+ * @author anish
  */
-public class XSDValidationTest {
+public class Node {
 
-    private static String XML_FILE_PATH;
+    private final String resourceName;
+    private HashSet<Node> childNodes;
 
-    private static String RES_VER;
-    private static String RES_DESC;
-
-    private static String EXEC_CLASS;
-    
-    private static String REQ_METHOD;
-    private static String REQ_DESC;
-
-    private static String PARAM_NAME;
-    private static String PARAM_REQUIRED;
-
-    private static String SQL_TYPE;
-    private static String SQL_WHEN;
-    private static String SQL_CLASS;
-    private static String SQL_VAL;
-
-    private static String[] testArray;
-    private static RPXParser parser;
-    private File resourceFile;
-
-    @Before
-    public void init() {
-        XML_FILE_PATH = "/test.xml";
-        resourceFile = new File(this.getClass().getResource(XML_FILE_PATH).getFile());
-        parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
-        
-        RES_VER = "1.0";
-        RES_DESC = "This works";
-
-        EXEC_CLASS = "execute_classname";
-        
-        REQ_METHOD = "POST";
-        REQ_DESC = "POST Desc 1";
-
-        PARAM_NAME = "param1";
-        PARAM_REQUIRED = "true";
-
-        SQL_TYPE = "update";
-        SQL_WHEN = "$a gt 1";
-        SQL_CLASS = "sql_classname";
-        SQL_VAL = "INSERT INTO table VALUE ($a)";
-
-        testArray = new String[]{RES_VER, RES_DESC, REQ_METHOD, REQ_DESC, PARAM_NAME, PARAM_REQUIRED,
-                                        EXEC_CLASS, SQL_TYPE, SQL_WHEN, SQL_CLASS, SQL_VAL};
+    public Node(String name) {
+        this.resourceName = name;
+        this.childNodes = new HashSet<>();
     }
 
-    //validate xml against xsd
-    //yet to add validation code for param validation
-    @Test
-    public void testValidation1() throws IOException {
-        try {
-            Resource rs = parser.parseFromXml();
-            //System.out.println(rs);
-            String method = null;
-            String reqDesc = null;
-            String paramName = null;
-            String paramRequired = null;
-            String execClass = null;
-            String sqlType = null;
-            String sqlWhen = null;
-            String sqlClass = null;
-            String sqlValue = null;
-            if (rs != null) {
-                List<Request> requests = rs.getRequest();
-                if (!requests.isEmpty()) {
-                    for (Request request : requests) {
-                        reqDesc = request.getDesc();
-                        method = request.getMethod().value();
-                        for (Param p : request.getParam()) {
-                            paramName = p.getName();
-                            paramRequired = Boolean.toString((Boolean) p.isRequired());
-                        }
-                        for(Execute e : request.getExecute()){
-                            execClass = e.getClassName();
-                        }
-                        for (Sql sql : request.getSql()) {
-                            sqlType = sql.getType().value();
-                            sqlWhen = sql.getWhen();
-                            sqlClass = sql.getClassName();
-                            sqlValue = sql.getValue().trim();
-                        }
+    public String getName() {
+        return this.resourceName;
+    }
+
+    public void setChildNodes(HashSet<Node> nodes) {
+        this.childNodes = nodes;
+    }
+
+    public void addChildNodes(HashSet<Node> nodes) {
+        for (Node n : nodes) {
+            this.childNodes.add(n);
+        }
+    }
+
+    //add child to this node
+    public void addChild(Node child) {
+        this.childNodes.add(child);
+    }
+
+    //get children of this node
+    public HashSet<Node> getChildNodes() {
+        return this.childNodes;
+    }
+
+    //return child of any order if exists or else return null
+    public Node getChildIfExists(Node child) {
+        if (!childNodes.isEmpty()) {
+            for (Node n : childNodes) {
+                //if node is direct child of iterating node
+                if (n.equals(child)) {
+                    return n;
+                } //if not direct child, call method inside iterating node
+                else {
+                    Node n1 = n.getChildIfExists(child);
+                    if (null != n1) {
+                        return n1;
                     }
-                } else {
-                    Assert.fail("No <Request> element found!");
                 }
-                String[] resultArray = new String[]{rs.getVersion(), rs.getDesc(), method, reqDesc, paramName, paramRequired,
-                                                            execClass, sqlType, sqlWhen, sqlClass, sqlValue};
-                Assert.assertArrayEquals(testArray, resultArray);
             }
-        } catch (JAXBException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (SAXException ex) {
-            Assert.fail(ex.getMessage());
         }
+        return null;
     }
-    
-    @Test
-    public void TestValidation2(){
-        File resourceFile = new File(this.getClass().getResource("/movies.xml").getFile());
-        RPXParser parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
-        try {
-            Resource rs = parser.parseFromXml();
-        } catch (JAXBException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (SAXException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (IOException ex) {
-            Assert.fail(ex.getMessage());
+
+    //remove child if exists
+    //can be a child of any order
+    //returns child which is removed, null if not found
+    public Node removeChildIfExists(Node child) {
+        if (!childNodes.isEmpty()) {
+            for (Node n : childNodes) {
+                //if node is direct child of iterating node
+                if (n.equals(child)) {
+                    childNodes.remove(n);
+                    return n;
+                } //if not direct child, call method inside iterating node
+                else {
+                    Node n1 = n.removeChildIfExists(child);
+                    if (null != n1) {
+                        return n1;
+                    }
+                }
+            }
         }
+        return null;
     }
-    
-    @Test
-    public void TestValidation3(){
-        File resourceFile = new File(this.getClass().getResource("/apple.xml").getFile());
-        RPXParser parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
-        try {
-            Resource rs = parser.parseFromXml();
-        } catch (JAXBException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (SAXException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (IOException ex) {
-            Assert.fail(ex.getMessage());
-        }
+
+    @Override
+    public int hashCode() {
+        return this.resourceName.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.resourceName.equals(((Node) obj).getName());
     }
 }

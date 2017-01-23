@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource xmlns="http://xml.metamug.net/resource/1.0"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" v="1.1">
+    <Desc>Contains information about movies.</Desc>
+    <Request method="GET">
+        <Param name="q" required="true" num="true" value="1"/>
+        <Sql when="$q eq 1" type="query">
+            SELECT * FROM movie
+        </Sql>
+        <Desc>Get all the tasks entered today.</Desc>
+        <Sql when="$q eq 2" type="query">
+            SELECT * FROM movie where id=$movieId
+        </Sql>
+        <Sql when="$q eq 3" type="query">
+            SELECT `name`,`rating` from movie where `release` ge $fromDate and `release` le $toDate
+        </Sql>
+        <Param name="q" max="5" />
+        <Sql type="update" classname="com.mtg.Urls">
+            INSERT INTO movie (`name`, `rating`,`release`) VALUES ($p, $q,$rDate)
+        </Sql>
+    </Request>
+    <Request method="POST">
+        <Execute classname="com.mtg.Apple" />
+    </Request>
+    <Request method="DELETE" item="true" status="410">
+        <Sql type="update">
+            DELETE FROM movie WHERE id=$id
+        </Sql>
+    </Request>
+</Resource>

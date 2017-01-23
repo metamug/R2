@@ -51,25 +51,34 @@
  *
  * This Agreement shall be governed by the laws of the State of Maharastra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharastra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.objectreturn.tests.testclasses;
+package com.metamug.commons;
 
-import javax.xml.bind.annotation.*;
+import java.io.StringWriter;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import org.eclipse.persistence.jaxb.MarshallerProperties;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-public class PhoneNumber {
+/**
+ *
+ * @author anishhirlekar
+ */
+public class ObjectConverter {
 
-    @XmlAttribute
-    private String type;
-
-    @XmlValue
-    private String number;
-
-    public void setType(String t) {
-        type = t;
-    }
-
-    public void setNum(String n) {
-        number = n;
+    //resultType can be "application/json" or "application/xml as specified by the accept header"
+    //if object is of type String, the object will be returned as it is and accept header will be ignored
+    public static String convert(Object returnObject, String acceptHeader) throws JAXBException {
+        if (returnObject instanceof String) {
+            return (String) returnObject;
+        }
+        StringWriter marshalledResult = new StringWriter();
+        JAXBContext jc = JAXBContext.newInstance(returnObject.getClass());
+        Marshaller marshaller = jc.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.setProperty(MarshallerProperties.MEDIA_TYPE, acceptHeader);
+        //marshaller.setProperty(MarshallerProperties.JSON_INCLUDE_ROOT, false);
+        marshaller.marshal(returnObject, marshalledResult);
+        return marshalledResult.toString();
     }
 
 }

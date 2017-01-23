@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           xmlns="http://xml.metamug.net/resource/1.0" 
-           targetNamespace="http://xml.metamug.net/resource/1.0" 
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://xml.metamug.net/resource/1.0"
+           targetNamespace="http://xml.metamug.net/resource/1.0"
            elementFormDefault="qualified" >
+    
     <xs:simpleType name="version">
-
         <xs:restriction base="xs:string">
             <xs:minLength value="1" />
         </xs:restriction>
@@ -36,7 +36,7 @@
                     <xs:element name="Request" type="request"/>
                 </xs:choice>
             </xs:sequence>
-            <xs:attribute name="version" type="version" use="required" />
+            <xs:attribute name="v" type="version" use="required" />
         </xs:complexType>
         <xs:unique name="Request">
             <xs:selector xpath="Request"/>
@@ -65,7 +65,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute name="type" type="sqlType" use="required" />
                 <xs:attribute name="when" type="xs:string" />
-                <xs:attribute name="className" type="className" />
+                <xs:attribute name="classname" type="className" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -106,14 +106,14 @@
         <xs:attribute name="required" type="xs:boolean" default="false" />
         <xs:attribute name="max" type="xs:double" />
         <xs:attribute name="min" type="xs:double" />
-        <xs:attribute name="maxLen" type="xs:int" />
-        <xs:attribute name="minLen" type="xs:int" />
+        <xs:attribute name="maxlength" type="xs:int" />
+        <xs:attribute name="minlength" type="xs:int" />
         <xs:attribute name="pattern" type="xs:string" />
         <xs:attribute name="exists" type="exists" />
         <xs:attribute name="value" type="xs:string" />
     </xs:complexType>
 
     <xs:complexType name="execute">
-        <xs:attribute name="className" type="className" use="required" />
+        <xs:attribute name="classname" type="className" use="required" />
     </xs:complexType>
 </xs:schema>

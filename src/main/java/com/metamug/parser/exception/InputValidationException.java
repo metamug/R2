@@ -51,25 +51,15 @@
  *
  * This Agreement shall be governed by the laws of the State of Maharastra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharastra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.objectreturn.tests.testclasses;
+package com.metamug.parser.exception;
 
-import javax.xml.bind.annotation.*;
+/**
+ *
+ * @author anish
+ */
+public class InputValidationException extends Exception {
 
-@XmlAccessorType(XmlAccessType.FIELD)
-public class PhoneNumber {
-
-    @XmlAttribute
-    private String type;
-
-    @XmlValue
-    private String number;
-
-    public void setType(String t) {
-        type = t;
+    public InputValidationException(String message) {
+        super(message);
     }
-
-    public void setNum(String n) {
-        number = n;
-    }
-
 }

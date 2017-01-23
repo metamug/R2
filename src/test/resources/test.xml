@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mtg:Resource xmlns:mtg="http://xml.metamug.net/resource/1.0"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" version="1.0">
-    <mtg:Desc>This works</mtg:Desc>
-    <mtg:Request method="POST">
-        <mtg:Desc>POST Desc 1</mtg:Desc>
-        <mtg:Param name="param1" required="true" ></mtg:Param>
-        <mtg:Sql type="update" when="$a gt 1">        
-        </mtg:Sql>
-    </mtg:Request>
-    
-</mtg:Resource>
+<Resource xmlns="http://xml.metamug.net/resource/1.0"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" v="1.0">
+    <Desc>This works</Desc>
+    <Request method="POST">
+        <Execute classname="execute_classname" />
+        <Desc>POST Desc 1</Desc>
+        <Param name="param1" required="true" ></Param>
+        <Sql type="update" when="$a gt 1" classname="sql_classname">INSERT INTO table VALUE ($a)</Sql>
+    </Request>
+</Resource>

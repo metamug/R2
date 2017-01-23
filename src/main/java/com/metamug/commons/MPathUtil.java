@@ -51,25 +51,41 @@
  *
  * This Agreement shall be governed by the laws of the State of Maharastra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharastra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.objectreturn.tests.testclasses;
+package com.metamug.commons;
 
-import javax.xml.bind.annotation.*;
+import com.github.wnameless.json.flattener.JsonFlattener;
+import java.io.IOException;
+import java.util.Map;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+import org.json.JSONObject;
+import org.json.XML;
+import org.xml.sax.SAXException;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-public class PhoneNumber {
+/**
+ *
+ * @author anishhirlekar
+ */
+public class MPathUtil {
 
-    @XmlAttribute
-    private String type;
-
-    @XmlValue
-    private String number;
-
-    public void setType(String t) {
-        type = t;
+    public static Object getValueFromJson(String inputJson, String mPath) {
+        Map<String, Object> flatMap = JsonFlattener.flattenAsMap(inputJson);
+        //System.out.println(flatMap);
+        return flatMap.get(mPath);
     }
 
-    public void setNum(String n) {
-        number = n;
-    }
+    public static Object getValueFromXml(String xmlInput, String mPath) throws IOException,
+            SAXException, XPathExpressionException, ParserConfigurationException {
 
+        JSONObject jobj = XML.toJSONObject(xmlInput);
+        String jobjStr = jobj.toString();
+        Map<String, Object> flatMap = JsonFlattener.flattenAsMap(jobjStr);
+        //System.out.println("jobj:\n"+flatMap);
+        Object value = flatMap.get(mPath);
+        if (null == value) {
+            value = flatMap.get(mPath + ".content");
+        }
+
+        return value;
+    }
 }
