@@ -56,9 +56,11 @@ package com.metamug.jaxb.tests;
 import com.metamug.parser.RPXParser;
 import com.metamug.schema.Execute;
 import com.metamug.schema.Param;
+import com.metamug.schema.Query;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
 import com.metamug.schema.Sql;
+import com.metamug.schema.Update;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -76,22 +78,20 @@ public class XSDValidationTest {
 
     private static String XML_FILE_PATH;
 
-    private static String RES_VER;
-    private static String RES_DESC;
+    private static String RES_VER, RES_DESC;
 
     private static String EXEC_CLASS;
     
-    private static String REQ_METHOD;
-    private static String REQ_DESC;
+    private static String REQ_METHOD, REQ_DESC;
 
-    private static String PARAM_NAME;
-    private static String PARAM_REQUIRED;
+    private static String PARAM_NAME, PARAM_REQUIRED;
 
-    private static String SQL_TYPE;
-    private static String SQL_WHEN;
-    private static String SQL_CLASS;
-    private static String SQL_VAL;
+    private static String SQL_TYPE, SQL_WHEN, SQL_CLASS, SQL_VAL;
 
+    private static String QUERY_TYPE, QUERY_CLASS, QUERY_VAL;
+    
+    private static String UPDATE_TYPE, UPDATE_WHEN, UPDATE_VAL;
+    
     private static String[] testArray;
     private static RPXParser parser;
     private File resourceFile;
@@ -113,13 +113,22 @@ public class XSDValidationTest {
         PARAM_NAME = "param1";
         PARAM_REQUIRED = "true";
 
+        QUERY_TYPE = "query";
+        QUERY_CLASS = "com.mtg.query";
+        QUERY_VAL = "SELECT * from table";
+        
+        UPDATE_TYPE = "update";
+        UPDATE_WHEN = "$q eq 1";
+        UPDATE_VAL = "UPDATE table SET column=$q WHERE id=$id";
+        
         SQL_TYPE = "update";
         SQL_WHEN = "$a gt 1";
         SQL_CLASS = "sql_classname";
         SQL_VAL = "INSERT INTO table VALUE ($a)";
 
         testArray = new String[]{RES_VER, RES_DESC, REQ_METHOD, REQ_DESC, PARAM_NAME, PARAM_REQUIRED,
-                                        EXEC_CLASS, SQL_TYPE, SQL_WHEN, SQL_CLASS, SQL_VAL};
+                                        EXEC_CLASS, SQL_TYPE, SQL_WHEN, SQL_CLASS, SQL_VAL, QUERY_TYPE, QUERY_CLASS, QUERY_VAL,
+                                                UPDATE_TYPE, UPDATE_WHEN, UPDATE_VAL};
     }
 
     //validate xml against xsd
@@ -131,13 +140,12 @@ public class XSDValidationTest {
             //System.out.println(rs);
             String method = null;
             String reqDesc = null;
-            String paramName = null;
-            String paramRequired = null;
+            String paramName = null, paramRequired = null;
             String execClass = null;
-            String sqlType = null;
-            String sqlWhen = null;
-            String sqlClass = null;
-            String sqlValue = null;
+            String sqlType = null, sqlWhen = null, sqlClass = null, sqlValue = null;
+            String queryType = null, queryClass = null, queryValue = null;
+            String updateType = null, updateWhen = null, updateValue = null;
+            
             if (rs != null) {
                 List<Request> requests = rs.getRequest();
                 if (!requests.isEmpty()) {
@@ -154,19 +162,30 @@ public class XSDValidationTest {
                         for (Sql sql : request.getSql()) {
                             sqlType = sql.getType().value();
                             sqlWhen = sql.getWhen();
-                            sqlClass = sql.getClassName();
+                            sqlClass = sql.getClassname();
                             sqlValue = sql.getValue().trim();
+                        }
+                        for(Query q : request.getQuery()){
+                            queryType = q.getType().value();
+                            queryClass = q.getClassname();
+                            queryValue = q.getValue().trim();
+                        }
+                        for(Update u : request.getUpdate()){
+                            updateType = u.getType().value();
+                            updateWhen = u.getWhen();
+                            updateValue = u.getValue().trim();
                         }
                     }
                 } else {
                     Assert.fail("No <Request> element found!");
                 }
                 String[] resultArray = new String[]{rs.getVersion(), rs.getDesc(), method, reqDesc, paramName, paramRequired,
-                                                            execClass, sqlType, sqlWhen, sqlClass, sqlValue};
+                                                            execClass, sqlType, sqlWhen, sqlClass, sqlValue, queryType, queryClass, queryValue,
+                                                                    updateType, updateWhen, updateValue};
                 Assert.assertArrayEquals(testArray, resultArray);
             }
         } catch (JAXBException ex) {
-            Assert.fail(ex.getMessage());
+            Assert.fail(ex.toString());
         } catch (SAXException ex) {
             Assert.fail(ex.getMessage());
         }
@@ -179,7 +198,7 @@ public class XSDValidationTest {
         try {
             Resource rs = parser.parseFromXml();
         } catch (JAXBException ex) {
-            Assert.fail(ex.getMessage());
+            Assert.fail(ex.toString());
         } catch (SAXException ex) {
             Assert.fail(ex.getMessage());
         } catch (IOException ex) {
@@ -194,7 +213,7 @@ public class XSDValidationTest {
         try {
             Resource rs = parser.parseFromXml();
         } catch (JAXBException ex) {
-            Assert.fail(ex.getMessage());
+            Assert.fail(ex.toString());
         } catch (SAXException ex) {
             Assert.fail(ex.getMessage());
         } catch (IOException ex) {

@@ -369,9 +369,9 @@ div#legend div.hint {
       <script type="text/javascript">
 <!--
 /* IDs of XML Instance Representation boxes */
-var xiBoxes = new Array('type_version_xibox', 'type_className_xibox', 'type_paramName_xibox', 'type_exists_xibox', 'element_Resource_xibox', 'type_desc_xibox', 'type_method_xibox', 'type_sql_xibox', 'type_sqlType_xibox', 'type_request_xibox', 'type_param_xibox', 'type_execute_xibox');
+var xiBoxes = new Array('type_version_xibox', 'type_className_xibox', 'type_paramName_xibox', 'type_exists_xibox', 'element_Resource_xibox', 'type_desc_xibox', 'type_method_xibox', 'type_sqlType_xibox', 'type_sqlBase_xibox', 'type_sql_xibox', 'type_query_xibox', 'type_update_xibox', 'type_request_xibox', 'type_param_xibox', 'type_execute_xibox');
 /* IDs of Schema Component Representation boxes */
-var scBoxes = new Array('schema_scbox', 'type_version_scbox', 'type_className_scbox', 'type_paramName_scbox', 'type_exists_scbox', 'element_Resource_scbox', 'type_desc_scbox', 'type_method_scbox', 'type_sql_scbox', 'type_sqlType_scbox', 'type_request_scbox', 'type_param_scbox', 'type_execute_scbox');
+var scBoxes = new Array('schema_scbox', 'type_version_scbox', 'type_className_scbox', 'type_paramName_scbox', 'type_exists_scbox', 'element_Resource_scbox', 'type_desc_scbox', 'type_method_scbox', 'type_sqlType_scbox', 'type_sqlBase_scbox', 'type_sql_scbox', 'type_query_scbox', 'type_update_scbox', 'type_request_scbox', 'type_param_scbox', 'type_execute_scbox');
 
 /**
  * Can get the ID of the button controlling
@@ -736,11 +736,23 @@ if (gc != null) {
                   </a>
                </li>
                <li>
+                  <a href="#type_query">Complex Type: <strong>query</strong>
+                  </a>
+               </li>
+               <li>
                   <a href="#type_request">Complex Type: <strong>request</strong>
                   </a>
                </li>
                <li>
                   <a href="#type_sql">Complex Type: <strong>sql</strong>
+                  </a>
+               </li>
+               <li>
+                  <a href="#type_sqlBase">Complex Type: <strong>sqlBase</strong>
+                  </a>
+               </li>
+               <li>
+                  <a href="#type_update">Complex Type: <strong>update</strong>
                   </a>
                </li>
                <li>
@@ -1228,6 +1240,93 @@ setState('type_param_scbox', false);
          <a href="#top">top</a>
       </div>
       <hr/>
+      <h3>Complex Type: <a name="type_query" class="name">query</a>
+      </h3>
+      <table class="hierarchy">
+         <tr>
+            <th>Super-types:</th>
+            <td>
+               <span class="type">
+                  <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> &lt; <span class="type">
+                  <a title="Jump to &#34;sqlBase&#34; type definition." href="#type_sqlBase">sqlBase</a>
+               </span> (by extension) &lt; <strong>query</strong> (by extension)</td>
+         </tr>
+         <tr>
+            <th>Sub-types:</th>
+            <td>None</td>
+         </tr>
+      </table>
+      <table class="properties">
+         <tr>
+            <th>Name</th>
+            <td>query</td>
+         </tr>
+         <tr>
+            <th>
+               <a title="Look up 'Abstract' in glossary" href="#term_Abstract">Abstract</a>
+            </th>
+            <td>no</td>
+         </tr>
+      </table>
+      <div class="sample box">
+         <div>
+            <input type="button"
+                   id="type_query_xibox_button"
+                   class="control"
+                   onclick="switchState('type_query_xibox'); return false;"
+                   style="display: none"/> 
+            <span class="caption">XML Instance Representation</span>
+         </div>
+         <div id="type_query_xibox" class="contents">
+            <div style="margin-left: 0em">&lt;...<br/>
+               <span style="margin-left: 0.5em" class="inherited"> when="<span class="type">
+                     <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> 
+                  <span class="occurs">[0..1]</span>"</span>
+               <br/>
+               <span style="margin-left: 0.5em" class="inherited"> classname="<span class="type">
+                     <a title="Jump to &#34;className&#34; type definition." href="#type_className">className</a>
+                  </span> 
+                  <span class="occurs">[0..1]</span>"</span>&gt; <br/>
+               <span style="margin-left: 1.5em"> 
+                  <span class="type">
+                     <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> 
+               </span>
+               <br/>&lt;/...&gt;</div>
+         </div>
+         <script type="text/javascript">
+<!--
+setState('type_query_xibox', true);
+// -->
+</script>
+      </div>
+      <div class="schemaComponent box">
+         <div>
+            <input type="button"
+                   id="type_query_scbox_button"
+                   class="control"
+                   onclick="switchState('type_query_scbox'); return false;"
+                   style="display: none"/> 
+            <span class="caption">Schema Component Representation</span>
+         </div>
+         <div id="type_query_scbox" class="contents">
+            <div style="margin-left: 0em">&lt;<span class="scTag">xs:complexType</span> 
+               <span class="scTag">name</span>="<span class="scContent">query</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:extension</span> 
+                     <span class="scTag">base</span>="<span class="scContent">
+                        <span class="type">
+                           <a title="Jump to &#34;sqlBase&#34; type definition." href="#type_sqlBase">sqlBase</a>
+                        </span>
+                     </span>"/&gt;</div>&lt;/<span class="scTag">xs:complexContent</span>&gt;</div>&lt;/<span class="scTag">xs:complexType</span>&gt;</div>
+         </div>
+         <script type="text/javascript">
+<!--
+setState('type_query_scbox', false);
+// -->
+</script>
+      </div>
+      <div style="text-align: right; clear: both;">
+         <a href="#top">top</a>
+      </div>
+      <hr/>
       <h3>Complex Type: <a name="type_request" class="name">request</a>
       </h3>
       <table class="hierarchy">
@@ -1301,6 +1400,14 @@ setState('type_param_scbox', false);
                      <a title="Jump to &#34;sql&#34; type definition." href="#type_sql">sql</a>
                   </span> &lt;/Sql&gt; <span class="occurs">[0..*]</span>
                </div>
+               <div style="margin-left: 3em">&lt;Query&gt; <span class="type">
+                     <a title="Jump to &#34;query&#34; type definition." href="#type_query">query</a>
+                  </span> &lt;/Query&gt; <span class="occurs">[0..*]</span>
+               </div>
+               <div style="margin-left: 3em">&lt;Update&gt; <span class="type">
+                     <a title="Jump to &#34;update&#34; type definition." href="#type_update">update</a>
+                  </span> &lt;/Update&gt; <span class="occurs">[0..*]</span>
+               </div>
                <span class="group" style="margin-left: 1.5em">End Choice</span>
                <br/>&lt;/...&gt;</div>
          </div>
@@ -1345,6 +1452,18 @@ setState('type_request_xibox', true);
                         <span class="type">
                            <a title="Jump to &#34;sql&#34; type definition." href="#type_sql">sql</a>
                         </span>
+                     </span>" <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>"/&gt;</div>
+                  <div style="margin-left: 1.5em">&lt;<span class="scTag">xs:element</span> 
+                     <span class="scTag">name</span>="<span class="scContent">Query</span>" <span class="scTag">type</span>="<span class="scContent">
+                        <span class="type">
+                           <a title="Jump to &#34;query&#34; type definition." href="#type_query">query</a>
+                        </span>
+                     </span>" <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>"/&gt;</div>
+                  <div style="margin-left: 1.5em">&lt;<span class="scTag">xs:element</span> 
+                     <span class="scTag">name</span>="<span class="scContent">Update</span>" <span class="scTag">type</span>="<span class="scContent">
+                        <span class="type">
+                           <a title="Jump to &#34;update&#34; type definition." href="#type_update">update</a>
+                        </span>
                      </span>" <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>"/&gt;</div>&lt;/<span class="scTag">xs:choice</span>&gt;</div>
                <div style="margin-left: 1.5em">&lt;<span class="scTag">xs:attribute</span> 
                   <span class="scTag">name</span>="<span class="scContent">method</span>" <span class="scTag">type</span>="<span class="scContent">
@@ -1380,7 +1499,9 @@ setState('type_request_scbox', false);
             <th>Super-types:</th>
             <td>
                <span class="type">
-                  <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> &lt; <strong>sql</strong> (by extension)</td>
+                  <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> &lt; <span class="type">
+                  <a title="Jump to &#34;sqlBase&#34; type definition." href="#type_sqlBase">sqlBase</a>
+               </span> (by extension) &lt; <strong>sql</strong> (by extension)</td>
          </tr>
          <tr>
             <th>Sub-types:</th>
@@ -1410,19 +1531,19 @@ setState('type_request_scbox', false);
          </div>
          <div id="type_sql_xibox" class="contents">
             <div style="margin-left: 0em">&lt;...<br/>
-               <span style="margin-left: 0.5em" class="newFields"> type="<span class="type">
-                     <a title="Jump to &#34;sqlType&#34; type definition." href="#type_sqlType">sqlType</a>
-                  </span> 
-                  <span class="occurs">[1]</span>"</span>
-               <br/>
-               <span style="margin-left: 0.5em" class="newFields"> when="<span class="type">
+               <span style="margin-left: 0.5em" class="inherited"> when="<span class="type">
                      <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> 
                   <span class="occurs">[0..1]</span>"</span>
                <br/>
-               <span style="margin-left: 0.5em" class="newFields"> classname="<span class="type">
+               <span style="margin-left: 0.5em" class="inherited"> classname="<span class="type">
                      <a title="Jump to &#34;className&#34; type definition." href="#type_className">className</a>
                   </span> 
-                  <span class="occurs">[0..1]</span>"</span>&gt; <br/>
+                  <span class="occurs">[0..1]</span>"</span>
+               <br/>
+               <span style="margin-left: 0.5em" class="newFields"> type="<span class="type">
+                     <a title="Jump to &#34;sqlType&#34; type definition." href="#type_sqlType">sqlType</a>
+                  </span> 
+                  <span class="occurs">[1]</span>"</span>&gt; <br/>
                <span style="margin-left: 1.5em"> 
                   <span class="type">
                      <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> 
@@ -1446,17 +1567,116 @@ setState('type_sql_xibox', true);
          </div>
          <div id="type_sql_scbox" class="contents">
             <div style="margin-left: 0em">&lt;<span class="scTag">xs:complexType</span> 
-               <span class="scTag">name</span>="<span class="scContent">sql</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:simpleContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:extension</span> 
+               <span class="scTag">name</span>="<span class="scContent">sql</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:extension</span> 
                      <span class="scTag">base</span>="<span class="scContent">
                         <span class="type">
-                           <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span>
+                           <a title="Jump to &#34;sqlBase&#34; type definition." href="#type_sqlBase">sqlBase</a>
+                        </span>
                      </span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:attribute</span> 
                         <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
                            <span class="type">
                               <a title="Jump to &#34;sqlType&#34; type definition." href="#type_sqlType">sqlType</a>
                            </span>
-                        </span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
-                     <div style="margin-left: 1.5em">&lt;<span class="scTag">xs:attribute</span> 
+                        </span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>&lt;/<span class="scTag">xs:extension</span>&gt;</div>&lt;/<span class="scTag">xs:complexContent</span>&gt;</div>&lt;/<span class="scTag">xs:complexType</span>&gt;</div>
+         </div>
+         <script type="text/javascript">
+<!--
+setState('type_sql_scbox', false);
+// -->
+</script>
+      </div>
+      <div style="text-align: right; clear: both;">
+         <a href="#top">top</a>
+      </div>
+      <hr/>
+      <h3>Complex Type: <a name="type_sqlBase" class="name">sqlBase</a>
+      </h3>
+      <table class="hierarchy">
+         <tr>
+            <th>Super-types:</th>
+            <td>
+               <span class="type">
+                  <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> &lt; <strong>sqlBase</strong> (by extension)</td>
+         </tr>
+         <tr>
+            <th>Sub-types:</th>
+            <td>
+               <ul>
+                  <li>
+                     <span class="type">
+                        <a title="Jump to &#34;sql&#34; type definition." href="#type_sql">sql</a>
+                     </span> (by extension)</li>
+                  <li>
+                     <span class="type">
+                        <a title="Jump to &#34;query&#34; type definition." href="#type_query">query</a>
+                     </span> (by extension)</li>
+                  <li>
+                     <span class="type">
+                        <a title="Jump to &#34;update&#34; type definition." href="#type_update">update</a>
+                     </span> (by extension)</li>
+               </ul>
+            </td>
+         </tr>
+      </table>
+      <table class="properties">
+         <tr>
+            <th>Name</th>
+            <td>sqlBase</td>
+         </tr>
+         <tr>
+            <th>
+               <a title="Look up 'Abstract' in glossary" href="#term_Abstract">Abstract</a>
+            </th>
+            <td>no</td>
+         </tr>
+      </table>
+      <div class="sample box">
+         <div>
+            <input type="button"
+                   id="type_sqlBase_xibox_button"
+                   class="control"
+                   onclick="switchState('type_sqlBase_xibox'); return false;"
+                   style="display: none"/> 
+            <span class="caption">XML Instance Representation</span>
+         </div>
+         <div id="type_sqlBase_xibox" class="contents">
+            <div style="margin-left: 0em">&lt;...<br/>
+               <span style="margin-left: 0.5em" class="newFields"> when="<span class="type">
+                     <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> 
+                  <span class="occurs">[0..1]</span>"</span>
+               <br/>
+               <span style="margin-left: 0.5em" class="newFields"> classname="<span class="type">
+                     <a title="Jump to &#34;className&#34; type definition." href="#type_className">className</a>
+                  </span> 
+                  <span class="occurs">[0..1]</span>"</span>&gt; <br/>
+               <span style="margin-left: 1.5em"> 
+                  <span class="type">
+                     <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> 
+               </span>
+               <br/>&lt;/...&gt;</div>
+         </div>
+         <script type="text/javascript">
+<!--
+setState('type_sqlBase_xibox', true);
+// -->
+</script>
+      </div>
+      <div class="schemaComponent box">
+         <div>
+            <input type="button"
+                   id="type_sqlBase_scbox_button"
+                   class="control"
+                   onclick="switchState('type_sqlBase_scbox'); return false;"
+                   style="display: none"/> 
+            <span class="caption">Schema Component Representation</span>
+         </div>
+         <div id="type_sqlBase_scbox" class="contents">
+            <div style="margin-left: 0em">&lt;<span class="scTag">xs:complexType</span> 
+               <span class="scTag">name</span>="<span class="scContent">sqlBase</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:simpleContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:extension</span> 
+                     <span class="scTag">base</span>="<span class="scContent">
+                        <span class="type">
+                           <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span>
+                     </span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:attribute</span> 
                         <span class="scTag">name</span>="<span class="scContent">when</span>" <span class="scTag">type</span>="<span class="scContent">
                            <span class="type">
                               <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span>
@@ -1470,7 +1690,94 @@ setState('type_sql_xibox', true);
          </div>
          <script type="text/javascript">
 <!--
-setState('type_sql_scbox', false);
+setState('type_sqlBase_scbox', false);
+// -->
+</script>
+      </div>
+      <div style="text-align: right; clear: both;">
+         <a href="#top">top</a>
+      </div>
+      <hr/>
+      <h3>Complex Type: <a name="type_update" class="name">update</a>
+      </h3>
+      <table class="hierarchy">
+         <tr>
+            <th>Super-types:</th>
+            <td>
+               <span class="type">
+                  <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> &lt; <span class="type">
+                  <a title="Jump to &#34;sqlBase&#34; type definition." href="#type_sqlBase">sqlBase</a>
+               </span> (by extension) &lt; <strong>update</strong> (by extension)</td>
+         </tr>
+         <tr>
+            <th>Sub-types:</th>
+            <td>None</td>
+         </tr>
+      </table>
+      <table class="properties">
+         <tr>
+            <th>Name</th>
+            <td>update</td>
+         </tr>
+         <tr>
+            <th>
+               <a title="Look up 'Abstract' in glossary" href="#term_Abstract">Abstract</a>
+            </th>
+            <td>no</td>
+         </tr>
+      </table>
+      <div class="sample box">
+         <div>
+            <input type="button"
+                   id="type_update_xibox_button"
+                   class="control"
+                   onclick="switchState('type_update_xibox'); return false;"
+                   style="display: none"/> 
+            <span class="caption">XML Instance Representation</span>
+         </div>
+         <div id="type_update_xibox" class="contents">
+            <div style="margin-left: 0em">&lt;...<br/>
+               <span style="margin-left: 0.5em" class="inherited"> when="<span class="type">
+                     <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> 
+                  <span class="occurs">[0..1]</span>"</span>
+               <br/>
+               <span style="margin-left: 0.5em" class="inherited"> classname="<span class="type">
+                     <a title="Jump to &#34;className&#34; type definition." href="#type_className">className</a>
+                  </span> 
+                  <span class="occurs">[0..1]</span>"</span>&gt; <br/>
+               <span style="margin-left: 1.5em"> 
+                  <span class="type">
+                     <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> 
+               </span>
+               <br/>&lt;/...&gt;</div>
+         </div>
+         <script type="text/javascript">
+<!--
+setState('type_update_xibox', true);
+// -->
+</script>
+      </div>
+      <div class="schemaComponent box">
+         <div>
+            <input type="button"
+                   id="type_update_scbox_button"
+                   class="control"
+                   onclick="switchState('type_update_scbox'); return false;"
+                   style="display: none"/> 
+            <span class="caption">Schema Component Representation</span>
+         </div>
+         <div id="type_update_scbox" class="contents">
+            <div style="margin-left: 0em">&lt;<span class="scTag">xs:complexType</span> 
+               <span class="scTag">name</span>="<span class="scContent">update</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:extension</span> 
+                     <span class="scTag">base</span>="<span class="scContent">
+                        <span class="type">
+                           <a title="Jump to &#34;sqlBase&#34; type definition." href="#type_sqlBase">sqlBase</a>
+                        </span>
+                     </span>"/&gt;</div>&lt;/<span class="scTag">xs:complexContent</span>&gt;</div>&lt;/<span class="scTag">xs:complexType</span>&gt;</div>
+         </div>
+         <script type="text/javascript">
+<!--
+setState('type_update_scbox', false);
 // -->
 </script>
       </div>

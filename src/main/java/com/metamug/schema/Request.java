@@ -21,6 +21,8 @@ import javax.xml.bind.annotation.XmlType;
     "param",
     "execute",
     "sql",
+    "query",
+    "update",
     "descOrParamOrExecute"
 })
 public class Request {
@@ -33,6 +35,10 @@ public class Request {
     protected List<Execute> execute;
     @XmlElement(name = "Sql")
     protected List<Sql> sql;
+    @XmlElement(name = "Query")
+    protected List<Query> query;
+    @XmlElement(name = "Update")
+    protected List<Update> update;
     @XmlAttribute(name = "status")
     protected Integer status;
     @XmlAttribute(name = "method")
@@ -43,7 +49,9 @@ public class Request {
         @XmlElement(name = "Desc", type = String.class),
         @XmlElement(name = "Param", type = Param.class),
         @XmlElement(name = "Execute", type = Execute.class),
-        @XmlElement(name = "Sql", type = Sql.class)
+        @XmlElement(name = "Sql", type = Sql.class),
+        @XmlElement(name = "Query", type = Query.class),
+        @XmlElement(name = "Update", type = Update.class)
     })
     protected List<Object> descOrParamOrExecute;
 
@@ -89,53 +97,37 @@ public class Request {
         }
         return this.sql;
     }
+    
+    public List<Query> getQuery(){
+        if(query == null){
+            query = new ArrayList<>();
+        }
+        return this.query;
+    }
+    
+    public List<Update> getUpdate(){
+        if(update == null){
+            update = new ArrayList<>();
+        }
+        return this.update;
+    }
 
-    /**
-     * Gets the value of the status property.
-     *
-     * @return possible object is {@link Integer }
-     *
-     */
     public Integer getStatus() {
         return status;
     }
 
-    /**
-     * Sets the value of the status property.
-     *
-     * @param value allowed object is {@link Integer }
-     *
-     */
     public void setStatus(Integer value) {
         this.status = value;
     }
 
-    /**
-     * Gets the value of the method property.
-     *
-     * @return possible object is {@link Method }
-     *
-     */
     public Method getMethod() {
         return method;
     }
 
-    /**
-     * Sets the value of the method property.
-     *
-     * @param value allowed object is {@link Method }
-     *
-     */
     public void setMethod(Method value) {
         this.method = value;
     }
 
-    /**
-     * Gets the value of the item property.
-     *
-     * @return possible object is {@link Boolean }
-     *
-     */
     public boolean isItem() {
         if (item == null) {
             return false;
@@ -144,12 +136,6 @@ public class Request {
         }
     }
 
-    /**
-     * Sets the value of the item property.
-     *
-     * @param value allowed object is {@link Boolean }
-     *
-     */
     public void setItem(Boolean value) {
         this.item = value;
     }

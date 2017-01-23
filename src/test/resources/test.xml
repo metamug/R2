@@ -3,9 +3,11 @@
               xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" v="1.0">
     <Desc>This works</Desc>
     <Request method="POST">
-        <Execute classname="execute_classname" />
-        <Desc>POST Desc 1</Desc>
-        <Param name="param1" required="true" ></Param>
+        <Update when="$q eq 1">UPDATE table SET column=$q WHERE id=$id</Update>
+        <Query classname="com.mtg.query">SELECT * from table</Query>
         <Sql type="update" when="$a gt 1" classname="sql_classname">INSERT INTO table VALUE ($a)</Sql>
+        <Execute classname="execute_classname" />        
+        <Param name="param1" required="true" ></Param>
+        <Desc>POST Desc 1</Desc>        
     </Request>
 </Resource>
