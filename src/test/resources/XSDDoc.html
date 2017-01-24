@@ -369,9 +369,9 @@ div#legend div.hint {
       <script type="text/javascript">
 <!--
 /* IDs of XML Instance Representation boxes */
-var xiBoxes = new Array('type_version_xibox', 'type_className_xibox', 'type_paramName_xibox', 'type_exists_xibox', 'element_Resource_xibox', 'type_desc_xibox', 'type_method_xibox', 'type_sqlType_xibox', 'type_sqlBase_xibox', 'type_sql_xibox', 'type_query_xibox', 'type_update_xibox', 'type_request_xibox', 'type_param_xibox', 'type_execute_xibox');
+var xiBoxes = new Array('type_version_xibox', 'type_id_xibox', 'type_parent_xibox', 'type_className_xibox', 'type_paramName_xibox', 'type_exists_xibox', 'element_Resource_xibox', 'type_desc_xibox', 'type_method_xibox', 'type_sqlType_xibox', 'type_sqlBase_xibox', 'type_sql_xibox', 'type_query_xibox', 'type_update_xibox', 'type_request_xibox', 'type_param_xibox', 'type_execute_xibox');
 /* IDs of Schema Component Representation boxes */
-var scBoxes = new Array('schema_scbox', 'type_version_scbox', 'type_className_scbox', 'type_paramName_scbox', 'type_exists_scbox', 'element_Resource_scbox', 'type_desc_scbox', 'type_method_scbox', 'type_sqlType_scbox', 'type_sqlBase_scbox', 'type_sql_scbox', 'type_query_scbox', 'type_update_scbox', 'type_request_scbox', 'type_param_scbox', 'type_execute_scbox');
+var scBoxes = new Array('schema_scbox', 'type_version_scbox', 'type_id_scbox', 'type_parent_scbox', 'type_className_scbox', 'type_paramName_scbox', 'type_exists_scbox', 'element_Resource_scbox', 'type_desc_scbox', 'type_method_scbox', 'type_sqlType_scbox', 'type_sqlBase_scbox', 'type_sql_scbox', 'type_query_scbox', 'type_update_scbox', 'type_request_scbox', 'type_param_scbox', 'type_execute_scbox');
 
 /**
  * Can get the ID of the button controlling
@@ -768,11 +768,19 @@ if (gc != null) {
                   </a>
                </li>
                <li>
+                  <a href="#type_id">Simple Type: <strong>id</strong>
+                  </a>
+               </li>
+               <li>
                   <a href="#type_method">Simple Type: <strong>method</strong>
                   </a>
                </li>
                <li>
                   <a href="#type_paramName">Simple Type: <strong>paramName</strong>
+                  </a>
+               </li>
+               <li>
+                  <a href="#type_parent">Simple Type: <strong>parent</strong>
                   </a>
                </li>
                <li>
@@ -914,7 +922,21 @@ setState('schema_scbox', false);
                <span style="margin-left: 0.5em"> v="<span class="type">
                      <a title="Jump to &#34;version&#34; type definition." href="#type_version">version</a>
                   </span> 
-                  <span class="occurs">[1]</span>"</span>&gt; <div class="other" style="margin-left: 1.5em">&lt;!-- <br/>
+                  <span class="occurs">[1]</span>"</span>
+               <br/>
+               <span style="margin-left: 0.5em"> id="<span class="type">
+                     <a title="Jump to &#34;id&#34; type definition." href="#type_id">id</a>
+                  </span> 
+                  <span class="occurs">[0..1]</span>"</span>
+               <br/>
+               <span style="margin-left: 0.5em"> parent="<span class="type">
+                     <a title="Jump to &#34;parent&#34; type definition." href="#type_parent">parent</a>
+                  </span> 
+                  <span class="occurs">[0..1]</span>"</span>
+               <br/>
+               <span style="margin-left: 0.5em"> auth="<span class="type">
+                     <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:boolean</span> 
+                  <span class="occurs">[0..1]</span>"</span>&gt; <div class="other" style="margin-left: 1.5em">&lt;!-- <br/>
                   <a title="Look up 'Uniqueness' in glossary" href="#term_Unique">Uniqueness</a> Constraint - <strong>
                      <a name="key_Request">Request</a>
                   </strong>
@@ -972,7 +994,24 @@ setState('element_Resource_xibox', true);
                         <span class="type">
                            <a title="Jump to &#34;version&#34; type definition." href="#type_version">version</a>
                         </span>
-                     </span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>&lt;/<span class="scTag">xs:complexType</span>&gt;</div>
+                     </span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+                  <div style="margin-left: 1.5em">&lt;<span class="scTag">xs:attribute</span> 
+                     <span class="scTag">name</span>="<span class="scContent">id</span>" <span class="scTag">type</span>="<span class="scContent">
+                        <span class="type">
+                           <a title="Jump to &#34;id&#34; type definition." href="#type_id">id</a>
+                        </span>
+                     </span>"/&gt;</div>
+                  <div style="margin-left: 1.5em">&lt;<span class="scTag">xs:attribute</span> 
+                     <span class="scTag">name</span>="<span class="scContent">parent</span>" <span class="scTag">type</span>="<span class="scContent">
+                        <span class="type">
+                           <a title="Jump to &#34;parent&#34; type definition." href="#type_parent">parent</a>
+                        </span>
+                     </span>"/&gt;</div>
+                  <div style="margin-left: 1.5em">&lt;<span class="scTag">xs:attribute</span> 
+                     <span class="scTag">name</span>="<span class="scContent">auth</span>" <span class="scTag">type</span>="<span class="scContent">
+                        <span class="type">
+                           <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:boolean</span>
+                     </span>" <span class="scTag">default</span>="<span class="scContent">false</span>"/&gt;</div>&lt;/<span class="scTag">xs:complexType</span>&gt;</div>
                <div style="margin-left: 1.5em">&lt;<span class="scTag">xs:unique</span> 
                   <span class="scTag">name</span>="<span class="scContent">Request</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:selector</span> 
                      <span class="scTag">xpath</span>="<span class="scContent">Request</span>"/&gt;</div>
@@ -1965,6 +2004,66 @@ setState('type_exists_scbox', false);
          <a href="#top">top</a>
       </div>
       <hr/>
+      <h3>Simple Type: <a name="type_id" class="name">id</a>
+      </h3>
+      <table class="hierarchy">
+         <tr>
+            <th>Super-types:</th>
+            <td>
+               <span class="type">
+                  <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> &lt; <strong>id</strong> (by restriction)</td>
+         </tr>
+         <tr>
+            <th>Sub-types:</th>
+            <td>None</td>
+         </tr>
+      </table>
+      <table class="properties">
+         <tr>
+            <th>Name</th>
+            <td>id</td>
+         </tr>
+         <tr>
+            <th>Content</th>
+            <td>
+               <ul>
+                  <li>Base XSD Type: string</li>
+               </ul>
+               <ul>
+                  <li>
+                     <em>length</em> &gt;= 1</li>
+               </ul>
+            </td>
+         </tr>
+      </table>
+      <div class="schemaComponent box">
+         <div>
+            <input type="button"
+                   id="type_id_scbox_button"
+                   class="control"
+                   onclick="switchState('type_id_scbox'); return false;"
+                   style="display: none"/> 
+            <span class="caption">Schema Component Representation</span>
+         </div>
+         <div id="type_id_scbox" class="contents">
+            <div style="margin-left: 0em">&lt;<span class="scTag">xs:simpleType</span> 
+               <span class="scTag">name</span>="<span class="scContent">id</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:restriction</span> 
+                  <span class="scTag">base</span>="<span class="scContent">
+                     <span class="type">
+                        <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span>
+                  </span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:minLength</span> 
+                     <span class="scTag">value</span>="<span class="scContent">1</span>"/&gt;</div>&lt;/<span class="scTag">xs:restriction</span>&gt;</div>&lt;/<span class="scTag">xs:simpleType</span>&gt;</div>
+         </div>
+         <script type="text/javascript">
+<!--
+setState('type_id_scbox', false);
+// -->
+</script>
+      </div>
+      <div style="text-align: right; clear: both;">
+         <a href="#top">top</a>
+      </div>
+      <hr/>
       <h3>Simple Type: <a name="type_method" class="name">method</a>
       </h3>
       <table class="hierarchy">
@@ -2084,6 +2183,66 @@ setState('type_method_scbox', false);
          <script type="text/javascript">
 <!--
 setState('type_paramName_scbox', false);
+// -->
+</script>
+      </div>
+      <div style="text-align: right; clear: both;">
+         <a href="#top">top</a>
+      </div>
+      <hr/>
+      <h3>Simple Type: <a name="type_parent" class="name">parent</a>
+      </h3>
+      <table class="hierarchy">
+         <tr>
+            <th>Super-types:</th>
+            <td>
+               <span class="type">
+                  <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> &lt; <strong>parent</strong> (by restriction)</td>
+         </tr>
+         <tr>
+            <th>Sub-types:</th>
+            <td>None</td>
+         </tr>
+      </table>
+      <table class="properties">
+         <tr>
+            <th>Name</th>
+            <td>parent</td>
+         </tr>
+         <tr>
+            <th>Content</th>
+            <td>
+               <ul>
+                  <li>Base XSD Type: string</li>
+               </ul>
+               <ul>
+                  <li>
+                     <em>length</em> &gt;= 1</li>
+               </ul>
+            </td>
+         </tr>
+      </table>
+      <div class="schemaComponent box">
+         <div>
+            <input type="button"
+                   id="type_parent_scbox_button"
+                   class="control"
+                   onclick="switchState('type_parent_scbox'); return false;"
+                   style="display: none"/> 
+            <span class="caption">Schema Component Representation</span>
+         </div>
+         <div id="type_parent_scbox" class="contents">
+            <div style="margin-left: 0em">&lt;<span class="scTag">xs:simpleType</span> 
+               <span class="scTag">name</span>="<span class="scContent">parent</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:restriction</span> 
+                  <span class="scTag">base</span>="<span class="scContent">
+                     <span class="type">
+                        <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span>
+                  </span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:minLength</span> 
+                     <span class="scTag">value</span>="<span class="scContent">1</span>"/&gt;</div>&lt;/<span class="scTag">xs:restriction</span>&gt;</div>&lt;/<span class="scTag">xs:simpleType</span>&gt;</div>
+         </div>
+         <script type="text/javascript">
+<!--
+setState('type_parent_scbox', false);
 // -->
 </script>
       </div>

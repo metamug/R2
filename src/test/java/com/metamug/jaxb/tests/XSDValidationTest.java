@@ -78,7 +78,7 @@ public class XSDValidationTest {
 
     private static String XML_FILE_PATH;
 
-    private static String RES_VER, RES_DESC, RES_ID;
+    private static String RES_VER, RES_DESC, RES_ID, RES_PARENT, RES_IS_AUTH;
 
     private static String EXEC_CLASS;
     
@@ -105,6 +105,8 @@ public class XSDValidationTest {
         RES_VER = "1.0";
         RES_DESC = "This works";
         RES_ID = "testIdString";
+        RES_PARENT = "exam";
+        RES_IS_AUTH = "true";
 
         EXEC_CLASS = "execute_classname";
         
@@ -127,7 +129,7 @@ public class XSDValidationTest {
         SQL_CLASS = "sql_classname";
         SQL_VAL = "INSERT INTO table VALUE ($a)";
 
-        testArray = new String[]{RES_VER, RES_DESC, RES_ID, REQ_METHOD, REQ_DESC, PARAM_NAME, PARAM_REQUIRED,
+        testArray = new String[]{RES_VER, RES_DESC, RES_ID, RES_PARENT, RES_IS_AUTH, REQ_METHOD, REQ_DESC, PARAM_NAME, PARAM_REQUIRED,
                                         EXEC_CLASS, SQL_TYPE, SQL_WHEN, SQL_CLASS, SQL_VAL, QUERY_TYPE, QUERY_CLASS, QUERY_VAL,
                                                 UPDATE_TYPE, UPDATE_WHEN, UPDATE_VAL};
     }
@@ -139,6 +141,7 @@ public class XSDValidationTest {
         try {
             Resource rs = parser.parseFromXml();
             //System.out.println(rs);
+            String resourceIsAuth = Boolean.toString(rs.isAuth());
             String method = null;
             String reqDesc = null;
             String paramName = null, paramRequired = null;
@@ -180,7 +183,7 @@ public class XSDValidationTest {
                 } else {
                     Assert.fail("No <Request> element found!");
                 }
-                String[] resultArray = new String[]{rs.getVersion(), rs.getDesc(), rs.getId(), method, reqDesc, paramName, paramRequired,
+                String[] resultArray = new String[]{rs.getVersion(), rs.getDesc(), rs.getId(), rs.getParent(), resourceIsAuth, method, reqDesc, paramName, paramRequired,
                                                             execClass, sqlType, sqlWhen, sqlClass, sqlValue, queryType, queryClass, queryValue,
                                                                     updateType, updateWhen, updateValue};
                 Assert.assertArrayEquals(testArray, resultArray);
@@ -198,6 +201,7 @@ public class XSDValidationTest {
         RPXParser parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
         try {
             Resource rs = parser.parseFromXml();
+            Assert.assertEquals(rs.isAuth(), false);
         } catch (JAXBException ex) {
             Assert.fail(ex.toString());
         } catch (SAXException ex) {
@@ -213,6 +217,7 @@ public class XSDValidationTest {
         RPXParser parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
         try {
             Resource rs = parser.parseFromXml();
+            Assert.assertEquals(rs.isAuth(), false);
         } catch (JAXBException ex) {
             Assert.fail(ex.toString());
         } catch (SAXException ex) {

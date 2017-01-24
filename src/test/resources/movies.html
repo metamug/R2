@@ -9,7 +9,7 @@
       <div class="container" style="padding-top:25px">
          <div class="panel-body"><span id="resName" style="color:darkgrey;font-weight:bold;margin-right:5px">
                ABC 
-               </span><span id="resVersion" class="badge">1.1</span><span id="resUri" style="font-weight:bold;" class="text text-success pull-right"></span><div>Contains information about movies.</div>
+               </span><span id="resVersion" class="badge" style="margin-right:5px;">1.1</span><span id="resUri" style="font-weight:bold;" class="text text-success pull-right"></span><div>Contains information about movies.</div>
          </div>
          <div class="col-md-12" style="padding-top:10px">
             <div class="panel panel-info">
@@ -163,8 +163,13 @@
                     var uriDiv = document.getElementById('resUri');
                     var version = document.getElementById('resVersion').innerHTML;
                     var uri = "/v"+version+"/"+resName;
-                    uriDiv.innerHTML = uri;       
-                                
+                    uriDiv.innerHTML = uri;     
+                    
+                    var parentSpan = document.getElementById('resParent');
+                    if(parentSpan != null){
+                       parentSpan.innerHTML = parentSpan.innerHTML.toUpperCase();  
+                    }
+                    /*            
                     var paramListClasses = document.getElementsByClassName("paramList");
                     for (var i = 0; i < paramListClasses.length; i++) {
                         //console.log(paramListClasses[i]);
@@ -197,6 +202,6 @@
                             out.push(i);
                         }
                         return out;
-                    }
+                    }*/
                 </script></body>
 </html>

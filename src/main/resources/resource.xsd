@@ -15,6 +15,12 @@
             <xs:minLength value="1" />
         </xs:restriction>
     </xs:simpleType>
+    
+    <xs:simpleType name="parent">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:simpleType name="className">
         <xs:restriction base="xs:string">
@@ -44,6 +50,8 @@
             </xs:sequence>
             <xs:attribute name="v" type="version" use="required" />
             <xs:attribute name="id" type="id" />
+            <xs:attribute name="parent" type="parent" />
+            <xs:attribute name="auth" type="xs:boolean" default="false" />
         </xs:complexType>
         <xs:unique name="Request">
             <xs:selector xpath="Request"/>

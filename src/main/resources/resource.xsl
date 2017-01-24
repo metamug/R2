@@ -20,19 +20,31 @@
                         <span id="resName" style="color:darkgrey;font-weight:bold;margin-right:5px">
                            ABC 
                         </span>
-                        <span id="resVersion" class="badge">
+                        <span id="resVersion" class="badge" style="margin-right:5px;">
                            <xsl:value-of select="@v"/>
                         </span>
+                        <xsl:choose>
+                            <xsl:when test="contains(@auth,'true')">
+                                <span class="glyphicon glyphicon-lock">
+                                </span>
+                            </xsl:when>
+                        </xsl:choose>
                         <span id="resUri" style="font-weight:bold;" class="text text-success pull-right">                            
                         </span>
                         <div>
-                           <xsl:choose>
-                               <xsl:when test='string-length(mtg:Desc) &gt; 0'>
-                                   <xsl:value-of select="mtg:Desc"/>
-                               </xsl:when>
+                            <xsl:choose>
+                                <xsl:when test='string-length(mtg:Desc) &gt; 0'>
+                                    <xsl:value-of select="mtg:Desc"/>
+                                </xsl:when>
                                <xsl:otherwise>Not Given
                                </xsl:otherwise>
-                           </xsl:choose>
+                            </xsl:choose>
+                            <xsl:choose>
+                                <xsl:when test='@parent'>
+                                       <span class="text text-info pull-right" style="font-weight:bold;">Parent: 
+                                       <span id="resParent" style="color:darkgrey;"><xsl:value-of select="@parent" /></span></span>                                       
+                                </xsl:when>
+                            </xsl:choose>
                         </div>
                      </div>
                     
@@ -369,8 +381,13 @@
                     var uriDiv = document.getElementById('resUri');
                     var version = document.getElementById('resVersion').innerHTML;
                     var uri = "/v"+version+"/"+resName;
-                    uriDiv.innerHTML = uri;       
-                                
+                    uriDiv.innerHTML = uri;     
+                    
+                    var parentSpan = document.getElementById('resParent');
+                    if(parentSpan != null){
+                       parentSpan.innerHTML = parentSpan.innerHTML.toUpperCase();  
+                    }
+                    /*            
                     var paramListClasses = document.getElementsByClassName("paramList");
                     for (var i = 0; i &lt; paramListClasses.length; i++) {
                         //console.log(paramListClasses[i]);
@@ -403,7 +420,7 @@
                             out.push(i);
                         }
                         return out;
-                    }
+                    }*/
                 </script>
             </body>
         </html>
