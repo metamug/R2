@@ -78,7 +78,7 @@ public class XSDValidationTest {
 
     private static String XML_FILE_PATH;
 
-    private static String RES_VER, RES_DESC;
+    private static String RES_VER, RES_DESC, RES_ID;
 
     private static String EXEC_CLASS;
     
@@ -104,6 +104,7 @@ public class XSDValidationTest {
         
         RES_VER = "1.0";
         RES_DESC = "This works";
+        RES_ID = "testIdString";
 
         EXEC_CLASS = "execute_classname";
         
@@ -126,7 +127,7 @@ public class XSDValidationTest {
         SQL_CLASS = "sql_classname";
         SQL_VAL = "INSERT INTO table VALUE ($a)";
 
-        testArray = new String[]{RES_VER, RES_DESC, REQ_METHOD, REQ_DESC, PARAM_NAME, PARAM_REQUIRED,
+        testArray = new String[]{RES_VER, RES_DESC, RES_ID, REQ_METHOD, REQ_DESC, PARAM_NAME, PARAM_REQUIRED,
                                         EXEC_CLASS, SQL_TYPE, SQL_WHEN, SQL_CLASS, SQL_VAL, QUERY_TYPE, QUERY_CLASS, QUERY_VAL,
                                                 UPDATE_TYPE, UPDATE_WHEN, UPDATE_VAL};
     }
@@ -179,7 +180,7 @@ public class XSDValidationTest {
                 } else {
                     Assert.fail("No <Request> element found!");
                 }
-                String[] resultArray = new String[]{rs.getVersion(), rs.getDesc(), method, reqDesc, paramName, paramRequired,
+                String[] resultArray = new String[]{rs.getVersion(), rs.getDesc(), rs.getId(), method, reqDesc, paramName, paramRequired,
                                                             execClass, sqlType, sqlWhen, sqlClass, sqlValue, queryType, queryClass, queryValue,
                                                                     updateType, updateWhen, updateValue};
                 Assert.assertArrayEquals(testArray, resultArray);

@@ -29,6 +29,8 @@ public class Resource {
     protected List<Request> request;
     @XmlAttribute(name = "v", required = true)
     protected String version;
+    @XmlAttribute(name = "id")
+    protected String id;
 
     /**
      * Gets the value of the desc property.
@@ -94,5 +96,28 @@ public class Resource {
     public void setVersion(String version) {
         this.version = version;
     }
+    
+    /**
+     * Gets the value of the id property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getId() {
+        return id;
+    }
 
+    /**
+     * Sets the value of the id property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setId(String value) {
+        this.id = value;
+    }
 }
