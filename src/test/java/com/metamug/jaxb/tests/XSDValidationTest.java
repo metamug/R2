@@ -142,6 +142,7 @@ public class XSDValidationTest {
             Resource rs = parser.parseFromXml();
             //System.out.println(rs);
             String resourceIsAuth = Boolean.toString(rs.isAuth());
+            String resourceVersion = Double.toString(rs.getVersion());
             String method = null;
             String reqDesc = null;
             String paramName = null, paramRequired = null;
@@ -183,7 +184,7 @@ public class XSDValidationTest {
                 } else {
                     Assert.fail("No <Request> element found!");
                 }
-                String[] resultArray = new String[]{rs.getVersion(), rs.getDesc(), rs.getId(), rs.getParent(), resourceIsAuth, method, reqDesc, paramName, paramRequired,
+                String[] resultArray = new String[]{resourceVersion, rs.getDesc(), rs.getId(), rs.getParent(), resourceIsAuth, method, reqDesc, paramName, paramRequired,
                                                             execClass, sqlType, sqlWhen, sqlClass, sqlValue, queryType, queryClass, queryValue,
                                                                     updateType, updateWhen, updateValue};
                 Assert.assertArrayEquals(testArray, resultArray);

@@ -2388,7 +2388,7 @@ setState('type_sqlType_scbox', false);
             <th>Super-types:</th>
             <td>
                <span class="type">
-                  <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span> &lt; <strong>version</strong> (by restriction)</td>
+                  <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:double</span> &lt; <strong>version</strong> (by restriction)</td>
          </tr>
          <tr>
             <th>Sub-types:</th>
@@ -2404,11 +2404,11 @@ setState('type_sqlType_scbox', false);
             <th>Content</th>
             <td>
                <ul>
-                  <li>Base XSD Type: string</li>
+                  <li>Base XSD Type: double</li>
                </ul>
                <ul>
                   <li>
-                     <em>length</em> &gt;= 1</li>
+                     <em>value</em> &gt; 0</li>
                </ul>
             </td>
          </tr>
@@ -2427,9 +2427,9 @@ setState('type_sqlType_scbox', false);
                <span class="scTag">name</span>="<span class="scContent">version</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:restriction</span> 
                   <span class="scTag">base</span>="<span class="scContent">
                      <span class="type">
-                        <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:string</span>
-                  </span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:minLength</span> 
-                     <span class="scTag">value</span>="<span class="scContent">1</span>"/&gt;</div>&lt;/<span class="scTag">xs:restriction</span>&gt;</div>&lt;/<span class="scTag">xs:simpleType</span>&gt;</div>
+                        <a href="#ns_xs" title="Find out namespace of 'xs' prefix">xs</a>:double</span>
+                  </span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xs:minExclusive</span> 
+                     <span class="scTag">value</span>="<span class="scContent">0</span>"/&gt;</div>&lt;/<span class="scTag">xs:restriction</span>&gt;</div>&lt;/<span class="scTag">xs:simpleType</span>&gt;</div>
          </div>
          <script type="text/javascript">
 <!--
