@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
     "desc",
     "request"
 })
-@XmlRootElement(namespace = "Resource")
+@XmlRootElement(name = "Resource")
 public class Resource {
 
     @XmlElement(name = "Desc")

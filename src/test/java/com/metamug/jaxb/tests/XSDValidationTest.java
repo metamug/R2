@@ -54,10 +54,8 @@
 package com.metamug.jaxb.tests;
 
 import com.metamug.parser.RPXParser;
-import com.metamug.schema.Param;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
-import com.metamug.schema.Sql;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -95,7 +93,7 @@ public class XSDValidationTest {
 
     @Before
     public void init() {
-        XML_FILE_PATH = "test.xml";
+        XML_FILE_PATH = "movies.xml";
         resourceFile = new File(this.getClass().getClassLoader().getResource(XML_FILE_PATH).getFile());
         parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
         RES_VER = "1.0";
@@ -130,18 +128,18 @@ public class XSDValidationTest {
                 List<Request> requests = rs.getRequest();
                 if (!requests.isEmpty()) {
                     //int counter = 1;
-                    for (Request request : requests) {
-                        reqDesc = request.getDesc();
-                        method = request.getMethod().value();
-                        for (Param p : request.getParam()) {
-                            paramName = p.getName();
-                            paramRequired = Boolean.toString((Boolean) p.isRequired());
-                        }
-                        for (Sql sql : request.getSql()) {
-                            sqlType = sql.getType().value();
-                            sqlWhen = sql.getWhen();
-                        }
-                    }
+//                    for (Request request : requests) {
+//                        reqDesc = request.getDesc();
+//                        method = request.getMethod().value();
+//                        for (Param p : request.getParam()) {
+//                            paramName = p.getName();
+//                            paramRequired = (Boolean) p.isRequired() ? "True" : "False";
+//                        }
+//                        for (Sql sql : request.getSql()) {
+//                            sqlType = sql.getType().value();
+//                            sqlWhen = sql.getWhen();
+//                        }
+//                    }
                 } else {
                     Assert.fail("No <Request> element found!");
                 }
