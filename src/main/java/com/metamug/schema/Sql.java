@@ -10,50 +10,37 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
 
+/**
+ * <p>
+ * Java class for sql complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
+ * <pre>
+ * &lt;complexType name="sql">
+ *   &lt;simpleContent>
+ *     &lt;extension base="&lt;http://xml.metamug.net/resource/1.0>sqlBase">
+ *       &lt;attribute name="type" use="required" type="{http://xml.metamug.net/resource/1.0}sqlType" />
+ *     &lt;/extension>
+ *   &lt;/simpleContent>
+ * &lt;/complexType>
+ * </pre>
+ *
+ *
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "sql", propOrder = {
-    "value"
-})
-public class Sql {
+@XmlType(name = "sql")
+public class Sql extends SqlBase {
 
-    @XmlValue
-    protected String value;
     @XmlAttribute(name = "type", required = true)
     protected SqlType type;
-    @XmlAttribute(name = "when")
-    protected String when;
-    @XmlAttribute(name = "className")
-    protected String className;
-
-    public Sql() {
-    }
-
-    /**
-     * Gets the value of the value property.
-     *
-     * @return possible object is {@link String }
-     *
-     */
-    public String getValue() {
-        return value;
-    }
-
-    /**
-     * Sets the value of the value property.
-     *
-     * @param value allowed object is {@link String }
-     *
-     */
-    public void setValue(String value) {
-        this.value = value;
-    }
 
     /**
      * Gets the value of the type property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link SqlType }
      *
      */
     public SqlType getType() {
@@ -63,51 +50,11 @@ public class Sql {
     /**
      * Sets the value of the type property.
      *
-     * @param value allowed object is {@link String }
+     * @param value allowed object is {@link SqlType }
      *
      */
     public void setType(SqlType value) {
         this.type = value;
-    }
-
-    /**
-     * Gets the value of the when property.
-     *
-     * @return possible object is {@link String }
-     *
-     */
-    public String getWhen() {
-        return when;
-    }
-
-    /**
-     * Sets the value of the when property.
-     *
-     * @param value allowed object is {@link String }
-     *
-     */
-    public void setWhen(String value) {
-        this.when = value;
-    }
-
-    /**
-     * Gets the value of the className property.
-     *
-     * @return possible object is {@link String }
-     *
-     */
-    public String getClassName() {
-        return className;
-    }
-
-    /**
-     * Sets the value of the className property.
-     *
-     * @param value allowed object is {@link String }
-     *
-     */
-    public void setClassName(String value) {
-        this.className = value;
     }
 
 }

@@ -51,103 +51,65 @@
  *
  * This Agreement shall be governed by the laws of the State of Maharastra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharastra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.docgenerator;
+package com.metamug.jaxb.tests;
 
-import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
+import com.metamug.xslttransformer.XslTransformer;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import javax.xml.xpath.XPathExpressionException;
+import javax.xml.transform.TransformerException;
+import org.junit.Before;
+import org.junit.Test;
 
-/**
- *
- * @author anish
- */
-public class ApiDocGenerator {
+public class DocGenerationTest {
 
-    OutputStream output;
-    XMLOutputFactory factory = XMLOutputFactory.newInstance();
-    XMLStreamWriter writer;
-
-    public void generate(String appDirectory) throws FileNotFoundException, XMLStreamException, IOException, XPathExpressionException {
-        try {
-            List<File> htmlFilenameList = new ArrayList<>();
-            File docsDirectory = new File(appDirectory + "/docs");
-            File[] versionDirecotries = docsDirectory.listFiles();
-            for (File versions : versionDirecotries) {
-                File[] versionFile = versions.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return name.toLowerCase().endsWith(".html");
-                    }
-                });
-                if (versionFile != null) {
-                    htmlFilenameList.addAll(Arrays.asList(versionFile));
-                }
-            }
-            output = new FileOutputStream(appDirectory + "/docs/list" + ".html");
-            writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
-            writeEscapedCharacters("<!DOCTYPE html>");
-            writer.writeStartElement("head");
-            writer.writeStartElement("link");
-            writer.writeAttribute("rel", "stylesheet");
-            writer.writeAttribute("href", "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
-            writer.writeAttribute("integrity", "sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u");
-            writer.writeAttribute("crossorigin", "anonymous");
-            writer.writeEndElement(); //End </link>
-            writer.writeEndElement(); //End of </head>
-            writer.writeStartElement("body");
-            writer.writeStartElement("div");
-            writer.writeAttribute("class", "container");
-            writer.writeAttribute("style", "padding-top:5px");
-            writer.writeStartElement("div");
-            writer.writeAttribute("class", "page-header");
-            writer.writeStartElement("h4");
-            writeEscapedCharacters("Resources");
-            writer.writeEndElement();//End of </h4>
-            writer.writeEndElement();//End of </div class="page-header">
-            if (!htmlFilenameList.isEmpty()) {
-                writer.writeStartElement("div");
-                writer.writeAttribute("height", "100%");
-                writer.writeAttribute("class", "list-group col-md-4");
-                for (File resourceDoc : htmlFilenameList) {
-                    writer.writeStartElement("a");
-                    writer.writeAttribute("class", "list-group-item");
-                    writer.writeAttribute("href", resourceDoc.getParentFile().getName() + File.separator + resourceDoc.getName());
-                    writer.writeAttribute("target", "description");
-                    writeEscapedCharacters(resourceDoc.getName());
-                    writer.writeStartElement("span");
-                    writer.writeAttribute("class", "badge");
-                    writeEscapedCharacters(resourceDoc.getParentFile().getName().replace("v", ""));
-                    writer.writeEndElement();//End of </span>
-                    writer.writeEndElement();   //Endo of </a>
-                }
-                writer.writeEndElement();   //Endo of </div class="list-group">
-            }
-            writer.writeEndElement();   //End of </div class="container">
-            writer.writeEndElement();   //End of </body>
-        } catch (FileNotFoundException | XMLStreamException | XPathExpressionException ex) {
-            Logger.getLogger(ApiDocGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    private String xs3pOutputFilePath, resDocPath1, resDocPath2, resDocPath3;    
+    private File xsd, xs3pXsl, resourceXsl;
+    
+    @Before
+    public void init() {
+        //change this accordingly
+        String basePath = "/Users/anishhirlekar/metamug/RPXParser/rpx-parser/src/test/resources";
+        
+        xs3pOutputFilePath = basePath + "/XSDDoc.html";
+        resDocPath1 = basePath + "/test.html";
+        resDocPath2 = basePath + "/movies.html";
+        resDocPath3 = basePath + "/apple.html";
+        
+        Class cl = XslTransformer.class;
+        xsd = new File(cl.getResource("/resource.xsd").getFile());
+        xs3pXsl = new File(cl.getResource("/xs3p.xsl").getFile());
+        resourceXsl = new File(cl.getResource("/resource.xsl").getFile());
     }
 
-    private void writeEscapedCharacters(String data) throws XMLStreamException, IOException, XPathExpressionException {
-        writer.writeCharacters("");
-        writer.flush();
-        OutputStreamWriter osw = new OutputStreamWriter(output);
-        osw.write(data);
-        osw.flush();
+    @Test
+    public void TestXs3pTransformation() throws TransformerException, IOException {
+        File xsdDocFile = new File(xs3pOutputFilePath);
+        xsdDocFile.createNewFile();
+        XslTransformer.transform(xsd, xs3pXsl, xsdDocFile);
     }
+    
+    @Test
+    public void TestResourceXslTransformation1() throws IOException, TransformerException{
+        File xml = new File(this.getClass().getResource("/test.xml").getFile());
+        File docFile = new File(resDocPath1);
+        docFile.createNewFile();
+        XslTransformer.transform(xml, resourceXsl, docFile);
+    }
+    
+    @Test
+    public void TestResourceXslTransformation2() throws IOException, TransformerException{
+        File xml = new File(this.getClass().getResource("/movies.xml").getFile());
+        File docFile = new File(resDocPath2);
+        docFile.createNewFile();
+        XslTransformer.transform(xml, resourceXsl, docFile);
+    }
+
+    @Test
+    public void TestResourceXslTransformation3() throws IOException, TransformerException{
+        File xml = new File(this.getClass().getResource("/apple.xml").getFile());
+        File docFile = new File(resDocPath3);
+        docFile.createNewFile();
+        XslTransformer.transform(xml, resourceXsl, docFile);
+    }
+
 }

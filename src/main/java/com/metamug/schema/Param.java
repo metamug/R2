@@ -19,7 +19,7 @@ public class Param {
     protected String name;
     @XmlAttribute(name = "blank")
     protected Boolean blank;
-    @XmlAttribute(name = "num")
+    @XmlAttribute(name = "number")
     protected Boolean isNum;
     @XmlAttribute(name = "required")
     protected Boolean required;
@@ -27,9 +27,9 @@ public class Param {
     protected String max;
     @XmlAttribute(name = "min")
     protected String min;
-    @XmlAttribute(name = "maxLen")
+    @XmlAttribute(name = "maxlength")
     protected String maxLen;
-    @XmlAttribute(name = "minLen")
+    @XmlAttribute(name = "minlength")
     protected String minLen;
     @XmlAttribute(name = "pattern")
     protected String pattern;

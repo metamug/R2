@@ -1,52 +1,64 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<mtg:Resource xmlns:mtg="http://xml.metamug.net/resource/1.0"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" version="1.1">
+<Resource auth="false"
+          xmlns="http://xml.metamug.net/resource/1.0"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" v="1.1">
 
-    <mtg:Desc>Contains records for data type apple</Desc>
+    <Desc>Contains records for data type apple</Desc>
 
-    <mtg:Request method="GET" item="true" status="200">
-        <mtg:Param name="t" blank="true" min="1" exists="table.column" />
-        <mtg:Param name="v" minLen="1" maxLen="500" />
-        <mtg:Param name="param1" minLen="5" maxLen="50" />
+    <Request method="GET" item="true" status="200">
+        <Param name="t" blank="true" min="1" exists="table.column" />
+        <Param name="v" minlength="1" maxlength="500" />
+        <Param name="param1" minlength="5" maxlength="50" />
 
-        <mtg:Sql when="$q eq 1" type="query">
+        <Sql when="$q eq 1" type="query">
             select * from employee where employee_name = $v
-        </mtg:Sql>
-        <mtg:Sql type="query" when="$q eq 2" className="com.mtg.Urls">
+        </Sql>
+        <Sql type="query" when="$q eq 2" classname="com.mtg.Urls">
             select * from employee
             where employee_name = $param1
             and employee_id = $id
-        </mtg:Sql>
-        <mtg:Sql when="$q eq 3" type="update">
+        </Sql>
+        <Sql when="$q eq 3" type="update">
             update employee set employee_name = $param2 where employee_id=$id
-        </mtg:Sql>
-    </mtg:Request>
+        </Sql>
+    </Request>
 
-    <mtg:Request method="POST" status="201">
-        <mtg:Desc>mtg:Request for creating an employee record.</mtg:Desc>
-        <mtg:Sql type="update">
+    <Request method="POST" status="201">
+        <Desc>Request for creating an employee record.</Desc>
+        <Sql type="update">
             insert into employee
             (employee_name, employee_id)
             values($name, $id)
-        </mtg:Sql>
+        </Sql>
+        <Execute classname="com.mtg.Apple" />
+    </Request>
 
-        <mtg:Execute className="com.mtg.Apple" />
+    <!--derived from Request -->
+    <Request method="PUT" item="true">
+        <Execute classname="com.mtg.Apple" />
+    </Request>
 
-    </mtg:Request>
+    <Request method="GET" item="false">
+        <Sql type="query" when="$item lt 1">select * from employee where employee_id=12</Sql>
+    </Request>
 
-    <!--derived from mtg:Request -->
-    <mtg:Request method="PUT" item="true">
-        <mtg:Execute className="com.mtg.Apple" />
-    </mtg:Request>
+    <Request method="DELETE" item="true">
+        <Sql type="update">delete * from employee where employee_id=$id</Sql>
+    </Request>
 
-    <mtg:Request method="GET" item="false">
-        <mtg:Sql type="query" when="$item lt 1">select * from employee where employee_id=12
-        </mtg:Sql>
-    </mtg:Request>
+    <!--derived from Request -->
+    <Request method="PUT" item="true">
+        <Execute className="com.mtg.Apple" />
+    </Request>
 
-    <mtg:Request method="DELETE" item="true">
-        <mtg:Sql type="update">delete * from employee where employee_id=$id
-        </mtg:Sql>
-    </mtg:Request>
+    <Request method="GET" item="false">
+        <Sql type="query" when="$item lt 1">select * from employee where employee_id=12
+        </Sql>
+    </Request>
 
-</mtg:Resource>
+    <Request method="DELETE" item="true">
+        <Sql type="update">delete * from employee where employee_id=$id
+        </Sql>
+    </Request>
+
+</Resource>

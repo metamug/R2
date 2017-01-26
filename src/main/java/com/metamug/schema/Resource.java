@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "resource", propOrder = {
+@XmlType(name = "", propOrder = {
     "desc",
     "request"
 })
@@ -27,8 +27,14 @@ public class Resource {
     protected String desc;
     @XmlElement(name = "Request")
     protected List<Request> request;
-    @XmlAttribute(name = "version", required = true)
+    @XmlAttribute(name = "v", required = true)
     protected String version;
+    @XmlAttribute(name = "id")
+    protected String id;
+    @XmlAttribute(name = "parent")
+    protected String parent;
+    @XmlAttribute(name = "auth")
+    protected Boolean auth;
 
     /**
      * Gets the value of the desc property.
@@ -94,5 +100,80 @@ public class Resource {
     public void setVersion(String version) {
         this.version = version;
     }
+    
+    /**
+     * Gets the value of the id property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getId() {
+        return id;
+    }
 
+    /**
+     * Sets the value of the id property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setId(String value) {
+        this.id = value;
+    }
+    
+    /**
+     * Gets the value of the parent property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getParent() {
+        return parent;
+    }
+
+    /**
+     * Sets the value of the parent property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setParent(String value) {
+        this.parent = value;
+    }
+
+    /**
+     * Gets the value of the auth property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public boolean isAuth() {
+        if (auth == null) {
+            return false;
+        } else {
+            return auth;
+        }
+    }
+
+    /**
+     * Sets the value of the auth property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setAuth(Boolean value) {
+        this.auth = value;
+    }
 }

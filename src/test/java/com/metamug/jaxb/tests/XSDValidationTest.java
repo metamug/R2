@@ -1,4 +1,4 @@
-/**
+    /**
  * ***********************************************************************
  * Freeware Licence Agreement
  *
@@ -54,8 +54,13 @@
 package com.metamug.jaxb.tests;
 
 import com.metamug.parser.RPXParser;
+import com.metamug.schema.Execute;
+import com.metamug.schema.Param;
+import com.metamug.schema.Query;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
+import com.metamug.schema.Sql;
+import com.metamug.schema.Update;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -75,81 +80,152 @@ public class XSDValidationTest {
 
     private static String XML_FILE_PATH;
 
-    private static String RES_VER;
-    private static String RES_DESC;
+    private static String RES_VER, RES_DESC, RES_ID, RES_PARENT, RES_IS_AUTH;
 
-    private static String REQ_METHOD;
-    private static String REQ_DESC;
+    private static String EXEC_CLASS;
+    
+    private static String REQ_METHOD, REQ_DESC;
 
-    private static String PARAM_NAME;
-    private static String PARAM_REQUIRED;
+    private static String PARAM_NAME, PARAM_REQUIRED;
 
-    private static String SQL_TYPE;
-    private static String SQL_WHEN;
+    private static String SQL_TYPE, SQL_WHEN, SQL_CLASS, SQL_VAL;
 
+    private static String QUERY_TYPE, QUERY_CLASS, QUERY_VAL;
+    
+    private static String UPDATE_TYPE, UPDATE_WHEN, UPDATE_VAL;
+    
     private static String[] testArray;
     private static RPXParser parser;
     private File resourceFile;
 
     @Before
     public void init() {
-        XML_FILE_PATH = "movies.xml";
-        resourceFile = new File(this.getClass().getClassLoader().getResource(XML_FILE_PATH).getFile());
+        XML_FILE_PATH = "/test.xml";
+        resourceFile = new File(this.getClass().getResource(XML_FILE_PATH).getFile());
         parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
+        
         RES_VER = "1.0";
         RES_DESC = "This works";
+        RES_ID = "testIdString";
+        RES_PARENT = "exam";
+        RES_IS_AUTH = "true";
 
+        EXEC_CLASS = "execute_classname";
+        
         REQ_METHOD = "POST";
         REQ_DESC = "POST Desc 1";
 
         PARAM_NAME = "param1";
         PARAM_REQUIRED = "true";
 
+        QUERY_TYPE = "query";
+        QUERY_CLASS = "com.mtg.query";
+        QUERY_VAL = "SELECT * from table";
+        
+        UPDATE_TYPE = "update";
+        UPDATE_WHEN = "$q eq 1";
+        UPDATE_VAL = "UPDATE table SET column=$q WHERE id=$id";
+        
         SQL_TYPE = "update";
         SQL_WHEN = "$a gt 1";
+        SQL_CLASS = "sql_classname";
+        SQL_VAL = "INSERT INTO table VALUE ($a)";
 
-        testArray = new String[]{RES_VER, RES_DESC, REQ_METHOD, REQ_DESC, PARAM_NAME, PARAM_REQUIRED, SQL_TYPE, SQL_WHEN};
+        testArray = new String[]{RES_VER, RES_DESC, RES_ID, RES_PARENT, RES_IS_AUTH, REQ_METHOD, REQ_DESC, PARAM_NAME, PARAM_REQUIRED,
+                                        EXEC_CLASS, SQL_TYPE, SQL_WHEN, SQL_CLASS, SQL_VAL, QUERY_TYPE, QUERY_CLASS, QUERY_VAL,
+                                                UPDATE_TYPE, UPDATE_WHEN, UPDATE_VAL};
     }
 
     //validate xml against xsd
     //yet to add validation code for param validation
     @Test
-    public void testValidation() throws IOException {
+    public void testValidation1() throws IOException {
         try {
             Resource rs = parser.parseFromXml();
-            System.out.println(rs);
+            //System.out.println(rs);
+            String resourceIsAuth = Boolean.toString(rs.isAuth());
             String method = null;
             String reqDesc = null;
-            String paramName = null;
-            String paramRequired = null;
-            String sqlType = null;
-            String sqlWhen = null;
+            String paramName = null, paramRequired = null;
+            String execClass = null;
+            String sqlType = null, sqlWhen = null, sqlClass = null, sqlValue = null;
+            String queryType = null, queryClass = null, queryValue = null;
+            String updateType = null, updateWhen = null, updateValue = null;
+            
             if (rs != null) {
                 List<Request> requests = rs.getRequest();
                 if (!requests.isEmpty()) {
-                    //int counter = 1;
-//                    for (Request request : requests) {
-//                        reqDesc = request.getDesc();
-//                        method = request.getMethod().value();
-//                        for (Param p : request.getParam()) {
-//                            paramName = p.getName();
-//                            paramRequired = (Boolean) p.isRequired() ? "True" : "False";
-//                        }
-//                        for (Sql sql : request.getSql()) {
-//                            sqlType = sql.getType().value();
-//                            sqlWhen = sql.getWhen();
-//                        }
-//                    }
+                    for (Request request : requests) {
+                        reqDesc = request.getDesc();
+                        method = request.getMethod().value();
+                        for (Param p : request.getParam()) {
+                            paramName = p.getName();
+                            paramRequired = Boolean.toString((Boolean) p.isRequired());
+                        }
+                        for(Execute e : request.getExecute()){
+                            execClass = e.getClassName();
+                        }
+                        for (Sql sql : request.getSql()) {
+                            sqlType = sql.getType().value();
+                            sqlWhen = sql.getWhen();
+                            sqlClass = sql.getClassName();
+                            sqlValue = sql.getValue().trim();
+                        }
+                        for(Query q : request.getQuery()){
+                            queryType = q.getType().value();
+                            queryClass = q.getClassName();
+                            queryValue = q.getValue().trim();
+                        }
+                        for(Update u : request.getUpdate()){
+                            updateType = u.getType().value();
+                            updateWhen = u.getWhen();
+                            updateValue = u.getValue().trim();
+                        }
+                    }
                 } else {
                     Assert.fail("No <Request> element found!");
                 }
-                String[] resultArray = new String[]{rs.getVersion(), rs.getDesc(), method, reqDesc, paramName, paramRequired, sqlType, sqlWhen};
+                String[] resultArray = new String[]{rs.getVersion(), rs.getDesc(), rs.getId(), rs.getParent(), resourceIsAuth, method, reqDesc, paramName, paramRequired,
+                                                            execClass, sqlType, sqlWhen, sqlClass, sqlValue, queryType, queryClass, queryValue,
+                                                                    updateType, updateWhen, updateValue};
                 Assert.assertArrayEquals(testArray, resultArray);
             }
         } catch (JAXBException ex) {
-            Assert.fail(ex.getMessage());
+            Assert.fail(ex.toString());
         } catch (SAXException ex) {
-            Logger.getLogger(XSDValidationTest.class.getName()).log(Level.SEVERE, null, ex);
+            Assert.fail(ex.getMessage());
+        }
+    }
+    
+    @Test
+    public void TestValidation2(){
+        File resourceFile = new File(this.getClass().getResource("/movies.xml").getFile());
+        RPXParser parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
+        try {
+            Resource rs = parser.parseFromXml();
+            Assert.assertEquals(rs.isAuth(), false);
+        } catch (JAXBException ex) {
+            Assert.fail(ex.toString());
+        } catch (SAXException ex) {
+            Assert.fail(ex.getMessage());
+        } catch (IOException ex) {
+            Assert.fail(ex.getMessage());
+        }
+    }
+    
+    @Test
+    public void TestValidation3(){
+        File resourceFile = new File(this.getClass().getResource("/apple.xml").getFile());
+        RPXParser parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
+        try {
+            Resource rs = parser.parseFromXml();
+            Assert.assertEquals(rs.isAuth(), false);
+        } catch (JAXBException ex) {
+            Assert.fail(ex.toString());
+        } catch (SAXException ex) {
+            Assert.fail(ex.getMessage());
+        } catch (IOException ex) {
+            Assert.fail(ex.getMessage());
         }
     }
 }

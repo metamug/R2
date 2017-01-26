@@ -3,8 +3,20 @@
            xmlns="http://xml.metamug.net/resource/1.0"
            targetNamespace="http://xml.metamug.net/resource/1.0"
            elementFormDefault="qualified" >
-    <xs:simpleType name="version">
 
+    <xs:simpleType name="version">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="id">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="parent">
         <xs:restriction base="xs:string">
             <xs:minLength value="1" />
         </xs:restriction>
@@ -36,7 +48,10 @@
                     <xs:element name="Request" type="request"/>
                 </xs:choice>
             </xs:sequence>
-            <xs:attribute name="version" type="version" use="required" />
+            <xs:attribute name="v" type="version" use="required" />
+            <xs:attribute name="id" type="id" />
+            <xs:attribute name="parent" type="parent" />
+            <xs:attribute name="auth" type="xs:boolean" default="false" />
         </xs:complexType>
         <xs:unique name="Request">
             <xs:selector xpath="Request"/>
@@ -60,22 +75,44 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="sql" >
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="type" type="sqlType" use="required" />
-                <xs:attribute name="when" type="xs:string" />
-                <xs:attribute name="className" type="className" />
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-
     <xs:simpleType name="sqlType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="query"/>
             <xs:enumeration value="update"/>
         </xs:restriction>
     </xs:simpleType>
+
+    <xs:complexType name="sqlBase">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="when" type="xs:string" />
+                <xs:attribute name="classname" type="className" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="sql" >
+        <xs:complexContent>
+            <xs:extension base="sqlBase">
+                <xs:attribute name="type" type="sqlType" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="query">
+        <xs:complexContent>
+            <xs:extension base="sqlBase">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="update">
+        <xs:complexContent>
+            <xs:extension base="sqlBase">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
 
     <xs:complexType name="request">
         <xs:annotation>
@@ -88,6 +125,8 @@
             <xs:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Query" type="query" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Update" type="update" minOccurs="0" maxOccurs="unbounded" />
         </xs:choice>
         <xs:attribute name="method" type="method" use="required" />
         <xs:attribute name="status" type="xs:int"/>
@@ -102,18 +141,18 @@
         </xs:annotation>
         <xs:attribute name="name" type="paramName" use="required" />
         <xs:attribute name="blank" type="xs:boolean" default="false" />
-        <xs:attribute name="num" type="xs:boolean" default="false" />
+        <xs:attribute name="number" type="xs:boolean" default="false" />
         <xs:attribute name="required" type="xs:boolean" default="false" />
         <xs:attribute name="max" type="xs:double" />
         <xs:attribute name="min" type="xs:double" />
-        <xs:attribute name="maxlen" type="xs:int" />
-        <xs:attribute name="minlen" type="xs:int" />
-        <xs:attribute name="pametamttern" type="xs:string" />
+        <xs:attribute name="maxlength" type="xs:int" />
+        <xs:attribute name="minlength" type="xs:int" />
+        <xs:attribute name="pattern" type="xs:string" />
         <xs:attribute name="exists" type="exists" />
         <xs:attribute name="value" type="xs:string" />
     </xs:complexType>
 
     <xs:complexType name="execute">
-        <xs:attribute name="className" type="className" use="required" />
+        <xs:attribute name="classname" type="className" use="required" />
     </xs:complexType>
 </xs:schema>

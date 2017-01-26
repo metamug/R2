@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "execute")
 public class Execute {
 
-    @XmlAttribute(name = "className", required = true)
+    @XmlAttribute(name = "classname", required = true)
     protected String className;
 
     /**
