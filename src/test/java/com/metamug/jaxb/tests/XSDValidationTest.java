@@ -202,7 +202,9 @@ public class XSDValidationTest {
         RPXParser parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
         try {
             Resource rs = parser.parseFromXml();
-            Assert.assertEquals(rs.isAuth(), false);
+            String[] testArray = new String[]{"false", "1.1"};
+            String[] resultArray = new String[]{Boolean.toString(rs.isAuth()), Double.toString(rs.getVersion())};
+            Assert.assertArrayEquals(testArray, resultArray);
         } catch (JAXBException ex) {
             Assert.fail(ex.toString());
         } catch (SAXException ex) {
