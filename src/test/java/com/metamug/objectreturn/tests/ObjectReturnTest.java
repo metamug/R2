@@ -53,7 +53,7 @@
  */
 package com.metamug.objectreturn.tests;
 
-import com.metamug.commons.ObjectConverter;
+import com.metamug.commons.ObjectReturn;
 import com.metamug.objectreturn.tests.testclasses.Customer;
 import com.metamug.objectreturn.tests.testclasses.PhoneNumber;
 import javax.xml.bind.JAXBException;
@@ -78,19 +78,19 @@ public class ObjectReturnTest {
 
     @Test
     public void ObjectToJsonTest() throws ClassNotFoundException, JAXBException {
-        String resultJson = ObjectConverter.convert(customer, TYPE_JSON);
+        String resultJson = ObjectReturn.convert(customer, TYPE_JSON);
         System.out.println(resultJson);
     }
 
     @Test
     public void ObjectToXmlTest() throws JAXBException {
-        String resultXml = ObjectConverter.convert(customer, TYPE_XML);
+        String resultXml = ObjectReturn.convert(customer, TYPE_XML);
         System.out.println(resultXml);
     }
 
     @Test
     public void StringTest() throws JAXBException {
-        String result = ObjectConverter.convert("Response String", "Ignored header");
+        String result = ObjectReturn.convert("Response String", "Ignored header");
         System.out.println(result);
     }
 }

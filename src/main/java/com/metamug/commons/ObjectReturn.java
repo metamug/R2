@@ -57,13 +57,14 @@ import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import org.eclipse.persistence.jaxb.JAXBContextFactory;
 import org.eclipse.persistence.jaxb.MarshallerProperties;
 
 /**
  *
  * @author anishhirlekar
  */
-public class ObjectConverter {
+public class ObjectReturn {
 
     //resultType can be "application/json" or "application/xml as specified by the accept header"
     //if object is of type String, the object will be returned as it is and accept header will be ignored
@@ -72,7 +73,9 @@ public class ObjectConverter {
             return (String) returnObject;
         }
         StringWriter marshalledResult = new StringWriter();
-        JAXBContext jc = JAXBContext.newInstance(returnObject.getClass());
+        //JAXBContext jc = JAXBContext.newInstance(returnObject.getClass());
+        JAXBContext jc = JAXBContextFactory.createContext(new Class[] {returnObject.getClass()}, null);
+        
         Marshaller marshaller = jc.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.setProperty(MarshallerProperties.MEDIA_TYPE, acceptHeader);

@@ -208,7 +208,9 @@ public class XSDValidationTest {
     public void TestValidation2() {
         try {
             Resource rs = parser.parseFromXml();
-            Assert.assertEquals(rs.isAuth(), false);
+            String[] expectedResultArray = new String[]{"false", "1.1"};
+            String[] resultArray = new String[]{Boolean.toString(rs.isAuth()), Double.toString(rs.getVersion())};
+            Assert.assertArrayEquals(expectedResultArray, resultArray);
         } catch (JAXBException ex) {
             Assert.fail(ex.toString());
         } catch (SAXException ex) {
