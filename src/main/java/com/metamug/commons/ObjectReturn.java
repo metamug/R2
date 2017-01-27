@@ -63,7 +63,7 @@ import org.eclipse.persistence.jaxb.MarshallerProperties;
  *
  * @author anishhirlekar
  */
-public class ObjectConverter {
+public class ObjectReturn {
 
     //resultType can be "application/json" or "application/xml as specified by the accept header"
     //if object is of type String, the object will be returned as it is and accept header will be ignored

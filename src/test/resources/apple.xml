@@ -6,7 +6,7 @@
     <Desc>Contains records for data type apple</Desc>
 
     <Request method="GET" item="true" status="200">
-        <Param name="t" type="range" min="1" exists="table.column" />
+        <Param name="t" type="number" min="1" exists="table.column" />
         <Param name="v" type="text" minlength="1" maxlength="500" />
         <Sql when="$q eq 1" type="query">
             select * from employee where employee_name = $v
