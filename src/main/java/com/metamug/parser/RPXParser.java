@@ -76,6 +76,8 @@ import com.metamug.xslttransformer.XslTransformer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -96,31 +98,37 @@ import org.xml.sax.SAXException;
 public class RPXParser {
 
     private final String appDirectory;
+    private final String appName;
     private final File xmlResourceFile;
 
     public RPXParser() {
         appDirectory = null;
+        appName = null;
         xmlResourceFile = null;
     }
 
     /**
      *
      * @param appDirectory Application path where docs has to be generated.
+     * @param appName App name
      * @param resouceFile XML file to parsed.
      */
-    public RPXParser(String appDirectory, File resouceFile) {
+    public RPXParser(String appDirectory, String appName, File resouceFile) {
         this.appDirectory = appDirectory;
+        this.appName = appName;
         this.xmlResourceFile = resouceFile;
     }
 
-    public void createHtml() throws IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException {
+    private void createHtml(Resource resource) throws IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException {
         File xsl = new File(RPXParser.class.getResource("/resource.xsl").getFile());
-        File outHtml = new File(FilenameUtils.removeExtension(xmlResourceFile.getName()) + ".html");
+        if (!new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()).exists()) {
+            Files.createDirectories(Paths.get(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()));
+        }
+        File outHtml = new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion() + "/" + FilenameUtils.removeExtension(xmlResourceFile.getName()) + ".html");
         XslTransformer.transform(xmlResourceFile, xsl, outHtml);
-        new DocGenerator().generate(appDirectory);
     }
 
-    public Resource parseFromXml() throws JAXBException, SAXException, IOException {
+    public Resource parseFromXml() throws JAXBException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException {
         File xsd = new File(RPXParser.class.getResource("/resource.xsd").getFile());
         StreamSource xmlFile = new StreamSource(xmlResourceFile);
         SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
@@ -129,6 +137,11 @@ public class RPXParser {
         validator.validate(xmlFile);
         JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        return (Resource) jaxbUnmarshaller.unmarshal(xmlResourceFile);
+        Resource resource = (Resource) jaxbUnmarshaller.unmarshal(xmlResourceFile);
+        if (resource != null) {
+            createHtml(resource);
+        }
+        new DocGenerator().generate(appDirectory + File.separator + appName);
+        return resource;
     }
 }

@@ -86,15 +86,17 @@ public class DocGenerator {
             List<File> htmlFilenameList = new ArrayList<>();
             File docsDirectory = new File(appDirectory + "/docs");
             File[] versionDirecotries = docsDirectory.listFiles();
-            for (File versions : versionDirecotries) {
-                File[] versionFile = versions.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return name.toLowerCase().endsWith(".html");
+            if (versionDirecotries != null) {
+                for (File versions : versionDirecotries) {
+                    File[] versionFile = versions.listFiles(new FilenameFilter() {
+                        @Override
+                        public boolean accept(File dir, String name) {
+                            return name.toLowerCase().endsWith(".html");
+                        }
+                    });
+                    if (versionFile != null) {
+                        htmlFilenameList.addAll(Arrays.asList(versionFile));
                     }
-                });
-                if (versionFile != null) {
-                    htmlFilenameList.addAll(Arrays.asList(versionFile));
                 }
             }
             output = new FileOutputStream(appDirectory + "/docs/list" + ".html");

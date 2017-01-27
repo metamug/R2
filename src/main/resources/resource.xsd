@@ -74,16 +74,16 @@
             <xs:enumeration value="DELETE"/>
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="paramType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="text"/>
-            <xs:enumeration value="range"/>
+            <xs:enumeration value="date"/>
+            <xs:enumeration value="datetime"/>
             <xs:enumeration value="email"/>
             <xs:enumeration value="number"/>
+            <xs:enumeration value="text"/>
             <xs:enumeration value="time"/>
-            <xs:enumeration value="date(yyyy-MM-dd)"/>
-            <xs:enumeration value="datetime(yyyy-MM-dd HH:mm:ss)"/>
+            <xs:enumeration value="url"/>
         </xs:restriction>
     </xs:simpleType>
 

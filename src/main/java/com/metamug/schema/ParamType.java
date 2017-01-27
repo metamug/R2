@@ -56,26 +56,19 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for paramType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
- * &lt;simpleType name="paramType">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="text"/>
- *     &lt;enumeration value="range"/>
- *     &lt;enumeration value="email"/>
- *     &lt;enumeration value="number"/>
- *     &lt;enumeration value="time"/>
- *     &lt;enumeration value="date(yyyy-MM-dd)"/>
- *     &lt;enumeration value="datetime(yyyy-MM-dd HH:mm:ss)"/>
- *   &lt;/restriction>
- * &lt;/simpleType>
+ * Java class for paramType.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * <
+ * pre>
+ * &lt;simpleType name="paramType"> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"> &lt;enumeration value="text"/> &lt;enumeration value="range"/> &lt;enumeration value="email"/>
+ * &lt;enumeration value="number"/> &lt;enumeration value="time"/> &lt;enumeration value="date(yyyy-MM-dd)"/> &lt;enumeration value="datetime(yyyy-MM-dd HH:mm:ss)"/> &lt;/restriction> &lt;/simpleType>
  * </pre>
- * 
+ *
  */
 @XmlType(name = "paramType")
 @XmlEnum
@@ -91,28 +84,30 @@ public enum ParamType {
     NUMBER("number"),
     @XmlEnumValue("time")
     TIME("time"),
-    @XmlEnumValue("date(yyyy-MM-dd)")
-    DATE_YYYY_MM_DD("date(yyyy-MM-dd)"),
-    @XmlEnumValue("datetime(yyyy-MM-dd HH:mm:ss)")
-    DATETIME_YYYY_MM_DD_HH_MM_SS("datetime(yyyy-MM-dd HH:mm:ss)");
+    @XmlEnumValue("date")
+    DATE("date"),
+    @XmlEnumValue("datetime")
+    DATETIME("datetime"),
+    @XmlEnumValue("url")
+    URL("url");
+
     private final String value;
 
-    ParamType(String v) {
-        value = v;
+    ParamType(String value) {
+        this.value = value;
     }
 
     public String value() {
-        return value;
+        return this.value;
     }
 
-    public static ParamType fromValue(String v) {
-        for (ParamType c: ParamType.values()) {
-            if (c.value.equals(v)) {
-                return c;
+    public static ParamType fromValue(String value) {
+        for (ParamType paramType : ParamType.values()) {
+            if (paramType.value.equals(value)) {
+                return paramType;
             }
         }
-        throw new IllegalArgumentException(v);
+        throw new IllegalArgumentException(value);
     }
 
 }
-

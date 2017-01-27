@@ -62,9 +62,15 @@ import com.metamug.schema.Resource;
 import com.metamug.schema.Sql;
 import com.metamug.schema.Update;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -100,7 +106,7 @@ public class XSDValidationTest {
     public void init() {
         XML_FILE_PATH = "/test.xml";
         resourceFile = new File(this.getClass().getResource(XML_FILE_PATH).getFile());
-        parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
+        parser = new RPXParser("/opt/tomcat8/api", "testApp", resourceFile);
 
         RES_VER = "1.0";
         RES_DESC = "This works";
@@ -193,13 +199,13 @@ public class XSDValidationTest {
             Assert.fail(ex.toString());
         } catch (SAXException ex) {
             Assert.fail(ex.getMessage());
+        } catch (FileNotFoundException | XMLStreamException | XPathExpressionException | TransformerException ex) {
+            Logger.getLogger(XSDValidationTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Test
     public void TestValidation2() {
-        File resourceFile = new File(this.getClass().getResource("/movies.xml").getFile());
-        RPXParser parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
         try {
             Resource rs = parser.parseFromXml();
             Assert.assertEquals(rs.isAuth(), false);
@@ -209,13 +215,13 @@ public class XSDValidationTest {
             Assert.fail(ex.getMessage());
         } catch (IOException ex) {
             Assert.fail(ex.getMessage());
+        } catch (XMLStreamException | XPathExpressionException | TransformerException ex) {
+            Logger.getLogger(XSDValidationTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Test
     public void TestValidation3() {
-        File resourceFile = new File(this.getClass().getResource("/apple.xml").getFile());
-        RPXParser parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
         try {
             Resource rs = parser.parseFromXml();
             Assert.assertEquals(rs.isAuth(), false);
@@ -225,6 +231,8 @@ public class XSDValidationTest {
             Assert.fail(ex.getMessage());
         } catch (IOException ex) {
             Assert.fail(ex.getMessage());
+        } catch (XMLStreamException | XPathExpressionException | TransformerException ex) {
+            Logger.getLogger(XSDValidationTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
