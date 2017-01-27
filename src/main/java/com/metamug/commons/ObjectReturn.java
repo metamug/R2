@@ -57,6 +57,7 @@ import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import org.eclipse.persistence.jaxb.JAXBContextFactory;
 import org.eclipse.persistence.jaxb.MarshallerProperties;
 
 /**
@@ -72,7 +73,9 @@ public class ObjectReturn {
             return (String) returnObject;
         }
         StringWriter marshalledResult = new StringWriter();
-        JAXBContext jc = JAXBContext.newInstance(returnObject.getClass());
+        //JAXBContext jc = JAXBContext.newInstance(returnObject.getClass());
+        JAXBContext jc = JAXBContextFactory.createContext(new Class[] {returnObject.getClass()}, null);
+        
         Marshaller marshaller = jc.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.setProperty(MarshallerProperties.MEDIA_TYPE, acceptHeader);
