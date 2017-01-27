@@ -11,132 +11,216 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ * 
+ *                 To perform validation on the parameters received.
+ *             
+ * 
+ * <p>Java class for param complex type.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * <pre>
+ * &lt;complexType name="param">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;attribute name="name" use="required" type="{http://xml.metamug.net/resource/1.0}paramName" />
+ *       &lt;attribute name="required" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
+ *       &lt;attribute name="max" type="{http://www.w3.org/2001/XMLSchema}double" />
+ *       &lt;attribute name="min" type="{http://www.w3.org/2001/XMLSchema}double" />
+ *       &lt;attribute name="maxlength" type="{http://www.w3.org/2001/XMLSchema}int" />
+ *       &lt;attribute name="minlength" type="{http://www.w3.org/2001/XMLSchema}int" />
+ *       &lt;attribute name="pattern" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="exists" type="{http://xml.metamug.net/resource/1.0}exists" />
+ *       &lt;attribute name="value" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="type" use="required" type="{http://xml.metamug.net/resource/1.0}paramType" />
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "param")
 public class Param {
 
     @XmlAttribute(name = "name", required = true)
     protected String name;
-    @XmlAttribute(name = "blank")
-    protected Boolean blank;
-    @XmlAttribute(name = "number")
-    protected Boolean isNum;
     @XmlAttribute(name = "required")
     protected Boolean required;
     @XmlAttribute(name = "max")
-    protected String max;
+    protected Double max;
     @XmlAttribute(name = "min")
-    protected String min;
+    protected Double min;
     @XmlAttribute(name = "maxlength")
-    protected String maxLen;
+    protected Integer maxlength;
     @XmlAttribute(name = "minlength")
-    protected String minLen;
+    protected Integer minlength;
     @XmlAttribute(name = "pattern")
     protected String pattern;
     @XmlAttribute(name = "exists")
     protected String exists;
     @XmlAttribute(name = "value")
-    protected String defaultValue;
+    protected String value;
+    @XmlAttribute(name = "type", required = true)
+    protected ParamType type;
 
+    /**
+     * Gets the value of the name property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the value of the name property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
     public void setName(String value) {
         this.name = value;
     }
 
-    public Object isBlank() {
-        return blank;
+    /**
+     * Gets the value of the required property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public boolean isRequired() {
+        if (required == null) {
+            return false;
+        } else {
+            return required;
+        }
     }
 
-    public void setBlank(Boolean value) {
-        this.blank = value;
-    }
-
-    public Object isNum() {
-        return isNum;
-    }
-
-    public void setNum(Boolean value) {
-        this.isNum = value;
-    }
-
-    public Object isRequired() {
-        return required;
-    }
-
+    /**
+     * Sets the value of the required property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
     public void setRequired(Boolean value) {
         this.required = value;
     }
 
-    public String getMax() {
+    /**
+     * Gets the value of the max property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Double }
+     *     
+     */
+    public Double getMax() {
         return max;
     }
 
-    public void setMax(String value) {
+    /**
+     * Sets the value of the max property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Double }
+     *     
+     */
+    public void setMax(Double value) {
         this.max = value;
     }
 
     /**
      * Gets the value of the min property.
-     *
-     * @return possible object is {@link String }
-     *
+     * 
+     * @return
+     *     possible object is
+     *     {@link Double }
+     *     
      */
-    public String getMin() {
+    public Double getMin() {
         return min;
     }
 
     /**
      * Sets the value of the min property.
-     *
-     * @param value allowed object is {@link String }
-     *
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Double }
+     *     
      */
-    public void setMin(String value) {
+    public void setMin(Double value) {
         this.min = value;
     }
 
-    public String getMaxLen() {
-        return maxLen;
+    /**
+     * Gets the value of the maxlength property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getMaxlength() {
+        return maxlength;
     }
 
     /**
-     * Sets the value of the maxLen property.
-     *
-     * @param value allowed object is {@link String }
-     *
+     * Sets the value of the maxlength property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
      */
-    public void setMaxLen(String value) {
-        this.maxLen = value;
+    public void setMaxlength(Integer value) {
+        this.maxlength = value;
     }
 
     /**
-     * Gets the value of the minLen property.
-     *
-     * @return possible object is {@link String }
-     *
+     * Gets the value of the minlength property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
      */
-    public String getMinLen() {
-        return minLen;
+    public Integer getMinlength() {
+        return minlength;
     }
 
     /**
-     * Sets the value of the minLen property.
-     *
-     * @param value allowed object is {@link String }
-     *
+     * Sets the value of the minlength property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
      */
-    public void setMinLen(String value) {
-        this.minLen = value;
+    public void setMinlength(Integer value) {
+        this.minlength = value;
     }
 
     /**
      * Gets the value of the pattern property.
-     *
-     * @return possible object is {@link String }
-     *
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
     public String getPattern() {
         return pattern;
@@ -144,9 +228,11 @@ public class Param {
 
     /**
      * Sets the value of the pattern property.
-     *
-     * @param value allowed object is {@link String }
-     *
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
     public void setPattern(String value) {
         this.pattern = value;
@@ -154,47 +240,74 @@ public class Param {
 
     /**
      * Gets the value of the exists property.
-     *
-     * @return possible object is {@link String }
-     *
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
     public String getExists() {
         return exists;
     }
 
-    public Boolean getIsNum() {
-        return isNum;
-    }
-
-    public void setIsNum(Boolean isNum) {
-        this.isNum = isNum;
-    }
-
     /**
      * Sets the value of the exists property.
-     *
-     * @param value allowed object is {@link String }
-     *
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
     public void setExists(String value) {
         this.exists = value;
     }
 
     /**
-     * Gets the value of the default property
-     *
+     * Gets the value of the value property.
+     * 
      * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public String getDefaultValue() {
-        return defaultValue;
+    public String getValue() {
+        return value;
     }
 
     /**
-     * Sets the value of the default property
-     *
+     * Sets the value of the value property.
+     * 
      * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setDefaultValue(String value) {
-        this.defaultValue = value;
+    public void setValue(String value) {
+        this.value = value;
     }
+
+    /**
+     * Gets the value of the type property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ParamType }
+     *     
+     */
+    public ParamType getType() {
+        return type;
+    }
+
+    /**
+     * Sets the value of the type property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ParamType }
+     *     
+     */
+    public void setType(ParamType value) {
+        this.type = value;
+    }
+
 }

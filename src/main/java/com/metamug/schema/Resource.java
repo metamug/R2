@@ -28,7 +28,7 @@ public class Resource {
     @XmlElement(name = "Request")
     protected List<Request> request;
     @XmlAttribute(name = "v", required = true)
-    protected String version;
+    protected double version;
     @XmlAttribute(name = "id")
     protected String id;
     @XmlAttribute(name = "parent")
@@ -88,7 +88,7 @@ public class Resource {
      *
      * @return
      */
-    public String getVersion() {
+    public double getVersion() {
         return version;
     }
 
@@ -97,7 +97,7 @@ public class Resource {
      *
      * @param version
      */
-    public void setVersion(String version) {
+    public void setVersion(double version) {
         this.version = version;
     }
     

@@ -5,8 +5,8 @@
            elementFormDefault="qualified" >
 
     <xs:simpleType name="version">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1" />
+        <xs:restriction base="xs:double">
+            <xs:minExclusive value="0" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -74,6 +74,18 @@
             <xs:enumeration value="DELETE"/>
         </xs:restriction>
     </xs:simpleType>
+    
+    <xs:simpleType name="paramType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="text"/>
+            <xs:enumeration value="range"/>
+            <xs:enumeration value="email"/>
+            <xs:enumeration value="number"/>
+            <xs:enumeration value="time"/>
+            <xs:enumeration value="date(yyyy-MM-dd)"/>
+            <xs:enumeration value="datetime(yyyy-MM-dd HH:mm:ss)"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:simpleType name="sqlType">
         <xs:restriction base="xs:string">
@@ -113,7 +125,6 @@
         </xs:complexContent>
     </xs:complexType>
 
-
     <xs:complexType name="request">
         <xs:annotation>
             <xs:documentation>
@@ -140,8 +151,6 @@
             </xs:documentation>
         </xs:annotation>
         <xs:attribute name="name" type="paramName" use="required" />
-        <xs:attribute name="blank" type="xs:boolean" default="false" />
-        <xs:attribute name="number" type="xs:boolean" default="false" />
         <xs:attribute name="required" type="xs:boolean" default="false" />
         <xs:attribute name="max" type="xs:double" />
         <xs:attribute name="min" type="xs:double" />
@@ -150,6 +159,7 @@
         <xs:attribute name="pattern" type="xs:string" />
         <xs:attribute name="exists" type="exists" />
         <xs:attribute name="value" type="xs:string" />
+        <xs:attribute name="type" type="paramType" use="required" />
     </xs:complexType>
 
     <xs:complexType name="execute">

@@ -1,4 +1,4 @@
-    /**
+/**
  * ***********************************************************************
  * Freeware Licence Agreement
  *
@@ -64,8 +64,6 @@ import com.metamug.schema.Update;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -83,7 +81,7 @@ public class XSDValidationTest {
     private static String RES_VER, RES_DESC, RES_ID, RES_PARENT, RES_IS_AUTH;
 
     private static String EXEC_CLASS;
-    
+
     private static String REQ_METHOD, REQ_DESC;
 
     private static String PARAM_NAME, PARAM_REQUIRED;
@@ -91,9 +89,9 @@ public class XSDValidationTest {
     private static String SQL_TYPE, SQL_WHEN, SQL_CLASS, SQL_VAL;
 
     private static String QUERY_TYPE, QUERY_CLASS, QUERY_VAL;
-    
+
     private static String UPDATE_TYPE, UPDATE_WHEN, UPDATE_VAL;
-    
+
     private static String[] testArray;
     private static RPXParser parser;
     private File resourceFile;
@@ -103,7 +101,7 @@ public class XSDValidationTest {
         XML_FILE_PATH = "/test.xml";
         resourceFile = new File(this.getClass().getResource(XML_FILE_PATH).getFile());
         parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
-        
+
         RES_VER = "1.0";
         RES_DESC = "This works";
         RES_ID = "testIdString";
@@ -111,7 +109,7 @@ public class XSDValidationTest {
         RES_IS_AUTH = "true";
 
         EXEC_CLASS = "execute_classname";
-        
+
         REQ_METHOD = "POST";
         REQ_DESC = "POST Desc 1";
 
@@ -121,19 +119,19 @@ public class XSDValidationTest {
         QUERY_TYPE = "query";
         QUERY_CLASS = "com.mtg.query";
         QUERY_VAL = "SELECT * from table";
-        
+
         UPDATE_TYPE = "update";
         UPDATE_WHEN = "$q eq 1";
         UPDATE_VAL = "UPDATE table SET column=$q WHERE id=$id";
-        
+
         SQL_TYPE = "update";
         SQL_WHEN = "$a gt 1";
         SQL_CLASS = "sql_classname";
         SQL_VAL = "INSERT INTO table VALUE ($a)";
 
         testArray = new String[]{RES_VER, RES_DESC, RES_ID, RES_PARENT, RES_IS_AUTH, REQ_METHOD, REQ_DESC, PARAM_NAME, PARAM_REQUIRED,
-                                        EXEC_CLASS, SQL_TYPE, SQL_WHEN, SQL_CLASS, SQL_VAL, QUERY_TYPE, QUERY_CLASS, QUERY_VAL,
-                                                UPDATE_TYPE, UPDATE_WHEN, UPDATE_VAL};
+            EXEC_CLASS, SQL_TYPE, SQL_WHEN, SQL_CLASS, SQL_VAL, QUERY_TYPE, QUERY_CLASS, QUERY_VAL,
+            UPDATE_TYPE, UPDATE_WHEN, UPDATE_VAL};
     }
 
     //validate xml against xsd
@@ -144,6 +142,7 @@ public class XSDValidationTest {
             Resource rs = parser.parseFromXml();
             //System.out.println(rs);
             String resourceIsAuth = Boolean.toString(rs.isAuth());
+            String resourceVersion = Double.toString(rs.getVersion());
             String method = null;
             String reqDesc = null;
             String paramName = null, paramRequired = null;
@@ -151,7 +150,7 @@ public class XSDValidationTest {
             String sqlType = null, sqlWhen = null, sqlClass = null, sqlValue = null;
             String queryType = null, queryClass = null, queryValue = null;
             String updateType = null, updateWhen = null, updateValue = null;
-            
+
             if (rs != null) {
                 List<Request> requests = rs.getRequest();
                 if (!requests.isEmpty()) {
@@ -162,7 +161,7 @@ public class XSDValidationTest {
                             paramName = p.getName();
                             paramRequired = Boolean.toString((Boolean) p.isRequired());
                         }
-                        for(Execute e : request.getExecute()){
+                        for (Execute e : request.getExecute()) {
                             execClass = e.getClassName();
                         }
                         for (Sql sql : request.getSql()) {
@@ -171,12 +170,12 @@ public class XSDValidationTest {
                             sqlClass = sql.getClassName();
                             sqlValue = sql.getValue().trim();
                         }
-                        for(Query q : request.getQuery()){
+                        for (Query q : request.getQuery()) {
                             queryType = q.getType().value();
                             queryClass = q.getClassName();
                             queryValue = q.getValue().trim();
                         }
-                        for(Update u : request.getUpdate()){
+                        for (Update u : request.getUpdate()) {
                             updateType = u.getType().value();
                             updateWhen = u.getWhen();
                             updateValue = u.getValue().trim();
@@ -185,9 +184,9 @@ public class XSDValidationTest {
                 } else {
                     Assert.fail("No <Request> element found!");
                 }
-                String[] resultArray = new String[]{rs.getVersion(), rs.getDesc(), rs.getId(), rs.getParent(), resourceIsAuth, method, reqDesc, paramName, paramRequired,
-                                                            execClass, sqlType, sqlWhen, sqlClass, sqlValue, queryType, queryClass, queryValue,
-                                                                    updateType, updateWhen, updateValue};
+                String[] resultArray = new String[]{resourceVersion, rs.getDesc(), rs.getId(), rs.getParent(), resourceIsAuth, method, reqDesc, paramName, paramRequired,
+                    execClass, sqlType, sqlWhen, sqlClass, sqlValue, queryType, queryClass, queryValue,
+                    updateType, updateWhen, updateValue};
                 Assert.assertArrayEquals(testArray, resultArray);
             }
         } catch (JAXBException ex) {
@@ -196,9 +195,9 @@ public class XSDValidationTest {
             Assert.fail(ex.getMessage());
         }
     }
-    
+
     @Test
-    public void TestValidation2(){
+    public void TestValidation2() {
         File resourceFile = new File(this.getClass().getResource("/movies.xml").getFile());
         RPXParser parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
         try {
@@ -212,9 +211,9 @@ public class XSDValidationTest {
             Assert.fail(ex.getMessage());
         }
     }
-    
+
     @Test
-    public void TestValidation3(){
+    public void TestValidation3() {
         File resourceFile = new File(this.getClass().getResource("/apple.xml").getFile());
         RPXParser parser = new RPXParser("/opt/tomcat8/api/testApp", resourceFile);
         try {
