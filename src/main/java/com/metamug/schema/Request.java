@@ -20,10 +20,7 @@ import javax.xml.bind.annotation.XmlType;
     "desc",
     "param",
     "execute",
-    "sql",
-    "query",
-    "update",
-    "descOrParamOrExecute"
+    "sql"
 })
 public class Request {
 
@@ -33,40 +30,26 @@ public class Request {
     protected List<Param> param;
     @XmlElement(name = "Execute")
     protected List<Execute> execute;
-    @XmlElements({    
-        @XmlElement(name = "Sql", type = Sql.class),
-        @XmlElement(name = "Query", type = Query.class),
+    @XmlElements({
+        @XmlElement(name = "Sql", type = Sql.class)
+        ,
+        @XmlElement(name = "Query", type = Query.class)
+        ,
         @XmlElement(name = "Update", type = Update.class)
     })
-    protected List<Sql> sql;    
+    protected List<Sql> sql;
     @XmlAttribute(name = "status")
     protected Integer status;
     @XmlAttribute(name = "method")
     protected Method method;
     @XmlAttribute(name = "item")
     protected Boolean item;
-    @XmlElements({
-        @XmlElement(name = "Desc", type = String.class),
-        @XmlElement(name = "Param", type = Param.class),
-        @XmlElement(name = "Execute", type = Execute.class),
-        @XmlElement(name = "Sql", type = Sql.class),
-        @XmlElement(name = "Query", type = Query.class),
-        @XmlElement(name = "Update", type = Update.class)
-    })
-    protected List<Object> descOrParamOrExecute;
 
     public Request() {
     }
 
     public Request(Method method) {
         this.method = method;
-    }
-
-    public List<Object> getDescOrParamOrExecute() {
-        if (descOrParamOrExecute == null) {
-            descOrParamOrExecute = new ArrayList<>();
-        }
-        return this.descOrParamOrExecute;
     }
 
     public List<Param> getParam() {
