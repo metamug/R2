@@ -177,16 +177,6 @@ public class XSDValidationTest {
                             sqlClass = sql.getClassname();
                             sqlValue = sql.getValue().trim();
                         }
-                        for (Query q : request.getQuery()) {
-                            queryType = q.getType().value();
-                            queryClass = q.getClassname();
-                            queryValue = q.getValue().trim();
-                        }
-                        for (Update u : request.getUpdate()) {
-                            updateType = u.getType().value();
-                            updateWhen = u.getWhen();
-                            updateValue = u.getValue().trim();
-                        }
                     }
                 } else {
                     Assert.fail("No <Request> element found!");

@@ -33,12 +33,12 @@ public class Request {
     protected List<Param> param;
     @XmlElement(name = "Execute")
     protected List<Execute> execute;
-    @XmlElement(name = "Sql")
-    protected List<Sql> sql;
-    @XmlElement(name = "Query")
-    protected List<Query> query;
-    @XmlElement(name = "Update")
-    protected List<Update> update;
+    @XmlElements({    
+        @XmlElement(name = "Sql", type = Sql.class),
+        @XmlElement(name = "Query", type = Query.class),
+        @XmlElement(name = "Update", type = Update.class)
+    })
+    protected List<Sql> sql;    
     @XmlAttribute(name = "status")
     protected Integer status;
     @XmlAttribute(name = "method")
@@ -96,20 +96,6 @@ public class Request {
             sql = new ArrayList<>();
         }
         return this.sql;
-    }
-    
-    public List<Query> getQuery(){
-        if(query == null){
-            query = new ArrayList<>();
-        }
-        return this.query;
-    }
-    
-    public List<Update> getUpdate(){
-        if(update == null){
-            update = new ArrayList<>();
-        }
-        return this.update;
     }
 
     public Integer getStatus() {
