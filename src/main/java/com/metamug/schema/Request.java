@@ -20,8 +20,6 @@ import javax.xml.bind.annotation.XmlType;
     "desc",
     "param",
     "execute",
-    "sql",
-    "descOrParamOrExecute"
     "sql"
 })
 public class Request {
