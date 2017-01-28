@@ -76,6 +76,7 @@ import com.metamug.xslttransformer.XslTransformer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -121,7 +122,7 @@ public class RPXParser {
     }
 
     private void createHtml(Resource resource) throws IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
-        File xsl = new File(getClass().getClassLoader().getResource("resource.xsl").getFile());
+        InputStream xsl = getClass().getClassLoader().getResourceAsStream("resource.xsl");
         if (!new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()).exists()) {
             Files.createDirectories(Paths.get(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()));
         }
