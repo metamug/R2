@@ -4,7 +4,7 @@
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:fn="http://www.w3.org/2005/xpath-functions"
-                xmlns:mtg="http://xml.metamug.net/resource/1.0">
+                xmlns="http://xml.metamug.net/resource/1.0">
 
     <xsl:template match="Resource">
         <html>
