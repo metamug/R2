@@ -54,6 +54,7 @@
 package com.metamug.xslttransformer;
 
 import java.io.File;
+import java.io.InputStream;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -67,11 +68,11 @@ import javax.xml.transform.stream.StreamSource;
  */
 public class XslTransformer {
 
-    public static void transform(File xmlFile, File xslFile, File htmlFile)
+    public static void transform(File xmlFile, InputStream xslInputStream, File htmlFile)
             throws TransformerConfigurationException, TransformerException {
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
         TransformerFactory factory = TransformerFactory.newInstance();
-        StreamSource xslStream = new StreamSource(XslTransformer.class.getClassLoader().getResourceAsStream("resource.xsl"));
+        StreamSource xslStream = new StreamSource(xslInputStream);
         Transformer transformer = factory.newTransformer(xslStream);
         StreamSource in = new StreamSource(xmlFile);
         StreamResult out = new StreamResult(htmlFile);

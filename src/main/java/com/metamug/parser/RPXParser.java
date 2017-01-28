@@ -76,6 +76,7 @@ import com.metamug.xslttransformer.XslTransformer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -121,16 +122,16 @@ public class RPXParser {
     }
 
     private void createHtml(Resource resource) throws IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
-        File xsl = new File(getClass().getClassLoader().getResource("resource.xsl").getFile());
-        if (!new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()).exists()) {
-            Files.createDirectories(Paths.get(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()));
+        try (InputStream xslStream = getClass().getClassLoader().getResourceAsStream("resource.xsl")) {
+            if (!new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()).exists()) {
+                Files.createDirectories(Paths.get(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()));
+            }
+            File outHtml = new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion() + "/" + FilenameUtils.removeExtension(xmlResourceFile.getName()) + ".html");
+            XslTransformer.transform(xmlResourceFile, xslStream, outHtml);
         }
-        File outHtml = new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion() + "/" + FilenameUtils.removeExtension(xmlResourceFile.getName()) + ".html");
-        XslTransformer.transform(xmlResourceFile, xsl, outHtml);
     }
 
     public Resource parseFromXml() throws JAXBException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
-//        File xsd = new File(getClass().getClassLoader().getResource("resource.xsd").getFile());
         StreamSource xmlFile = new StreamSource(xmlResourceFile);
         SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
         Schema schema = schemaFactory.newSchema(getClass().getClassLoader().getResource("resource.xsd"));
