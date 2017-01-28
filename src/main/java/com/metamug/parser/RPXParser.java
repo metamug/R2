@@ -121,7 +121,9 @@ public class RPXParser {
     }
 
     private void createHtml(Resource resource) throws IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
-        File xsl = new File(RPXParser.class.getClassLoader().getResource("resource.xsl").getFile());
+        System.out.println(getClass().getResource(""));
+        System.out.println(getClass().getResource("/resource.xsl").getFile());
+        File xsl = new File(getClass().getResource("/resource.xsl").getFile());
         if (!new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()).exists()) {
             Files.createDirectories(Paths.get(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()));
         }
@@ -130,7 +132,7 @@ public class RPXParser {
     }
 
     public Resource parseFromXml() throws JAXBException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
-        File xsd = new File(RPXParser.class.getClassLoader().getResource("resource.xsd").getFile());
+        File xsd = new File(getClass().getResource("/resource.xsd").getFile());
         StreamSource xmlFile = new StreamSource(xmlResourceFile);
         SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
         Schema schema = schemaFactory.newSchema(xsd);
