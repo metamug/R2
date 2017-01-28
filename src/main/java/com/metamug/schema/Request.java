@@ -21,8 +21,6 @@ import javax.xml.bind.annotation.XmlType;
     "param",
     "execute",
     "sql",
-    "query",
-    "update",
     "descOrParamOrExecute"
 })
 public class Request {
