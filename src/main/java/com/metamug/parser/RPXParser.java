@@ -76,6 +76,7 @@ import com.metamug.xslttransformer.XslTransformer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import javax.xml.bind.JAXBContext;
@@ -119,8 +120,8 @@ public class RPXParser {
         this.xmlResourceFile = resouceFile;
     }
 
-    private void createHtml(Resource resource) throws IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException {
-        File xsl = new File(getClass().getResource("/resource.xsl").getFile());
+    private void createHtml(Resource resource) throws IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
+        File xsl = new File(getClass().getResource("/resource.xsl").toURI());
         if (!new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()).exists()) {
             Files.createDirectories(Paths.get(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()));
         }
@@ -128,8 +129,8 @@ public class RPXParser {
         XslTransformer.transform(xmlResourceFile, xsl, outHtml);
     }
 
-    public Resource parseFromXml() throws JAXBException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException {
-        File xsd = new File(getClass().getResource("/resource.xsd").getFile());
+    public Resource parseFromXml() throws JAXBException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
+        File xsd = new File(getClass().getResource("/resource.xsd").toURI());
         StreamSource xmlFile = new StreamSource(xmlResourceFile);
         SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
         Schema schema = schemaFactory.newSchema(xsd);
