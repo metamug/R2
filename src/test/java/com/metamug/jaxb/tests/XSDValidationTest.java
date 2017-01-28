@@ -174,12 +174,12 @@ public class XSDValidationTest {
                         for (Sql sql : request.getSql()) {
                             sqlType = sql.getType().value();
                             sqlWhen = sql.getWhen();
-                            sqlClass = sql.getClassName();
+                            sqlClass = sql.getClassname();
                             sqlValue = sql.getValue().trim();
                         }
                         for (Query q : request.getQuery()) {
                             queryType = q.getType().value();
-                            queryClass = q.getClassName();
+                            queryClass = q.getClassname();
                             queryValue = q.getValue().trim();
                         }
                         for (Update u : request.getUpdate()) {

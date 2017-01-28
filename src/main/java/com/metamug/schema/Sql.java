@@ -9,49 +9,144 @@ package com.metamug.schema;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
+
 
 /**
- * <p>
- * Java class for sql complex type.
- *
- * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
+ * <p>Java class for sql complex type.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
  * <pre>
  * &lt;complexType name="sql">
  *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://xml.metamug.net/resource/1.0>sqlBase">
- *       &lt;attribute name="type" use="required" type="{http://xml.metamug.net/resource/1.0}sqlType" />
+ *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
+ *       &lt;attribute name="when" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="classname" type="{http://xml.metamug.net/resource/1.0}className" />
+ *       &lt;attribute name="type" type="{http://xml.metamug.net/resource/1.0}sqlType" default="query" />
  *     &lt;/extension>
  *   &lt;/simpleContent>
  * &lt;/complexType>
  * </pre>
- *
- *
+ * 
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "sql")
-public class Sql extends SqlBase {
+@XmlType(name = "sql", propOrder = {
+    "value"
+})
+@XmlSeeAlso({
+    Query.class,
+    Update.class
+})
+public class Sql {
 
-    @XmlAttribute(name = "type", required = true)
+    @XmlValue
+    protected String value;
+    @XmlAttribute(name = "when")
+    protected String when;
+    @XmlAttribute(name = "classname")
+    protected String classname;
+    @XmlAttribute(name = "type")
     protected SqlType type;
 
     /**
+     * Gets the value of the value property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value of the value property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    /**
+     * Gets the value of the when property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getWhen() {
+        return when;
+    }
+
+    /**
+     * Sets the value of the when property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setWhen(String value) {
+        this.when = value;
+    }
+
+    /**
+     * Gets the value of the classname property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getClassname() {
+        return classname;
+    }
+
+    /**
+     * Sets the value of the classname property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setClassname(String value) {
+        this.classname = value;
+    }
+
+    /**
      * Gets the value of the type property.
-     *
-     * @return possible object is {@link SqlType }
-     *
+     * 
+     * @return
+     *     possible object is
+     *     {@link SqlType }
+     *     
      */
     public SqlType getType() {
-        return type;
+        if (type == null) {
+            return SqlType.QUERY;
+        } else {
+            return type;
+        }
     }
 
     /**
      * Sets the value of the type property.
-     *
-     * @param value allowed object is {@link SqlType }
-     *
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link SqlType }
+     *     
      */
     public void setType(SqlType value) {
         this.type = value;

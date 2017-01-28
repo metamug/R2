@@ -94,33 +94,26 @@
         </xsd:restriction>
     </xsd:simpleType>
 
-    <xsd:complexType name="sqlBase">
+    <xsd:complexType name="sql" >
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
                 <xsd:attribute name="when" type="xsd:string" />
                 <xsd:attribute name="classname" type="className" />
+                <xsd:attribute name="type" type="sqlType" default="query" />
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
 
-    <xsd:complexType name="sql" >
-        <xsd:complexContent>
-            <xsd:extension base="sqlBase">
-                <xsd:attribute name="type" type="sqlType" use="required" />
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
     <xsd:complexType name="query">
         <xsd:complexContent>
-            <xsd:extension base="sqlBase">
+            <xsd:extension base="sql">
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
     <xsd:complexType name="update">
         <xsd:complexContent>
-            <xsd:extension base="sqlBase">
+            <xsd:extension base="sql">
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>

@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="query">
  *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://xml.metamug.net/resource/1.0>sqlBase">
+ *     &lt;extension base="&lt;http://xml.metamug.net/resource/1.0>sql">
  *     &lt;/extension>
  *   &lt;/simpleContent>
  * &lt;/complexType>
@@ -32,9 +32,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "query")
 public class Query
-    extends SqlBase
+    extends Sql
 {
+    @Override
     public SqlType getType(){
         return SqlType.QUERY;
     }
+
 }

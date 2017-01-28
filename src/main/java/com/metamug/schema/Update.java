@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * <p>Java class for update complex type.
  * 
@@ -21,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="update">
  *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://xml.metamug.net/resource/1.0>sqlBase">
+ *     &lt;extension base="&lt;http://xml.metamug.net/resource/1.0>sql">
  *     &lt;/extension>
  *   &lt;/simpleContent>
  * &lt;/complexType>
@@ -32,8 +31,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "update")
 public class Update
-    extends SqlBase
+    extends Sql
 {
+    @Override
     public SqlType getType(){
         return SqlType.UPDATE;
     }
