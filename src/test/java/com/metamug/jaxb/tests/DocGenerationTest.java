@@ -56,31 +56,29 @@ package com.metamug.jaxb.tests;
 import com.metamug.xslttransformer.XslTransformer;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import javax.xml.transform.TransformerException;
 import org.junit.Before;
 import org.junit.Test;
 
 public class DocGenerationTest {
 
-    private String xs3pOutputFilePath, resDocPath1, resDocPath2, resDocPath3;
-    private File xsd;
-    private InputStream xs3pXsl, resourceXsl;
-
+    private String xs3pOutputFilePath, resDocPath1, resDocPath2, resDocPath3;    
+    private File xsd, xs3pXsl, resourceXsl;
+    
     @Before
     public void init() {
         //change this accordingly
         String basePath = "/Users/anishhirlekar/metamug/RPXParser/rpx-parser/src/test/resources";
-
+        
         xs3pOutputFilePath = basePath + "/XSDDoc.html";
         resDocPath1 = basePath + "/test.html";
         resDocPath2 = basePath + "/movies.html";
         resDocPath3 = basePath + "/apple.html";
-
+        
         Class cl = XslTransformer.class;
         xsd = new File(cl.getResource("/resource.xsd").getFile());
-        xs3pXsl = cl.getResourceAsStream("/xs3p.xsl");
-        resourceXsl = cl.getResourceAsStream("/resource.xsl");
+        xs3pXsl = new File(cl.getResource("/xs3p.xsl").getFile());
+        resourceXsl = new File(cl.getResource("/resource.xsl").getFile());
     }
 
     @Test
@@ -89,17 +87,17 @@ public class DocGenerationTest {
         xsdDocFile.createNewFile();
         XslTransformer.transform(xsd, xs3pXsl, xsdDocFile);
     }
-
+    
     @Test
-    public void TestResourceXslTransformation1() throws IOException, TransformerException {
+    public void TestResourceXslTransformation1() throws IOException, TransformerException{
         File xml = new File(this.getClass().getResource("/test.xml").getFile());
         File docFile = new File(resDocPath1);
         docFile.createNewFile();
         XslTransformer.transform(xml, resourceXsl, docFile);
     }
-
+    
     @Test
-    public void TestResourceXslTransformation2() throws IOException, TransformerException {
+    public void TestResourceXslTransformation2() throws IOException, TransformerException{
         File xml = new File(this.getClass().getResource("/movies.xml").getFile());
         File docFile = new File(resDocPath2);
         docFile.createNewFile();
@@ -107,7 +105,7 @@ public class DocGenerationTest {
     }
 
     @Test
-    public void TestResourceXslTransformation3() throws IOException, TransformerException {
+    public void TestResourceXslTransformation3() throws IOException, TransformerException{
         File xml = new File(this.getClass().getResource("/apple.xml").getFile());
         File docFile = new File(resDocPath3);
         docFile.createNewFile();

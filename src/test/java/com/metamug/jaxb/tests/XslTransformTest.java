@@ -55,25 +55,22 @@ package com.metamug.jaxb.tests;
 
 import com.metamug.xslttransformer.XslTransformer;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import javax.xml.transform.TransformerException;
 import org.junit.Before;
 
 public class XslTransformTest {
 
     private File xml;
-    private InputStream xsl;
+    private File xsl;
 
     @Before
     public void init() {
         xml = new File(XslTransformTest.class.getResource("/resource.xsd").getFile());
-        xsl = XslTransformTest.class.getResourceAsStream("/xs3p.xsl");
+        xsl = new File(XslTransformTest.class.getResource("/xs3p.xsl").getFile());
     }
 
-    public void testTransformation() throws TransformerException, IOException {
+    public void testTransformation() throws TransformerException {
         XslTransformer.transform(xml, xsl, new File("/XsdDoc.html"));
-        xsl.close();
     }
 
 }
