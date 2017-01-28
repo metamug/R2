@@ -71,7 +71,7 @@ public class XslTransformer {
             throws TransformerConfigurationException, TransformerException {
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
         TransformerFactory factory = TransformerFactory.newInstance();
-        StreamSource xslStream = new StreamSource(xslFile);
+        StreamSource xslStream = new StreamSource(XslTransformer.class.getClassLoader().getResourceAsStream("resource.xsl"));
         Transformer transformer = factory.newTransformer(xslStream);
         StreamSource in = new StreamSource(xmlFile);
         StreamResult out = new StreamResult(htmlFile);
