@@ -79,6 +79,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -121,8 +123,9 @@ public class RPXParser {
     }
 
     private void createHtml(Resource resource) throws IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
-        System.out.println(getClass().getResource(""));
-        System.out.println(getClass().getResource("/resource.xsl").getFile());
+        Logger.getLogger(RPXParser.class.getName()).log(Level.SEVERE, getClass().getResource("").toString());
+        Logger.getLogger(RPXParser.class.getName()).log(Level.SEVERE, getClass().getResource("resource.xsd").toString());
+        Logger.getLogger(RPXParser.class.getName()).log(Level.SEVERE, getClass().getResource("/resource.xsd").toString());
         File xsl = new File(getClass().getResource("/resource.xsl").getFile());
         if (!new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()).exists()) {
             Files.createDirectories(Paths.get(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()));
