@@ -33,8 +33,7 @@ import javax.xml.bind.annotation.XmlType;
 public class Update
     extends Sql
 {
-    @Override
-    public SqlType getType(){
-        return SqlType.UPDATE;
+    public Update(){
+        this.type = SqlType.UPDATE;
     }
 }

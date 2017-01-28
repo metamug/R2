@@ -34,9 +34,8 @@ import javax.xml.bind.annotation.XmlType;
 public class Query
     extends Sql
 {
-    @Override
-    public SqlType getType(){
-        return SqlType.QUERY;
+    public Query(){
+        this.type = SqlType.QUERY;
     }
 
 }
