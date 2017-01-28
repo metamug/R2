@@ -64,6 +64,7 @@ import com.metamug.schema.Update;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -143,7 +144,7 @@ public class XSDValidationTest {
     //validate xml against xsd
     //yet to add validation code for param validation
     @Test
-    public void testValidation1() throws IOException {
+    public void testValidation1() throws IOException, URISyntaxException {
         try {
             Resource rs = parser.parseFromXml();
             //System.out.println(rs);
@@ -217,7 +218,7 @@ public class XSDValidationTest {
             Assert.fail(ex.getMessage());
         } catch (IOException ex) {
             Assert.fail(ex.getMessage());
-        } catch (XMLStreamException | XPathExpressionException | TransformerException ex) {
+        } catch (XMLStreamException | XPathExpressionException | TransformerException | URISyntaxException ex) {
             Logger.getLogger(XSDValidationTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -233,7 +234,7 @@ public class XSDValidationTest {
             Assert.fail(ex.getMessage());
         } catch (IOException ex) {
             Assert.fail(ex.getMessage());
-        } catch (XMLStreamException | XPathExpressionException | TransformerException ex) {
+        } catch (XMLStreamException | XPathExpressionException | TransformerException | URISyntaxException ex) {
             Logger.getLogger(XSDValidationTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
