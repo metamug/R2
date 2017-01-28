@@ -1,168 +1,168 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://xml.metamug.net/resource/1.0"
-           targetNamespace="http://xml.metamug.net/resource/1.0"
-           elementFormDefault="qualified" >
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://xml.metamug.net/resource/1.0"
+            targetNamespace="http://xml.metamug.net/resource/1.0"
+            elementFormDefault="qualified" >
 
-    <xs:simpleType name="version">
-        <xs:restriction base="xs:double">
-            <xs:minExclusive value="0" />
-        </xs:restriction>
-    </xs:simpleType>
+    <xsd:simpleType name="version">
+        <xsd:restriction base="xsd:double">
+            <xsd:minExclusive value="0" />
+        </xsd:restriction>
+    </xsd:simpleType>
 
-    <xs:simpleType name="id">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1" />
-        </xs:restriction>
-    </xs:simpleType>
+    <xsd:simpleType name="id">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+        </xsd:restriction>
+    </xsd:simpleType>
 
-    <xs:simpleType name="parent">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1" />
-        </xs:restriction>
-    </xs:simpleType>
+    <xsd:simpleType name="parent">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+        </xsd:restriction>
+    </xsd:simpleType>
 
-    <xs:simpleType name="className">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1" />
-        </xs:restriction>
-    </xs:simpleType>
+    <xsd:simpleType name="className">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+        </xsd:restriction>
+    </xsd:simpleType>
 
-    <xs:simpleType name="paramName">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1" />
-        </xs:restriction>
-    </xs:simpleType>
+    <xsd:simpleType name="paramName">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+        </xsd:restriction>
+    </xsd:simpleType>
 
-    <xs:simpleType name="exists">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="3" />
-        </xs:restriction>
-    </xs:simpleType>
+    <xsd:simpleType name="exists">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="3" />
+        </xsd:restriction>
+    </xsd:simpleType>
 
-    <xs:element name="Resource">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
-                <xs:choice maxOccurs="unbounded">
-                    <xs:element name="Request" type="request"/>
-                </xs:choice>
-            </xs:sequence>
-            <xs:attribute name="v" type="version" use="required" />
-            <xs:attribute name="id" type="id" />
-            <xs:attribute name="parent" type="parent" />
-            <xs:attribute name="auth" type="xs:boolean" default="false" />
-        </xs:complexType>
-        <xs:unique name="Request">
-            <xs:selector xpath="Request"/>
-            <xs:field xpath="@method"/>
-            <xs:field xpath="@item"/>
-        </xs:unique>
-    </xs:element>
+    <xsd:element name="Resource">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="Request" type="request"/>
+                </xsd:choice>
+            </xsd:sequence>
+            <xsd:attribute name="v" type="version" use="required" />
+            <xsd:attribute name="id" type="id" />
+            <xsd:attribute name="parent" type="parent" />
+            <xsd:attribute name="auth" type="xsd:boolean" default="false" />
+        </xsd:complexType>
+        <xsd:unique name="Request">
+            <xsd:selector xpath="Request"/>
+            <xsd:field xpath="@method"/>
+            <xsd:field xpath="@item"/>
+        </xsd:unique>
+    </xsd:element>
 
-    <xs:simpleType name="desc">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xsd:simpleType name="desc">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
 
-    <xs:simpleType name="method">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="GET"/>
-            <xs:enumeration value="POST"/>
-            <xs:enumeration value="PUT"/>
-            <xs:enumeration value="DELETE"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xsd:simpleType name="method">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="GET"/>
+            <xsd:enumeration value="POST"/>
+            <xsd:enumeration value="PUT"/>
+            <xsd:enumeration value="DELETE"/>
+        </xsd:restriction>
+    </xsd:simpleType>
 
-    <xs:simpleType name="paramType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="date"/>
-            <xs:enumeration value="datetime"/>
-            <xs:enumeration value="email"/>
-            <xs:enumeration value="number"/>
-            <xs:enumeration value="text"/>
-            <xs:enumeration value="time"/>
-            <xs:enumeration value="url"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xsd:simpleType name="paramType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="date"/>
+            <xsd:enumeration value="datetime"/>
+            <xsd:enumeration value="email"/>
+            <xsd:enumeration value="number"/>
+            <xsd:enumeration value="text"/>
+            <xsd:enumeration value="time"/>
+            <xsd:enumeration value="url"/>
+        </xsd:restriction>
+    </xsd:simpleType>
 
-    <xs:simpleType name="sqlType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="query"/>
-            <xs:enumeration value="update"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xsd:simpleType name="sqlType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="query"/>
+            <xsd:enumeration value="update"/>
+        </xsd:restriction>
+    </xsd:simpleType>
 
-    <xs:complexType name="sqlBase">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="when" type="xs:string" />
-                <xs:attribute name="classname" type="className" />
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
+    <xsd:complexType name="sqlBase">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="when" type="xsd:string" />
+                <xsd:attribute name="classname" type="className" />
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
 
-    <xs:complexType name="sql" >
-        <xs:complexContent>
-            <xs:extension base="sqlBase">
-                <xs:attribute name="type" type="sqlType" use="required" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
+    <xsd:complexType name="sql" >
+        <xsd:complexContent>
+            <xsd:extension base="sqlBase">
+                <xsd:attribute name="type" type="sqlType" use="required" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
-    <xs:complexType name="query">
-        <xs:complexContent>
-            <xs:extension base="sqlBase">
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
+    <xsd:complexType name="query">
+        <xsd:complexContent>
+            <xsd:extension base="sqlBase">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
-    <xs:complexType name="update">
-        <xs:complexContent>
-            <xs:extension base="sqlBase">
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
+    <xsd:complexType name="update">
+        <xsd:complexContent>
+            <xsd:extension base="sqlBase">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
-    <xs:complexType name="request">
-        <xs:annotation>
-            <xs:documentation>
+    <xsd:complexType name="request">
+        <xsd:annotation>
+            <xsd:documentation>
                 For processing incoming request and sending back response.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:choice maxOccurs="unbounded">
-            <xs:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
-            <xs:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="Query" type="query" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="Update" type="update" minOccurs="0" maxOccurs="unbounded" />
-        </xs:choice>
-        <xs:attribute name="method" type="method" use="required" />
-        <xs:attribute name="status" type="xs:int"/>
-        <xs:attribute name="item" type="xs:boolean" default="false" />
-    </xs:complexType>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice maxOccurs="unbounded">
+            <xsd:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
+            <xsd:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="Query" type="query" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="Update" type="update" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:choice>
+        <xsd:attribute name="method" type="method" use="required" />
+        <xsd:attribute name="status" type="xsd:int"/>
+        <xsd:attribute name="item" type="xsd:boolean" default="false" />
+    </xsd:complexType>
 
-    <xs:complexType name="param">
-        <xs:annotation>
-            <xs:documentation>
+    <xsd:complexType name="param">
+        <xsd:annotation>
+            <xsd:documentation>
                 To perform validation on the parameters received.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:attribute name="name" type="paramName" use="required" />
-        <xs:attribute name="required" type="xs:boolean" default="false" />
-        <xs:attribute name="max" type="xs:double" />
-        <xs:attribute name="min" type="xs:double" />
-        <xs:attribute name="maxlength" type="xs:int" />
-        <xs:attribute name="minlength" type="xs:int" />
-        <xs:attribute name="pattern" type="xs:string" />
-        <xs:attribute name="exists" type="exists" />
-        <xs:attribute name="value" type="xs:string" />
-        <xs:attribute name="type" type="paramType" use="required" />
-    </xs:complexType>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="name" type="paramName" use="required" />
+        <xsd:attribute name="required" type="xsd:boolean" default="false" />
+        <xsd:attribute name="max" type="xsd:double" />
+        <xsd:attribute name="min" type="xsd:double" />
+        <xsd:attribute name="maxlength" type="xsd:int" />
+        <xsd:attribute name="minlength" type="xsd:int" />
+        <xsd:attribute name="pattern" type="xsd:string" />
+        <xsd:attribute name="exists" type="exists" />
+        <xsd:attribute name="value" type="xsd:string" />
+        <xsd:attribute name="type" type="paramType" use="required" />
+    </xsd:complexType>
 
-    <xs:complexType name="execute">
-        <xs:attribute name="classname" type="className" use="required" />
-    </xs:complexType>
-</xs:schema>
+    <xsd:complexType name="execute">
+        <xsd:attribute name="classname" type="className" use="required" />
+    </xsd:complexType>
+</xsd:schema>

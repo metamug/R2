@@ -79,8 +79,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -132,7 +130,6 @@ public class RPXParser {
     }
 
     public Resource parseFromXml() throws JAXBException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
-        Logger.getLogger(RPXParser.class.getName()).log(Level.SEVERE, getClass().getClassLoader().getResource("/resource.xsd").getFile());
         File xsd = new File(getClass().getClassLoader().getResource("resource.xsd").getFile());
         StreamSource xmlFile = new StreamSource(xmlResourceFile);
         SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
