@@ -70,7 +70,7 @@ public class MPathUtil {
 
     public static Object getValueFromJson(String inputJson, String mPath) {
         Map<String, Object> flatMap = JsonFlattener.flattenAsMap(inputJson);
-        //System.out.println(flatMap);
+        //System.out.println("flatMap: \n"+flatMap);
         return flatMap.get(mPath);
     }
 
@@ -80,7 +80,7 @@ public class MPathUtil {
         JSONObject jobj = XML.toJSONObject(xmlInput);
         String jobjStr = jobj.toString();
         Map<String, Object> flatMap = JsonFlattener.flattenAsMap(jobjStr);
-        //System.out.println("jobj:\n"+flatMap);
+        System.out.println("converted flatMap: \n"+flatMap);
         Object value = flatMap.get(mPath);
         if (null == value) {
             value = flatMap.get(mPath + ".content");

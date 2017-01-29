@@ -57,9 +57,11 @@ import com.metamug.commons.MPathUtil;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -99,6 +101,34 @@ public class MPathTest {
             + "       }\n"
             + "   }\n"
             + "}";
+    
+    public static final String TEST_JSON2 = "[\n"
+            + "   {\n"
+            + "       \"Port\":\n"
+            + "       {\n"
+            + "           \"alias\": 8080,\n"
+            + "           \"ThreadPool\":\n"
+            + "           {\n"
+            + "               \"enabled\": false,\n"
+            + "               \"Max\": 150,\n"
+            + "               \"ThreadPriority\": 5\n"
+            + "           }\n"
+            + "       }\n"
+            + "   },\n"
+            + "   {\n"
+            + "       \"Port\":\n"
+            + "       {\n"
+            + "           \"alias\": 3306,\n"
+            + "           \"ThreadPool\":\n"
+            + "           {\n"
+            + "               \"enabled\": true,\n"
+            + "               \"Max\": 20,\n"
+            + "               \"ThreadPriority\": 1\n"
+            + "           }\n"
+            + "       }\n"
+            + "   }\n"
+            + "]";
+            
 
     public static final String TEST_XML = "<Resource version=\"1.1\" >\n"
             + "\n"
@@ -150,6 +180,7 @@ public class MPathTest {
             + "	       \n"
             + "	</Resource>";
 
+    @Ignore
     @Test
     public void TestCase1() throws XPathExpressionException, IOException,
             SAXException, ParserConfigurationException {
@@ -161,10 +192,9 @@ public class MPathTest {
         Object jsonVal1 = MPathUtil.getValueFromJson(TEST_JSON, mKey1);
         Object jsonVal2 = MPathUtil.getValueFromJson(TEST_JSON, mKey2);
         Object jsonVal3 = MPathUtil.getValueFromJson(TEST_JSON, mKey3);
-        /*System.out.println("json 1: "+jsonVal1);
-        System.out.println("json 2: "+jsonVal2);
-        System.out.println("JSON Val 3: "+jsonVal3);
-         */
+        
+        System.out.println("TEST_JSON: \n"+TEST_JSON);
+        
         Object xmlVal1 = MPathUtil.getValueFromXml(equivalentXml, mKey1);
         Object xmlVal2 = MPathUtil.getValueFromXml(equivalentXml, mKey2);
         Object xmlVal3 = MPathUtil.getValueFromXml(equivalentXml, mKey3);
@@ -178,8 +208,23 @@ public class MPathTest {
 
     }
 
+    //@Ignore
     @Test
-    public void TestCase2() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException {
+    public void TestCase2() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException{
+        //System.out.println("TEST_JSON2: \n"+TEST_JSON2);
+        String mPath = "[1].Port.ThreadPool.Max";
+        String xmlMPath = "array[1].Port.ThreadPool.Max";
+        Object valueFromJson = MPathUtil.getValueFromJson(TEST_JSON2, mPath);
+        String testXml2 = XML.toString(new JSONArray(TEST_JSON2));
+        //System.out.println("converted XML: \n"+testXml2);
+        Object valueFromXml = MPathUtil.getValueFromXml(testXml2, xmlMPath);
+        Assert.assertEquals(valueFromJson, valueFromXml);
+        
+    }
+    
+    @Ignore
+    @Test
+    public void TestCase3() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException {
         String equivalentJson = (XML.toJSONObject(TEST_XML)).toString();
         String mKey1 = "Resource.Request[0].method";
         String mKey2Xml = "Resource.Request[1].Sql";
@@ -201,7 +246,8 @@ public class MPathTest {
 
         Assert.assertArrayEquals(new String[]{xmlVal1, xmlVal2, xmlVal3, xmlVal4, xmlVal5}, new String[]{jsonVal1, jsonVal2, jsonVal3, jsonVal4, jsonVal5});
     }
-
+    
+    @Ignore
     @Test
     public void FailCase1() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException {
         //System.out.println(TEST_XML2);
@@ -209,6 +255,7 @@ public class MPathTest {
         Assert.assertNull(MPathUtil.getValueFromXml(TEST_XML2, mKey1));
     }
 
+    @Ignore
     @Test
     public void FailCase2() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException {
         String garbageMKey = "ChangeMeToTestGarbageValues";
