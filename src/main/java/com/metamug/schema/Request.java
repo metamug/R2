@@ -31,13 +31,13 @@ public class Request {
     @XmlElement(name = "Execute")
     protected List<Execute> execute;
     @XmlElements({
-        @XmlElement(name = "Sql", type = Sql.class)
-        ,
-        @XmlElement(name = "Query", type = Query.class)
-        ,
+        @XmlElement(name = "Sql", type = Sql.class),
+        @XmlElement(name = "Query", type = Query.class),
         @XmlElement(name = "Update", type = Update.class)
     })
     protected List<Sql> sql;
+    @XmlAttribute(name = "id")
+    protected String id; 
     @XmlAttribute(name = "status")
     protected Integer status;
     @XmlAttribute(name = "method")
@@ -79,6 +79,14 @@ public class Request {
             sql = new ArrayList<>();
         }
         return this.sql;
+    }
+    
+    public String getId() {
+        return id;
+    }
+    
+    public void setId(String value) {
+        this.id = value;
     }
 
     public Integer getStatus() {

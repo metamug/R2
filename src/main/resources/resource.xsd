@@ -48,8 +48,8 @@
                     <xsd:element name="Request" type="request"/>
                 </xsd:choice>
             </xsd:sequence>
-            <xsd:attribute name="v" type="version" use="required" />
             <xsd:attribute name="id" type="id" />
+            <xsd:attribute name="v" type="version" use="required" />
             <xsd:attribute name="parent" type="parent" />
             <xsd:attribute name="auth" type="xsd:boolean" default="false" />
         </xsd:complexType>
@@ -132,6 +132,7 @@
             <xsd:element name="Query" type="query" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="Update" type="update" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
+        <xsd:attribute name="id" type="id" />
         <xsd:attribute name="method" type="method" use="required" />
         <xsd:attribute name="status" type="xsd:int"/>
         <xsd:attribute name="item" type="xsd:boolean" default="false" />

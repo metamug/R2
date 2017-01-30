@@ -61,7 +61,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -180,7 +179,6 @@ public class MPathTest {
             + "	       \n"
             + "	</Resource>";
 
-    @Ignore
     @Test
     public void TestCase1() throws XPathExpressionException, IOException,
             SAXException, ParserConfigurationException {
@@ -193,7 +191,7 @@ public class MPathTest {
         Object jsonVal2 = MPathUtil.getValueFromJson(TEST_JSON, mKey2);
         Object jsonVal3 = MPathUtil.getValueFromJson(TEST_JSON, mKey3);
         
-        System.out.println("TEST_JSON: \n"+TEST_JSON);
+        //System.out.println("TEST_JSON: \n"+TEST_JSON);
         
         Object xmlVal1 = MPathUtil.getValueFromXml(equivalentXml, mKey1);
         Object xmlVal2 = MPathUtil.getValueFromXml(equivalentXml, mKey2);
@@ -208,21 +206,17 @@ public class MPathTest {
 
     }
 
-    //@Ignore
     @Test
     public void TestCase2() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException{
-        //System.out.println("TEST_JSON2: \n"+TEST_JSON2);
         String mPath = "[1].Port.ThreadPool.Max";
-        String xmlMPath = "array[1].Port.ThreadPool.Max";
         Object valueFromJson = MPathUtil.getValueFromJson(TEST_JSON2, mPath);
+        //xml without root element
         String testXml2 = XML.toString(new JSONArray(TEST_JSON2));
         //System.out.println("converted XML: \n"+testXml2);
-        Object valueFromXml = MPathUtil.getValueFromXml(testXml2, xmlMPath);
-        Assert.assertEquals(valueFromJson, valueFromXml);
-        
+        Object valueFromXml = MPathUtil.getValueFromXml(testXml2, mPath);
+        Assert.assertNotEquals(valueFromJson, valueFromXml);        
     }
     
-    @Ignore
     @Test
     public void TestCase3() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException {
         String equivalentJson = (XML.toJSONObject(TEST_XML)).toString();
@@ -247,7 +241,6 @@ public class MPathTest {
         Assert.assertArrayEquals(new String[]{xmlVal1, xmlVal2, xmlVal3, xmlVal4, xmlVal5}, new String[]{jsonVal1, jsonVal2, jsonVal3, jsonVal4, jsonVal5});
     }
     
-    @Ignore
     @Test
     public void FailCase1() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException {
         //System.out.println(TEST_XML2);
@@ -255,7 +248,6 @@ public class MPathTest {
         Assert.assertNull(MPathUtil.getValueFromXml(TEST_XML2, mKey1));
     }
 
-    @Ignore
     @Test
     public void FailCase2() throws IOException, SAXException, XPathExpressionException, ParserConfigurationException {
         String garbageMKey = "ChangeMeToTestGarbageValues";
