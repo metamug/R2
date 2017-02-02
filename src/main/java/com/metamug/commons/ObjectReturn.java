@@ -54,6 +54,9 @@
 package com.metamug.commons;
 
 import java.io.StringWriter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -65,16 +68,19 @@ import org.eclipse.persistence.jaxb.MarshallerProperties;
  * @author anishhirlekar
  */
 public class ObjectReturn {
+    
+    private static final String TYPE_JSON = "application/json";
+    private static final String TYPE_XML = "application/xml";
 
     //resultType can be "application/json" or "application/xml as specified by the accept header"
     //if object is of type String, the object will be returned as it is and accept header will be ignored
-    public static String convert(Object returnObject, String acceptHeader) throws JAXBException {
+    public static String convert(Object returnObject, Class objectClass, String acceptHeader) throws JAXBException {
         if (returnObject instanceof String) {
             return (String) returnObject;
         }
         StringWriter marshalledResult = new StringWriter();
         //JAXBContext jc = JAXBContext.newInstance(returnObject.getClass());
-        JAXBContext jc = JAXBContextFactory.createContext(new Class[] {returnObject.getClass()}, null);
+        JAXBContext jc = JAXBContextFactory.createContext(new Class[] {objectClass}, null);
         
         Marshaller marshaller = jc.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -83,5 +89,23 @@ public class ObjectReturn {
         marshaller.marshal(returnObject, marshalledResult);
         return marshalledResult.toString();
     }
-
+    
+    public static String convert(List<Object> objectList, Class objectClass, String accHeader) throws JAXBException{
+        String prefix = null, suffix = null;
+        if(accHeader.equals(TYPE_JSON)){
+            prefix = "[";
+            suffix = "]";
+        }else if(accHeader.equals(TYPE_XML)){
+            prefix = "<data>";
+            suffix = "</data>";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefix);
+        for(Object obj : objectList){
+            sb.append(convert(obj, objectClass, accHeader));
+        }
+        sb.append(suffix);
+        
+        return sb.toString();
+    }
 }
