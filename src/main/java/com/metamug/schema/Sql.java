@@ -23,9 +23,11 @@ import javax.xml.bind.annotation.XmlValue;
  * &lt;complexType name="sql">
  *   &lt;simpleContent>
  *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
+ *       &lt;attribute name="requires" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="when" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="classname" type="{http://xml.metamug.net/resource/1.0}className" />
  *       &lt;attribute name="type" type="{http://xml.metamug.net/resource/1.0}sqlType" default="query" />
+ *       &lt;attribute name="status" type="{http://xml.metamug.net/resource/1.0}status" />
  *     &lt;/extension>
  *   &lt;/simpleContent>
  * &lt;/complexType>
@@ -45,12 +47,16 @@ public class Sql {
 
     @XmlValue
     protected String value;
+    @XmlAttribute(name = "requires")
+    protected String requires;
     @XmlAttribute(name = "when")
     protected String when;
     @XmlAttribute(name = "classname")
     protected String classname;
     @XmlAttribute(name = "type")
     protected SqlType type;
+    @XmlAttribute(name = "status")
+    protected Integer status;
 
     /**
      * Gets the value of the value property.
@@ -76,6 +82,30 @@ public class Sql {
         this.value = value;
     }
 
+    /**
+     * Gets the value of the requires property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getRequires() {
+        return requires;
+    }
+
+    /**
+     * Sets the value of the requires property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setRequires(String value) {
+        this.requires = value;
+    }
+    
     /**
      * Gets the value of the when property.
      * 
@@ -150,6 +180,30 @@ public class Sql {
      */
     public void setType(SqlType value) {
         this.type = value;
+    }
+    
+    /**
+     * Gets the value of the status property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets the value of the status property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setStatus(Integer value) {
+        this.status = value;
     }
 
 }

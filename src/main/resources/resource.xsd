@@ -33,6 +33,13 @@
             <xsd:minLength value="1" />
         </xsd:restriction>
     </xsd:simpleType>
+    
+    <xsd:simpleType name="status">
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="100" />
+            <xsd:maxExclusive value="600" />
+        </xsd:restriction>
+    </xsd:simpleType>
 
     <xsd:simpleType name="exists">
         <xsd:restriction base="xsd:string">
@@ -97,9 +104,11 @@
     <xsd:complexType name="sql" >
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
+                <xsd:attribute name="requires" type="xsd:string"/>
                 <xsd:attribute name="when" type="xsd:string" />
                 <xsd:attribute name="classname" type="className" />
                 <xsd:attribute name="type" type="sqlType" default="query" />
+                <xsd:attribute name="status" type="status"/>
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
@@ -134,7 +143,7 @@
         </xsd:choice>
         <xsd:attribute name="id" type="id" />
         <xsd:attribute name="method" type="method" use="required" />
-        <xsd:attribute name="status" type="xsd:int"/>
+        <xsd:attribute name="status" type="status"/>
         <xsd:attribute name="item" type="xsd:boolean" default="false" />
     </xsd:complexType>
 
@@ -145,7 +154,6 @@
             </xsd:documentation>
         </xsd:annotation>
         <xsd:attribute name="name" type="paramName" use="required" />
-        <xsd:attribute name="required" type="xsd:boolean" default="false" />
         <xsd:attribute name="max" type="xsd:double" />
         <xsd:attribute name="min" type="xsd:double" />
         <xsd:attribute name="maxlength" type="xsd:int" />

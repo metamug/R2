@@ -121,7 +121,6 @@ public class XSDValidationTest {
         REQ_DESC = "POST Desc 1";
 
         PARAM_NAME = "param1";
-        PARAM_REQUIRED = "true";
 
         QUERY_TYPE = "query";
         QUERY_CLASS = "com.mtg.query";
@@ -136,7 +135,7 @@ public class XSDValidationTest {
         SQL_CLASS = "sql_classname";
         SQL_VAL = "INSERT INTO table VALUE ($a)";
 
-        testArray = new String[]{RES_VER, RES_DESC, RES_ID, RES_PARENT, RES_IS_AUTH, REQ_METHOD, REQ_DESC, PARAM_NAME, PARAM_REQUIRED,
+        testArray = new String[]{RES_VER, RES_DESC, RES_ID, RES_PARENT, RES_IS_AUTH, REQ_METHOD, REQ_DESC, PARAM_NAME,
             EXEC_CLASS, SQL_TYPE, SQL_WHEN, SQL_CLASS, SQL_VAL, QUERY_TYPE, QUERY_CLASS, QUERY_VAL,
             UPDATE_TYPE, UPDATE_WHEN, UPDATE_VAL};
     }
@@ -152,7 +151,7 @@ public class XSDValidationTest {
             String resourceVersion = Double.toString(rs.getVersion());
             String method = null;
             String reqDesc = null;
-            String paramName = null, paramRequired = null;
+            String paramName = null;
             String execClass = null;
             String sqlType = null, sqlWhen = null, sqlClass = null, sqlValue = null;
             String queryType = null, queryClass = null, queryValue = null;
@@ -166,7 +165,6 @@ public class XSDValidationTest {
                         method = request.getMethod().value();
                         for (Param p : request.getParam()) {
                             paramName = p.getName();
-                            paramRequired = Boolean.toString((Boolean) p.isRequired());
                         }
                         for (Execute e : request.getExecute()) {
                             execClass = e.getClassName();
@@ -181,7 +179,7 @@ public class XSDValidationTest {
                 } else {
                     Assert.fail("No <Request> element found!");
                 }
-                String[] resultArray = new String[]{resourceVersion, rs.getDesc(), rs.getId(), rs.getParent(), resourceIsAuth, method, reqDesc, paramName, paramRequired,
+                String[] resultArray = new String[]{resourceVersion, rs.getDesc(), rs.getId(), rs.getParent(), resourceIsAuth, method, reqDesc, paramName,
                     execClass, sqlType, sqlWhen, sqlClass, sqlValue, queryType, queryClass, queryValue,
                     updateType, updateWhen, updateValue};
                 Assert.assertArrayEquals(testArray, resultArray);

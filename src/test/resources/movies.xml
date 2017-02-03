@@ -3,7 +3,7 @@
               xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" v="001.1000">
     <Desc>Contains information about movies.</Desc>
     <Request method="GET">
-        <Param name="q" required="true" type='number' value="1"/>
+        <Param name="q" type='number' value="1"/>
         <Sql when="$q eq 1" type="query">
             SELECT * FROM movie
         </Sql>

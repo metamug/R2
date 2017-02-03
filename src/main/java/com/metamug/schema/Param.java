@@ -49,8 +49,6 @@ public class Param {
 
     @XmlAttribute(name = "name", required = true)
     protected String name;
-    @XmlAttribute(name = "required")
-    protected Boolean required;
     @XmlAttribute(name = "max")
     protected Double max;
     @XmlAttribute(name = "min")
@@ -86,30 +84,6 @@ public class Param {
      */
     public void setName(String value) {
         this.name = value;
-    }
-
-    /**
-     * Gets the value of the required property.
-     *
-     * @return possible object is {@link Boolean }
-     *
-     */
-    public boolean isRequired() {
-        if (required == null) {
-            return false;
-        } else {
-            return required;
-        }
-    }
-
-    /**
-     * Sets the value of the required property.
-     *
-     * @param value allowed object is {@link Boolean }
-     *
-     */
-    public void setRequired(Boolean value) {
-        this.required = value;
     }
 
     /**
