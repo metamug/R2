@@ -53,7 +53,7 @@
  */
 package com.metamug.resourcenesting.tests;
 
-import com.metamug.commons.TreeUtil;
+import com.metamug.resourcenesting.TreeUtil;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertFalse;
@@ -65,7 +65,7 @@ import org.junit.Test;
  *
  * @author anish
  */
-public class JUnitTest {
+public class ResourceNestingTest {
 
     String nodeA, nodeB, nodeC, nodeD, nodeE, nodeF;
     TreeUtil treeUtil;
