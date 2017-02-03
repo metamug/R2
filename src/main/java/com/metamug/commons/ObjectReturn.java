@@ -54,6 +54,7 @@
 package com.metamug.commons;
 
 import java.io.StringWriter;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -65,6 +66,9 @@ import org.eclipse.persistence.jaxb.MarshallerProperties;
  * @author anishhirlekar
  */
 public class ObjectReturn {
+    
+    private static final String TYPE_JSON = "application/json";
+    private static final String TYPE_XML = "application/xml";
 
     //resultType can be "application/json" or "application/xml as specified by the accept header"
     //if object is of type String, the object will be returned as it is and accept header will be ignored
@@ -73,15 +77,35 @@ public class ObjectReturn {
             return (String) returnObject;
         }
         StringWriter marshalledResult = new StringWriter();
-        //JAXBContext jc = JAXBContext.newInstance(returnObject.getClass());
         JAXBContext jc = JAXBContextFactory.createContext(new Class[] {returnObject.getClass()}, null);
         
         Marshaller marshaller = jc.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.setProperty(MarshallerProperties.MEDIA_TYPE, acceptHeader);
-        //marshaller.setProperty(MarshallerProperties.JSON_INCLUDE_ROOT, false);
+        marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
         marshaller.marshal(returnObject, marshalledResult);
         return marshalledResult.toString();
     }
-
+    
+    public static String convert(List<?> objectList, String accHeader) throws JAXBException{
+        String prefix = null, suffix = null, separator = null;
+        if(accHeader.equals(TYPE_JSON)){
+            prefix = "[\n";
+            suffix = "]";
+            separator = ",\n";
+        }else if(accHeader.equals(TYPE_XML)){
+            prefix = "<data>\n";
+            suffix = "</data>";
+            separator = "\n";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefix);
+        for(Object obj : objectList){
+            sb.append(convert(obj, accHeader));
+            sb.append(separator);
+        }
+        sb.append(suffix);
+        
+        return sb.toString();
+    }
 }

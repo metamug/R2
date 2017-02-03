@@ -56,7 +56,13 @@ package com.metamug.objectreturn.tests;
 import com.metamug.commons.ObjectReturn;
 import com.metamug.objectreturn.tests.testclasses.Customer;
 import com.metamug.objectreturn.tests.testclasses.PhoneNumber;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.JAXBException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -64,33 +70,88 @@ public class ObjectReturnTest {
 
     private final String TYPE_JSON = "application/json";
     private final String TYPE_XML = "application/xml";
-    private Customer customer;
+    private Customer customer1, customer2, customer3;
+    private List<Customer> list = new ArrayList<>();
 
     @Before
     public void init() {
-        customer = new Customer(1, "Kaustubh", "Gosling");
+        customer1 = new Customer(1, "Kaustubh", "Gosling");
         PhoneNumber pn = new PhoneNumber();
         pn.setNum("9128992849");
         pn.setType("mobile");
-        customer.addPhoneNumber(pn);
-        customer.getClass();
+        customer1.addPhoneNumber(pn);
+        list.add(customer1);
+        
+        customer2 = new Customer(2, "Deepak", "Ritchie");
+        pn = new PhoneNumber();
+        pn.setNum("1204597612");
+        pn.setType("work");
+        customer2.addPhoneNumber(pn);
+        list.add(customer2);
+        
+        customer3 = new Customer(3, "Suraj", "MacMaharaja");
+        pn = new PhoneNumber();
+        pn.setNum("164295318");
+        pn.setType("work");
+        customer3.addPhoneNumber(pn);
+        list.add(customer3);
     }
 
     @Test
-    public void ObjectToJsonTest() throws ClassNotFoundException, JAXBException {
-        String resultJson = ObjectReturn.convert(customer, TYPE_JSON);
-        System.out.println(resultJson);
+    public void ObjectToJsonTest() {
+        try{
+            String resultJson = ObjectReturn.convert(customer1, TYPE_JSON);
+            //System.out.println(resultJson);
+            JSONObject jsonObject = new JSONObject(resultJson);
+            Assert.assertNotNull(jsonObject);
+        }catch(JSONException | JAXBException e){
+            Assert.fail(e.toString());
+        }
     }
 
     @Test
-    public void ObjectToXmlTest() throws JAXBException {
-        String resultXml = ObjectReturn.convert(customer, TYPE_XML);
-        System.out.println(resultXml);
+    public void ObjectToXmlTest() {
+        try {
+            String resultXml = ObjectReturn.convert(customer1, TYPE_XML);
+            //    System.out.println(resultXml);
+            Assert.assertNotNull(resultXml);
+        } catch (JAXBException ex) {
+            Assert.fail(ex.toString());
+        }
     }
 
     @Test
-    public void StringTest() throws JAXBException {
-        String result = ObjectReturn.convert("Response String", "Ignored header");
-        System.out.println(result);
+    public void StringTest() {
+        try {
+            String result = ObjectReturn.convert("Response String", "Ignored header");
+            //  System.out.println(result);
+            Assert.assertNotNull(result);
+        } catch (JAXBException ex) {
+            Assert.fail(ex.toString());
+        }
+    }    
+
+    @Test
+    public void ObjectListToJsonTest() {
+        try{
+            String result = ObjectReturn.convert(list, TYPE_JSON);
+            System.out.println(result);
+            JSONArray jsonArray = new JSONArray(result);
+            Assert.assertNotNull(jsonArray);
+        }catch(JSONException | JAXBException e){
+            Assert.fail(e.toString());
+        }
     }
+    
+    @Test
+    public void ObjectListToXml() {
+        try {
+            String result = ObjectReturn.convert(list, TYPE_XML);
+            System.out.println(result);
+            Assert.assertNotNull(result);
+        } catch (JAXBException ex) {
+            Assert.fail(ex.toString());
+        }
+    }
+
 }
