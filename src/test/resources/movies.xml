@@ -4,18 +4,18 @@
     <Desc>Contains information about movies.</Desc>
     <Request method="GET">
         <Param name="q" type='number' value="1"/>
-        <Sql when="$q eq 1" type="query">
+        <Sql id="R1S1" when="$q eq 1" type="query">
             SELECT * FROM movie
         </Sql>
         <Desc>Get all the tasks entered today.</Desc>
-        <Sql when="$q eq 2" type="query">
+        <Sql id="R1S2" when="$q eq 2" type="query">
             SELECT * FROM movie where id=$movieId
         </Sql>
-        <Sql when="$q eq 3" type="query">
+        <Sql id="R1S3" when="$q eq 3" type="query">
             SELECT `name`,`rating` from movie where `release` ge $fromDate and `release` le $toDate
         </Sql>
         <Param name="q" type="url" max="5" />
-        <Sql type="update" classname="com.mtg.Urls">
+        <Sql id="R1S4" type="update" classname="com.mtg.Urls">
             INSERT INTO movie (`name`, `rating`,`release`) VALUES ($p, $q,$rDate)
         </Sql>
     </Request>
@@ -23,7 +23,7 @@
         <Execute classname="com.mtg.Apple" />
     </Request>
     <Request method="DELETE" item="true" status="410">
-        <Sql type="update">
+        <Sql id="R3S1" type="update">
             DELETE FROM movie WHERE id=$id
         </Sql>
     </Request>

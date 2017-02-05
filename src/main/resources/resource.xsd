@@ -21,6 +21,12 @@
             <xsd:minLength value="1" />
         </xsd:restriction>
     </xsd:simpleType>
+    
+    <xsd:simpleType name="requires">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+        </xsd:restriction>
+    </xsd:simpleType>
 
     <xsd:simpleType name="className">
         <xsd:restriction base="xsd:string">
@@ -104,7 +110,8 @@
     <xsd:complexType name="sql" >
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
-                <xsd:attribute name="requires" type="xsd:string"/>
+                <xsd:attribute name="id" type="id" use="required"/>
+                <xsd:attribute name="requires" type="requires"/>
                 <xsd:attribute name="when" type="xsd:string" />
                 <xsd:attribute name="classname" type="className" />
                 <xsd:attribute name="type" type="sqlType" default="query" />
@@ -165,6 +172,7 @@
     </xsd:complexType>
 
     <xsd:complexType name="execute">
+        <xsd:attribute name="requires" type="requires"/>
         <xsd:attribute name="classname" type="className" use="required" />
     </xsd:complexType>
 </xsd:schema>

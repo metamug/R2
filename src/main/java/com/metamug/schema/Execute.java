@@ -11,32 +11,40 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
-/**
- * <p>
- * Java class for execute complex type.
- *
- * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType name="execute">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="className" use="required" type="{}className" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- *
- *
- */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "execute")
 public class Execute {
 
+    @XmlAttribute(name = "requires")
+    protected String requires;
     @XmlAttribute(name = "classname", required = true)
     protected String className;
 
+    /**
+     * Gets the value of the requires property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getRequires() {
+        return requires;
+    }
+
+    /**
+     * Sets the value of the requires property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setRequires(String value) {
+        this.requires = value;
+    }
+    
     /**
      * Gets the value of the className property.
      *

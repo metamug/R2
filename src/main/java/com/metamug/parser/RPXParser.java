@@ -144,6 +144,7 @@ public class RPXParser {
             createHtml(resource);
         }
         new DocGenerator().generate(appDirectory + File.separator + appName);
+        
         return resource;
     }
 }
