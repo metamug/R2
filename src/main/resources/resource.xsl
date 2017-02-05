@@ -129,7 +129,7 @@
                                                     <xsl:for-each select="mtg:Sql">
                                                         <xsl:choose>
                                                             <xsl:when test="@when">
-                                                                <xsl:analyze-string select="@when" regex="$((\w+)(.\w)*)">
+                                                                <xsl:analyze-string select="@when" regex="$((\w+)(.\w)*?\s)">
                                                                     <xsl:matching-substring>
                                                                         <span class="label label-primary" style="margin-right:5px">
                                                                             <xsl:value-of select="regex-group(1)"/>
@@ -144,7 +144,7 @@
                                                     <xsl:for-each select="mtg:Query">
                                                         <xsl:choose>
                                                             <xsl:when test="@when">
-                                                                <xsl:analyze-string select="@when" regex="$((\w+)(.\w)*)">
+                                                                <xsl:analyze-string select="@when" regex="$((\w+)(.\w)*?\s)">
                                                                     <xsl:matching-substring>
                                                                         <span class="label label-primary" style="margin-right:5px">
                                                                             <xsl:value-of select="regex-group(1)"/>
@@ -159,7 +159,7 @@
                                                     <xsl:for-each select="mtg:Update">
                                                         <xsl:choose>
                                                             <xsl:when test="@when">
-                                                                <xsl:analyze-string select="@when" regex="$((\w+)(.\w)*)">
+                                                                <xsl:analyze-string select="@when" regex="$((\w+)(.\w)*?\s)">
                                                                     <xsl:matching-substring>
                                                                         <span class="label label-primary" style="margin-right:5px">
                                                                             <xsl:value-of select="regex-group(1)"/>
@@ -172,7 +172,7 @@
                                                         </xsl:choose>
                                                     </xsl:for-each>
 
-                                                    <xsl:analyze-string select="." regex="$((\w+)(.\w)*)">
+                                                    <xsl:analyze-string select="." regex="$((\w+)(.\w)*?\s)">
                                                         <xsl:matching-substring>
                                                             <span>
                                                                 <xsl:value-of select="regex-group(1)"/>
@@ -367,7 +367,7 @@
                                                     <xsl:for-each select="mtg:Sql">
                                                         <xsl:choose>
                                                             <xsl:when test="@when">
-                                                                <xsl:analyze-string select="@when" regex="$((\w+)(.\w)*)">
+                                                                <xsl:analyze-string select="@when" regex="$((\w+)(.\w)*?\s)">
                                                                     <xsl:matching-substring>
                                                                         <span class="label label-primary" style="margin-right:5px">
                                                                             <xsl:value-of select="regex-group(1)"/>
@@ -382,7 +382,7 @@
                                                     <xsl:for-each select="mtg:Query">
                                                         <xsl:choose>
                                                             <xsl:when test="@when">
-                                                                <xsl:analyze-string select="@when" regex="$((\w+)(.\w)*)">
+                                                                <xsl:analyze-string select="@when" regex="$((\w+)(.\w)*?\s)">
                                                                     <xsl:matching-substring>
                                                                         <span class="label label-primary" style="margin-right:5px">
                                                                             <xsl:value-of select="regex-group(1)"/>
@@ -397,7 +397,7 @@
                                                     <xsl:for-each select="mtg:Update">
                                                         <xsl:choose>
                                                             <xsl:when test="@when">
-                                                                <xsl:analyze-string select="@when" regex="$((\w+)(.\w)*)">
+                                                                <xsl:analyze-string select="@when" regex="$((\w+)(.\w)*?\s)">
                                                                     <xsl:matching-substring>
                                                                         <span class="label label-primary" style="margin-right:5px">
                                                                             <xsl:value-of select="regex-group(1)"/>
@@ -410,7 +410,7 @@
                                                         </xsl:choose>
                                                     </xsl:for-each>
 
-                                                    <xsl:analyze-string select="." regex="$((\w+)(.\w)*)">
+                                                    <xsl:analyze-string select="." regex="$((\w+)(.\w)*?\s)">
                                                         <xsl:matching-substring>
                                                             <span class="label label-primary" style="margin-right:5px">
                                                                 <xsl:value-of select="regex-group(1)"/>

@@ -33,7 +33,7 @@
             <xsd:minLength value="1" />
         </xsd:restriction>
     </xsd:simpleType>
-    
+
     <xsd:simpleType name="status">
         <xsd:restriction base="xsd:integer">
             <xsd:minInclusive value="100" />
