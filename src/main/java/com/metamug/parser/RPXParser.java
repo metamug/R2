@@ -140,10 +140,11 @@ public class RPXParser {
         JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         Resource resource = (Resource) jaxbUnmarshaller.unmarshal(xmlResourceFile);
-        if (resource != null) {
+        /*if (resource != null) {
             createHtml(resource);
         }
         new DocGenerator().generate(appDirectory + File.separator + appName);
+        */
         return resource;
     }
 }

@@ -14,27 +14,6 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
 
-/**
- * <p>Java class for sql complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
- * <pre>
- * &lt;complexType name="sql">
- *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="requires" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="when" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="classname" type="{http://xml.metamug.net/resource/1.0}className" />
- *       &lt;attribute name="type" type="{http://xml.metamug.net/resource/1.0}sqlType" default="query" />
- *       &lt;attribute name="status" type="{http://xml.metamug.net/resource/1.0}status" />
- *     &lt;/extension>
- *   &lt;/simpleContent>
- * &lt;/complexType>
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sql", propOrder = {
     "value"
@@ -47,6 +26,8 @@ public class Sql {
 
     @XmlValue
     protected String value;
+    @XmlAttribute(name = "id", required = true)
+    protected String id;
     @XmlAttribute(name = "requires")
     protected String requires;
     @XmlAttribute(name = "when")
@@ -104,6 +85,30 @@ public class Sql {
      */
     public void setRequires(String value) {
         this.requires = value;
+    }
+
+    /**
+     * Gets the value of the id property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Sets the value of the id property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setId(String value) {
+        this.id = value;
     }
     
     /**
