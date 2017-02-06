@@ -146,7 +146,6 @@ public class XSDValidationTest {
                         execReq = e.getRequires();
                     }
                     for (Sql sql : request.getSql()) {
-                        System.out.println("SqlId: " + sql.getId());
                         System.out.println("SqlType: " + sql.getType().value());
                         System.out.println("SqlWhen: " + sql.getWhen());
                         System.out.println("SqlClass: " + sql.getClassname());
