@@ -13,7 +13,6 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sql", propOrder = {
     "value"
@@ -30,6 +29,11 @@ public class Sql {
     protected String requires;
     @XmlAttribute(name = "when")
     protected String when;
+    @XmlAttribute(name = "limit")
+    protected String limit;
+    @XmlAttribute(name = "offset")
+    protected String offset;
+
     @XmlAttribute(name = "classname")
     protected String classname;
     @XmlAttribute(name = "type")
@@ -39,11 +43,9 @@ public class Sql {
 
     /**
      * Gets the value of the value property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getValue() {
         return value;
@@ -51,11 +53,9 @@ public class Sql {
 
     /**
      * Sets the value of the value property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setValue(String value) {
         this.value = value;
@@ -63,11 +63,9 @@ public class Sql {
 
     /**
      * Gets the value of the requires property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getRequires() {
         return requires;
@@ -75,23 +73,19 @@ public class Sql {
 
     /**
      * Sets the value of the requires property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setRequires(String value) {
         this.requires = value;
     }
-    
+
     /**
      * Gets the value of the when property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getWhen() {
         return when;
@@ -99,23 +93,40 @@ public class Sql {
 
     /**
      * Sets the value of the when property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setWhen(String value) {
         this.when = value;
     }
 
     /**
-     * Gets the value of the classname property.
-     * 
+     * Sets the value of limit property
+     *
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     */
+    public String getLimit() {
+        return limit;
+    }
+
+    public void setLimit(String limit) {
+        this.limit = limit;
+    }
+
+    public String getOffset() {
+        return offset;
+    }
+
+    public void setOffset(String offset) {
+        this.offset = offset;
+    }
+
+    /**
+     * Gets the value of the classname property.
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getClassname() {
         return classname;
@@ -123,11 +134,9 @@ public class Sql {
 
     /**
      * Sets the value of the classname property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setClassname(String value) {
         this.classname = value;
@@ -135,11 +144,9 @@ public class Sql {
 
     /**
      * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SqlType }
-     *     
+     *
+     * @return possible object is {@link SqlType }
+     *
      */
     public SqlType getType() {
         if (type == null) {
@@ -151,23 +158,19 @@ public class Sql {
 
     /**
      * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link SqlType }
-     *     
+     *
+     * @param value allowed object is {@link SqlType }
+     *
      */
     public void setType(SqlType value) {
         this.type = value;
     }
-    
+
     /**
      * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
+     *
+     * @return possible object is {@link Integer }
+     *
      */
     public Integer getStatus() {
         return status;
@@ -175,11 +178,9 @@ public class Sql {
 
     /**
      * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer }
-     *     
+     *
+     * @param value allowed object is {@link Integer }
+     *
      */
     public void setStatus(Integer value) {
         this.status = value;
