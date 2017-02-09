@@ -20,20 +20,20 @@ public enum SqlType {
     UPDATE("update");
     private final String value;
 
-    SqlType(String v) {
-        value = v;
+    SqlType(String value) {
+        this.value = value;
     }
 
     public String value() {
         return value;
     }
 
-    public static SqlType fromValue(String v) {
-        for (SqlType c : SqlType.values()) {
-            if (c.value.equals(v)) {
-                return c;
-            }
-        }
-        throw new IllegalArgumentException(v);
-    }
+//    public static SqlType fromValue(String v) {
+//        for (SqlType c : SqlType.values()) {
+//            if (c.value.equals(v)) {
+//                return c;
+//            }
+//        }
+//        throw new IllegalArgumentException(v);
+//    }
 }

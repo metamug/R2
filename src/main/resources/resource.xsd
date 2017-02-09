@@ -115,7 +115,6 @@
                 <xsd:attribute name="limit" type="xsd:string" />
                 <xsd:attribute name="offset" type="xsd:string" />
                 <xsd:attribute name="classname" type="className" />
-                <xsd:attribute name="type" type="sqlType" default="query" />
                 <xsd:attribute name="status" type="status"/>
             </xsd:extension>
         </xsd:simpleContent>
@@ -145,7 +144,6 @@
             <xsd:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
             <xsd:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
-            <xsd:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="Query" type="query" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="Update" type="update" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
