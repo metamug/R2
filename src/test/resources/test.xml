@@ -5,7 +5,6 @@
     <Request method="POST">
         <Update requires="p,q" when="$q eq 1">UPDATE table SET column=$q WHERE id=$id</Update>
         <Query classname="com.mtg.query">SELECT * from table</Query>
-        <Sql type="update" when="$a gt 1" classname="sql_classname">INSERT INTO table VALUE ($a)</Sql>
         <Execute requires="param1" classname="execute_classname" />        
         <Param name="param1" type="date" ></Param>
         <Desc>POST Desc 1</Desc>        

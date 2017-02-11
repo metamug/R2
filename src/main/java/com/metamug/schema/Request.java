@@ -31,7 +31,6 @@ public class Request {
     @XmlElement(name = "Execute")
     protected List<Execute> execute;
     @XmlElements({
-        @XmlElement(name = "Sql", type = Sql.class),
         @XmlElement(name = "Query", type = Query.class),
         @XmlElement(name = "Update", type = Update.class)
     })

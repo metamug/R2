@@ -8,26 +8,26 @@
     <Request method="GET" item="true" status="200">
         <Param name="t" type="number" min="1" exists="table.column" />
         <Param name="v" type="text" minlength="1" maxlength="500" />
-        <Sql when="$q eq 1" type="query">
+        <Query when="$q eq 1">
             select * from employee where employee_name = $v
-        </Sql>
-        <Sql type="query" when="$q eq 2" classname="com.mtg.Urls">
+        </Query>
+        <Query when="$q eq 2" classname="com.mtg.Urls">
             select * from employee
             where employee_name = $param1
             and employee_id = $id
-        </Sql>
-        <Sql when="$q eq 3" type="update">
+        </Query>
+        <Update when="$q eq 3" >
             update employee set employee_name = $param2 where employee_id=$id
-        </Sql>
+        </Update>
     </Request>
 
     <Request method="POST" status="201">
         <Desc>Request for creating an employee record.</Desc>
-        <Sql type="update">
+        <Update>
             insert into employee
             (employee_name, employee_id)
             values($name, $id)
-        </Sql>
+        </Update>
         <Execute classname="com.mtg.Apple" />
     </Request>
 
@@ -37,11 +37,11 @@
     </Request>
 
     <Request method="GET" item="false">
-        <Sql type="query" when="$item lt 1">select * from employee where employee_id=12</Sql>
+        <Query when="$item lt 1">select * from employee where employee_id=12</Query>
     </Request>
 
     <Request method="DELETE" item="true">
-        <Sql type="update">delete * from employee where employee_id=$id</Sql>
+        <Update>delete * from employee where employee_id=$id</Update>
     </Request>
 
     <!--derived from Request -->
@@ -50,13 +50,13 @@
     </Request>
 
     <Request method="GET" item="false">
-        <Sql type="query" when="$item lt 1">select * from employee where employee_id=12
-        </Sql>
+        <Query when="$item lt 1">select * from employee where employee_id=12
+        </Query>
     </Request>
 
     <Request method="DELETE" item="true">
-        <Sql type="update">delete * from employee where employee_id=$id
-        </Sql>
+        <Update>delete * from employee where employee_id=$id
+        </Update>
     </Request>
 
 </Resource>
