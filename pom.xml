@@ -28,6 +28,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.sf.saxon</groupId>
@@ -38,21 +39,6 @@
             <groupId>org.opengis.cite.xerces</groupId>
             <artifactId>xercesImpl-xsd11</artifactId>
             <version>2.12-beta-r1667115</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.moxy</artifactId>
-            <version>2.6.4</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.wnameless</groupId>
-            <artifactId>json-flattener</artifactId>
-            <version>0.2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20160810</version>
         </dependency>
     </dependencies>
 </project>
