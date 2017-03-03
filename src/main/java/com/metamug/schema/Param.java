@@ -65,6 +65,8 @@ public class Param {
     protected String value;
     @XmlAttribute(name = "type", required = true)
     protected ParamType type;
+    @XmlAttribute(name = "required")
+    protected boolean required;
 
     /**
      * Gets the value of the name property.
@@ -79,11 +81,11 @@ public class Param {
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is {@link String }
+     * @param paramName allowed object is {@link String }
      *
      */
-    public void setName(String value) {
-        this.name = value;
+    public void setName(String paramName) {
+        this.name = paramName;
     }
 
     /**
@@ -99,11 +101,11 @@ public class Param {
     /**
      * Sets the value of the max property.
      *
-     * @param value allowed object is {@link Double }
+     * @param max allowed object is {@link Double }
      *
      */
-    public void setMax(Double value) {
-        this.max = value;
+    public void setMax(Double max) {
+        this.max = max;
     }
 
     /**
@@ -119,11 +121,11 @@ public class Param {
     /**
      * Sets the value of the min property.
      *
-     * @param value allowed object is {@link Double }
+     * @param min allowed object is {@link Double }
      *
      */
-    public void setMin(Double value) {
-        this.min = value;
+    public void setMin(Double min) {
+        this.min = min;
     }
 
     /**
@@ -139,11 +141,11 @@ public class Param {
     /**
      * Sets the value of the maxlength property.
      *
-     * @param value allowed object is {@link Integer }
+     * @param maxLen allowed object is {@link Integer }
      *
      */
-    public void setMaxlength(Integer value) {
-        this.maxlength = value;
+    public void setMaxlength(Integer maxLen) {
+        this.maxlength = maxLen;
     }
 
     /**
@@ -159,11 +161,11 @@ public class Param {
     /**
      * Sets the value of the minlength property.
      *
-     * @param value allowed object is {@link Integer }
+     * @param minLen allowed object is {@link Integer }
      *
      */
-    public void setMinlength(Integer value) {
-        this.minlength = value;
+    public void setMinlength(Integer minLen) {
+        this.minlength = minLen;
     }
 
     /**
@@ -179,11 +181,11 @@ public class Param {
     /**
      * Sets the value of the pattern property.
      *
-     * @param value allowed object is {@link String }
+     * @param regexPattern allowed object is {@link String }
      *
      */
-    public void setPattern(String value) {
-        this.pattern = value;
+    public void setPattern(String regexPattern) {
+        this.pattern = regexPattern;
     }
 
     /**
@@ -199,11 +201,11 @@ public class Param {
     /**
      * Sets the value of the exists property.
      *
-     * @param value allowed object is {@link String }
+     * @param columnName allowed object is {@link String }
      *
      */
-    public void setExists(String value) {
-        this.exists = value;
+    public void setExists(String columnName) {
+        this.exists = columnName;
     }
 
     /**
@@ -239,11 +241,28 @@ public class Param {
     /**
      * Sets the value of the type property.
      *
-     * @param value allowed object is {@link ParamType }
+     * @param inputType allowed object is {@link ParamType }
      *
      */
-    public void setType(ParamType value) {
-        this.type = value;
+    public void setType(ParamType inputType) {
+        this.type = inputType;
     }
 
+    /**
+     * Sets the value of the required property.
+     *
+     * @param isRequired
+     */
+    public void setRequired(boolean isRequired) {
+        this.required = isRequired;
+    }
+
+    /**
+     * Gets the value of the required property.
+     *
+     * @return
+     */
+    public boolean isRequired() {
+        return this.required;
+    }
 }

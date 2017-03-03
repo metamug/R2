@@ -168,6 +168,7 @@
         <xsd:attribute name="exists" type="exists" />
         <xsd:attribute name="value" type="xsd:string" />
         <xsd:attribute name="type" type="paramType" use="required" />
+        <xsd:attribute name="required" type="xsd:boolean" default="false"/>
     </xsd:complexType>
 
     <xsd:complexType name="execute">
