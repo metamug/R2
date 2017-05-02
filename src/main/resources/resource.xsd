@@ -64,7 +64,7 @@
             <xsd:attribute name="id" type="id" />
             <xsd:attribute name="v" type="version" use="required" />
             <xsd:attribute name="parent" type="parent" />
-            <xsd:attribute name="auth" type="xsd:boolean" default="false" />
+            <xsd:attribute name="group" type="xsd:string"/>
         </xsd:complexType>
         <xsd:unique name="Request">
             <xsd:selector xpath="Request"/>

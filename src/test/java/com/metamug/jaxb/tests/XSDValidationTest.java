@@ -116,7 +116,7 @@ public class XSDValidationTest {
         PARAM_NAME = "param1";
 
         testArray = new String[]{RES_VER, RES_DESC, RES_ID, RES_PARENT, RES_IS_AUTH,
-                        REQ_METHOD, REQ_DESC, PARAM_NAME, EXEC_CLASS, EXEC_REQUIRES};
+            REQ_METHOD, REQ_DESC, PARAM_NAME, EXEC_CLASS, EXEC_REQUIRES};
     }
 
     //validate xml against xsd
@@ -126,7 +126,6 @@ public class XSDValidationTest {
         try {
             Resource rs = parser.parseFromXml();
             //System.out.println(rs);
-            String resourceIsAuth = Boolean.toString(rs.isAuth());
             String resourceVersion = Double.toString(rs.getVersion());
             String method = null;
             String reqDesc = null;
@@ -158,9 +157,9 @@ public class XSDValidationTest {
                 Assert.fail("No <Request> element found!");
             }
             String[] resultArray = new String[]{resourceVersion, rs.getDesc(), rs.getId(), rs.getParent(),
-                                resourceIsAuth, method, reqDesc, paramName, execClass, execReq};
+                method, reqDesc, paramName, execClass, execReq};
             Assert.assertArrayEquals(testArray, resultArray);
-            
+
         } catch (JAXBException ex) {
             Assert.fail(ex.toString());
         } catch (SAXException ex) {
@@ -176,8 +175,8 @@ public class XSDValidationTest {
             resourceFile = new File(this.getClass().getResource("/movies.xml").getFile());
             parser = new RPXParser("/opt/tomcat8/api", "testApp", resourceFile);
             Resource rs = parser.parseFromXml();
-            String[] expectedResultArray = new String[]{"false", "1.1"};
-            String[] resultArray = new String[]{Boolean.toString(rs.isAuth()), Double.toString(rs.getVersion())};
+            String[] expectedResultArray = new String[]{"1.1"};
+            String[] resultArray = new String[]{Double.toString(rs.getVersion())};
             Assert.assertArrayEquals(expectedResultArray, resultArray);
         } catch (JAXBException ex) {
             Assert.fail(ex.toString());
@@ -196,7 +195,6 @@ public class XSDValidationTest {
             resourceFile = new File(this.getClass().getResource("/apple.xml").getFile());
             parser = new RPXParser("/opt/tomcat8/api", "testApp", resourceFile);
             Resource rs = parser.parseFromXml();
-            Assert.assertEquals(rs.isAuth(), false);
         } catch (JAXBException ex) {
             Assert.fail(ex.toString());
         } catch (SAXException ex) {

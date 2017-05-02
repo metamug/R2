@@ -33,8 +33,8 @@ public class Resource {
     protected String id;
     @XmlAttribute(name = "parent")
     protected String parent;
-    @XmlAttribute(name = "auth")
-    protected Boolean auth;
+    @XmlAttribute(name = "group")
+    private String group;
 
     /**
      * Gets the value of the desc property.
@@ -100,14 +100,12 @@ public class Resource {
     public void setVersion(double version) {
         this.version = version;
     }
-    
+
     /**
      * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getId() {
         return id;
@@ -115,23 +113,19 @@ public class Resource {
 
     /**
      * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setId(String value) {
         this.id = value;
     }
-    
+
     /**
      * Gets the value of the parent property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getParent() {
         return parent;
@@ -139,41 +133,24 @@ public class Resource {
 
     /**
      * Sets the value of the parent property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setParent(String value) {
         this.parent = value;
     }
 
     /**
-     * Gets the value of the auth property.
-     * 
+     *
      * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
      */
-    public boolean isAuth() {
-        if (auth == null) {
-            return false;
-        } else {
-            return auth;
-        }
+    public String getGroup() {
+        return group;
     }
 
-    /**
-     * Sets the value of the auth property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
-     */
-    public void setAuth(Boolean value) {
-        this.auth = value;
+    public void setGroup(String group) {
+        this.group = group;
     }
+
 }
