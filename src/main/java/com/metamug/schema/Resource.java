@@ -33,8 +33,8 @@ public class Resource {
     protected String id;
     @XmlAttribute(name = "parent")
     protected String parent;
-    @XmlAttribute(name = "group")
-    private String group;
+    @XmlAttribute(name = "auth")
+    private String auth;
 
     /**
      * Gets the value of the desc property.
@@ -145,12 +145,12 @@ public class Resource {
      *
      * @return
      */
-    public String getGroup() {
-        return group;
+    public String getAuth() {
+        return auth;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setAuth(String auth) {
+        this.auth = auth;
     }
 
 }
