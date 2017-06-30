@@ -173,7 +173,13 @@
     </xsd:complexType>
 
     <xsd:complexType name="execute">
-        <xsd:attribute name="requires" type="requires"/>
-        <xsd:attribute name="classname" type="className" use="required" />
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="requires" type="requires"/>
+                <xsd:attribute name="classname" type="className" use="required" />
+                <xsd:attribute name="when" type="xsd:string" />
+                <xsd:attribute name="status" type="status"/>
+            </xsd:extension>
+        </xsd:simpleContent>
     </xsd:complexType>
 </xsd:schema>

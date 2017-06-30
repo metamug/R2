@@ -11,7 +11,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "execute")
 public class Execute {
@@ -20,14 +19,16 @@ public class Execute {
     protected String requires;
     @XmlAttribute(name = "classname", required = true)
     protected String className;
+    @XmlAttribute(name = "when")
+    protected String when;
+    @XmlAttribute(name = "status")
+    protected Integer status;
 
     /**
      * Gets the value of the requires property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getRequires() {
         return requires;
@@ -35,16 +36,14 @@ public class Execute {
 
     /**
      * Sets the value of the requires property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setRequires(String value) {
         this.requires = value;
     }
-    
+
     /**
      * Gets the value of the className property.
      *
@@ -63,6 +62,46 @@ public class Execute {
      */
     public void setClassName(String value) {
         this.className = value;
+    }
+
+    /**
+     * Gets the value of the when property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getWhen() {
+        return when;
+    }
+
+    /**
+     * Sets the value of the when property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setWhen(String value) {
+        this.when = value;
+    }
+
+    /**
+     * Gets the value of the status property.
+     *
+     * @return possible object is {@link Integer }
+     *
+     */
+    public Integer getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets the value of the status property.
+     *
+     * @param value allowed object is {@link Integer }
+     *
+     */
+    public void setStatus(Integer value) {
+        this.status = value;
     }
 
 }
