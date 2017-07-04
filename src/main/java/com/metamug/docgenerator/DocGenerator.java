@@ -129,7 +129,7 @@ public class DocGenerator {
                     writer.writeAttribute("class", "list-group-item");
                     writer.writeAttribute("href", resourceDoc.getParentFile().getName() + File.separator + resourceDoc.getName());
                     writer.writeAttribute("target", "description");
-                    writeEscapedCharacters(resourceDoc.getName());
+                    writeEscapedCharacters(resourceDoc.getName().replace(".html", ""));
                     writer.writeStartElement("span");
                     writer.writeAttribute("class", "badge");
                     writeEscapedCharacters(resourceDoc.getParentFile().getName().replace("v", ""));
