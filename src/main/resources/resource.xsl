@@ -14,6 +14,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
                       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
             </head>
             <body>
                 
@@ -33,12 +34,13 @@
                         </span>
                         <span id="resGroup" style="padding:5px;color:#777777;">
                             <xsl:choose>
-                                <xsl:when test='not(matches(@group,"[^ ]+"))'>
-                                    <span class="glyphicons glyphicons-unlock"></span>
+                                <xsl:when test='not(matches(@auth,"[^ ]+"))'>
+                                    <i class="fa fa-unlock" aria-hidden="true"></i>
+                                    <!--<span class="glyphicons glyphicons-unlock"></span>-->
                                 </xsl:when>
-                                <xsl:when test="not(empty(@group))">
-                                    <span class="glyphicon glyphicon-lock">
-                                    </span>
+                                <xsl:when test="not(empty(@auth))">
+                                    <i class="fa fa-lock" aria-hidden="true"></i>
+                                    <!--<span class="glyphicon glyphicon-lock"></span>-->
                                 </xsl:when>
                                 <xsl:otherwise>
                                     
@@ -70,15 +72,11 @@
                         <xsl:variable name="QueryRequires" select="mtg:Query/@requires"/>
                         <xsl:variable name="ExecuteRequires" select="mtg:Execute/@requires"/>
                         <xsl:variable name="ParamName" select="mtg:Param/@name"/>
-                        <xsl:variable name="JointVarUR" select="string-join( ($UpdateRequires), ',')"/>
-                        <xsl:variable name="JointVarQR" select="string-join( ($QueryRequires), ',')"/>
-                        <xsl:variable name="JointVarER" select="string-join( ($ExecuteRequires), ',')"/>
+                        <xsl:variable name="JointVarReqs" select="string-join( ($UpdateRequires,$QueryRequires,$ExecuteRequires), ',')"/>
                         <xsl:variable name="JointVarPN" select="string-join( ($ParamName), ',')"/>
-                        <xsl:variable name="TokenizedUpdateRequires" select="tokenize($JointVarUR,'[,]')"/>
-                        <xsl:variable name="TokenizedQueryRequires" select="tokenize($JointVarQR,'[,]')"/>
-                        <xsl:variable name="TokenizedExecuteRequires" select="tokenize($JointVarER,'[,]')"/>
+                        <xsl:variable name="TokenizedVarReqs" select="tokenize($JointVarReqs,'[,]')"/>
                         <xsl:variable name="TokenizedParamName" select="tokenize($JointVarPN,'[,]')"/>
-                        <xsl:variable name="AllValues" select="(($TokenizedUpdateRequires,$TokenizedQueryRequires,$TokenizedExecuteRequires),'')"/>
+                        <xsl:variable name="AllValues" select="(($TokenizedVarReqs),',')"/>
                         <xsl:variable name="DistAllValues" select="distinct-values($AllValues)"/>
                         <xsl:variable name="DistinctAllValues" select="string-join($DistAllValues,',')"/>
                         <xsl:variable name="TokDistinctAllValues" select="tokenize($DistinctAllValues,',')"/>
@@ -285,12 +283,12 @@
                                                                             </td>
                                                                             <td>
                                                                                 <xsl:choose>
-                                                                                    <xsl:when test="@required">
-                                                                                        <xsl:if test=" @required='true'">
-                                                                                            <span class="glyphicon glyphicon-remove"></span>
-                                                                                        </xsl:if>
+                                                                                    <xsl:when test="@required or matches($JointVarReqs,@name)">
                                                                                         <xsl:if test=" @required='false'">
                                                                                             <span class="glyphicon glyphicon-ok" style="color:green;"></span>
+                                                                                        </xsl:if>
+                                                                                        <xsl:if test=" @required='true' or matches($JointVarReqs,@name)">
+                                                                                            <span class="glyphicon glyphicon-remove" style="color:red;"></span>
                                                                                         </xsl:if>
                                                                                     </xsl:when>
                                                                                     <xsl:otherwise>
@@ -344,22 +342,22 @@
                                                                         </thead>
                                                                         <xsl:for-each select="$TokDistinctAllValues">
                                                                             <xsl:variable name="i" select="position()" />
-                                                                            <xsl:if test="$i &lt; last()">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td colspan="7">
-                                                                                        <span>
-                                                                                            <xsl:value-of select="$TokDistinctAllValues[$i]"/>
-                                                                                            <sup>
-                                                                                                <span style="color:red;">*</span>
-                                                                                            </sup>
-                                                                                        </span>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <span class="glyphicon glyphicon-remove" style="color:red;"></span>
-                                                                                    </td>
-                                                                                </tr>                     
-                                                                            </tbody>
+                                                                            <xsl:if test="$i &lt; (last()-1)">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td colspan="7">
+                                                                                            <span>
+                                                                                                <xsl:value-of select="$TokDistinctAllValues[$i]"/>
+                                                                                                <sup>
+                                                                                                    <span style="color:red;">*</span>
+                                                                                                </sup>
+                                                                                            </span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <span class="glyphicon glyphicon-remove" style="color:red;"></span>
+                                                                                        </td>
+                                                                                    </tr>                     
+                                                                                </tbody>
                                                                             </xsl:if>
                                                                         </xsl:for-each>
                                                         
@@ -563,12 +561,12 @@
                                                                             </td>
                                                                             <td>
                                                                                 <xsl:choose>
-                                                                                    <xsl:when test="@required">
-                                                                                        <xsl:if test=" @required='true'">
-                                                                                            <span class="glyphicon glyphicon-remove"></span>
-                                                                                        </xsl:if>
+                                                                                    <xsl:when test="@required or matches($JointVarReqs,@name)">
                                                                                         <xsl:if test=" @required='false'">
                                                                                             <span class="glyphicon glyphicon-ok" style="color:green;"></span>
+                                                                                        </xsl:if>
+                                                                                        <xsl:if test=" @required='true' or matches($JointVarReqs,@name)">
+                                                                                            <span class="glyphicon glyphicon-remove" style="color:red;"></span>
                                                                                         </xsl:if>
                                                                                     </xsl:when>
                                                                                     <xsl:otherwise>
@@ -622,22 +620,22 @@
                                                                         </thead>
                                                                         <xsl:for-each select="$TokDistinctAllValues">
                                                                             <xsl:variable name="i" select="position()" />
-                                                                            <xsl:if test="$i &lt; last()">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td colspan="7">
-                                                                                        <span>
-                                                                                            <xsl:value-of select="$TokDistinctAllValues[$i]"/>
-                                                                                            <sup>
-                                                                                                <span style="color:red;">*</span>
-                                                                                            </sup>
-                                                                                        </span>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <span class="glyphicon glyphicon-remove" style="color:red;"></span>
-                                                                                    </td>
-                                                                                </tr>                     
-                                                                            </tbody>
+                                                                            <xsl:if test="$i &lt; (last()-1)">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td colspan="7">
+                                                                                            <span>
+                                                                                                <xsl:value-of select="$TokDistinctAllValues[$i]"/>
+                                                                                                <sup>
+                                                                                                    <span style="color:red;">*</span>
+                                                                                                </sup>
+                                                                                            </span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <span class="glyphicon glyphicon-remove" style="color:red;"></span>
+                                                                                        </td>
+                                                                                    </tr>                     
+                                                                                </tbody>
                                                                             </xsl:if>
                                                                         </xsl:for-each>
                                                         
@@ -857,11 +855,11 @@
                                                                             </td>
                                                                             <td>
                                                                                 <xsl:choose>
-                                                                                    <xsl:when test="@required or contains($UpdateRequires,@name)">
+                                                                                    <xsl:when test="@required or matches($JointVarReqs,@name)">
                                                                                         <xsl:if test=" @required='false'">
                                                                                             <span class="glyphicon glyphicon-ok" style="color:green;"></span>
                                                                                         </xsl:if>
-                                                                                        <xsl:if test=" @required='true' or contains($UpdateRequires,@name)">
+                                                                                        <xsl:if test=" @required='true' or matches($JointVarReqs,@name)">
                                                                                             <span class="glyphicon glyphicon-remove" style="color:red;"></span>
                                                                                         </xsl:if>
                                                                                     </xsl:when>
@@ -916,22 +914,22 @@
                                                                         </thead>
                                                                         <xsl:for-each select="$TokDistinctAllValues">
                                                                             <xsl:variable name="i" select="position()" />
-                                                                            <xsl:if test="$i &lt; last()">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td colspan="7">
-                                                                                        <span>
-                                                                                            <xsl:value-of select="$TokDistinctAllValues[$i]"/>
-                                                                                            <sup>
-                                                                                                <span style="color:red;">*</span>
-                                                                                            </sup>
-                                                                                        </span>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <span class="glyphicon glyphicon-remove" style="color:red;"></span>
-                                                                                    </td>
-                                                                                </tr>                     
-                                                                            </tbody>
+                                                                            <xsl:if test="$i &lt; (last()-1)">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td colspan="7">
+                                                                                            <span>
+                                                                                                <xsl:value-of select="$TokDistinctAllValues[$i]"/>
+                                                                                                <sup>
+                                                                                                    <span style="color:red;">*</span>
+                                                                                                </sup>
+                                                                                            </span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <span class="glyphicon glyphicon-remove" style="color:red;"></span>
+                                                                                        </td>
+                                                                                    </tr>                     
+                                                                                </tbody>
                                                                             </xsl:if>
                                                                         </xsl:for-each>
                                                         
@@ -966,20 +964,6 @@
                     var uri = ("/v"+version+"/"+resName+" "+group).toLowerCase();
                     var reqUri=("/v"+version+"/"+resName).toLowerCase();
                     uriDiv.innerHTML = uri;
-                    
-                    var ReqTypeItem = document.getElementsByClassName('ReqTypeItem');
-                    
-                    for(var i=0;i &lt; ReqTypeItem.length;i++)
-                    {
-                    ReqTypeItem[i].innerHTML = reqUri+"/{id}";
-                    }
-                    
-                    var ReqTypeCollection = document.getElementsByClassName('ReqTypeCollection');
-                    
-                    for(var i=0;i &lt; ReqTypeItem.length;i++)
-                    {
-                    ReqTypeCollection[i].innerHTML = reqUri;
-                    }
                     
                     var parentSpan = document.getElementById('resParent');
                     if(parentSpan != null){
@@ -1018,6 +1002,19 @@
                     out.push(i);
                     }
                     return out;
+                    }
+                    var ReqTypeItem = document.getElementsByClassName('ReqTypeItem');
+                    
+                    for(var i=0;i &lt; ReqTypeItem.length;i++)
+                    {
+                    ReqTypeItem[i].innerHTML = reqUri+"/{id}";
+                    }
+                    
+                    var ReqTypeCollection = document.getElementsByClassName('ReqTypeCollection');
+                    
+                    for(var i=0;i &lt; ReqTypeItem.length;i++)
+                    {
+                    ReqTypeCollection[i].innerHTML = reqUri;
                     }
                 </script>
             </body>
