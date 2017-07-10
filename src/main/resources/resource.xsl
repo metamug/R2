@@ -47,7 +47,7 @@
                         </span>
                         <span id="resUri" style="font-weight:bold;" class="text text-success pull-right">
                         </span>
-                        <div>
+                        <div style="margin-left: 5px;font-size: small;">
                             <xsl:choose>
                                 <xsl:when test='string-length(mtg:Desc) &gt; 0'>
                                     <xsl:value-of select="mtg:Desc"/>
@@ -66,6 +66,22 @@
                     </div>
 
                     <xsl:for-each select="mtg:Request">
+                        <xsl:variable name="UpdateRequires" select="mtg:Update/@requires"/>
+                        <xsl:variable name="QueryRequires" select="mtg:Query/@requires"/>
+                        <xsl:variable name="ExecuteRequires" select="mtg:Execute/@requires"/>
+                        <xsl:variable name="ParamName" select="mtg:Param/@name"/>
+                        <xsl:variable name="JointVarUR" select="string-join( ($UpdateRequires), ',')"/>
+                        <xsl:variable name="JointVarQR" select="string-join( ($QueryRequires), ',')"/>
+                        <xsl:variable name="JointVarER" select="string-join( ($ExecuteRequires), ',')"/>
+                        <xsl:variable name="JointVarPN" select="string-join( ($ParamName), ',')"/>
+                        <xsl:variable name="TokenizedUpdateRequires" select="tokenize($JointVarUR,'[,]')"/>
+                        <xsl:variable name="TokenizedQueryRequires" select="tokenize($JointVarQR,'[,]')"/>
+                        <xsl:variable name="TokenizedExecuteRequires" select="tokenize($JointVarER,'[,]')"/>
+                        <xsl:variable name="TokenizedParamName" select="tokenize($JointVarPN,'[,]')"/>
+                        <xsl:variable name="AllValues" select="(($TokenizedUpdateRequires,$TokenizedQueryRequires,$TokenizedExecuteRequires),'')"/>
+                        <xsl:variable name="DistAllValues" select="distinct-values($AllValues)"/>
+                        <xsl:variable name="DistinctAllValues" select="string-join($DistAllValues,',')"/>
+                        <xsl:variable name="TokDistinctAllValues" select="tokenize($DistinctAllValues,',')"/>
                         
                         <div class="col-md-12" style="padding-top:10px">
                             <xsl:choose>
@@ -73,13 +89,7 @@
                                     <div class="panel panel-success">
                                         <div class="panel-heading">
                                             <span class="ReqTypeItem" style="font-weight:bold">ITEM REQUEST</span>
-                                            <xsl:choose>
-                                                <xsl:when test='string-length(mtg:Desc) &gt; 0'>
-                                                    <span style="padding-bottom:12px;margin-left:10px;font-size:small;">
-                                                        <xsl:value-of select="mtg:Desc"/>
-                                                    </span>    
-                                                </xsl:when>
-                                            </xsl:choose>
+                                            
                                             <span class="pull-right" style="font-size:14px">
                                                 <div class="badge" style="margin-right:10px;">
                                                     <xsl:choose>
@@ -93,17 +103,17 @@
                                                 </div>
                                                 <xsl:choose>
                                                     <xsl:when test="contains(@method,'GET')">
-                                                        <div class="label label-success" style="font-size:14px">
+                                                        <div class="label label-success" style="font-size:14px;background-color: #5cb85c;">
                                                             GET
                                                         </div>
                                                     </xsl:when>
                                                     <xsl:when test="contains(@method,'POST')">
-                                                        <div class="label label-info" style="font-size:14px">
+                                                        <div class="label label-info" style="font-size:14px;background-color: #5cb85c;">
                                                             POST
                                                         </div>
                                                     </xsl:when>
                                                     <xsl:when test="contains(@method,'PUT')">
-                                                        <div class="label label-warning" style="font-size:14px">
+                                                        <div class="label label-warning" style="font-size:14px;background-color: #5cb85c;">
                                                             PUT
                                                         </div>
                                                     </xsl:when>
@@ -112,7 +122,16 @@
                                         </div>
                                         <div class="panel-body">
                                             
-                                                   
+                                            <xsl:choose>
+                                                <xsl:when test='string-length(mtg:Desc) &gt; 0'>
+                                                    <div style="padding-bottom:12px">
+                                                        <div style="color:darkgrey;font-weight:bold;">
+                                                            Description
+                                                        </div>
+                                                        <xsl:value-of select="mtg:Desc"/>
+                                                    </div>    
+                                                </xsl:when>
+                                            </xsl:choose>       
                                             <div style="padding-bottom:12px">
                                                 <div style="color:darkgrey;font-weight:bold;">
                                                     Parameters
@@ -163,10 +182,10 @@
                                             </div>
                                             
                                             <xsl:choose>
-                                                <xsl:when test="mtg:Param">  
+                                                <xsl:when test="mtg:Param or mtg:Update/@requires or mtg:Query/@requires or mtg:Execute/@requires">  
                                                     <div>
                                                         <div style="color:darkgrey;font-weight:bold;">
-                                                            Validation
+                                                            Parameter(s) criteria
                                                         </div>
                                                         <div class="paramList" style="font-size:16px;">
 
@@ -203,9 +222,20 @@
                                                                     <tbody>
                                                                         <tr>
                                                                             <td>
-                                                                                <span>
-                                                                                    <xsl:value-of select="@name"/>
-                                                                                </span>
+                                                                                <xsl:choose>
+                                                                                    <xsl:when test=" @name">
+                                                                                        <xsl:if test=" @name ">
+                                                                                            <span>
+                                                                                                <xsl:value-of select="@name"/>
+                                                                                            </span>
+                                                                                        </xsl:if>
+                                                                                    </xsl:when>
+                                                                                    <xsl:otherwise>
+                                                                                        <span>
+                                                                                            <xsl:value-of select="@name"/>
+                                                                                        </span>
+                                                                                    </xsl:otherwise>
+                                                                                </xsl:choose>
                                                                             </td>
                                                                             <td>
                                                                                 <span>
@@ -260,11 +290,11 @@
                                                                                             <span class="glyphicon glyphicon-remove"></span>
                                                                                         </xsl:if>
                                                                                         <xsl:if test=" @required='false'">
-                                                                                            <span class="glyphicon glyphicon-ok"></span>
+                                                                                            <span class="glyphicon glyphicon-ok" style="color:green;"></span>
                                                                                         </xsl:if>
                                                                                     </xsl:when>
                                                                                     <xsl:otherwise>
-                                                                                        <span class="glyphicon glyphicon-ok"></span>
+                                                                                        <span class="glyphicon glyphicon-ok" style="color:green;"></span>
                                                                                     </xsl:otherwise>
                                                                                     <!--<xsl:value-of select="@required"/>-->
                                                                                 </xsl:choose>
@@ -273,9 +303,71 @@
                                                                     </tbody>
                                                                 </xsl:for-each>
                                                             </table>
-
                                                         </div>
                                                     </div>
+                                                    <xsl:choose>
+                                                        <xsl:when test="mtg:Update/@requires or mtg:Query/@requires or mtg:Execute/@requires">
+                                                            <div>
+                                                                <div style="color:darkgrey;font-weight:bold;">
+                                                                    Parameter(s) criteria (Compulsory)
+                                                                </div>
+                                                                <div class="paramList" style="font-size:16px;">
+
+                                                                    <table class="table table-hover">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>
+                                                                                    Parameter
+                                                                                </th>
+                                                                                <th>
+                                                                                    Type
+                                                                                </th>
+                                                                                <th>
+                                                                                    Min
+                                                                                </th>
+                                                                                <th>
+                                                                                    Max
+                                                                                </th>
+                                                                                <th>
+                                                                                    Min Length
+                                                                                </th>
+                                                                                <th>
+                                                                                    Max Length
+                                                                                </th>
+                                                                                <th>
+                                                                                    Value
+                                                                                </th>
+                                                                                <th>
+                                                                                    Nullable
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <xsl:for-each select="$TokDistinctAllValues">
+                                                                            <xsl:variable name="i" select="position()" />
+                                                                            <xsl:if test="$i &lt; last()">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td colspan="7">
+                                                                                        <span>
+                                                                                            <xsl:value-of select="$TokDistinctAllValues[$i]"/>
+                                                                                            <sup>
+                                                                                                <span style="color:red;">*</span>
+                                                                                            </sup>
+                                                                                        </span>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <span class="glyphicon glyphicon-remove" style="color:red;"></span>
+                                                                                    </td>
+                                                                                </tr>                     
+                                                                            </tbody>
+                                                                            </xsl:if>
+                                                                        </xsl:for-each>
+                                                        
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </xsl:when>
+                                                    </xsl:choose>           
                                                 </xsl:when>
                                             </xsl:choose>
                                         </div>
@@ -285,15 +377,9 @@
                                     <div class="panel panel-success" style="border-color: #e0bab9;">
                                         <div class="panel-heading" style="color: #d9534f;background-color: #fbd8d7;border-color: #e0bab9;">
                                             <span class="ReqTypeItem" style="font-weight:bold;color: #d9534f;background-color: #fdd5d4;border-color: #e0bab9;">ITEM REQUEST</span>
-                                            <xsl:choose>
-                                                <xsl:when test='string-length(mtg:Desc) &gt; 0'>
-                                                    <span style="padding-bottom:12px;margin-left:10px;font-size:small;">
-                                                        <xsl:value-of select="mtg:Desc"/>
-                                                    </span>    
-                                                </xsl:when>
-                                            </xsl:choose>
+                                            
                                             <span class="pull-right" style="font-size:14px">
-                                                <div class="badge" style="margin-right:10px;color: #fbd8d7;background-color: #df534f;">
+                                                <div class="badge" style="margin-right:10px;color: #fbd8d7;background-color: #c14a46;">
                                                     <xsl:choose>
                                                         <xsl:when test='string-length(@status) &gt; 0'>
                                                             <xsl:value-of select="@status"/>
@@ -305,7 +391,7 @@
                                                 </div>
                                                 <xsl:choose>
                                                     <xsl:when test="contains(@method,'DELETE')">
-                                                        <div class="label label-danger" style="font-size:14px">
+                                                        <div class="label label-danger" style="font-size:14px;background-color: #d9534f;">
                                                             DELETE
                                                         </div>
                                                     </xsl:when>
@@ -314,7 +400,16 @@
                                         </div>
                                         <div class="panel-body">
                                             
-                                                   
+                                            <xsl:choose>
+                                                <xsl:when test='string-length(mtg:Desc) &gt; 0'>
+                                                    <div style="padding-bottom:12px">
+                                                        <div style="color:darkgrey;font-weight:bold;">
+                                                            Description
+                                                        </div>
+                                                        <xsl:value-of select="mtg:Desc"/>
+                                                    </div>    
+                                                </xsl:when>
+                                            </xsl:choose>       
                                             <div style="padding-bottom:12px">
                                                 <div style="color:darkgrey;font-weight:bold;">
                                                     Parameters
@@ -365,10 +460,10 @@
                                             </div>
                                             
                                             <xsl:choose>
-                                                <xsl:when test="mtg:Param">  
+                                                <xsl:when test="mtg:Param or mtg:Update/@requires or mtg:Query/@requires or mtg:Execute/@requires">  
                                                     <div>
                                                         <div style="color:darkgrey;font-weight:bold;">
-                                                            Validation
+                                                            Parameter(s) criterias
                                                         </div>
                                                         <div class="paramList" style="font-size:16px;">
 
@@ -405,9 +500,20 @@
                                                                     <tbody>
                                                                         <tr>
                                                                             <td>
-                                                                                <span>
-                                                                                    <xsl:value-of select="@name"/>
-                                                                                </span>
+                                                                                <xsl:choose>
+                                                                                    <xsl:when test=" @name">
+                                                                                        <xsl:if test=" @name ">
+                                                                                            <span>
+                                                                                                <xsl:value-of select="@name"/>
+                                                                                            </span>
+                                                                                        </xsl:if>
+                                                                                    </xsl:when>
+                                                                                    <xsl:otherwise>
+                                                                                        <span>
+                                                                                            <xsl:value-of select="@name"/>
+                                                                                        </span>
+                                                                                    </xsl:otherwise>
+                                                                                </xsl:choose>
                                                                             </td>
                                                                             <td>
                                                                                 <span>
@@ -462,9 +568,12 @@
                                                                                             <span class="glyphicon glyphicon-remove"></span>
                                                                                         </xsl:if>
                                                                                         <xsl:if test=" @required='false'">
-                                                                                            <span class="glyphicon glyphicon-ok"></span>
+                                                                                            <span class="glyphicon glyphicon-ok" style="color:green;"></span>
                                                                                         </xsl:if>
                                                                                     </xsl:when>
+                                                                                    <xsl:otherwise>
+                                                                                        <span class="glyphicon glyphicon-ok" style="color:green;"></span>
+                                                                                    </xsl:otherwise>
                                                                                     <!--<xsl:value-of select="@required"/>-->
                                                                                 </xsl:choose>
                                                                             </td>
@@ -472,9 +581,71 @@
                                                                     </tbody>
                                                                 </xsl:for-each>
                                                             </table>
-
                                                         </div>
                                                     </div>
+                                                    <xsl:choose>
+                                                        <xsl:when test="mtg:Update/@requires or mtg:Query/@requires or mtg:Execute/@requires">
+                                                            <div>
+                                                                <div style="color:darkgrey;font-weight:bold;">
+                                                                    Parameter(s) criteria (Compulsory)
+                                                                </div>
+                                                                <div class="paramList" style="font-size:16px;">
+
+                                                                    <table class="table table-hover">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>
+                                                                                    Parameter
+                                                                                </th>
+                                                                                <th>
+                                                                                    Type
+                                                                                </th>
+                                                                                <th>
+                                                                                    Min
+                                                                                </th>
+                                                                                <th>
+                                                                                    Max
+                                                                                </th>
+                                                                                <th>
+                                                                                    Min Length
+                                                                                </th>
+                                                                                <th>
+                                                                                    Max Length
+                                                                                </th>
+                                                                                <th>
+                                                                                    Value
+                                                                                </th>
+                                                                                <th>
+                                                                                    Nullable
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <xsl:for-each select="$TokDistinctAllValues">
+                                                                            <xsl:variable name="i" select="position()" />
+                                                                            <xsl:if test="$i &lt; last()">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td colspan="7">
+                                                                                        <span>
+                                                                                            <xsl:value-of select="$TokDistinctAllValues[$i]"/>
+                                                                                            <sup>
+                                                                                                <span style="color:red;">*</span>
+                                                                                            </sup>
+                                                                                        </span>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <span class="glyphicon glyphicon-remove" style="color:red;"></span>
+                                                                                    </td>
+                                                                                </tr>                     
+                                                                            </tbody>
+                                                                            </xsl:if>
+                                                                        </xsl:for-each>
+                                                        
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </xsl:when>
+                                                    </xsl:choose> 
                                                 </xsl:when>
                                             </xsl:choose>
                                         </div>
@@ -484,13 +655,7 @@
                                     <div class="panel panel-info">
                                         <div class="panel-heading">
                                             <span class="ReqTypeCollection" style="font-weight:bold">COLLECTION REQUEST</span>
-                                            <xsl:choose>
-                                                <xsl:when test='string-length(mtg:Desc) &gt; 0'>
-                                                    <span style="padding-bottom:12px;margin-left:10px;font-size:small;">
-                                                        <xsl:value-of select="mtg:Desc"/>
-                                                    </span>    
-                                                </xsl:when>
-                                            </xsl:choose>
+                                            
                                             <span class="pull-right" style="font-size:14px">
                                                 <div class="badge" style="margin-right:10px;">
                                                     <xsl:choose>
@@ -504,22 +669,22 @@
                                                 </div>
                                                 <xsl:choose>
                                                     <xsl:when test="contains(@method,'GET')">
-                                                        <div class="label label-success" style="font-size:14px">
+                                                        <div class="label label-success" style="font-size:14px;background-color: #5bc0de;">
                                                             GET
                                                         </div>
                                                     </xsl:when>
                                                     <xsl:when test="contains(@method,'POST')">
-                                                        <div class="label label-info" style="font-size:14px">
+                                                        <div class="label label-info" style="font-size:14px;background-color: #5bc0de;">
                                                             POST
                                                         </div>
                                                     </xsl:when>
                                                     <xsl:when test="contains(@method,'PUT')">
-                                                        <div class="label label-warning" style="font-size:14px">
+                                                        <div class="label label-warning" style="font-size:14px;background-color: #5bc0de;">
                                                             PUT
                                                         </div>
                                                     </xsl:when>
                                                     <xsl:when test="contains(@method,'DELETE')">
-                                                        <div class="label label-danger" style="font-size:14px">
+                                                        <div class="label label-danger" style="font-size:14px;background-color: #5bc0de;">
                                                             DELETE
                                                         </div>
                                                     </xsl:when>
@@ -528,7 +693,16 @@
                                         </div>
                                         <div class="panel-body">
                                             
-                                                   
+                                            <xsl:choose>
+                                                <xsl:when test='string-length(mtg:Desc) &gt; 0'>
+                                                    <div style="padding-bottom:12px">
+                                                        <div style="color:darkgrey;font-weight:bold;">
+                                                            Description
+                                                        </div>
+                                                        <xsl:value-of select="mtg:Desc"/>
+                                                    </div>    
+                                                </xsl:when>
+                                            </xsl:choose>      
                                             <div style="padding-bottom:12px">
                                                 <div style="color:darkgrey;font-weight:bold;">
                                                     Parameters
@@ -577,9 +751,10 @@
                                                     
                                                 </div>    
                                             </div>
-                                            <xsl:variable name="UpdateRequires" select="*/@requires"/>
+                                            
+                                            
                                             <xsl:choose>
-                                                <xsl:when test="mtg:Param or mtg:Update">
+                                                <xsl:when test="mtg:Param or mtg:Update/@requires or mtg:Query/@requires or mtg:Execute/@requires">
                                                     <div>
                                                         <div style="color:darkgrey;font-weight:bold;">
                                                             Parameter(s) Criterias
@@ -614,8 +789,8 @@
                                                                         </th>
                                                                     </tr>
                                                                 </thead>
-                                                                <xsl:variable name="ParamName" select="*/@name"/>
-                                                                <xsl:for-each select="mtg:Param">
+                                                                
+                                                                <xsl:for-each select="mtg:Param" >
                                                                     <tbody>
                                                                         <tr>
                                                                             <td>
@@ -624,13 +799,6 @@
                                                                                         <xsl:if test=" @name ">
                                                                                             <span>
                                                                                                 <xsl:value-of select="@name"/>
-                                                                                            </span>
-                                                                                        </xsl:if>
-                                                                                        <xsl:if test="contains($UpdateRequires,@name)">
-                                                                                            <span>
-                                                                                                <sup>
-                                                                                                    <span style="color:red;">*</span>
-                                                                                                </sup>
                                                                                             </span>
                                                                                         </xsl:if>
                                                                                     </xsl:when>
@@ -706,41 +874,72 @@
                                                                         </tr>
                                                                     </tbody>
                                                                 </xsl:for-each>
-                                                                <xsl:for-each select="mtg:Update">
-                                                                    <tbody>
-                                                                        <xsl:choose>
-                                                                            <xsl:when test="@requires">
-                                                                                
-                                                                                <xsl:variable name="UpdateRequiresTok" select='tokenize($UpdateRequires,"[,]")'/>
-                                                                                
-                                                                                            
-                                                                                <xsl:for-each select="$UpdateRequiresTok">
-                                                                                    <xsl:variable name="i" select="position()" />
-                                                                                    <xsl:if test=" not(matches($ParamName,$UpdateRequiresTok[$i])) ">
-                                                                                        <tr>
-                                                                                            <td colspan="7">
-                                                                                                <span>
-                                                                                                    <xsl:value-of select="$UpdateRequiresTok[$i]"/>
-                                                                                                    <sup>
-                                                                                                        <span style="color:red;">*</span>
-                                                                                                    </sup>
-                                                                                                </span>
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                <span class="glyphicon glyphicon-remove" style="color:red;"></span>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </xsl:if>
-                                                                                            
-                                                                                </xsl:for-each>
-                                                                            </xsl:when>
-                                                                        </xsl:choose>
-                                                                    </tbody>
-                                                                </xsl:for-each>
                                                             </table>                                                                
-
                                                         </div>
                                                     </div>
+                                                    <xsl:choose>
+                                                        <xsl:when test="mtg:Update/@requires or mtg:Query/@requires or mtg:Execute/@requires">
+                                                            <div>
+                                                                <div style="color:darkgrey;font-weight:bold;">
+                                                                    Parameter(s) criteria (Compulsory)
+                                                                </div>
+                                                                <div class="paramList" style="font-size:16px;">
+
+                                                                    <table class="table table-hover">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>
+                                                                                    Parameter
+                                                                                </th>
+                                                                                <th>
+                                                                                    Type
+                                                                                </th>
+                                                                                <th>
+                                                                                    Min
+                                                                                </th>
+                                                                                <th>
+                                                                                    Max
+                                                                                </th>
+                                                                                <th>
+                                                                                    Min Length
+                                                                                </th>
+                                                                                <th>
+                                                                                    Max Length
+                                                                                </th>
+                                                                                <th>
+                                                                                    Value
+                                                                                </th>
+                                                                                <th>
+                                                                                    Nullable
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <xsl:for-each select="$TokDistinctAllValues">
+                                                                            <xsl:variable name="i" select="position()" />
+                                                                            <xsl:if test="$i &lt; last()">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td colspan="7">
+                                                                                        <span>
+                                                                                            <xsl:value-of select="$TokDistinctAllValues[$i]"/>
+                                                                                            <sup>
+                                                                                                <span style="color:red;">*</span>
+                                                                                            </sup>
+                                                                                        </span>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <span class="glyphicon glyphicon-remove" style="color:red;"></span>
+                                                                                    </td>
+                                                                                </tr>                     
+                                                                            </tbody>
+                                                                            </xsl:if>
+                                                                        </xsl:for-each>
+                                                        
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </xsl:when>
+                                                    </xsl:choose> 
                                                 </xsl:when>
                                             </xsl:choose>    
 
