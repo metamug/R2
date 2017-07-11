@@ -20,34 +20,35 @@
                 
                 <div class="container" style="padding-top:25px">
                     <div class="panel-body">
-                        <xsl:choose>
-                            <xsl:when test="contains(@auth,'true')">
-                                <span class="glyphicon glyphicon-lock">
-                                </span>
-                            </xsl:when>
-                        </xsl:choose>
+                        
                         <span id="resName" style="color:darkgrey;font-weight:bold;margin-left:5px;margin-right:5px">
                             ABC
                         </span>
                         <span id="resVersion" class="badge">
                             <xsl:value-of select="@v"/>
                         </span>
+                        <xsl:choose>
+                            <xsl:when test="@auth != ''">
+                                <span class="fa fa-lock" style="color: #777777;padding-left: 5px;font-size: large;"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <span class="fa fa-unlock" style="color: #777777;padding-left: 5px;font-size: large;"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                         <span id="resGroup" style="padding:5px;color:#777777;">
+                       <!--This span displays parameters encountered in Request and is set using JS-->
+                        </span>
+                        <span>
                             <xsl:choose>
-                                <xsl:when test='not(matches(@auth,"[^ ]+"))'>
-                                    <i class="fa fa-unlock" aria-hidden="true"></i>
-                                    <!--<span class="glyphicons glyphicons-unlock"></span>-->
-                                </xsl:when>
-                                <xsl:when test="not(empty(@auth))">
-                                    <i class="fa fa-lock" aria-hidden="true"></i>
-                                    <!--<span class="glyphicon glyphicon-lock"></span>-->
+                                <xsl:when test="@auth != ''">
+                                    <span class="fa fa-lock pull-right" style="color: #3c763d;font-size: large;"></span>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    
+                                    <span class="fa fa-unlock pull-right" style="color: #3c763d;font-size: large;"></span>
                                 </xsl:otherwise>
                             </xsl:choose>
-                        </span>
-                        <span id="resUri" style="font-weight:bold;" class="text text-success pull-right">
+                            <span id="resUri" style="font-weight:bold;" class="text text-success pull-right">
+                            </span>
                         </span>
                         <div style="margin-left: 5px;font-size: small;">
                             <xsl:choose>
