@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns="http://xml.metamug.net/resource/1.0"
-            xmlns:tns="http://xml.metamug.net/resource/1.0"
+            xmlns:mtmg="http://xml.metamug.net/resource/1.0"
             targetNamespace="http://xml.metamug.net/resource/1.0"
             elementFormDefault="qualified" >
 
+    <xsd:simpleType name="nonEmpty">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    
     <xsd:simpleType name="version">
         <xsd:restriction base="xsd:double">
             <xsd:minExclusive value="0" />
@@ -57,23 +63,20 @@
     <xsd:element name="Resource">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="Request" type="request"/>
-                </xsd:choice>
+                <xsd:element id="Req" name="Request" type="request" maxOccurs="unbounded"/>
             </xsd:sequence>
             <xsd:attribute name="id" type="id" />
             <xsd:attribute name="v" type="version" use="required" />
             <xsd:attribute name="parent" type="parent" />
             <xsd:attribute name="auth" type="xsd:string"/>
         </xsd:complexType>
-        <xsd:unique name="Request">
-            <xsd:selector xpath="tns:Request"/>
+        <xsd:unique name="uniqueReq">
+            <xsd:selector xpath="mtmg:Request"/>
             <xsd:field xpath="@method"/>
             <xsd:field xpath="@item"/>
         </xsd:unique>
     </xsd:element>
-
+    
     <xsd:simpleType name="desc">
         <xsd:restriction base="xsd:string">
             <xsd:minLength value="1"/>
@@ -109,8 +112,8 @@
     </xsd:simpleType>
 
     <xsd:complexType name="sql" >
-        <xsd:simpleContent>
-            <xsd:extension base="xsd:string">
+        <xsd:complexContent>
+            <xsd:extension base="nonEmpty">
                 <xsd:attribute name="requires" type="requires"/>
                 <xsd:attribute name="when" type="xsd:string" />
                 <xsd:attribute name="limit" type="xsd:string" />
@@ -118,9 +121,8 @@
                 <xsd:attribute name="classname" type="className" />
                 <xsd:attribute name="status" type="status"/>
             </xsd:extension>
-        </xsd:simpleContent>
+        </xsd:complexContent>
     </xsd:complexType>
-
     <xsd:complexType name="query">
         <xsd:complexContent>
             <xsd:extension base="sql">
@@ -149,9 +151,9 @@
             <xsd:element name="Update" type="update" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
         <xsd:attribute name="id" type="id" />
-        <xsd:attribute name="method" type="method" use="required" />
+        <xsd:attribute name="method" type="method" use="required"/>
         <xsd:attribute name="status" type="status"/>
-        <xsd:attribute name="item" type="xsd:boolean" default="false" />
+        <xsd:attribute name="item" type="xsd:boolean" default="false"/>
     </xsd:complexType>
 
     <xsd:complexType name="param">
@@ -173,13 +175,7 @@
     </xsd:complexType>
 
     <xsd:complexType name="execute">
-        <xsd:simpleContent>
-            <xsd:extension base="xsd:string">
-                <xsd:attribute name="requires" type="requires"/>
-                <xsd:attribute name="classname" type="className" use="required" />
-                <xsd:attribute name="when" type="xsd:string" />
-                <xsd:attribute name="status" type="status"/>
-            </xsd:extension>
-        </xsd:simpleContent>
+        <xsd:attribute name="requires" type="requires"/>
+        <xsd:attribute name="classname" type="className" use="required" />
     </xsd:complexType>
 </xsd:schema>
