@@ -35,8 +35,8 @@ public class Request {
         @XmlElement(name = "Update", type = Update.class)
     })
     protected List<Sql> sql;
-    @XmlAttribute(name = "id")
-    protected String id; 
+//    @XmlAttribute(name = "id")
+//    protected String id; 
     @XmlAttribute(name = "status")
     protected Integer status;
     @XmlAttribute(name = "method")
@@ -80,13 +80,13 @@ public class Request {
         return this.sql;
     }
     
-    public String getId() {
-        return id;
-    }
-    
-    public void setId(String value) {
-        this.id = value;
-    }
+//    public String getId() {
+//        return id;
+//    }
+//    
+//    public void setId(String value) {
+//        this.id = value;
+//    }
 
     public Integer getStatus() {
         return status;
