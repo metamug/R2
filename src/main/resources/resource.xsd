@@ -5,6 +5,12 @@
             targetNamespace="http://xml.metamug.net/resource/1.0"
             elementFormDefault="qualified" >
 
+    <xsd:simpleType name="strlength">
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
     <xsd:simpleType name="version">
         <xsd:restriction base="xsd:double">
             <xsd:minExclusive value="0" />
@@ -163,8 +169,8 @@
         <xsd:attribute name="name" type="paramName" use="required" />
         <xsd:attribute name="max" type="xsd:double" />
         <xsd:attribute name="min" type="xsd:double" />
-        <xsd:attribute name="maxlength" type="xsd:int" />
-        <xsd:attribute name="minlength" type="xsd:int" />
+        <xsd:attribute name="maxlength" type="strlength"/>
+        <xsd:attribute name="minlength" type="strlength"/>
         <xsd:attribute name="pattern" type="xsd:string" />
         <xsd:attribute name="exists" type="exists" />
         <xsd:attribute name="value" type="xsd:string" />
