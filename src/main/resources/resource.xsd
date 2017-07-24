@@ -5,6 +5,19 @@
             targetNamespace="http://xml.metamug.net/resource/1.0"
             elementFormDefault="qualified" >
 
+    <xsd:simpleType name="nonEmpty">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+            <xsd:pattern value=".+[^\s][ ]?"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="positives">
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
     <xsd:simpleType name="version">
         <xsd:restriction base="xsd:double">
             <xsd:minExclusive value="0" />
@@ -57,12 +70,11 @@
     <xsd:element name="Resource">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="Request" type="request"/>
-                </xsd:choice>
+                
+                    <xsd:element id="Req" name="Request" type="request" maxOccurs="unbounded"/>
+                
             </xsd:sequence>
-            <!--<xsd:attribute name="id" type="id" />-->
+            <xsd:attribute name="id" type="id" />
             <xsd:attribute name="v" type="version" use="required" />
             <xsd:attribute name="parent" type="parent" />
             <xsd:attribute name="auth" type="xsd:string"/>
@@ -110,7 +122,7 @@
 
     <xsd:complexType name="sql" >
         <xsd:simpleContent>
-            <xsd:extension base="xsd:string">
+            <xsd:extension base="nonEmpty">
                 <xsd:attribute name="requires" type="requires"/>
                 <xsd:attribute name="when" type="xsd:string" />
                 <xsd:attribute name="limit" type="xsd:string" />
@@ -141,6 +153,7 @@
                 For processing incoming request and sending back response.
             </xsd:documentation>
         </xsd:annotation>
+        
         <xsd:choice maxOccurs="unbounded">
             <xsd:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
             <xsd:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded" />
@@ -163,8 +176,8 @@
         <xsd:attribute name="name" type="paramName" use="required" />
         <xsd:attribute name="max" type="xsd:double" />
         <xsd:attribute name="min" type="xsd:double" />
-        <xsd:attribute name="maxlength" type="xsd:int" />
-        <xsd:attribute name="minlength" type="xsd:int" />
+        <xsd:attribute name="maxlength" type="positives" />
+        <xsd:attribute name="minlength" type="positives" />
         <xsd:attribute name="pattern" type="xsd:string" />
         <xsd:attribute name="exists" type="exists" />
         <xsd:attribute name="value" type="xsd:string" />
