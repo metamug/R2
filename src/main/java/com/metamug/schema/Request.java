@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlType;
     "desc",
     "param",
     "execute",
+    "filter",
     "sql"
 })
 public class Request {
@@ -30,6 +31,9 @@ public class Request {
     protected List<Param> param;
     @XmlElement(name = "Execute")
     protected List<Execute> execute;
+    @XmlElement(name = "Filter")
+    protected List<Filter> filter;
+    
     @XmlElements({
         @XmlElement(name = "Query", type = Query.class),
         @XmlElement(name = "Update", type = Update.class)
@@ -63,6 +67,13 @@ public class Request {
             execute = new ArrayList<>();
         }
         return this.execute;
+    }
+    
+    public List<Filter> getFilter() {
+        if (filter == null) {
+            filter = new ArrayList<>();
+        }
+        return this.filter;
     }
 
     public String getDesc() {

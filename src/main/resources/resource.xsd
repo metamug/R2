@@ -69,10 +69,8 @@
 
     <xsd:element name="Resource">
         <xsd:complexType>
-            <xsd:sequence>
-                
-                    <xsd:element id="Req" name="Request" type="request" maxOccurs="unbounded"/>
-                
+            <xsd:sequence>                
+                <xsd:element id="Req" name="Request" type="request" maxOccurs="unbounded"/>
             </xsd:sequence>
             <xsd:attribute name="id" type="id" />
             <xsd:attribute name="v" type="version" use="required" />
@@ -158,7 +156,7 @@
             <xsd:element name="Desc" type="desc" minOccurs="0" maxOccurs="1" />
             <xsd:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded" />
-            <xsd:element name="Filter" type="execute" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="Filter" type="filter" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="Query" type="query" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="Update" type="update" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
@@ -190,4 +188,9 @@
         <xsd:attribute name="requires" type="requires"/>
         <xsd:attribute name="classname" type="className" use="required" />
     </xsd:complexType>
+    
+    <xsd:complexType name="filter">
+        <xsd:attribute name="classname" type="className" use="required" />
+    </xsd:complexType>
+    
 </xsd:schema>
