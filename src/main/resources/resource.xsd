@@ -159,6 +159,7 @@
             <xsd:element name="Filter" type="filter" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="Query" type="query" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="Update" type="update" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="External" type="external" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:choice>
         <xsd:attribute name="id" type="id" />
         <xsd:attribute name="method" type="method" use="required"/>
@@ -191,6 +192,35 @@
     
     <xsd:complexType name="filter">
         <xsd:attribute name="classname" type="className" use="required" />
+    </xsd:complexType>
+    
+    <xsd:complexType name="external">
+        <xsd:choice maxOccurs="unbounded">
+            <xsd:element name="Response" type="externalResponse" minOccurs="0" maxOccurs="1" />
+            <xsd:element name="Param" type="externalParamHeader" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="Header" type="externalParamHeader" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:choice>
+        <xsd:attribute name="url" type="xsd:anyURI" use="required"/>
+        <xsd:attribute name="method" type="method" use="required"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="externalResponse">
+        <xsd:choice maxOccurs="unbounded">
+            <xsd:element name="Set" type="externalSet" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:choice>
+        <xsd:attribute name="expected" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="externalSet">
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <xsd:attribute name="path" type="xsd:string" />
+        <xsd:attribute name="value" type="xsd:string" />
+        <xsd:attribute name="when" type="xsd:string"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="externalParamHeader">
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <xsd:attribute name="value" type="xsd:string" />
     </xsd:complexType>
     
 </xsd:schema>
