@@ -141,7 +141,7 @@ public class DocGenerator {
             writer.writeEndElement();   //End of </div class="container">
             writer.writeEndElement();   //End of </body>
         } catch (FileNotFoundException | XMLStreamException | XPathExpressionException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DocGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
