@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.01.27 at 03:21:31 PM IST 
 //
-
-
 package com.metamug.schema;
 
 import javax.xml.bind.annotation.XmlEnum;
@@ -14,18 +12,10 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>
- * <pre>
- * &lt;simpleType name="paramType">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="date"/>
- *     &lt;enumeration value="datetime"/>
- *     &lt;enumeration value="email"/>
- *     &lt;enumeration value="number"/>
- *     &lt;enumeration value="text"/>
- *     &lt;enumeration value="time"/>
- *     &lt;enumeration value="url"/>
- *   &lt;/restriction>
- * &lt;/simpleType>
+ * <
+ * pre>
+ * &lt;simpleType name="paramType"> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"> &lt;enumeration value="date"/> &lt;enumeration value="datetime"/> &lt;enumeration value="email"/>
+ * &lt;enumeration value="number"/> &lt;enumeration value="text"/> &lt;enumeration value="time"/> &lt;enumeration value="url"/> &lt;/restriction> &lt;/simpleType>
  * </pre>
  *
  */

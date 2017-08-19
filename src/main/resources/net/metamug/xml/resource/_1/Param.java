@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.08.06 at 11:04:34 AM IST 
 //
-
-
 package net.metamug.xml.resource._1;
 
 import java.math.BigInteger;
@@ -14,16 +12,17 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * 
- *                 To perform validation on the parameters received.
- *             
- * 
- * <p>Java class for param complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
+ * To perform validation on the parameters received.
+ *
+ *
+ * <p>
+ * Java class for param complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType name="param">
  *   &lt;complexContent>
@@ -42,8 +41,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "param")
@@ -72,11 +71,9 @@ public class Param {
 
     /**
      * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getName() {
         return name;
@@ -84,11 +81,9 @@ public class Param {
 
     /**
      * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setName(String value) {
         this.name = value;
@@ -96,11 +91,9 @@ public class Param {
 
     /**
      * Gets the value of the max property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Double }
-     *     
+     *
+     * @return possible object is {@link Double }
+     *
      */
     public Double getMax() {
         return max;
@@ -108,11 +101,9 @@ public class Param {
 
     /**
      * Sets the value of the max property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Double }
-     *     
+     *
+     * @param value allowed object is {@link Double }
+     *
      */
     public void setMax(Double value) {
         this.max = value;
@@ -120,11 +111,9 @@ public class Param {
 
     /**
      * Gets the value of the min property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Double }
-     *     
+     *
+     * @return possible object is {@link Double }
+     *
      */
     public Double getMin() {
         return min;
@@ -132,11 +121,9 @@ public class Param {
 
     /**
      * Sets the value of the min property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Double }
-     *     
+     *
+     * @param value allowed object is {@link Double }
+     *
      */
     public void setMin(Double value) {
         this.min = value;
@@ -144,11 +131,9 @@ public class Param {
 
     /**
      * Gets the value of the maxlength property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @return possible object is {@link BigInteger }
+     *
      */
     public BigInteger getMaxlength() {
         return maxlength;
@@ -156,11 +141,9 @@ public class Param {
 
     /**
      * Sets the value of the maxlength property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @param value allowed object is {@link BigInteger }
+     *
      */
     public void setMaxlength(BigInteger value) {
         this.maxlength = value;
@@ -168,11 +151,9 @@ public class Param {
 
     /**
      * Gets the value of the minlength property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @return possible object is {@link BigInteger }
+     *
      */
     public BigInteger getMinlength() {
         return minlength;
@@ -180,11 +161,9 @@ public class Param {
 
     /**
      * Sets the value of the minlength property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @param value allowed object is {@link BigInteger }
+     *
      */
     public void setMinlength(BigInteger value) {
         this.minlength = value;
@@ -192,11 +171,9 @@ public class Param {
 
     /**
      * Gets the value of the pattern property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getPattern() {
         return pattern;
@@ -204,11 +181,9 @@ public class Param {
 
     /**
      * Sets the value of the pattern property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setPattern(String value) {
         this.pattern = value;
@@ -216,11 +191,9 @@ public class Param {
 
     /**
      * Gets the value of the exists property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getExists() {
         return exists;
@@ -228,11 +201,9 @@ public class Param {
 
     /**
      * Sets the value of the exists property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setExists(String value) {
         this.exists = value;
@@ -240,11 +211,9 @@ public class Param {
 
     /**
      * Gets the value of the value property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getValue() {
         return value;
@@ -252,11 +221,9 @@ public class Param {
 
     /**
      * Sets the value of the value property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setValue(String value) {
         this.value = value;
@@ -264,11 +231,9 @@ public class Param {
 
     /**
      * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ParamType }
-     *     
+     *
+     * @return possible object is {@link ParamType }
+     *
      */
     public ParamType getType() {
         return type;
@@ -276,11 +241,9 @@ public class Param {
 
     /**
      * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ParamType }
-     *     
+     *
+     * @param value allowed object is {@link ParamType }
+     *
      */
     public void setType(ParamType value) {
         this.type = value;
@@ -288,11 +251,9 @@ public class Param {
 
     /**
      * Gets the value of the required property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     *
+     * @return possible object is {@link Boolean }
+     *
      */
     public boolean isRequired() {
         if (required == null) {
@@ -304,11 +265,9 @@ public class Param {
 
     /**
      * Sets the value of the required property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     *
+     * @param value allowed object is {@link Boolean }
+     *
      */
     public void setRequired(Boolean value) {
         this.required = value;

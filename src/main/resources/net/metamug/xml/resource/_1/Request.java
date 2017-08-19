@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.08.06 at 11:04:34 AM IST 
 //
-
-
 package net.metamug.xml.resource._1;
 
 import java.util.ArrayList;
@@ -18,16 +16,17 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * 
- *                 For processing incoming request and sending back response.
- *             
- * 
- * <p>Java class for request complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
+ * For processing incoming request and sending back response.
+ *
+ *
+ * <p>
+ * Java class for request complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType name="request">
  *   &lt;complexContent>
@@ -48,8 +47,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "request", propOrder = {
@@ -58,11 +57,16 @@ import javax.xml.bind.annotation.XmlType;
 public class Request {
 
     @XmlElementRefs({
-        @XmlElementRef(name = "Desc", namespace = "http://xml.metamug.net/resource/1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "Filter", namespace = "http://xml.metamug.net/resource/1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "Update", namespace = "http://xml.metamug.net/resource/1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "Execute", namespace = "http://xml.metamug.net/resource/1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "Query", namespace = "http://xml.metamug.net/resource/1.0", type = JAXBElement.class, required = false),
+        @XmlElementRef(name = "Desc", namespace = "http://xml.metamug.net/resource/1.0", type = JAXBElement.class, required = false)
+        ,
+        @XmlElementRef(name = "Filter", namespace = "http://xml.metamug.net/resource/1.0", type = JAXBElement.class, required = false)
+        ,
+        @XmlElementRef(name = "Update", namespace = "http://xml.metamug.net/resource/1.0", type = JAXBElement.class, required = false)
+        ,
+        @XmlElementRef(name = "Execute", namespace = "http://xml.metamug.net/resource/1.0", type = JAXBElement.class, required = false)
+        ,
+        @XmlElementRef(name = "Query", namespace = "http://xml.metamug.net/resource/1.0", type = JAXBElement.class, required = false)
+        ,
         @XmlElementRef(name = "Param", namespace = "http://xml.metamug.net/resource/1.0", type = JAXBElement.class, required = false)
     })
     protected List<JAXBElement<?>> descOrParamOrExecute;
@@ -77,30 +81,27 @@ public class Request {
 
     /**
      * Gets the value of the descOrParamOrExecute property.
-     * 
+     *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the descOrParamOrExecute property.
-     * 
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is
+     * not a <CODE>set</CODE> method for the descOrParamOrExecute property.
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getDescOrParamOrExecute().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
+     * Objects of the following type(s) are allowed in the list null null     {@link JAXBElement }{@code <}{@link String }{@code >}
      * {@link JAXBElement }{@code <}{@link Query }{@code >}
      * {@link JAXBElement }{@code <}{@link Param }{@code >}
      * {@link JAXBElement }{@code <}{@link Execute }{@code >}
      * {@link JAXBElement }{@code <}{@link Update }{@code >}
      * {@link JAXBElement }{@code <}{@link Execute }{@code >}
-     * 
-     * 
+     *
+     *
      */
     public List<JAXBElement<?>> getDescOrParamOrExecute() {
         if (descOrParamOrExecute == null) {
@@ -111,11 +112,9 @@ public class Request {
 
     /**
      * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getId() {
         return id;
@@ -123,11 +122,9 @@ public class Request {
 
     /**
      * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setId(String value) {
         this.id = value;
@@ -135,11 +132,9 @@ public class Request {
 
     /**
      * Gets the value of the method property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Method }
-     *     
+     *
+     * @return possible object is {@link Method }
+     *
      */
     public Method getMethod() {
         return method;
@@ -147,11 +142,9 @@ public class Request {
 
     /**
      * Sets the value of the method property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Method }
-     *     
+     *
+     * @param value allowed object is {@link Method }
+     *
      */
     public void setMethod(Method value) {
         this.method = value;
@@ -159,11 +152,9 @@ public class Request {
 
     /**
      * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
+     *
+     * @return possible object is {@link Integer }
+     *
      */
     public Integer getStatus() {
         return status;
@@ -171,11 +162,9 @@ public class Request {
 
     /**
      * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer }
-     *     
+     *
+     * @param value allowed object is {@link Integer }
+     *
      */
     public void setStatus(Integer value) {
         this.status = value;
@@ -183,11 +172,9 @@ public class Request {
 
     /**
      * Gets the value of the item property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     *
+     * @return possible object is {@link Boolean }
+     *
      */
     public boolean isItem() {
         if (item == null) {
@@ -199,11 +186,9 @@ public class Request {
 
     /**
      * Sets the value of the item property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     *
+     * @param value allowed object is {@link Boolean }
+     *
      */
     public void setItem(Boolean value) {
         this.item = value;

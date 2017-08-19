@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.08.06 at 11:04:34 AM IST 
 //
-
-
 package net.metamug.xml.resource._1;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -15,12 +13,13 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
-
 /**
- * <p>Java class for sql complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for sql complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType name="sql">
  *   &lt;simpleContent>
@@ -35,8 +34,8 @@ import javax.xml.bind.annotation.XmlValue;
  *   &lt;/simpleContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sql", propOrder = {
@@ -65,11 +64,9 @@ public class Sql {
 
     /**
      * Gets the value of the value property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getValue() {
         return value;
@@ -77,11 +74,9 @@ public class Sql {
 
     /**
      * Sets the value of the value property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setValue(String value) {
         this.value = value;
@@ -89,11 +84,9 @@ public class Sql {
 
     /**
      * Gets the value of the requires property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getRequires() {
         return requires;
@@ -101,11 +94,9 @@ public class Sql {
 
     /**
      * Sets the value of the requires property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setRequires(String value) {
         this.requires = value;
@@ -113,11 +104,9 @@ public class Sql {
 
     /**
      * Gets the value of the when property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getWhen() {
         return when;
@@ -125,11 +114,9 @@ public class Sql {
 
     /**
      * Sets the value of the when property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setWhen(String value) {
         this.when = value;
@@ -137,11 +124,9 @@ public class Sql {
 
     /**
      * Gets the value of the limit property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getLimit() {
         return limit;
@@ -149,11 +134,9 @@ public class Sql {
 
     /**
      * Sets the value of the limit property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setLimit(String value) {
         this.limit = value;
@@ -161,11 +144,9 @@ public class Sql {
 
     /**
      * Gets the value of the offset property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getOffset() {
         return offset;
@@ -173,11 +154,9 @@ public class Sql {
 
     /**
      * Sets the value of the offset property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setOffset(String value) {
         this.offset = value;
@@ -185,11 +164,9 @@ public class Sql {
 
     /**
      * Gets the value of the classname property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getClassname() {
         return classname;
@@ -197,11 +174,9 @@ public class Sql {
 
     /**
      * Sets the value of the classname property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setClassname(String value) {
         this.classname = value;
@@ -209,11 +184,9 @@ public class Sql {
 
     /**
      * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
+     *
+     * @return possible object is {@link Integer }
+     *
      */
     public Integer getStatus() {
         return status;
@@ -221,11 +194,9 @@ public class Sql {
 
     /**
      * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer }
-     *     
+     *
+     * @param value allowed object is {@link Integer }
+     *
      */
     public void setStatus(Integer value) {
         this.status = value;

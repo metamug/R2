@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.08.06 at 11:04:34 AM IST 
 //
-
-
 package net.metamug.xml.resource._1;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,12 +11,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for execute complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for execute complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType name="execute">
  *   &lt;complexContent>
@@ -29,8 +28,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "execute")
@@ -43,11 +42,9 @@ public class Execute {
 
     /**
      * Gets the value of the requires property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getRequires() {
         return requires;
@@ -55,11 +52,9 @@ public class Execute {
 
     /**
      * Sets the value of the requires property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setRequires(String value) {
         this.requires = value;
@@ -67,11 +62,9 @@ public class Execute {
 
     /**
      * Gets the value of the classname property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getClassname() {
         return classname;
@@ -79,11 +72,9 @@ public class Execute {
 
     /**
      * Sets the value of the classname property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setClassname(String value) {
         this.classname = value;

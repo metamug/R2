@@ -4,29 +4,24 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.08.06 at 11:04:34 AM IST 
 //
-
-
 package net.metamug.xml.resource._1;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for sqlType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
- * &lt;simpleType name="sqlType">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="query"/>
- *     &lt;enumeration value="update"/>
- *   &lt;/restriction>
- * &lt;/simpleType>
+ * Java class for sqlType.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * <
+ * pre>
+ * &lt;simpleType name="sqlType"> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"> &lt;enumeration value="query"/> &lt;enumeration value="update"/> &lt;/restriction> &lt;/simpleType>
  * </pre>
- * 
+ *
  */
 @XmlType(name = "sqlType")
 @XmlEnum
@@ -47,7 +42,7 @@ public enum SqlType {
     }
 
     public static SqlType fromValue(String v) {
-        for (SqlType c: SqlType.values()) {
+        for (SqlType c : SqlType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

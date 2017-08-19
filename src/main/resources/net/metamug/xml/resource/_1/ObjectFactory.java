@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.08.06 at 11:04:34 AM IST 
 //
-
-
 package net.metamug.xml.resource._1;
 
 import javax.xml.bind.JAXBElement;
@@ -13,41 +11,34 @@ import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
-
 /**
- * This object contains factory methods for each 
- * Java content interface and Java element interface 
- * generated in the net.metamug.xml.resource._1 package. 
- * <p>An ObjectFactory allows you to programatically 
- * construct new instances of the Java representation 
- * for XML content. The Java representation of XML 
- * content can consist of schema derived interfaces 
- * and classes representing the binding of schema 
- * type definitions, element declarations and model 
- * groups.  Factory methods for each of these are 
- * provided in this class.
- * 
+ * This object contains factory methods for each Java content interface and Java element interface generated in the net.metamug.xml.resource._1 package.
+ * <p>
+ * An ObjectFactory allows you to programatically construct new instances of the Java representation for XML content. The Java representation of XML content can consist of schema derived interfaces
+ * and classes representing the binding of schema type definitions, element declarations and model groups. Factory methods for each of these are provided in this class.
+ *
  */
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _RequestDesc_QNAME = new QName("http://xml.metamug.net/resource/1.0", "Desc");
-    private final static QName _RequestExecute_QNAME = new QName("http://xml.metamug.net/resource/1.0", "Execute");
-    private final static QName _RequestUpdate_QNAME = new QName("http://xml.metamug.net/resource/1.0", "Update");
-    private final static QName _RequestQuery_QNAME = new QName("http://xml.metamug.net/resource/1.0", "Query");
-    private final static QName _RequestFilter_QNAME = new QName("http://xml.metamug.net/resource/1.0", "Filter");
-    private final static QName _RequestParam_QNAME = new QName("http://xml.metamug.net/resource/1.0", "Param");
+    private final static QName REQUEST_DESC_QNAME = new QName("http://xml.metamug.net/resource/1.0", "Desc");
+    private final static QName REQUESTE_EXECUTE_QNAME = new QName("http://xml.metamug.net/resource/1.0", "Execute");
+    private final static QName REQUEST_UPDATE_QNAME = new QName("http://xml.metamug.net/resource/1.0", "Update");
+    private final static QName REQUEST_QUERY_QNAME = new QName("http://xml.metamug.net/resource/1.0", "Query");
+    private final static QName REQUEST_FILTER_QNAME = new QName("http://xml.metamug.net/resource/1.0", "Filter");
+    private final static QName REQUEST_PARAM_QNAME = new QName("http://xml.metamug.net/resource/1.0", "Param");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: net.metamug.xml.resource._1
-     * 
+     *
      */
     public ObjectFactory() {
     }
 
     /**
      * Create an instance of {@link Resource }
-     * 
+     *
+     * @return
      */
     public Resource createResource() {
         return new Resource();
@@ -55,7 +46,8 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Request }
-     * 
+     *
+     * @return
      */
     public Request createRequest() {
         return new Request();
@@ -63,7 +55,8 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Update }
-     * 
+     *
+     * @return
      */
     public Update createUpdate() {
         return new Update();
@@ -71,7 +64,8 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Execute }
-     * 
+     *
+     * @return
      */
     public Execute createExecute() {
         return new Execute();
@@ -79,7 +73,8 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Param }
-     * 
+     *
+     * @return
      */
     public Param createParam() {
         return new Param();
@@ -87,7 +82,8 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Query }
-     * 
+     *
+     * @return
      */
     public Query createQuery() {
         return new Query();
@@ -95,7 +91,8 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Sql }
-     * 
+     *
+     * @return
      */
     public Sql createSql() {
         return new Sql();
@@ -103,56 +100,68 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     * 
+     *
+     * @param value
+     * @return
      */
     @XmlElementDecl(namespace = "http://xml.metamug.net/resource/1.0", name = "Desc", scope = Request.class)
     public JAXBElement<String> createRequestDesc(String value) {
-        return new JAXBElement<String>(_RequestDesc_QNAME, String.class, Request.class, value);
+        return new JAXBElement<>(REQUEST_DESC_QNAME, String.class, Request.class, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link Execute }{@code >}}
-     * 
+     *
+     * @param value
+     * @return
      */
     @XmlElementDecl(namespace = "http://xml.metamug.net/resource/1.0", name = "Execute", scope = Request.class)
     public JAXBElement<Execute> createRequestExecute(Execute value) {
-        return new JAXBElement<Execute>(_RequestExecute_QNAME, Execute.class, Request.class, value);
+        return new JAXBElement<>(REQUESTE_EXECUTE_QNAME, Execute.class, Request.class, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link Update }{@code >}}
-     * 
+     *
+     * @param value
+     * @return
      */
     @XmlElementDecl(namespace = "http://xml.metamug.net/resource/1.0", name = "Update", scope = Request.class)
     public JAXBElement<Update> createRequestUpdate(Update value) {
-        return new JAXBElement<Update>(_RequestUpdate_QNAME, Update.class, Request.class, value);
+        return new JAXBElement<>(REQUEST_UPDATE_QNAME, Update.class, Request.class, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link Query }{@code >}}
-     * 
+     *
+     * @param value
+     * @return
      */
     @XmlElementDecl(namespace = "http://xml.metamug.net/resource/1.0", name = "Query", scope = Request.class)
     public JAXBElement<Query> createRequestQuery(Query value) {
-        return new JAXBElement<Query>(_RequestQuery_QNAME, Query.class, Request.class, value);
+        return new JAXBElement<>(REQUEST_QUERY_QNAME, Query.class, Request.class, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link Execute }{@code >}}
-     * 
+     *
+     * @param value
+     * @return
      */
     @XmlElementDecl(namespace = "http://xml.metamug.net/resource/1.0", name = "Filter", scope = Request.class)
     public JAXBElement<Execute> createRequestFilter(Execute value) {
-        return new JAXBElement<Execute>(_RequestFilter_QNAME, Execute.class, Request.class, value);
+        return new JAXBElement<>(REQUEST_FILTER_QNAME, Execute.class, Request.class, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link Param }{@code >}}
-     * 
+     *
+     * @param value
+     * @return
      */
     @XmlElementDecl(namespace = "http://xml.metamug.net/resource/1.0", name = "Param", scope = Request.class)
     public JAXBElement<Param> createRequestParam(Param value) {
-        return new JAXBElement<Param>(_RequestParam_QNAME, Param.class, Request.class, value);
+        return new JAXBElement<>(REQUEST_PARAM_QNAME, Param.class, Request.class, value);
     }
 
 }

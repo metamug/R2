@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Resource auth="true" parent="exam" id="testIdString" xmlns="http://xml.metamug.net/resource/1.0"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" v="1.0">
+          xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" v="1.0">
     <Desc>This works</Desc>
     <Request method="POST">
         <Update requires="p,q" when="$q eq 1">UPDATE table SET column=$q WHERE id=$id</Update>

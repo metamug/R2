@@ -4,6 +4,5 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.08.06 at 11:04:34 AM IST 
 //
-
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://xml.metamug.net/resource/1.0", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package net.metamug.xml.resource._1;

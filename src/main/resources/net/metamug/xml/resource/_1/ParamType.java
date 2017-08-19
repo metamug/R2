@@ -4,34 +4,25 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.08.06 at 11:04:34 AM IST 
 //
-
-
 package net.metamug.xml.resource._1;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for paramType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
- * &lt;simpleType name="paramType">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="date"/>
- *     &lt;enumeration value="datetime"/>
- *     &lt;enumeration value="email"/>
- *     &lt;enumeration value="number"/>
- *     &lt;enumeration value="text"/>
- *     &lt;enumeration value="time"/>
- *     &lt;enumeration value="url"/>
- *   &lt;/restriction>
- * &lt;/simpleType>
+ * Java class for paramType.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * <
+ * pre>
+ * &lt;simpleType name="paramType"> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"> &lt;enumeration value="date"/> &lt;enumeration value="datetime"/> &lt;enumeration value="email"/>
+ * &lt;enumeration value="number"/> &lt;enumeration value="text"/> &lt;enumeration value="time"/> &lt;enumeration value="url"/> &lt;/restriction> &lt;/simpleType>
  * </pre>
- * 
+ *
  */
 @XmlType(name = "paramType")
 @XmlEnum
@@ -62,7 +53,7 @@ public enum ParamType {
     }
 
     public static ParamType fromValue(String v) {
-        for (ParamType c: ParamType.values()) {
+        for (ParamType c : ParamType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

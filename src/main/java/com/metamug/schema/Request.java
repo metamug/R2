@@ -33,9 +33,10 @@ public class Request {
     protected List<Execute> execute;
     @XmlElement(name = "Filter")
     protected List<Filter> filter;
-    
+
     @XmlElements({
-        @XmlElement(name = "Query", type = Query.class),
+        @XmlElement(name = "Query", type = Query.class)
+        ,
         @XmlElement(name = "Update", type = Update.class)
     })
     protected List<Sql> sql;
@@ -68,7 +69,7 @@ public class Request {
         }
         return this.execute;
     }
-    
+
     public List<Filter> getFilter() {
         if (filter == null) {
             filter = new ArrayList<>();
@@ -90,7 +91,7 @@ public class Request {
         }
         return this.sql;
     }
-    
+
 //    public String getId() {
 //        return id;
 //    }
@@ -98,7 +99,6 @@ public class Request {
 //    public void setId(String value) {
 //        this.id = value;
 //    }
-
     public Integer getStatus() {
         return status;
     }
