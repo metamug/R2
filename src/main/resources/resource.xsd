@@ -180,6 +180,7 @@
 
     <xsd:complexType name="execute">
         <xsd:attribute name="requires" type="requires"/>
+        <xsd:attribute name="when" type="xsd:string" />
         <xsd:attribute name="classname" type="className" use="required" />
     </xsd:complexType>
 </xsd:schema>
