@@ -7,7 +7,11 @@
 package com.metamug.schema;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -52,11 +56,19 @@ public class Request {
         this.method = method;
     }
 
-    public List<Param> getParam() {
+    public Set<Param> getParam() {
         if (param == null) {
-            param = new ArrayList<>();
+            Set<Param> paramSet = new HashSet<>();
+            return paramSet;
+        } else {
+            Map<String, Param> paramMap = new HashMap<>();
+            param.forEach((Param param1) -> {
+                paramMap.put(param1.name, param1);
+            });
+            Set<Param> paramSet = new HashSet<>();
+            paramSet.addAll(paramMap.values());
+            return paramSet;
         }
-        return this.param;
     }
 
     public List<Execute> getExecute() {

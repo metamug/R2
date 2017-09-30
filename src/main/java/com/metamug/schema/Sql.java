@@ -14,13 +14,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "sql", propOrder = {
-    "value"
-})
-@XmlSeeAlso({
-    Query.class,
-    Update.class
-})
+@XmlType(name = "sql", propOrder = {"value"})
+@XmlSeeAlso({Query.class, Update.class})
 public class Sql {
 
     @XmlValue
