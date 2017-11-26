@@ -28,7 +28,6 @@ public class Sql {
     protected String limit;
     @XmlAttribute(name = "offset")
     protected String offset;
-
     @XmlAttribute(name = "classname")
     protected String classname;
     @XmlAttribute(name = "type")

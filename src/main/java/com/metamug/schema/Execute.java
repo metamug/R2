@@ -12,7 +12,10 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "execute")
+@XmlType(name = "execute", propOrder = {
+    "className",
+    "script"
+})
 public class Execute {
 
     @XmlAttribute(name = "requires")
@@ -21,6 +24,8 @@ public class Execute {
     protected String className;
     @XmlAttribute(name = "when")
     protected String when;
+    @XmlAttribute(name = "script")
+    protected String script;
     @XmlAttribute(name = "status")
     protected Integer status;
 
@@ -82,6 +87,26 @@ public class Execute {
      */
     public void setWhen(String value) {
         this.when = value;
+    }
+
+    /**
+     * Gets the value of the script property.
+     *
+     * @return possible object is {@link String}
+     * 
+     */
+    public String getScript() {
+        return script;
+    }
+
+    /**
+     * Sets the value of the script property.
+     *
+     * @param scriptPath allowed object is {@link String}
+     * 
+     */
+    public void setScript(String scriptPath) {
+        this.script = scriptPath;
     }
 
     /**
