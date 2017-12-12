@@ -99,7 +99,7 @@ public class DocGenerator {
                     }
                 }
             }
-            output = new FileOutputStream(appDirectory + "/docs/list" + ".html");
+            output = new FileOutputStream(appDirectory + "/docs/list.html");
             writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output, "UTF-8"));
             writeEscapedCharacters("<!DOCTYPE html>");
             writer.writeStartElement("head");
