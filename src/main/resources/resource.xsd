@@ -208,6 +208,6 @@
         <xsd:attribute name="classname" type="className"/>
         <xsd:attribute name="script" type="script"/>
         <xsd:attribute name="status" type="status"/>
-        <xsd:assert test="(@script and not(@classname)) or (@classname and @not(script))"/>  
+        <xsd:assert test="(@script and not(@classname)) or (@classname and not(@script))"/>  
     </xsd:complexType>
 </xsd:schema>
