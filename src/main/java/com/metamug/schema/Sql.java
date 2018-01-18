@@ -34,6 +34,8 @@ public class Sql {
     protected SqlType type;
     @XmlAttribute(name = "status")
     protected Integer status;
+    @XmlAttribute(name = "verbose")
+    private Boolean verbose;
 
     /**
      * Gets the value of the value property.
@@ -178,6 +180,26 @@ public class Sql {
      */
     public void setStatus(Integer value) {
         this.status = value;
+    }
+
+    /**
+     * Gets the value of the verbose property.
+     *
+     * @return possible object is {@link Boolean }.
+     *
+     */
+    public Boolean getVerbose() {
+        return verbose;
+    }
+
+    /**
+     * Sets the value of the verbose property.
+     *
+     * @param verbose allowed object is {@link Integer }
+     *
+     */
+    public void setVerbose(Boolean verbose) {
+        this.verbose = verbose;
     }
 
 }
