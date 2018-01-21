@@ -213,7 +213,11 @@ public class Sql {
      *
      */
     public Boolean getPersist() {
-        return persist;
+        if (persist != null) {
+            return persist;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -233,7 +237,11 @@ public class Sql {
      *
      */
     public Boolean getCollect() {
-        return collect;
+        if (collect != null) {
+            return collect;
+        } else {
+            return false;
+        }
     }
 
     /**
