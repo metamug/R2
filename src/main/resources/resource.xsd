@@ -131,7 +131,7 @@
             <xsd:extension base="xsd:string">
                 <xsd:attribute name="requires" type="requires"/>
                 <xsd:attribute name="when" type="xsd:string" />
-                <xsd:attribute name="verbose" type="xsd:boolean" default="false" use="optional"/>
+                <xsd:attribute name="verbose" type="xsd:boolean" use="optional"/>
                 <xsd:attribute name="persist" type="xsd:boolean" default="false" use="optional"/>
                 <xsd:attribute name="collect" type="xsd:boolean" default="false" use="optional"/>
                 <xsd:attribute name="limit">
