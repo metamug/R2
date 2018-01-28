@@ -14,7 +14,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "execute", propOrder = {
     "className",
-    "script"
+    "verbose",
+    "persist",
+    "collect"
 })
 public class Execute {
 
