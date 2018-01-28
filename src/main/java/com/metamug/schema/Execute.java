@@ -24,10 +24,14 @@ public class Execute {
     protected String className;
     @XmlAttribute(name = "when")
     protected String when;
-    @XmlAttribute(name = "script")
-    protected String script;
     @XmlAttribute(name = "status")
     protected Integer status;
+    @XmlAttribute(name = "verbose")
+    private Boolean verbose;
+    @XmlAttribute(name = "persist")
+    private Boolean persist;
+    @XmlAttribute(name = "collect")
+    private Boolean collect;
 
     /**
      * Gets the value of the requires property.
@@ -90,26 +94,6 @@ public class Execute {
     }
 
     /**
-     * Gets the value of the script property.
-     *
-     * @return possible object is {@link String}
-     * 
-     */
-    public String getScript() {
-        return script;
-    }
-
-    /**
-     * Sets the value of the script property.
-     *
-     * @param scriptPath allowed object is {@link String}
-     * 
-     */
-    public void setScript(String scriptPath) {
-        this.script = scriptPath;
-    }
-
-    /**
      * Gets the value of the status property.
      *
      * @return possible object is {@link Integer }
@@ -129,4 +113,71 @@ public class Execute {
         this.status = value;
     }
 
+    /**
+     * Gets the value of the verbose property.
+     *
+     * @return possible object is {@link Boolean}.
+     *
+     */
+    public Boolean getVerbose() {
+        return verbose;
+    }
+
+    /**
+     * Sets the value of the verbose property.
+     *
+     * @param verbose allowed object is {@link Boolean}
+     *
+     */
+    public void setVerbose(Boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    /**
+     * Gets the value of the persist property.
+     *
+     * @return possible object is {@link Boolean}.
+     *
+     */
+    public Boolean getPersist() {
+        if (persist != null) {
+            return persist;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Sets the value of the persist property.
+     *
+     * @param persist allowed object is {@link Boolean}
+     *
+     */
+    public void setPersist(Boolean persist) {
+        this.persist = persist;
+    }
+
+    /**
+     * Gets the value of the collect property.
+     *
+     * @return possible object is {@link Boolean}.
+     *
+     */
+    public Boolean getCollect() {
+        if (collect != null) {
+            return collect;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Sets the value of the collect property.
+     *
+     * @param collect allowed object is {@link Boolean}
+     *
+     */
+    public void setCollect(Boolean collect) {
+        this.collect = collect;
+    }
 }
