@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
     "persist",
     "collect"
 })
-public class Execute {
+public class Execute extends SqlOrExecute {
 
     @XmlAttribute(name = "requires")
     protected String requires;

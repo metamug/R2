@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlValue;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sql", propOrder = {"value"})
 @XmlSeeAlso({Query.class, Update.class})
-public class Sql {
+public class Sql extends SqlOrExecute{
 
     @XmlValue
     protected String value;
