@@ -14,10 +14,12 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "sql")
+@XmlType(name = "sql", propOrder = {"value"})
 @XmlSeeAlso({Query.class, Update.class})
-public class Sql extends SqlOrExecute{
+public class Sql {
 
+    @XmlValue
+    protected String value;
     @XmlAttribute(name = "requires")
     protected String requires;
     @XmlAttribute(name = "when")
@@ -39,6 +41,25 @@ public class Sql extends SqlOrExecute{
     @XmlAttribute(name = "collect")
     private Boolean collect;
 
+    /**
+     * Gets the value of the value property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value of the value property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
 
     /**
      * Gets the value of the requires property.

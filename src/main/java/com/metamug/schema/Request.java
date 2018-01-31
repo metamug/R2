@@ -24,8 +24,7 @@ import javax.xml.bind.annotation.XmlType;
     "desc",
     "param",
     "execute",
-    "sql",
-    "sqlOrExecute"
+    "sql"
 })
 public class Request {
 
@@ -36,18 +35,16 @@ public class Request {
     @XmlElement(name = "Execute")
     protected List<Execute> execute;
     @XmlElements({
-        @XmlElement(name = "Query", type = Query.class)
-        ,
+        @XmlElement(name = "Query", type = Query.class),
         @XmlElement(name = "Update", type = Update.class)
     })
     protected List<Sql> sql;
     @XmlElements({
-        @XmlElement(name = "Query", type = Query.class)
-        ,
+        @XmlElement(name = "Query", type = Query.class),
         @XmlElement(name = "Update", type = Update.class),
         @XmlElement(name = "Execute", type = Execute.class)
     })
-    protected List<SqlOrExecute> sqlOrExecute;
+    protected List<Object> sqlOrExecute;
 //    @XmlAttribute(name = "id")
 //    protected String id; 
     @XmlAttribute(name = "status")
@@ -101,7 +98,7 @@ public class Request {
         return this.sql;
     }
     
-    public List<SqlOrExecute> getSqlOrExecute(){
+    public List<Object> getSqlOrExecute(){
         if(sqlOrExecute == null){
             sqlOrExecute = new ArrayList<>();
         }
