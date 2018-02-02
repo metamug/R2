@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2018.02.01 at 01:06:35 AM IST 
 //
-
-
 package com.metamug.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,12 +12,13 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
-
 /**
- * <p>Java class for sqlOrExecute complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for sqlOrExecute complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType name="sqlOrExecute">
  *   &lt;complexContent>
@@ -28,8 +27,8 @@ import javax.xml.bind.annotation.XmlValue;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sqlOrExecute")
@@ -39,11 +38,10 @@ import javax.xml.bind.annotation.XmlValue;
     Sql.class
 })
 public class SqlOrExecute {
-    
+
     @XmlValue
     protected String value;
 
-    
     /**
      * Gets the value of the value property.
      *

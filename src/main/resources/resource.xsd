@@ -125,13 +125,13 @@
             <xsd:enumeration value="update"/>
         </xsd:restriction>
     </xsd:simpleType>
-
+    
     <xsd:complexType name="sqlOrExecute">
     </xsd:complexType>
 
     <xsd:complexType name="sql">
-        <xsd:complexContent>
-            <xsd:extension base="sqlOrExecute">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
                 <xsd:attribute name="requires" type="requires"/>
                 <xsd:attribute name="when" type="xsd:string" />
                 <xsd:attribute name="verbose" type="xsd:boolean" use="optional"/>
@@ -154,21 +154,17 @@
                 <xsd:attribute name="classname" type="className" />
                 <xsd:attribute name="status" type="status"/>
             </xsd:extension>
-        </xsd:complexContent>
+        </xsd:simpleContent>
     </xsd:complexType>
 
     <xsd:complexType name="execute">
-        <xsd:complexContent>
-            <xsd:extension base="sqlOrExecute">
-                <xsd:attribute name="requires" type="requires"/>
-                <xsd:attribute name="when" type="xsd:string"/>
-                <xsd:attribute name="classname" type="className"/>
-                <xsd:attribute name="verbose" type="xsd:boolean" use="optional"/>
-                <xsd:attribute name="persist" type="xsd:boolean" default="false" use="optional"/>
-                <xsd:attribute name="collect" type="xsd:boolean" default="false" use="optional"/>
-                <xsd:attribute name="status" type="status"/>
-            </xsd:extension>
-        </xsd:complexContent>
+        <xsd:attribute name="requires" type="requires"/>
+        <xsd:attribute name="when" type="xsd:string"/>
+        <xsd:attribute name="classname" type="className"/>
+        <xsd:attribute name="verbose" type="xsd:boolean" use="optional"/>
+        <xsd:attribute name="persist" type="xsd:boolean" default="false" use="optional"/>
+        <xsd:attribute name="collect" type="xsd:boolean" default="false" use="optional"/>
+        <xsd:attribute name="status" type="status"/>
     </xsd:complexType>
 
     <xsd:complexType name="query">

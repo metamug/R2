@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "request", propOrder = {
     "desc",
     "param",
+    "sqlOrExecute",
     "execute",
     "sql"
 })
@@ -35,18 +36,22 @@ public class Request {
     @XmlElement(name = "Execute")
     protected List<Execute> execute;
     @XmlElements({
-        @XmlElement(name = "Query", type = Query.class),
+        @XmlElement(name = "Query", type = Query.class)
+        ,
         @XmlElement(name = "Update", type = Update.class)
     })
     protected List<Sql> sql;
     @XmlElements({
-        @XmlElement(name = "Query", type = Query.class),
-        @XmlElement(name = "Update", type = Update.class),
+        @XmlElement(name = "Query", type = Query.class)
+        ,
+        @XmlElement(name = "Update", type = Update.class)
+        ,
         @XmlElement(name = "Execute", type = Execute.class)
     })
-    protected List<Object> sqlOrExecute;
+    protected List sqlOrExecute;
+
 //    @XmlAttribute(name = "id")
-//    protected String id; 
+//    protected String id;
     @XmlAttribute(name = "status")
     protected Integer status;
     @XmlAttribute(name = "method")
@@ -77,8 +82,11 @@ public class Request {
     }
 
     public List<Execute> getExecute() {
-        if (execute == null) {
-            execute = new ArrayList<>();
+        execute = new ArrayList<>();
+        for (Object object : sqlOrExecute) {
+            if (object instanceof Execute) {
+                execute.add((Execute) object);
+            }
         }
         return this.execute;
     }
@@ -92,14 +100,17 @@ public class Request {
     }
 
     public List<Sql> getSql() {
-        if (sql == null) {
-            sql = new ArrayList<>();
+        sql = new ArrayList<>();
+        for (Object object : sqlOrExecute) {
+            if (object instanceof Sql) {
+                sql.add((Sql) object);
+            }
         }
         return this.sql;
     }
-    
-    public List<Object> getSqlOrExecute(){
-        if(sqlOrExecute == null){
+
+    public List getSqlOrExecute() {
+        if (sqlOrExecute == null) {
             sqlOrExecute = new ArrayList<>();
         }
         return this.sqlOrExecute;
