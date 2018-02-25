@@ -103,22 +103,17 @@ public class RPXParser {
     private final String appName;
     private final File xmlResourceFile;
 
-    public RPXParser() {
-        appDirectory = null;
-        appName = null;
-        xmlResourceFile = null;
-    }
 
     /**
      *
      * @param appDirectory Application path where docs has to be generated.
      * @param appName App name
-     * @param resouceFile XML file to parsed.
+     * @param resourceFile XML file to parsed.
      */
-    public RPXParser(String appDirectory, String appName, File resouceFile) {
+    public RPXParser(String appDirectory, String appName, File resourceFile) {
         this.appDirectory = appDirectory;
         this.appName = appName;
-        this.xmlResourceFile = resouceFile;
+        this.xmlResourceFile = resourceFile;
     }
 
     private void createHtml(Resource resource) throws IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
