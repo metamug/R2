@@ -133,7 +133,9 @@
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
                 <xsd:attribute name="requires" type="requires"/>
-                <xsd:attribute name="when" type="xsd:string" />
+                <xsd:attribute name="when" type="xsd:string"/>
+                <xsd:attribute name="onblank" type="xsd:string"/>
+                <xsd:attribute name="onerror" type="xsd:string"/>
                 <xsd:attribute name="verbose" type="xsd:boolean" use="optional"/>
                 <xsd:attribute name="persist" type="xsd:boolean" default="false" use="optional"/>
                 <xsd:attribute name="collect" type="xsd:boolean" default="false" use="optional"/>
@@ -160,6 +162,7 @@
     <xsd:complexType name="execute">
         <xsd:attribute name="requires" type="requires"/>
         <xsd:attribute name="when" type="xsd:string"/>
+        <xsd:attribute name="onerror" type="xsd:string"/>
         <xsd:attribute name="classname" type="className"/>
         <xsd:attribute name="verbose" type="xsd:boolean" use="optional"/>
         <xsd:attribute name="persist" type="xsd:boolean" default="false" use="optional"/>

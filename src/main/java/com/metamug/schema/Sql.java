@@ -24,6 +24,10 @@ public class Sql {
     protected String requires;
     @XmlAttribute(name = "when")
     protected String when;
+    @XmlAttribute(name = "onblank")
+    protected String onblank;
+    @XmlAttribute(name = "onerror")
+    protected String onerror;
     @XmlAttribute(name = "limit")
     protected String limit;
     @XmlAttribute(name = "offset")
@@ -99,6 +103,46 @@ public class Sql {
      */
     public void setWhen(String value) {
         this.when = value;
+    }
+
+    /**
+     * Gets the value of the onblank property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getOnblank() {
+        return onblank;
+    }
+
+    /**
+     * Sets the value of the onblank property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setOnblank(String value) {
+        this.onblank = value;
+    }
+
+    /**
+     * Gets the value of the onerror property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getOnerror() {
+        return onerror;
+    }
+
+    /**
+     * Sets the value of the onerror property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setOnerror(String value) {
+        this.onerror = value;
     }
 
     /**

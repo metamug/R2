@@ -26,6 +26,8 @@ public class Execute {
     protected String className;
     @XmlAttribute(name = "when")
     protected String when;
+    @XmlAttribute(name = "onerror")
+    protected String onerror;
     @XmlAttribute(name = "status")
     protected Integer status;
     @XmlAttribute(name = "verbose")
@@ -93,6 +95,26 @@ public class Execute {
      */
     public void setWhen(String value) {
         this.when = value;
+    }
+
+    /**
+     * Gets the value of the onerror property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getOnerror() {
+        return onerror;
+    }
+
+    /**
+     * Sets the value of the onerror property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setOnerror(String value) {
+        this.onerror = value;
     }
 
     /**
