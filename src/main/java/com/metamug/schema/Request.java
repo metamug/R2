@@ -22,8 +22,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "request", propOrder = {
     "desc",
+    "paramOrSqlOrExecute",
     "param",
-    "sqlOrExecute",
     "execute",
     "sql"
 })
@@ -42,13 +42,15 @@ public class Request {
     })
     protected List<Sql> sql;
     @XmlElements({
-        @XmlElement(name = "Query", type = Query.class)
+        @XmlElement(name = "Param", type = Param.class)
         ,
-        @XmlElement(name = "Update", type = Update.class)
+    @XmlElement(name = "Query", type = Query.class)
         ,
-        @XmlElement(name = "Execute", type = Execute.class)
+    @XmlElement(name = "Update", type = Update.class)
+        ,
+    @XmlElement(name = "Execute", type = Execute.class)
     })
-    protected List sqlOrExecute;
+    protected List paramOrSqlOrExecute;
 
 //    @XmlAttribute(name = "id")
 //    protected String id;
@@ -83,7 +85,7 @@ public class Request {
 
     public List<Execute> getExecute() {
         execute = new ArrayList<>();
-        for (Object object : sqlOrExecute) {
+        for (Object object : paramOrSqlOrExecute) {
             if (object instanceof Execute) {
                 execute.add((Execute) object);
             }
@@ -101,7 +103,7 @@ public class Request {
 
     public List<Sql> getSql() {
         sql = new ArrayList<>();
-        for (Object object : sqlOrExecute) {
+        for (Object object : paramOrSqlOrExecute) {
             if (object instanceof Sql) {
                 sql.add((Sql) object);
             }
@@ -109,11 +111,11 @@ public class Request {
         return this.sql;
     }
 
-    public List getSqlOrExecute() {
-        if (sqlOrExecute == null) {
-            sqlOrExecute = new ArrayList<>();
+    public List getParamOrSqlOrExecute() {
+        if (paramOrSqlOrExecute == null) {
+            paramOrSqlOrExecute = new ArrayList<>();
         }
-        return this.sqlOrExecute;
+        return this.paramOrSqlOrExecute;
     }
 
 //    public String getId() {

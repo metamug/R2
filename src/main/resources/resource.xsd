@@ -126,7 +126,7 @@
         </xsd:restriction>
     </xsd:simpleType>
     
-    <xsd:complexType name="sqlOrExecute">
+    <xsd:complexType name="paramOrSqlOrExecute">
     </xsd:complexType>
 
     <xsd:complexType name="sql">

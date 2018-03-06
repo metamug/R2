@@ -72,6 +72,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -135,22 +136,27 @@ public class XSDValidationTest {
             List<Request> requests = rs.getRequest();
             if (!requests.isEmpty()) {
                 for (Request request : requests) {
+                    List paramOrSqlOrExecute = request.getParamOrSqlOrExecute();
+                    for (Object object : paramOrSqlOrExecute) {
+//                        System.out.println(object.getClass());
+                    }
                     reqDesc = request.getDesc();
                     method = request.getMethod().value();
                     for (Param p : request.getParam()) {
                         paramName = p.getName();
+                        System.out.println(paramName);
                     }
                     for (Execute e : request.getExecute()) {
                         execClass = e.getClassName();
                         execReq = e.getRequires();
                     }
                     for (Sql sql : request.getSql()) {
-                        System.out.println("SqlType: " + sql.getType().value());
-                        System.out.println("SqlWhen: " + sql.getWhen());
-                        System.out.println("SqlClass: " + sql.getClassname());
-                        System.out.println("SqlRequires: " + sql.getRequires());
-                        System.out.println("SqlVal: " + sql.getValue().trim());
-                        System.out.println();
+//                        System.out.println("SqlType: " + sql.getType().value());
+//                        System.out.println("SqlWhen: " + sql.getWhen());
+//                        System.out.println("SqlClass: " + sql.getClassname());
+//                        System.out.println("SqlRequires: " + sql.getRequires());
+//                        System.out.println("SqlVal: " + sql.getValue().trim());
+//                        System.out.println();
                     }
                 }
             } else {
@@ -169,6 +175,7 @@ public class XSDValidationTest {
         }
     }
 
+    @Ignore
     @Test
     public void TestValidation2() {
         try {
@@ -189,6 +196,7 @@ public class XSDValidationTest {
         }
     }
 
+    @Ignore
     @Test
     public void TestValidation3() {
         try {
