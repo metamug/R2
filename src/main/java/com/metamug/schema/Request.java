@@ -25,7 +25,8 @@ import javax.xml.bind.annotation.XmlType;
     "paramOrSqlOrExecute",
     "param",
     "execute",
-    "sql"
+    "sql",
+    "xrequest"
 })
 public class Request {
 
@@ -35,22 +36,22 @@ public class Request {
     protected List<Param> param;
     @XmlElement(name = "Execute")
     protected List<Execute> execute;
+    @XmlElement(name = "XRequest")
+    protected List<Xrequest> xrequest;
+  
     @XmlElements({
-        @XmlElement(name = "Query", type = Query.class)
-        ,
+        @XmlElement(name = "Query", type = Query.class),
         @XmlElement(name = "Update", type = Update.class)
     })
     protected List<Sql> sql;
     @XmlElements({
-        @XmlElement(name = "Param", type = Param.class)
-        ,
-    @XmlElement(name = "Query", type = Query.class)
-        ,
-    @XmlElement(name = "Update", type = Update.class)
-        ,
-    @XmlElement(name = "Execute", type = Execute.class)
+        @XmlElement(name = "Param", type = Param.class),
+        @XmlElement(name = "Query", type = Query.class),
+        @XmlElement(name = "Update", type = Update.class),
+        @XmlElement(name = "Execute", type = Execute.class),
+        @XmlElement(name = "XRequest", type = Xrequest.class)
     })
-    protected List paramOrSqlOrExecute;
+    protected List paramOrSqlOrExecuteOrXrequest;
 
 //    @XmlAttribute(name = "id")
 //    protected String id;
@@ -85,37 +86,39 @@ public class Request {
 
     public List<Execute> getExecute() {
         execute = new ArrayList<>();
-        for (Object object : paramOrSqlOrExecute) {
+        for (Object object : paramOrSqlOrExecuteOrXrequest) {
             if (object instanceof Execute) {
                 execute.add((Execute) object);
             }
         }
-        return this.execute;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String value) {
-        this.desc = value;
+        return execute;
     }
 
     public List<Sql> getSql() {
         sql = new ArrayList<>();
-        for (Object object : paramOrSqlOrExecute) {
+        for (Object object : paramOrSqlOrExecuteOrXrequest) {
             if (object instanceof Sql) {
                 sql.add((Sql) object);
             }
         }
-        return this.sql;
+        return sql;
     }
 
-    public List getParamOrSqlOrExecute() {
-        if (paramOrSqlOrExecute == null) {
-            paramOrSqlOrExecute = new ArrayList<>();
+    public List<Xrequest> getXRequest() {
+        xrequest = new ArrayList<>();
+        for (Object object : paramOrSqlOrExecuteOrXrequest) {
+            if (object instanceof Xrequest) {
+                xrequest.add((Xrequest) object);
+            }
         }
-        return this.paramOrSqlOrExecute;
+        return xrequest;
+    }
+
+    public List getParamOrSqlOrExecuteOrXrequest() {
+        if (paramOrSqlOrExecuteOrXrequest == null) {
+            paramOrSqlOrExecuteOrXrequest = new ArrayList<>();
+        }
+        return this.paramOrSqlOrExecuteOrXrequest;
     }
 
 //    public String getId() {
@@ -125,6 +128,15 @@ public class Request {
 //    public void setId(String value) {
 //        this.id = value;
 //    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String value) {
+        this.desc = value;
+    }
+    
     public Integer getStatus() {
         return status;
     }
