@@ -136,7 +136,7 @@ public class XSDValidationTest {
             List<Request> requests = rs.getRequest();
             if (!requests.isEmpty()) {
                 for (Request request : requests) {
-                    List paramOrSqlOrExecute = request.getParamOrSqlOrExecute();
+                    List paramOrSqlOrExecute = request.getParamOrSqlOrExecuteOrXrequest();
                     for (Object object : paramOrSqlOrExecute) {
 //                        System.out.println(object.getClass());
                     }
