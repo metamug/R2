@@ -12,8 +12,8 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>
- * <
- * pre>
+ *
+ * <pre>
  * &lt;simpleType name="paramType"> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"> &lt;enumeration value="date"/> &lt;enumeration value="datetime"/> &lt;enumeration value="email"/>
  * &lt;enumeration value="number"/> &lt;enumeration value="text"/> &lt;enumeration value="time"/> &lt;enumeration value="url"/> &lt;/restriction> &lt;/simpleType>
  * </pre>
@@ -55,5 +55,4 @@ public enum ParamType {
         }
         throw new IllegalArgumentException(value);
     }
-
 }

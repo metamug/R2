@@ -16,10 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "desc",
-    "request"
-})
+@XmlType(name = "", propOrder = {"desc", "request"})
 @XmlRootElement(name = "Resource")
 public class Resource {
 
@@ -152,5 +149,4 @@ public class Resource {
     public void setAuth(String auth) {
         this.auth = auth;
     }
-
 }

@@ -7,7 +7,11 @@
 package com.metamug.schema;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -18,10 +22,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "request", propOrder = {
     "desc",
+    "paramOrSqlOrExecute",
     "param",
     "execute",
-    "filter",
-    "sql"
+    "sql",
+    "xrequest"
 })
 public class Request {
 
@@ -31,8 +36,8 @@ public class Request {
     protected List<Param> param;
     @XmlElement(name = "Execute")
     protected List<Execute> execute;
-    @XmlElement(name = "Filter")
-    protected List<Filter> filter;
+    @XmlElement(name = "XRequest")
+    protected List<Xrequest> xrequest;
 
     @XmlElements({
         @XmlElement(name = "Query", type = Query.class)
@@ -40,8 +45,21 @@ public class Request {
         @XmlElement(name = "Update", type = Update.class)
     })
     protected List<Sql> sql;
+    @XmlElements({
+        @XmlElement(name = "Param", type = Param.class)
+        ,
+        @XmlElement(name = "Query", type = Query.class)
+        ,
+        @XmlElement(name = "Update", type = Update.class)
+        ,
+        @XmlElement(name = "Execute", type = Execute.class)
+        ,
+        @XmlElement(name = "XRequest", type = Xrequest.class)
+    })
+    protected List paramOrSqlOrExecuteOrXrequest;
+
 //    @XmlAttribute(name = "id")
-//    protected String id; 
+//    protected String id;
     @XmlAttribute(name = "status")
     protected Integer status;
     @XmlAttribute(name = "method")
@@ -56,40 +74,56 @@ public class Request {
         this.method = method;
     }
 
-    public List<Param> getParam() {
+    public Set<Param> getParam() {
         if (param == null) {
-            param = new ArrayList<>();
+            Set<Param> paramSet = new HashSet<>();
+            return paramSet;
+        } else {
+            Map<String, Param> paramMap = new HashMap<>();
+            param.forEach((Param param1) -> {
+                paramMap.put(param1.name, param1);
+            });
+            Set<Param> paramSet = new HashSet<>();
+            paramSet.addAll(paramMap.values());
+            return paramSet;
         }
-        return this.param;
     }
 
     public List<Execute> getExecute() {
-        if (execute == null) {
-            execute = new ArrayList<>();
+        execute = new ArrayList<>();
+        for (Object object : paramOrSqlOrExecuteOrXrequest) {
+            if (object instanceof Execute) {
+                execute.add((Execute) object);
+            }
         }
-        return this.execute;
-    }
-
-    public List<Filter> getFilter() {
-        if (filter == null) {
-            filter = new ArrayList<>();
-        }
-        return this.filter;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String value) {
-        this.desc = value;
+        return execute;
     }
 
     public List<Sql> getSql() {
-        if (sql == null) {
-            sql = new ArrayList<>();
+        sql = new ArrayList<>();
+        for (Object object : paramOrSqlOrExecuteOrXrequest) {
+            if (object instanceof Sql) {
+                sql.add((Sql) object);
+            }
         }
-        return this.sql;
+        return sql;
+    }
+
+    public List<Xrequest> getXRequest() {
+        xrequest = new ArrayList<>();
+        for (Object object : paramOrSqlOrExecuteOrXrequest) {
+            if (object instanceof Xrequest) {
+                xrequest.add((Xrequest) object);
+            }
+        }
+        return xrequest;
+    }
+
+    public List getParamOrSqlOrExecuteOrXrequest() {
+        if (paramOrSqlOrExecuteOrXrequest == null) {
+            paramOrSqlOrExecuteOrXrequest = new ArrayList<>();
+        }
+        return this.paramOrSqlOrExecuteOrXrequest;
     }
 
 //    public String getId() {
@@ -99,6 +133,14 @@ public class Request {
 //    public void setId(String value) {
 //        this.id = value;
 //    }
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String value) {
+        this.desc = value;
+    }
+
     public Integer getStatus() {
         return status;
     }
@@ -126,5 +168,4 @@ public class Request {
     public void setItem(Boolean value) {
         this.item = value;
     }
-
 }

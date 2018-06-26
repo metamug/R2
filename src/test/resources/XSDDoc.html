@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>XML Schema Documentation</title>
-        <meta http-equiv="Content-Type" content="text/xml; charset=utf-8"/>
+        <meta http-equiv="Content-Type" content="text/xml; charset=iso-8859-1"/>
         <style type="text/css">
             /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
             /* More-configurable styles */
@@ -699,15 +699,11 @@
             <br/>
             <span style="margin-left: 1em; white-space: nowrap">[ <a href="javascript:void(0)" onclick="expandAll(scBoxes)">Expand All</a> | <a href="javascript:void(0)" onclick="collapseAll(scBoxes)">Collapse All</a> ]</span>
          </div>
-         <script type="text/j            avasc            ript">
-            <!--
-       
-                    var gc = getElementObjec                    t("globalControls");
-                    if (gc != null) {
-                 gc.style.display = "block";
-             }
-
-// -->
+         <script type="text/javascript">
+            <!--var gc = getElementObject("global             Controls");-->
+            <!--if (gc != null) {-->
+//                 gc.style.display = "block";
+//             }
 </script>
       </div>
       <h2>Table of Contents</h2>
@@ -867,8 +863,7 @@
             <input type="button"
                    id="schema_scbox_button"
                    class="control"
-                   onclick="switchState('schema_scbox');
-                           return false;"
+                   onclick="switchState('schema_scbox'); return false;"
                    style="display: none"/> 
             <span class="caption">Schema Component Representation</span>
          </div>
@@ -1067,7 +1062,8 @@
             <input type="button"
                    id="type_execute_xibox_button"
                    class="control"
-                   onclick="switchState('type_execute_xibox'); return false;"
+                   onclick="switchState('type_execute_xibox');
+                           return false;"
                    style="display: none"/> 
             <span class="caption">XML Instance Representation</span>
          </div>
@@ -1343,7 +1339,8 @@
             <input type="button"
                    id="type_query_scbox_button"
                    class="control"
-                   onclick="switchState('type_query_scbox'); return false;"
+                   onclick="switchState('type_query_scbox');
+                           return false;"
                    style="display: none"/> 
             <span class="caption">Schema Component Representation</span>
          </div>
@@ -1461,7 +1458,8 @@
             <input type="button"
                    id="type_request_scbox_button"
                    class="control"
-                   onclick="switchState('type_request_scbox'); return false;"
+                   onclick="switchState('type_request_scbox');
+                           return false;"
                    style="display: none"/> 
             <span class="caption">Schema Component Representation</span>
          </div>
@@ -1564,8 +1562,7 @@
             <input type="button"
                    id="type_sql_xibox_button"
                    class="control"
-                   onclick="switchState('type_sql_xibox');
-                           return false;"
+                   onclick="switchState('type_sql_xibox'); return false;"
                    style="display: none"/> 
             <span class="caption">XML Instance Representation</span>
          </div>
@@ -1601,7 +1598,8 @@
             <input type="button"
                    id="type_sql_scbox_button"
                    class="control"
-                   onclick="switchState('type_sql_scbox'); return false;"
+                   onclick="switchState('type_sql_scbox');
+                           return false;"
                    style="display: none"/> 
             <span class="caption">Schema Component Representation</span>
          </div>
@@ -1707,8 +1705,7 @@
             <input type="button"
                    id="type_sqlBase_scbox_button"
                    class="control"
-                   onclick="switchState('type_sqlBase_scbox');
-                           return false;"
+                   onclick="switchState('type_sqlBase_scbox'); return false;"
                    style="display: none"/> 
             <span class="caption">Schema Component Representation</span>
          </div>
@@ -1773,8 +1770,7 @@
             <input type="button"
                    id="type_update_xibox_button"
                    class="control"
-                   onclick="switchState('type_update_xibox');
-                           return false;"
+                   onclick="switchState('type_update_xibox'); return false;"
                    style="display: none"/> 
             <span class="caption">XML Instance Representation</span>
          </div>
@@ -1805,8 +1801,7 @@
             <input type="button"
                    id="type_update_scbox_button"
                    class="control"
-                   onclick="switchState('type_update_scbox');
-                           return false;"
+                   onclick="switchState('type_update_scbox'); return false;"
                    style="display: none"/> 
             <span class="caption">Schema Component Representation</span>
          </div>
@@ -1926,8 +1921,7 @@
             <input type="button"
                    id="type_desc_scbox_button"
                    class="control"
-                   onclick="switchState('type_desc_scbox');
-                           return false;"
+                   onclick="switchState('type_desc_scbox'); return false;"
                    style="display: none"/> 
             <span class="caption">Schema Component Representation</span>
          </div>
@@ -2047,7 +2041,8 @@
             <input type="button"
                    id="type_id_scbox_button"
                    class="control"
-                   onclick="switchState('type_id_scbox'); return false;"
+                   onclick="switchState('type_id_scbox');
+                           return false;"
                    style="display: none"/> 
             <span class="caption">Schema Component Representation</span>
          </div>
@@ -2107,8 +2102,7 @@
             <input type="button"
                    id="type_method_scbox_button"
                    class="control"
-                   onclick="switchState('type_method_scbox');
-                           return false;"
+                   onclick="switchState('type_method_scbox'); return false;"
                    style="display: none"/> 
             <span class="caption">Schema Component Representation</span>
          </div>
@@ -2235,8 +2229,7 @@
             <input type="button"
                    id="type_paramType_scbox_button"
                    class="control"
-                   onclick="switchState('type_paramType_scbox');
-                           return false;"
+                   onclick="switchState('type_paramType_scbox'); return false;"
                    style="display: none"/> 
             <span class="caption">Schema Component Representation</span>
          </div>
@@ -2535,8 +2528,7 @@
                      <a href="javascript:void(0)"
                         title="View Documentation"
                         class="documentation"
-                        onclick="docArray = new Array('Post code must be a four-digit number.');
-                                viewDocumentation('Element', 'postcode', docArray);">?</a>
+                        onclick="docArray = new Array('Post code must be a four-digit number.'); viewDocumentation('Element', 'postcode', docArray);">?</a>
                   </span>
                   <br/>
                </span>
@@ -2667,7 +2659,7 @@
          <p>
             <span class="glossaryTerm">
                <a name="term_Nillable">Nillable</a> 
-            </span>(Applies to element declarations). If an element declaration is nillable, instances can use the <code>xsi:nil</code> attribute. The <code>xsi:nil</code> attribute is the boolean attribute, <em>nil</em>, from the <em>http://www.w3.org/2001/XMLSchema-instance</em> namespace. If an element instance has an <code>xsi:nil</code> attribute set to true, it can be left empty, even though its element declaration may have required content.</p>
+            </span>(Applies to element declarations). If an element declaration is nullable, instances can use the <code>xsi:nil</code> attribute. The <code>xsi:nil</code> attribute is the boolean attribute, <em>nil</em>, from the <em>http://www.w3.org/2001/XMLSchema-instance</em> namespace. If an element instance has an <code>xsi:nil</code> attribute set to true, it can be left empty, even though its element declaration may have required content.</p>
          <p>
             <span class="glossaryTerm">
                <a name="term_Notation">Notation</a> 
@@ -2722,6 +2714,6 @@
                    document.write(document.lastModified);
 // -->
 </script>
-  </p>
+      </p>
    </body>
 </html>

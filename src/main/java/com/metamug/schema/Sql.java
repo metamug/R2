@@ -14,13 +14,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "sql", propOrder = {
-    "value"
-})
-@XmlSeeAlso({
-    Query.class,
-    Update.class
-})
+@XmlType(name = "sql", propOrder = {"value"})
+@XmlSeeAlso({Query.class, Update.class})
 public class Sql {
 
     @XmlValue
@@ -29,17 +24,26 @@ public class Sql {
     protected String requires;
     @XmlAttribute(name = "when")
     protected String when;
+    @XmlAttribute(name = "onblank")
+    protected String onblank;
+    @XmlAttribute(name = "onerror")
+    protected String onerror;
     @XmlAttribute(name = "limit")
     protected String limit;
     @XmlAttribute(name = "offset")
     protected String offset;
-
     @XmlAttribute(name = "classname")
     protected String classname;
     @XmlAttribute(name = "type")
     protected SqlType type;
     @XmlAttribute(name = "status")
     protected Integer status;
+    @XmlAttribute(name = "verbose")
+    private Boolean verbose;
+    @XmlAttribute(name = "persist")
+    private Boolean persist;
+    @XmlAttribute(name = "collect")
+    private Boolean collect;
 
     /**
      * Gets the value of the value property.
@@ -99,6 +103,46 @@ public class Sql {
      */
     public void setWhen(String value) {
         this.when = value;
+    }
+
+    /**
+     * Gets the value of the onblank property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getOnblank() {
+        return onblank;
+    }
+
+    /**
+     * Sets the value of the onblank property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setOnblank(String value) {
+        this.onblank = value;
+    }
+
+    /**
+     * Gets the value of the onerror property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getOnerror() {
+        return onerror;
+    }
+
+    /**
+     * Sets the value of the onerror property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setOnerror(String value) {
+        this.onerror = value;
     }
 
     /**
@@ -186,4 +230,71 @@ public class Sql {
         this.status = value;
     }
 
+    /**
+     * Gets the value of the verbose property.
+     *
+     * @return possible object is {@link Boolean}.
+     *
+     */
+    public Boolean getVerbose() {
+        return verbose;
+    }
+
+    /**
+     * Sets the value of the verbose property.
+     *
+     * @param verbose allowed object is {@link Boolean}
+     *
+     */
+    public void setVerbose(Boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    /**
+     * Gets the value of the persist property.
+     *
+     * @return possible object is {@link Boolean}.
+     *
+     */
+    public Boolean getPersist() {
+        if (persist != null) {
+            return persist;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Sets the value of the persist property.
+     *
+     * @param persist allowed object is {@link Boolean}
+     *
+     */
+    public void setPersist(Boolean persist) {
+        this.persist = persist;
+    }
+
+    /**
+     * Gets the value of the collect property.
+     *
+     * @return possible object is {@link Boolean}.
+     *
+     */
+    public Boolean getCollect() {
+        if (collect != null) {
+            return collect;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Sets the value of the collect property.
+     *
+     * @param collect allowed object is {@link Boolean}
+     *
+     */
+    public void setCollect(Boolean collect) {
+        this.collect = collect;
+    }
 }
