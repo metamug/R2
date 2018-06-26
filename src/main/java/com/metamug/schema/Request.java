@@ -38,17 +38,22 @@ public class Request {
     protected List<Execute> execute;
     @XmlElement(name = "XRequest")
     protected List<Xrequest> xrequest;
-  
+
     @XmlElements({
-        @XmlElement(name = "Query", type = Query.class),
+        @XmlElement(name = "Query", type = Query.class)
+        ,
         @XmlElement(name = "Update", type = Update.class)
     })
     protected List<Sql> sql;
     @XmlElements({
-        @XmlElement(name = "Param", type = Param.class),
-        @XmlElement(name = "Query", type = Query.class),
-        @XmlElement(name = "Update", type = Update.class),
-        @XmlElement(name = "Execute", type = Execute.class),
+        @XmlElement(name = "Param", type = Param.class)
+        ,
+        @XmlElement(name = "Query", type = Query.class)
+        ,
+        @XmlElement(name = "Update", type = Update.class)
+        ,
+        @XmlElement(name = "Execute", type = Execute.class)
+        ,
         @XmlElement(name = "XRequest", type = Xrequest.class)
     })
     protected List paramOrSqlOrExecuteOrXrequest;
@@ -128,7 +133,6 @@ public class Request {
 //    public void setId(String value) {
 //        this.id = value;
 //    }
-
     public String getDesc() {
         return desc;
     }
@@ -136,7 +140,7 @@ public class Request {
     public void setDesc(String value) {
         this.desc = value;
     }
-    
+
     public Integer getStatus() {
         return status;
     }
@@ -164,5 +168,4 @@ public class Request {
     public void setItem(Boolean value) {
         this.item = value;
     }
-
 }

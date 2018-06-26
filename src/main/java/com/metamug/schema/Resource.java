@@ -149,5 +149,4 @@ public class Resource {
     public void setAuth(String auth) {
         this.auth = auth;
     }
-
 }

@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2018.06.19 at 07:00:32 PM IST 
 //
-
-
 package com.metamug.schema;
 
 import java.util.ArrayList;
@@ -17,16 +15,17 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * 
- *                 For making external request to 3rd party APIs
- *             
- * 
- * <p>Java class for xrequest complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
+ * For making external request to 3rd party APIs
+ *
+ *
+ * <p>
+ * Java class for xrequest complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType name="xrequest">
  *   &lt;complexContent>
@@ -46,8 +45,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "xrequest", propOrder = {
@@ -56,8 +55,10 @@ import javax.xml.bind.annotation.XmlType;
 public class Xrequest {
 
     @XmlElements({
-        @XmlElement(name = "Param", type = Xparam.class),
-        @XmlElement(name = "Header", type = Xheader.class),
+        @XmlElement(name = "Param", type = Xparam.class)
+        ,
+        @XmlElement(name = "Header", type = Xheader.class)
+        ,
         @XmlElement(name = "Body", type = String.class)
     })
     protected List<Object> paramOrHeaderOrBody;
@@ -76,42 +77,38 @@ public class Xrequest {
 
     /**
      * Gets the value of the paramOrHeaderOrBody property.
-     * 
+     *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the paramOrHeaderOrBody property.
-     * 
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is
+     * not a <CODE>set</CODE> method for the paramOrHeaderOrBody property.
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getParamOrHeaderOrBody().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Xparam }
+     * Objects of the following type(s) are allowed in the list {@link Xparam }
      * {@link Xheader }
      * {@link String }
-     * 
-     * 
+     *
+     *
+     * @return
      */
     public List<Object> getParamOrHeaderOrBody() {
         if (paramOrHeaderOrBody == null) {
-            paramOrHeaderOrBody = new ArrayList<Object>();
+            paramOrHeaderOrBody = new ArrayList<>();
         }
         return this.paramOrHeaderOrBody;
     }
 
     /**
      * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getId() {
         return id;
@@ -119,11 +116,9 @@ public class Xrequest {
 
     /**
      * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setId(String value) {
         this.id = value;
@@ -131,11 +126,9 @@ public class Xrequest {
 
     /**
      * Gets the value of the when property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getWhen() {
         return when;
@@ -143,11 +136,9 @@ public class Xrequest {
 
     /**
      * Sets the value of the when property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setWhen(String value) {
         this.when = value;
@@ -155,11 +146,9 @@ public class Xrequest {
 
     /**
      * Gets the value of the url property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getUrl() {
         return url;
@@ -167,11 +156,9 @@ public class Xrequest {
 
     /**
      * Sets the value of the url property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setUrl(String value) {
         this.url = value;
@@ -179,11 +166,9 @@ public class Xrequest {
 
     /**
      * Gets the value of the method property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Method }
-     *     
+     *
+     * @return possible object is {@link Method }
+     *
      */
     public Method getMethod() {
         return method;
@@ -191,11 +176,9 @@ public class Xrequest {
 
     /**
      * Sets the value of the method property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Method }
-     *     
+     *
+     * @param value allowed object is {@link Method }
+     *
      */
     public void setMethod(Method value) {
         this.method = value;
@@ -203,11 +186,9 @@ public class Xrequest {
 
     /**
      * Gets the value of the verbose property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     *
+     * @return possible object is {@link Boolean }
+     *
      */
     public Boolean isVerbose() {
         return verbose;
@@ -215,11 +196,9 @@ public class Xrequest {
 
     /**
      * Sets the value of the verbose property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     *
+     * @param value allowed object is {@link Boolean }
+     *
      */
     public void setVerbose(Boolean value) {
         this.verbose = value;
@@ -227,11 +206,9 @@ public class Xrequest {
 
     /**
      * Gets the value of the persist property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     *
+     * @return possible object is {@link Boolean }
+     *
      */
     public boolean isPersist() {
         if (persist == null) {
@@ -243,11 +220,9 @@ public class Xrequest {
 
     /**
      * Sets the value of the persist property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     *
+     * @param value allowed object is {@link Boolean }
+     *
      */
     public void setPersist(Boolean value) {
         this.persist = value;

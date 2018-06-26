@@ -55,5 +55,4 @@ public enum ParamType {
         }
         throw new IllegalArgumentException(value);
     }
-
 }

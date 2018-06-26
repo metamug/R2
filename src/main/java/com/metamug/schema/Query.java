@@ -36,5 +36,4 @@ public class Query
     public Query() {
         this.type = SqlType.QUERY;
     }
-
 }

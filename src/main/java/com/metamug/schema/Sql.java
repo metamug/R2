@@ -297,5 +297,4 @@ public class Sql {
     public void setCollect(Boolean collect) {
         this.collect = collect;
     }
-
 }

@@ -45,5 +45,4 @@ public enum Method {
     public static Method fromValue(String method) {
         return valueOf(method);
     }
-
 }
