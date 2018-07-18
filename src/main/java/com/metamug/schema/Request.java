@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "request", propOrder = {
     "desc",
-    "paramOrSqlOrExecute",
+    "paramOrSqlOrExecuteOrXrequest",
     "param",
     "execute",
     "sql",
