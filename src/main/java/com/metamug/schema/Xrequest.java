@@ -191,7 +191,11 @@ public class Xrequest {
      *
      */
     public Boolean isVerbose() {
-        return verbose;
+        if (verbose == null) {
+            return false;
+        } else {
+            return verbose;
+        }
     }
 
     /**
