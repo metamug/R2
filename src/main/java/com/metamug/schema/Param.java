@@ -63,6 +63,8 @@ public class Param {
     protected String exists;
     @XmlAttribute(name = "value")
     protected String value;
+    @XmlAttribute(name = "testvalue")
+    protected String testvalue;
     @XmlAttribute(name = "type", required = true)
     protected ParamType type;
     @XmlAttribute(name = "required")
@@ -227,7 +229,31 @@ public class Param {
     public void setValue(String value) {
         this.value = value;
     }
+    
+    /**
+     * Gets the value of the testvalue property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getTestvalue() {
+        return testvalue;
+    }
 
+    /**
+     * Sets the value of the testvalue property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setTestvalue(String value) {
+        this.testvalue = value;
+    }
+    
     /**
      * Gets the value of the type property.
      *
