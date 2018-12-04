@@ -32,6 +32,28 @@ public class Resource {
     protected String parent;
     @XmlAttribute(name = "auth")
     private String auth;
+    
+    private boolean testable = false;
+    private List<Request> testableRequests;
+    
+    public boolean isTestable() {
+        return testable;        
+    }
+    
+    public void setTestable(boolean t) {
+        testable = t;
+    }
+    
+    public void addTestableRequest(Request request) {
+        if(testableRequests == null) {
+            testableRequests = new ArrayList<>();
+        }
+        testableRequests.add(request);
+    }
+    
+    public List<Request> getTestableRequests() {
+        return testableRequests;
+    }
 
     /**
      * Gets the value of the desc property.
