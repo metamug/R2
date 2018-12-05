@@ -34,7 +34,6 @@ public class Resource {
     private String auth;
     
     private boolean testable = false;
-    private List<Request> testableRequests;
     
     public boolean isTestable() {
         return testable;        
@@ -42,17 +41,6 @@ public class Resource {
     
     public void setTestable(boolean t) {
         testable = t;
-    }
-    
-    public void addTestableRequest(Request request) {
-        if(testableRequests == null) {
-            testableRequests = new ArrayList<>();
-        }
-        testableRequests.add(request);
-    }
-    
-    public List<Request> getTestableRequests() {
-        return testableRequests;
     }
 
     /**

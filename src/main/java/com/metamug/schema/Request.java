@@ -66,6 +66,16 @@ public class Request {
     protected Method method;
     @XmlAttribute(name = "item")
     protected Boolean item;
+    
+    private boolean testable = false;
+    
+    public boolean isTestable() {
+        return testable;        
+    }
+    
+    public void setTestable(boolean t) {
+        testable = t;
+    }
 
     public Request() {
     }
