@@ -10,7 +10,7 @@
             <xsd:minInclusive value="0"/>
         </xsd:restriction>
     </xsd:simpleType>
-    
+
     <xsd:simpleType name="version">
         <xsd:restriction base="xsd:double">
             <xsd:minExclusive value="0"/>
@@ -40,7 +40,7 @@
             <xsd:minLength value="1"/>
         </xsd:restriction>
     </xsd:simpleType>
-    
+
     <xsd:simpleType name="script">
         <xsd:restriction base="xsd:string">
             <xsd:minLength value="1"/>
@@ -97,13 +97,13 @@
             <xsd:field xpath="@item"/>
         </xsd:unique>
     </xsd:element>
-    
+
     <xsd:simpleType name="desc">
         <xsd:restriction base="xsd:string">
             <xsd:minLength value="1"/>
         </xsd:restriction>
     </xsd:simpleType>
-    
+
     <xsd:simpleType name="xbody">
         <xsd:restriction base="xsd:string">
             <xsd:minLength value="1"/>
@@ -137,13 +137,14 @@
             <xsd:enumeration value="update"/>
         </xsd:restriction>
     </xsd:simpleType>
-    
+
     <xsd:complexType name="paramOrSqlOrExecute">
     </xsd:complexType>
 
     <xsd:complexType name="sql">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
+                <xsd:attribute name="id" type="id" use="required"/>
                 <xsd:attribute name="requires" type="requires"/>
                 <xsd:attribute name="when" type="xsd:string"/>
                 <xsd:attribute name="onblank" type="xsd:string"/>
@@ -172,6 +173,7 @@
     </xsd:complexType>
 
     <xsd:complexType name="execute">
+        <xsd:attribute name="id" type="id" use="required"/>
         <xsd:attribute name="requires" type="requires"/>
         <xsd:attribute name="when" type="xsd:string"/>
         <xsd:attribute name="onerror" type="xsd:string"/>
@@ -181,14 +183,14 @@
         <xsd:attribute name="collect" type="xsd:boolean" default="false" use="optional"/>
         <xsd:attribute name="status" type="status"/>
     </xsd:complexType>
-    
+
     <xsd:complexType name="xparam">
-        <xsd:attribute name="name" type="paramName" use="required"/>      
+        <xsd:attribute name="name" type="paramName" use="required"/>
         <xsd:attribute name="value" type="xsd:string" use="required"/>
     </xsd:complexType>
-    
+
     <xsd:complexType name="xheader">
-        <xsd:attribute name="name" type="headerName" use="required"/>      
+        <xsd:attribute name="name" type="headerName" use="required"/>
         <xsd:attribute name="value" type="xsd:string" use="required"/>
     </xsd:complexType>
 
@@ -205,14 +207,14 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="xrequest">
         <xsd:annotation>
             <xsd:documentation>
                 For making external request to 3rd party APIs
             </xsd:documentation>
-        </xsd:annotation>        
-        <xsd:choice maxOccurs="unbounded">            
+        </xsd:annotation>
+        <xsd:choice maxOccurs="unbounded">
             <xsd:element name="Param" type="xparam" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="Header" type="xheader" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="Body" type="xbody" minOccurs="0" maxOccurs="1"/>
@@ -239,11 +241,10 @@
             <xsd:element name="Update" type="update" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="XRequest" type="xrequest" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:choice>
-        <xsd:attribute name="id" type="id"/>
         <xsd:attribute name="method" type="method" use="required"/>
         <xsd:attribute name="status" type="status"/>
         <xsd:attribute name="item" type="xsd:boolean" default="false"/>
-    </xsd:complexType>   
+    </xsd:complexType>
 
     <xsd:complexType name="param">
         <xsd:annotation>

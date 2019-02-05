@@ -8,30 +8,40 @@
 
 package net.metamug.xml.resource._1;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for execute complex type.
+ * 
+ *                 For making external request to 3rd party APIs
+ *             
+ * 
+ * <p>Java class for xrequest complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="execute">
+ * &lt;complexType name="xrequest">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;choice maxOccurs="unbounded">
+ *         &lt;element name="Param" type="{http://xml.metamug.net/resource/1.0}xparam" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="Header" type="{http://xml.metamug.net/resource/1.0}xheader" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="Body" type="{http://xml.metamug.net/resource/1.0}xbody" minOccurs="0"/>
+ *       &lt;/choice>
  *       &lt;attribute name="id" use="required" type="{http://xml.metamug.net/resource/1.0}id" />
- *       &lt;attribute name="requires" type="{http://xml.metamug.net/resource/1.0}requires" />
  *       &lt;attribute name="when" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="onerror" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="classname" type="{http://xml.metamug.net/resource/1.0}className" />
+ *       &lt;attribute name="url" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="method" use="required" type="{http://xml.metamug.net/resource/1.0}method" />
  *       &lt;attribute name="verbose" type="{http://www.w3.org/2001/XMLSchema}boolean" />
  *       &lt;attribute name="persist" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
- *       &lt;attribute name="collect" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
- *       &lt;attribute name="status" type="{http://xml.metamug.net/resource/1.0}status" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -40,27 +50,60 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "execute")
-public class Execute {
+@XmlType(name = "xrequest", propOrder = {
+    "paramOrHeaderOrBody"
+})
+public class Xrequest {
 
+    @XmlElements({
+        @XmlElement(name = "Param", type = Xparam.class),
+        @XmlElement(name = "Header", type = Xheader.class),
+        @XmlElement(name = "Body", type = String.class)
+    })
+    protected List<Object> paramOrHeaderOrBody;
     @XmlAttribute(name = "id", required = true)
     protected String id;
-    @XmlAttribute(name = "requires")
-    protected String requires;
     @XmlAttribute(name = "when")
     protected String when;
-    @XmlAttribute(name = "onerror")
-    protected String onerror;
-    @XmlAttribute(name = "classname")
-    protected String classname;
+    @XmlAttribute(name = "url", required = true)
+    protected String url;
+    @XmlAttribute(name = "method", required = true)
+    protected Method method;
     @XmlAttribute(name = "verbose")
     protected Boolean verbose;
     @XmlAttribute(name = "persist")
     protected Boolean persist;
-    @XmlAttribute(name = "collect")
-    protected Boolean collect;
-    @XmlAttribute(name = "status")
-    protected Integer status;
+
+    /**
+     * Gets the value of the paramOrHeaderOrBody property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the paramOrHeaderOrBody property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getParamOrHeaderOrBody().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Xparam }
+     * {@link Xheader }
+     * {@link String }
+     * 
+     * 
+     */
+    public List<Object> getParamOrHeaderOrBody() {
+        if (paramOrHeaderOrBody == null) {
+            paramOrHeaderOrBody = new ArrayList<Object>();
+        }
+        return this.paramOrHeaderOrBody;
+    }
 
     /**
      * Gets the value of the id property.
@@ -84,30 +127,6 @@ public class Execute {
      */
     public void setId(String value) {
         this.id = value;
-    }
-
-    /**
-     * Gets the value of the requires property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getRequires() {
-        return requires;
-    }
-
-    /**
-     * Sets the value of the requires property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setRequires(String value) {
-        this.requires = value;
     }
 
     /**
@@ -135,51 +154,51 @@ public class Execute {
     }
 
     /**
-     * Gets the value of the onerror property.
+     * Gets the value of the url property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getOnerror() {
-        return onerror;
+    public String getUrl() {
+        return url;
     }
 
     /**
-     * Sets the value of the onerror property.
+     * Sets the value of the url property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setOnerror(String value) {
-        this.onerror = value;
+    public void setUrl(String value) {
+        this.url = value;
     }
 
     /**
-     * Gets the value of the classname property.
+     * Gets the value of the method property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link Method }
      *     
      */
-    public String getClassname() {
-        return classname;
+    public Method getMethod() {
+        return method;
     }
 
     /**
-     * Sets the value of the classname property.
+     * Sets the value of the method property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link Method }
      *     
      */
-    public void setClassname(String value) {
-        this.classname = value;
+    public void setMethod(Method value) {
+        this.method = value;
     }
 
     /**
@@ -232,58 +251,6 @@ public class Execute {
      */
     public void setPersist(Boolean value) {
         this.persist = value;
-    }
-
-    /**
-     * Gets the value of the collect property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
-     */
-    public boolean isCollect() {
-        if (collect == null) {
-            return false;
-        } else {
-            return collect;
-        }
-    }
-
-    /**
-     * Sets the value of the collect property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
-     */
-    public void setCollect(Boolean value) {
-        this.collect = value;
-    }
-
-    /**
-     * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
-     */
-    public Integer getStatus() {
-        return status;
-    }
-
-    /**
-     * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer }
-     *     
-     */
-    public void setStatus(Integer value) {
-        this.status = value;
     }
 
 }

@@ -14,26 +14,24 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for query complex type.
+ * <p>Java class for paramOrSqlOrExecute complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="query">
- *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://xml.metamug.net/resource/1.0>sql">
- *     &lt;/extension>
- *   &lt;/simpleContent>
+ * &lt;complexType name="paramOrSqlOrExecute">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
  * 
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "query")
-public class Query
-    extends Sql
-{
+@XmlType(name = "paramOrSqlOrExecute")
+public class ParamOrSqlOrExecute {
 
 
 }
