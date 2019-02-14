@@ -81,8 +81,7 @@ public class ParserServiceTest {
             ParserConfigurationException, XPathExpressionException, XMLStreamException, 
                 FileAlreadyExistsException, URISyntaxException {
         
-        File file = new File(ParserServiceTest.class.getClassLoader().getResource(resourceFile).getFile());
-        
+        File file = new File(ParserServiceTest.class.getClassLoader().getResource(resourceFile).getFile());       
         
         ParserService parseService = new ParserService();
 

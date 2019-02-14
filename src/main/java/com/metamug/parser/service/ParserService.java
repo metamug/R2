@@ -98,7 +98,7 @@ import org.xml.sax.SAXException;
  * @author Kainix
  */
 public class ParserService {
-    protected static final String MASON_DATASOURCE = "jdbc/mason";
+    protected static final String MASON_DATASOURCE = "datasource";
     protected static final String MASON_OUTPUT = "masonOutput";
     public static final String MTG_PERSIST_MAP = "mtgPersist";
     
@@ -167,13 +167,16 @@ public class ParserService {
                 initializeRequest(writer, req);
 
                 methodItemList.remove(req.getMethod() + ":" + String.valueOf(req.isItem()));
-
+                
                 //Add UploadListener tag
                 if (req.getMethod().value().equalsIgnoreCase("POST")) 
                     writer.writeEmptyElement("m:upload");
 
-                List sqlOrExecute = req.getParamOrSqlOrExecuteOrXrequest();
-                for (Object object : sqlOrExecute) {
+                List elements = req.getParamOrSqlOrExecuteOrXrequest();
+                elementIds = new HashSet<>();
+                        
+                for (Object object : elements) {
+                    //System.out.println("METHOD");
                     if (object instanceof Param) {
                         Param param = (Param) object;
                         //if a param contains testvalue, mark the request and resource as testable
