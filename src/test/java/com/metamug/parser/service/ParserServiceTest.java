@@ -55,7 +55,6 @@ package com.metamug.parser.service;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -75,14 +74,14 @@ public class ParserServiceTest {
     private final String outputFolder = "/Users/anishhirlekar/mtg/metamug-parser/output";
     String appName = "testWebapp";
     boolean isOldFile = true;
-    
+    String resourceFile = "testwhen.xml";
     
     @Test
     public void testParser() throws SAXException, IOException, TransformerException, JAXBException, 
             ParserConfigurationException, XPathExpressionException, XMLStreamException, 
                 FileAlreadyExistsException, URISyntaxException {
         
-        File file = new File(ParserServiceTest.class.getClassLoader().getResource("testwhen.xml").getFile());
+        File file = new File(ParserServiceTest.class.getClassLoader().getResource(resourceFile).getFile());
         
         
         ParserService parseService = new ParserService();

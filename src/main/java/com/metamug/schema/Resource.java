@@ -32,16 +32,6 @@ public class Resource {
     protected String parent;
     @XmlAttribute(name = "auth")
     private String auth;
-    
-    private boolean testable = false;
-    
-    public boolean isTestable() {
-        return testable;        
-    }
-    
-    public void setTestable(boolean t) {
-        testable = t;
-    }
 
     /**
      * Gets the value of the desc property.

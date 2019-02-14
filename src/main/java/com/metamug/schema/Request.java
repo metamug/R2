@@ -58,24 +58,12 @@ public class Request {
     })
     protected List paramOrSqlOrExecuteOrXrequest;
 
-//    @XmlAttribute(name = "id")
-//    protected String id;
     @XmlAttribute(name = "status")
     protected Integer status;
     @XmlAttribute(name = "method")
     protected Method method;
     @XmlAttribute(name = "item")
     protected Boolean item;
-    
-    private boolean testable = false;
-    
-    public boolean isTestable() {
-        return testable;        
-    }
-    
-    public void setTestable(boolean t) {
-        testable = t;
-    }
 
     public Request() {
     }
