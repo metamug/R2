@@ -217,6 +217,8 @@ public class ParserService {
                     
                     //end m:request
                 closeRequest(writer);
+                
+                writer.writeCharacters(System.lineSeparator());
             }
             
             //print404Cases(writer);
@@ -352,6 +354,9 @@ public class ParserService {
                     throw new SAXException("Offset or limit attribute can't be used for Update query");
                 }
             }
+            
+            writer.writeCharacters(System.lineSeparator());
+            
             if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("update")) 
                 writer.writeStartElement("sql:update");
             else 
@@ -378,6 +383,9 @@ public class ParserService {
 
             writer.writeEndElement();//End of <sql:query/update>
             //Store the sql data in map for <sql:query> or <sql:update>  
+            
+            writer.writeCharacters(System.lineSeparator());
+            
             printSqlEnd(sql,writer);
         }
     }
@@ -454,14 +462,19 @@ public class ParserService {
                 writer.writeAttribute("isRequired", "true");
             }
         }
+            
+        writer.writeCharacters(System.lineSeparator());
+        
         writer.writeEmptyElement("m:execute");
         String execVar = "execResult";
         writer.writeAttribute("var", execVar);
         writer.writeAttribute("className", execute.getClassName());
         writer.writeAttribute("param", enclose("mtgReq"));
+        if (execute.getPersist()) 
+            writer.writeAttribute("persistParam",enclose(MTG_PERSIST_MAP));
 
         //Sets Verbose,Persist and Collect attributes
-        if (execute.getVerbose() == null || execute.getVerbose()) 
+        if (execute.getVerbose() != null && execute.getVerbose()) 
             printCSet(writer, enclose(MASON_OUTPUT), execute.getId(), enclose(execVar) );
         
         if (execute.getPersist()) 
@@ -480,6 +493,9 @@ public class ParserService {
             writer.writeEmptyElement("mtg:status");
             writer.writeAttribute("value", String.valueOf(execute.getStatus()));
         }*/
+        
+        writer.writeCharacters(System.lineSeparator());
+        
         if (execute.getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
@@ -500,12 +516,13 @@ public class ParserService {
             String testString = getQuotedString(xrequest.getWhen());
             writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
         }
+        
+        writer.writeCharacters(System.lineSeparator());
 
         writer.writeStartElement("m:xrequest");
         String xreqVar = "xreqResult";
         writer.writeAttribute("var", xreqVar);
         writer.writeAttribute("method", xrequest.getMethod().name());
-        writer.writeAttribute("param", enclose("mtgReq"));
         writer.writeAttribute("url", xrequest.getUrl());   
 
         for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
@@ -526,7 +543,9 @@ public class ParserService {
             }
         }
 
-        writer.writeEndElement(); //End of <m:xrequest>
+        writer.writeEndElement(); //End of <m:xrequest>    
+        
+        writer.writeCharacters(System.lineSeparator());
         
         if (xrequest.isVerbose()) 
             printCSet(writer, enclose(MASON_OUTPUT), xrequest.getId(), enclose(xreqVar) );

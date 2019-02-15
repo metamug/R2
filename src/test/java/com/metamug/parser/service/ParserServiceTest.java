@@ -52,10 +52,15 @@
  */
 package com.metamug.parser.service;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
@@ -74,7 +79,8 @@ public class ParserServiceTest {
     private final String outputFolder = "/Users/anishhirlekar/mtg/metamug-parser/output";
     String appName = "testWebapp";
     boolean isOldFile = true;
-    String resourceFile = "customer.xml";
+    
+    String resourceFile = "persist.xml";
     
     @Test
     public void testParser() throws SAXException, IOException, TransformerException, JAXBException, 
@@ -89,4 +95,5 @@ public class ParserServiceTest {
         
         System.out.println(jsonObj);
     }
+    
 }

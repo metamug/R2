@@ -10,7 +10,7 @@
         <Request method="GET" item="true">
 		<Query id="getReq2"> 
                  
-                    SELECT * from customer where customer_id=?  
+                    SELECT * from customer where customer_id=$id
                     
                 </Query>
 	</Request>
