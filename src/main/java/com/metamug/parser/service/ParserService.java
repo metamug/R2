@@ -107,7 +107,7 @@ public class ParserService {
     OutputStream output;
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
     File resourceFile;
-    List<String> methodItemList = new ArrayList<String>() {
+    /*List<String> methodItemList = new ArrayList<String>() {
         {
             add("GET:true");
             add("GET:false");
@@ -118,7 +118,7 @@ public class ParserService {
             add("DELETE:true");
             add("DELETE:false");
         }
-    };
+    };*/
     private HashSet<String> elementIds; 
     
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
@@ -148,9 +148,10 @@ public class ParserService {
     }
 
     public Resource parse(File resourceFile, String appName, boolean isOldFile)
-            throws JAXBException, SAXException, IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
+            throws JAXBException, SAXException, IOException, FileNotFoundException, XPathExpressionException, TransformerException, URISyntaxException, XMLStreamException {
         RPXParser parser = new RPXParser(OUTPUT_FOLDER, appName, resourceFile);
         Resource resource = parser.parseFromXml();
+        
         String resourceDir = OUTPUT_FOLDER + File.separator + appName + "/WEB-INF/resources/";
         
         if (!new File(resourceDir + "v" + resource.getVersion()).exists()) 
@@ -159,70 +160,72 @@ public class ParserService {
         if (!new File(resourceDir + "v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp").exists() || isOldFile) {
             output = new FileOutputStream(resourceDir + "v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp");
             XMLStreamWriter writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output));
-
+           
             printHeaderAndGroup(writer, resource);
-
-            writer.writeStartElement("m:request");
+                      
+            elementIds = new HashSet<>();
+            
             for (Request req : resource.getRequest()) {
+                writer.writeStartElement("m:request");
                 initializeRequest(writer, req);
-
-                methodItemList.remove(req.getMethod() + ":" + String.valueOf(req.isItem()));
+                //methodItemList.remove(req.getMethod() + ":" + String.valueOf(req.isItem()));
                 
                 //Add UploadListener tag
-                if (req.getMethod().value().equalsIgnoreCase("POST")) 
+                if (req.getMethod().value().equalsIgnoreCase("POST")) {
                     writer.writeEmptyElement("m:upload");
+                }
 
-                List elements = req.getParamOrSqlOrExecuteOrXrequest();
-                elementIds = new HashSet<>();
+                List elements = req.getParamOrSqlOrExecuteOrXrequest();   
                         
                 for (Object object : elements) {
-                    //System.out.println("METHOD");
                     if (object instanceof Param) {
-                        Param param = (Param) object;
-                        //if a param contains testvalue, mark the request and resource as testable
-                        /*if(param.getTestvalue()!=null){
-                            req.setTestable(true);
-                            resource.setTestable(true);
-                        }*/
+                        Param param = (Param) object;                
                         printParamTag(writer, param);
+
                     } else if (object instanceof Sql) {
                         Sql sql = (Sql) object;
                         elementIds.add(sql.getId());
                         
-                        if (sql.getOnerror() != null && sql.getOnerror().length() > 0) 
-                            startValidateTag(writer, sql.getOnerror());
-                        
+                        if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
+                            startValidateTag(writer, sql.getOnerror());      
+                        }
+                      
                         printSqlTag(sql, writer);
-                        if (sql.getOnerror() != null && sql.getOnerror().length() > 0) 
+                        
+                        if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
                             closeValidateTag(writer);
+                        }
                         
                     } else if (object instanceof Execute) {
                         Execute execute = (Execute) object;
                         elementIds.add(execute.getId());
+                        
                         printExecuteTag(execute, writer);
+                        
                     } else if (object instanceof Xrequest) {
                         Xrequest xr = (Xrequest) object;
                         elementIds.add(xr.getId());
+                        
                         printXrequestTag(xr, writer);
                     }
                 }
                 //printGlobalOutput(writer, resourceFile);
-
-                //printDefaultCase(req, writer);
-
-                //printRequestStatus(req, writer);
-
-                //end m:request
+                
+                    //printDefaultCase(req, writer);
+                    
+                    //printRequestStatus(req, writer);
+                    
+                    //end m:request
                 closeRequest(writer);
             }
             
             //print404Cases(writer);
             //declareNonImplementedMethod(writer);
-            
+                
             writer.writeEndElement();//end m:resource
-            
             writer.flush();
             writer.close();
+               
             output.close();
             escapeSpecialCharacters(resource, appName, resourceFile);
             return resource;
@@ -276,8 +279,6 @@ public class ParserService {
      */
     private void initializeRequest(XMLStreamWriter writer, Request req) throws XMLStreamException {
         writer.writeAttribute("method",req.getMethod().toString());
-        if (req.isItem())
-            writer.writeAttribute("item", "true");
     }
 
     /**

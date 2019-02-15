@@ -74,7 +74,7 @@ public class ParserServiceTest {
     private final String outputFolder = "/Users/anishhirlekar/mtg/metamug-parser/output";
     String appName = "testWebapp";
     boolean isOldFile = true;
-    String resourceFile = "testwhen.xml";
+    String resourceFile = "customer.xml";
     
     @Test
     public void testParser() throws SAXException, IOException, TransformerException, JAXBException, 

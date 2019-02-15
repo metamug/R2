@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Resource xmlns="http://xml.metamug.net/resource/1.0" v="1.0">
+
+	<Request method="GET">
+		<Query id="getReq1" when="$q eq 1"> SELECT 'Hello When!' </Query>
+		<Query id="getReq1" when="$q eq 2"> SELECT * from customer </Query>
+	</Request>
+        
+        <Request method="POST">
+		<Query id="getReq2"> 
+                 
+                    SELECT * from customer where customer_id=?  
+                    
+                </Query>
+	</Request>
+
+</Resource>
