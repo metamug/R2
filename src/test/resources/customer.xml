@@ -7,7 +7,7 @@
 		<Query id="getReq1" when="$q eq 2"> SELECT * from customer </Query>
 	</Request>
         
-        <Request method="POST">
+        <Request method="GET" item="true">
 		<Query id="getReq2"> 
                  
                     SELECT * from customer where customer_id=?  

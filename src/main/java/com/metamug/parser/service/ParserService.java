@@ -278,7 +278,9 @@ public class ParserService {
      * @throws XMLStreamException
      */
     private void initializeRequest(XMLStreamWriter writer, Request req) throws XMLStreamException {
-        writer.writeAttribute("method",req.getMethod().toString());
+        writer.writeAttribute("method",req.getMethod().value());
+        if (req.isItem())
+            writer.writeAttribute("item", "true");
     }
 
     /**
