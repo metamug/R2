@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Resource auth="supplier" xmlns="http://xml.metamug.net/resource/1.0" v="1.0">
+
+    <Request method="GET">
+        <Query id="d0"> SELECT * from customer
+        </Query>
+
+    </Request>
+    
+</Resource>
