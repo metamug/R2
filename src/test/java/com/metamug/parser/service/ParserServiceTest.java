@@ -76,11 +76,11 @@ import org.xml.sax.SAXException;
  */
 public class ParserServiceTest {
     
-    private final String outputFolder = "/Users/anishhirlekar/mtg/metamug-parser/output";
+    private final String outputFolder = "/Users/anishhirlekar/parser-output";
     String appName = "testWebapp";
     boolean isOldFile = true;
     
-    String resourceFile = "persist.xml";
+    String resourceFile = "movie.xml";
     
     @Test
     public void testParser() throws SAXException, IOException, TransformerException, JAXBException, 

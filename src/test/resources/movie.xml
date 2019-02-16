@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource xmlns="http://xml.metamug.net/resource/1.0" v="1.1">
+
+    <Request method="GET">
+       <Query id="getResult">SELECT * FROM movie
+       </Query>
+    </Request>
+
+    <Request method='POST'>
+       <Update id="postResult" verbose="true">
+            INSERT INTO movie (name,rating) values ($name,$rating)
+
+       </Update>
+    </Request>
+
+    <Request method='PUT' item="true">
+       <Update id="putResult" verbose="true">
+            UPDATE movie SET rating=$rating where id=$id
+       </Update>
+    </Request>
+
+    <Request method='DELETE' item="true">
+        <Update id="deleteResult" verbose="true">
+            DELETE FROM movie WHERE id=$id
+
+        </Update>
+    </Request>
+
+</Resource>
