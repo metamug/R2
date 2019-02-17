@@ -66,6 +66,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -80,20 +81,21 @@ public class ParserServiceTest {
     String appName = "testWebapp";
     boolean isOldFile = true;
     
-    String resourceFile = "result.xml";
-    
     @Test
     public void testParser() throws SAXException, IOException, TransformerException, JAXBException, 
             ParserConfigurationException, XPathExpressionException, XMLStreamException, 
                 FileAlreadyExistsException, URISyntaxException {
         
-        File file = new File(ParserServiceTest.class.getClassLoader().getResource(resourceFile).getFile());       
+        File resDir = new File(ParserServiceTest.class.getClassLoader().getResource(".").getFile());  
         
         ParserService parseService = new ParserService();
-
-        JSONObject jsonObj = parseService.transform(file, appName, isOldFile, outputFolder);
+      
+        for(File file: resDir.listFiles()){
+            if(FilenameUtils.getExtension(file.toString()).equals("xml")) {
+                JSONObject jsonObj = parseService.transform(file, appName, isOldFile, outputFolder);
         
-        System.out.println(jsonObj);
+                System.out.println(jsonObj);
+            }
+        }       
     }
-    
 }
