@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource xmlns="http://xml.metamug.net/resource/1.0" v="1.0">
+
+    <Request method="GET">
+	<Execute classname="com.metamug.plugin.RequestExample" id="execRes"
+                  verbose="true" />
+            
+    </Request>
+ 
+</Resource>

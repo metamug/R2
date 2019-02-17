@@ -80,7 +80,7 @@ public class ParserServiceTest {
     String appName = "testWebapp";
     boolean isOldFile = true;
     
-    String resourceFile = "xrequest.xml";
+    String resourceFile = "result.xml";
     
     @Test
     public void testParser() throws SAXException, IOException, TransformerException, JAXBException, 
