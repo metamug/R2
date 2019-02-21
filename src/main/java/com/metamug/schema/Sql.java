@@ -24,6 +24,8 @@ public class Sql {
     protected String id;
     @XmlAttribute(name = "requires")
     protected String requires;
+    @XmlAttribute(name = "ref")
+    protected String ref;
     @XmlAttribute(name = "when")
     protected String when;
     @XmlAttribute(name = "onblank")
@@ -109,6 +111,30 @@ public class Sql {
      */
     public void setRequires(String value) {
         this.requires = value;
+    }
+    
+    /**
+     * Gets the value of the ref property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getRef() {
+        return ref;
+    }
+
+    /**
+     * Sets the value of the ref property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setRef(String value) {
+        this.ref = value;
     }
 
     /**

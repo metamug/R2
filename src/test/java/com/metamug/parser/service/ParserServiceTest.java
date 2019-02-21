@@ -52,15 +52,10 @@
  */
 package com.metamug.parser.service;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.file.FileAlreadyExistsException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
