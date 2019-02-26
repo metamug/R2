@@ -77,7 +77,30 @@
             <xsd:sequence>
                 <xsd:element name="Desc" type="desc" minOccurs="0" maxOccurs="1"/>
                 <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="Request" type="request"/>
+                    <xsd:element name="Request">
+                        <xsd:complexType>
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    For processing incoming request and sending back response.
+                                </xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:choice maxOccurs="unbounded">
+                                <xsd:element name="Desc" type="desc" minOccurs="0" maxOccurs="1"/>
+                                <xsd:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded"/>
+                                <xsd:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded"/>
+                                <xsd:element name="Query" type="query" minOccurs="0" maxOccurs="unbounded"/>
+                                <xsd:element name="Update" type="update" minOccurs="0" maxOccurs="unbounded"/>
+                                <xsd:element name="XRequest" type="xrequest" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:choice>
+                            <xsd:attribute name="method" type="method" use="required"/>
+                            <xsd:attribute name="status" type="status"/>
+                            <xsd:attribute name="item" type="xsd:boolean" default="false"/>
+                        </xsd:complexType>
+                        <xsd:unique name="uniqueWhen">
+                            <xsd:selector xpath="mtmg:*"/>
+                            <xsd:field xpath="@when"/>
+                        </xsd:unique>
+                    </xsd:element>
                 </xsd:choice>
             </xsd:sequence>
             <!--<xsd:attribute name="id" type="id" />-->
@@ -95,6 +118,10 @@
             <xsd:selector xpath="mtmg:Request"/>
             <xsd:field xpath="@method"/>
             <xsd:field xpath="@item"/>
+        </xsd:unique>
+        <xsd:unique name="uniqueId">
+            <xsd:selector xpath="mtmg:Request/*"/>
+            <xsd:field xpath="@id"/>
         </xsd:unique>
     </xsd:element>
 
@@ -226,25 +253,6 @@
         <xsd:attribute name="method" type="method" use="required"/>
         <xsd:attribute name="verbose" type="xsd:boolean" use="optional"/>
         <xsd:attribute name="persist" type="xsd:boolean" default="false" use="optional"/>
-    </xsd:complexType>
-
-    <xsd:complexType name="request">
-        <xsd:annotation>
-            <xsd:documentation>
-                For processing incoming request and sending back response.
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:choice maxOccurs="unbounded">
-            <xsd:element name="Desc" type="desc" minOccurs="0" maxOccurs="1"/>
-            <xsd:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="Query" type="query" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="Update" type="update" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="XRequest" type="xrequest" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:choice>
-        <xsd:attribute name="method" type="method" use="required"/>
-        <xsd:attribute name="status" type="status"/>
-        <xsd:attribute name="item" type="xsd:boolean" default="false"/>
     </xsd:complexType>
 
     <xsd:complexType name="param">

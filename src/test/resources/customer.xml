@@ -4,7 +4,7 @@
 
 	<Request method="GET">
 		<Query id="getReq1" when="$q eq 1"> SELECT 'Hello When!' </Query>
-		<Query id="getReq1" when="$q eq 2"> SELECT * from customer </Query>
+		<Query id="getReq3" when="$q eq 3"> SELECT * from customer </Query>
 	</Request>
         
         <Request method="GET" item="true">

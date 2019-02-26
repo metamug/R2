@@ -10,7 +10,7 @@
     
     <Request method="POST">
 	<XRequest verbose="true"
-            id="xreqvalue" url="https://postman-echo.com/post" method="POST" >
+            id="xreqvalue2" url="https://postman-echo.com/post" method="POST" >
             <Header name="Content-Type" value="application/json"/>
             <Body>
                 {

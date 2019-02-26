@@ -20,7 +20,7 @@
                 SELECT * from customer WHERE customer_id=$id
             </Query>    
             
-            <Query id="getResult">
+            <Query id="getResult2">
                 SELECT $query1.customer_name AS 'resultName'
             </Query>
             
@@ -28,7 +28,7 @@
         
         <Request method="POST">
         
-            <Query id="query1" persist="true" verbose="false">
+            <Query id="query2" persist="true" verbose="false">
                 SELECT * from customer WHERE customer_id=$customer_id
             </Query>
         

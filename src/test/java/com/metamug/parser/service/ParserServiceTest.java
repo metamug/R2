@@ -87,6 +87,8 @@ public class ParserServiceTest {
       
         for(File file: resDir.listFiles()){
             if(FilenameUtils.getExtension(file.toString()).equals("xml")) {
+                System.out.println(file.getName());
+                
                 JSONObject jsonObj = parseService.transform(file, appName, isOldFile, outputFolder);
         
                 System.out.println(jsonObj);
