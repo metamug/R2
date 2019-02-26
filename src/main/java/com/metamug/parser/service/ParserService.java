@@ -53,6 +53,7 @@
  */
 package com.metamug.parser.service;
 
+import com.metamug.api.mason.services.QueryTesterService;
 import com.metamug.parser.RPXParser;
 import com.metamug.schema.Execute;
 import com.metamug.schema.Param;
@@ -130,14 +131,10 @@ public class ParserService {
         OUTPUT_FOLDER = outputFolder;
         JSONObject obj = new JSONObject();
         Resource resource = parse(uploadedFile, appName, isOldFile);
-        //if resource is testable, simulate the testable requests
-        /*if(resource.isTestable()){
-            for (Request req : resource.getRequest()) {
-                //okhttp here
-                String method = req.getMethod().value();
-            }
-        }*/
-
+       
+        QueryTesterService qryTestService = new QueryTesterService();
+        JSONObject queryTestResult = qryTestService.testQueries(resource);
+        
         obj.put("version", resource.getVersion());
         if (resource.getAuth() != null && !resource.getAuth().isEmpty()) {
             obj.put("secure", true);
@@ -766,6 +763,7 @@ public class ParserService {
     }
     
     protected boolean paramIsPersisted(String paramName){
+        //first segment of mpath param is an element id
         return elementIds.contains(paramName.split("\\.")[0]);
     }
 
