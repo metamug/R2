@@ -53,7 +53,6 @@
  */
 package com.metamug.parser.service;
 
-import com.metamug.api.mason.services.QueryTesterService;
 import com.metamug.parser.RPXParser;
 import com.metamug.schema.Execute;
 import com.metamug.schema.Param;
@@ -64,6 +63,7 @@ import com.metamug.schema.Xheader;
 import com.metamug.schema.Xparam;
 import com.metamug.schema.Xrequest;
 import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -75,6 +75,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,16 +126,25 @@ public class ParserService {
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
 
-    public JSONObject transform(File uploadedFile, String appName, boolean isOldFile, String outputFolder)
-            throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException, XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException, URISyntaxException, IOException {
+    public JSONObject transform(File uploadedFile, String appName, boolean isOldFile, String outputFolder, String domain)
+            throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException,
+                    XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException, 
+                        URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException {
         this.appName = appName;
         OUTPUT_FOLDER = outputFolder;
-        JSONObject obj = new JSONObject();
-        Resource resource = parse(uploadedFile, appName, isOldFile);
-       
-        QueryTesterService qryTestService = new QueryTesterService();
-        JSONObject queryTestResult = qryTestService.testQueries(resource);
         
+        RPXParser parser = new RPXParser(OUTPUT_FOLDER, appName, uploadedFile);
+        Resource parsedResource = parser.parseFromXml();
+                
+        //todo make test queries requests
+        if(null != domain) {
+            ResourceTestService testService = new ResourceTestService();
+            testService.testResource(parsedResource, domain, appName);
+        }
+       
+        Resource resource = createJsp(parsedResource, uploadedFile, isOldFile);
+        
+        JSONObject obj = new JSONObject();
         obj.put("version", resource.getVersion());
         if (resource.getAuth() != null && !resource.getAuth().isEmpty()) {
             obj.put("secure", true);
@@ -144,12 +154,12 @@ public class ParserService {
         return obj;
     }
 
-    public Resource parse(File resourceFile, String appName, boolean isOldFile)
-            throws JAXBException, SAXException, IOException, FileNotFoundException, XPathExpressionException, TransformerException, URISyntaxException, XMLStreamException {
-        RPXParser parser = new RPXParser(OUTPUT_FOLDER, appName, resourceFile);
-        Resource resource = parser.parseFromXml();
-        
-        String resourceDir = OUTPUT_FOLDER + File.separator + appName + "/WEB-INF/resources/";
+    public Resource createJsp(Resource resource, File resourceFile, boolean isOldFile)
+            throws JAXBException, SAXException, IOException, FileNotFoundException, XPathExpressionException, 
+                    TransformerException, URISyntaxException, XMLStreamException {
+             
+        String resourceDir = OUTPUT_FOLDER + File.separator + appName + File.separator + 
+                "WEB-INF"+File.separator+"resources"+File.separator;
         
         if (!new File(resourceDir + "v" + resource.getVersion()).exists()) 
             Files.createDirectories(Paths.get(resourceDir + "v" + resource.getVersion()));
@@ -165,7 +175,6 @@ public class ParserService {
             for (Request req : resource.getRequest()) {
                 writer.writeStartElement("m:request");
                 initializeRequest(writer, req);
-                //methodItemList.remove(req.getMethod() + ":" + String.valueOf(req.isItem()));
                 
                 //Add UploadListener tag
                 if (req.getMethod().value().equalsIgnoreCase("POST")) {
@@ -227,6 +236,7 @@ public class ParserService {
                
             output.close();
             escapeSpecialCharacters(resource, appName, resourceFile);
+            
             return resource;
         } else {
             //user is trying to create new resource with already created resource 

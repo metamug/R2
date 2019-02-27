@@ -52,78 +52,72 @@
  */
 package com.metamug.parser.service;
 
+import com.metamug.parser.util.Utils;
+import com.metamug.schema.Param;
+import com.metamug.schema.Request;
+import com.metamug.schema.Resource;
+import com.metamug.schema.Sql;
 import java.beans.PropertyVetoException;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.io.FilenameUtils;
+import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Test;
-import org.xml.sax.SAXException;
 
 /**
  *
  * @author anishhirlekar
  */
-public class ParserServiceTest {
+public class ResourceTestService {
     
-    private final String outputFolder = "/Users/anishhirlekar/parser-output";
-    String appName = "testWebapp";
-    boolean isOldFile = true;
-    
-    @Test
-    public void testParser() {
+    public JSONObject testResource(Resource resource, String domain, String appName) 
+            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException{
+        JSONObject result = new JSONObject();
         
-        File resDir = new File(ParserServiceTest.class.getClassLoader().getResource(".").getFile());  
-        
-        ParserService parseService = new ParserService();
-      
-        for(File file: resDir.listFiles()){
-            if(FilenameUtils.getExtension(file.toString()).equals("xml")) {
-                try {
-                    System.out.println(file.getName());
+        for (Request req : resource.getRequest()) {
+            List elements = req.getParamOrSqlOrExecuteOrXrequest();  
+            for (Object object : elements) {
+                if (object instanceof Sql) {
+                    Sql sql = (Sql) object;
+                    String id = sql.getId();
                     
-                    JSONObject jsonObj = parseService.transform(file, appName, isOldFile, outputFolder, null);
+                    JSONArray res;
                     
-                    System.out.println(jsonObj);
+                    if(null != sql.getRef()){
+                        res = executeQuery(sql.getRef(), appName, domain, "queryref");
+                    } else {
+                        res = executeQuery(sql.getValue(), appName, domain, "query");
+                    }
                     
-                } catch (SAXException ex) {                
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (FileNotFoundException ex) {       
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (XMLStreamException ex) {          
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (XPathExpressionException ex) {    
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ParserConfigurationException ex) {
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (TransformerException ex) {    
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (JAXBException ex) {           
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (URISyntaxException ex) {      
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {             
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {            
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {  
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (PropertyVetoException ex) {   
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (Exception ex) {                                        
-                    System.out.println(ex.getMessage());
+                    result.put(id, res);
                 }
             }
-        }       
+        }
+        
+        return result;
+    }
+    
+    private JSONArray executeQuery(String query, String appName, String domain, String type) 
+            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException {
+        
+        JSONArray tablesArray = new JSONArray();
+        JSONObject tableData = new JSONObject();
+        String result = Utils.executeQueryInApp(domain + "/" + appName, type, query);
+        
+        if (result == null || result.isEmpty()) {
+            tableData.put("status", 204);
+            tablesArray.put(tableData);
+            return tablesArray;
+        } else {
+            try {
+                JSONArray resultArray = new JSONArray(result);
+                return resultArray;
+            } catch (JSONException ex) {
+                tableData.put("status", 204);
+                tablesArray.put(tableData);
+                return tablesArray;
+            }
+        }
     }
 }
