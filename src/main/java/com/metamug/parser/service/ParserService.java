@@ -54,6 +54,7 @@
 package com.metamug.parser.service;
 
 import com.metamug.parser.RPXParser;
+import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.schema.Execute;
 import com.metamug.schema.Param;
 import com.metamug.schema.Request;
@@ -129,7 +130,7 @@ public class ParserService {
     public JSONObject transform(File uploadedFile, String appName, boolean isOldFile, String outputFolder, String domain)
             throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException,
                     XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException, 
-                        URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException {
+                        URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
         this.appName = appName;
         OUTPUT_FOLDER = outputFolder;
         

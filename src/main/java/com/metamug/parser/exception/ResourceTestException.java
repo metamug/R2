@@ -50,81 +50,15 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.parser.service;
-
-import com.metamug.parser.exception.ResourceTestException;
-import com.metamug.parser.util.Utils;
-import com.metamug.schema.Request;
-import com.metamug.schema.Resource;
-import com.metamug.schema.Sql;
-import java.beans.PropertyVetoException;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+package com.metamug.parser.exception;
 
 /**
  *
  * @author anishhirlekar
  */
-public class ResourceTestService {
-    
-    public JSONObject testResource(Resource resource, String domain, String appName) 
-            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException{
-        JSONObject result = new JSONObject();
-        
-        for (Request req : resource.getRequest()) {
-            List elements = req.getParamOrSqlOrExecuteOrXrequest();  
-            for (Object object : elements) {
-                if (object instanceof Sql) {
-                    Sql sql = (Sql) object;
-                    String id = sql.getId();
-                    
-                    JSONArray res;
-                    
-                    if(null != sql.getRef()){
-                        res = executeQuery(sql.getRef(), appName, domain, "queryref");
-                    } else {
-                        res = executeQuery(sql.getValue(), appName, domain, "query");
-                    }
-                    
-                    result.put(id, res);
-                }
-            }
-        }     
-        
-        verifyResult(result);
-        
-        return result;
-    }
-    
-    private void verifyResult(JSONObject res) throws ResourceTestException{
-        //todo iterate over results and create exception message for failed queries
-        //throw ResourceTestException with the message
-    }
-    
-    private JSONArray executeQuery(String query, String appName, String domain, String type) 
-            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException {
-        
-        JSONArray tablesArray = new JSONArray();
-        JSONObject tableData = new JSONObject();
-        String result = Utils.executeQueryInApp(domain + "/" + appName, type, query);
-        
-        if (result == null || result.isEmpty()) {
-            tableData.put("status", 204);
-            tablesArray.put(tableData);
-            return tablesArray;
-        } else {
-            try {
-                JSONArray resultArray = new JSONArray(result);
-                return resultArray;
-            } catch (JSONException ex) {
-                tableData.put("status", 204);
-                tablesArray.put(tableData);
-                return tablesArray;
-            }
-        }
+public class ResourceTestException extends Exception {
+
+    public ResourceTestException(String message) {
+        super(message);
     }
 }
