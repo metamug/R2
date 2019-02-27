@@ -52,6 +52,7 @@
  */
 package com.metamug.parser.service;
 
+import com.metamug.parser.exception.ResourceTestException;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -96,32 +97,10 @@ public class ParserServiceTest {
                     
                     System.out.println(jsonObj);
                     
-                } catch (SAXException ex) {                
+                } catch (SAXException | XMLStreamException | XPathExpressionException | ParserConfigurationException 
+                        | TransformerException | JAXBException | URISyntaxException | IOException | SQLException 
+                               | ClassNotFoundException | PropertyVetoException | ResourceTestException ex) {                                        
                     Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (FileNotFoundException ex) {       
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (XMLStreamException ex) {          
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (XPathExpressionException ex) {    
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ParserConfigurationException ex) {
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (TransformerException ex) {    
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (JAXBException ex) {           
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (URISyntaxException ex) {      
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {             
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {            
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {  
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (PropertyVetoException ex) {   
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (Exception ex) {                                        
-                    System.out.println(ex.getMessage());
                 }
             }
         }       

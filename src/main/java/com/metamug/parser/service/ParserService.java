@@ -129,7 +129,7 @@ public class ParserService {
 
     public JSONObject transform(File uploadedFile, String appName, boolean isOldFile, String outputFolder, String domain)
             throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException,
-                    XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException, 
+                  XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException, 
                         URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
         this.appName = appName;
         OUTPUT_FOLDER = outputFolder;

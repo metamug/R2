@@ -60,6 +60,7 @@ import com.metamug.schema.Sql;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -100,9 +101,33 @@ public class ResourceTestService {
         return result;
     }
     
-    private void verifyResult(JSONObject res) throws ResourceTestException{
-        //todo iterate over results and create exception message for failed queries
-        //throw ResourceTestException with the message
+    private void verifyResult(JSONObject res) throws ResourceTestException {
+        StringBuilder sb = new StringBuilder("Errors occurred in following queries");
+        sb.append(System.getProperty("line.separator"));
+        
+        boolean error = false;
+        Iterator<String> keys = res.keys();
+        while(keys.hasNext()) {
+            String queryId = keys.next();
+            JSONArray array = res.getJSONArray(queryId);
+            JSONObject queryResult = array.getJSONObject(0);
+            
+            int status = queryResult.getInt("status");
+            if(status == 500 || status == 403){
+                error = true;
+                JSONArray data = queryResult.getJSONArray("data");
+                String message = data.getString(0);
+                
+                sb.append("Ref: ").append(queryId);
+                sb.append(System.getProperty("line.separator"));
+                sb.append("Error: ").append(message);
+                sb.append(System.getProperty("line.separator"));
+            }
+        }
+        
+        if(error){
+            throw new ResourceTestException(sb.toString());
+        }
     }
     
     private JSONArray executeQuery(String query, String appName, String domain, String type) 
