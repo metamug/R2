@@ -81,17 +81,14 @@ public class ResourceTestService {
             for (Object object : elements) {
                 if (object instanceof Sql) {
                     Sql sql = (Sql) object;
-                    String id = sql.getId();
+                    String ref = sql.getRef();
                     
-                    JSONArray res;
-                    
-                    if(null != sql.getRef()){
-                        res = executeQuery(sql.getRef(), appName, domain, "queryref");
+                    if(null != ref){
+                        JSONArray res = executeQuery(ref, appName, domain, "queryref");
+                        result.put(ref, res);
                     } else {
-                        res = executeQuery(sql.getValue(), appName, domain, "query");
-                    }
-                    
-                    result.put(id, res);
+                        //todo add query to catalog table
+                    }                    
                 }
             }
         }     
@@ -113,7 +110,7 @@ public class ResourceTestService {
             JSONObject queryResult = array.getJSONObject(0);
             
             int status = queryResult.getInt("status");
-            if(status == 500 || status == 403){
+            if(status == 500 || status == 403 || status == 404){
                 error = true;
                 JSONArray data = queryResult.getJSONArray("data");
                 String message = data.getString(0);
