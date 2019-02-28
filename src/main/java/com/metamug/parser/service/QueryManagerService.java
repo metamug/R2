@@ -54,97 +54,79 @@ package com.metamug.parser.service;
 
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.util.Utils;
-import com.metamug.schema.Request;
-import com.metamug.schema.Resource;
-import com.metamug.schema.Sql;
-import java.beans.PropertyVetoException;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import static javax.ws.rs.core.HttpHeaders.USER_AGENT;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  *
  * @author anishhirlekar
  */
-public class ResourceTestService {
+public class QueryManagerService {
     
-    public JSONObject testResource(Resource resource, String domain, String appName) 
-            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException{
-        JSONObject result = new JSONObject();
+    public static final String ACTION_SAVE_REF_TAG = "refsavewithtag";
+    public static final String ACTION_SAVE_QUERY_TAG = "querysavewithtag";
+    
+    public String saveRefWithTag(String url, String ref, String resname, String resversion, String tag) throws IOException, ResourceTestException {
+        Map<String,String> params = new HashMap<>();
+        params.put("action", ACTION_SAVE_REF_TAG);
+        params.put("ref", ref);
+        params.put("resname", resname);
+        params.put("resversion", resversion);
+        params.put("tag", tag);
         
-        for (Request req : resource.getRequest()) {
-            List elements = req.getParamOrSqlOrExecuteOrXrequest();  
-            for (Object object : elements) {
-                if (object instanceof Sql) {
-                    Sql sql = (Sql) object;
-                    String ref = sql.getRef();
-                    
-                    if(null != ref){
-                        JSONArray res = executeQuery(ref, appName, domain, "queryref");
-                        result.put(ref, res);
-                    }                    
-                }
-            }
-        }     
+        JSONArray array = new JSONArray(makeRequest(url,params));
+        JSONObject jsonObject = array.getJSONObject(0);
         
-        verifyResult(result);
-        
-        return result;
+        return jsonObject.getString("query");
     }
     
-    private void verifyResult(JSONObject res) throws ResourceTestException {
-        StringBuilder sb = new StringBuilder("Errors occurred in following queries");
-        sb.append(System.getProperty("line.separator"));
+    public void saveQueryWithTag(String url, String query, String resname, String resversion, String tag) throws IOException, ResourceTestException {
+        Map<String,String> params = new HashMap<>();
+        params.put("action", ACTION_SAVE_QUERY_TAG);
+        params.put("query", query);
+        params.put("resname", resname);
+        params.put("resversion", resversion);
+        params.put("tag", tag);
         
-        boolean error = false;
-        Iterator<String> keys = res.keys();
-        while(keys.hasNext()) {
-            String queryId = keys.next();
-            JSONArray array = res.getJSONArray(queryId);
-            JSONObject queryResult = array.getJSONObject(0);
-            
-            int status = queryResult.getInt("status");
-            if(status == 500 || status == 403 || status == 404){
-                error = true;
-                JSONArray data = queryResult.getJSONArray("data");
-                String message = data.getString(0);
-                
-                sb.append("Ref: ").append(queryId);
-                sb.append(System.getProperty("line.separator"));
-                sb.append("Error: ").append(message);
-                sb.append(System.getProperty("line.separator"));
-            }
-        }
-        
-        if(error){
-            throw new ResourceTestException(sb.toString());
-        }
+        makeRequest(url, params);
     }
     
-    private JSONArray executeQuery(String query, String appName, String domain, String type) 
-            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
+    private static String makeRequest(String url, Map<String,String> params) throws IOException, ResourceTestException {  
+        URL obj = new URL(url + "/query");
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("User-Agent", USER_AGENT);
+        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+        String urlParameters = Utils.mapToUrlParams(params);
+
+        // Send post request
+        con.setDoOutput(true);
+        try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
+            wr.writeBytes(urlParameters);
+            wr.flush();
+        }
+        int statusCode = con.getResponseCode();
+        if(statusCode != 200) {
+            throw new ResourceTestException("Server error. Could not save query references!");
+        }
         
-        JSONArray tablesArray = new JSONArray();
-        JSONObject tableData = new JSONObject();
-        String result = Utils.executeQueryInApp(domain + "/" + appName, type, query);
-        
-        if (result == null || result.isEmpty()) {
-            tableData.put("status", 204);
-            tablesArray.put(tableData);
-            return tablesArray;
-        } else {
-            try {
-                JSONArray resultArray = new JSONArray(result);
-                return resultArray;
-            } catch (JSONException ex) {
-                tableData.put("status", 204);
-                tablesArray.put(tableData);
-                return tablesArray;
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            StringBuilder responseBuffer = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                responseBuffer.append(inputLine);
             }
+            return responseBuffer.toString();
         }
     }
 }

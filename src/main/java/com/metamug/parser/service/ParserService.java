@@ -143,7 +143,7 @@ public class ParserService {
             testService.testResource(parsedResource, domain, appName);
         }
        
-        Resource resource = createJsp(parsedResource, uploadedFile, isOldFile);
+        Resource resource = createJsp(parsedResource, uploadedFile, isOldFile, domain);
         
         JSONObject obj = new JSONObject();
         obj.put("version", resource.getVersion());
@@ -155,9 +155,9 @@ public class ParserService {
         return obj;
     }
 
-    public Resource createJsp(Resource resource, File resourceFile, boolean isOldFile)
+    public Resource createJsp(Resource resource, File resourceFile, boolean isOldFile, String domain)
             throws JAXBException, SAXException, IOException, FileNotFoundException, XPathExpressionException, 
-                    TransformerException, URISyntaxException, XMLStreamException {
+                    TransformerException, URISyntaxException, XMLStreamException, ResourceTestException {
              
         String resourceDir = OUTPUT_FOLDER + File.separator + appName + File.separator + 
                 "WEB-INF"+File.separator+"resources"+File.separator;
@@ -191,12 +191,27 @@ public class ParserService {
 
                     } else if (object instanceof Sql) {
                         Sql sql = (Sql) object;
-                        elementIds.add(sql.getId());
+                        String tag = sql.getId();
+                        elementIds.add(tag);
                         
                         if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
                             startValidateTag(writer, sql.getOnerror());      
                         }
-                      
+                                             
+                        if(null != domain) {
+                            String ref = sql.getRef();
+                            QueryManagerService service = new QueryManagerService();
+                            String url = domain+"/"+appName;
+                            String version = Double.toString(resource.getVersion());
+                            
+                            if(ref != null) {
+                                sql.setValue(service.saveRefWithTag(url,
+                                        ref, resourceFile.getName(), version, tag));
+                            } else {
+                                service.saveQueryWithTag(url, sql.getValue(), resourceFile.getName(), version, tag);
+                            }
+                        }
+                        
                         printSqlTag(sql, writer);
                         
                         if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
