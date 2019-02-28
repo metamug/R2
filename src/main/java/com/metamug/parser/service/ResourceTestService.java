@@ -86,8 +86,6 @@ public class ResourceTestService {
                     if(null != ref){
                         JSONArray res = executeQuery(ref, appName, domain, "queryref");
                         result.put(ref, res);
-                    } else {
-                        //todo add query to catalog table
                     }                    
                 }
             }

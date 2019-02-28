@@ -58,6 +58,13 @@
             <xsd:minLength value="1"/>
         </xsd:restriction>
     </xsd:simpleType>
+    
+    <xsd:simpleType name="elementId">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="100"/>
+        </xsd:restriction>
+    </xsd:simpleType>
 
     <xsd:simpleType name="status">
         <xsd:restriction base="xsd:integer">
@@ -171,7 +178,7 @@
     <xsd:complexType name="sql">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
-                <xsd:attribute name="id" type="id" use="required"/>
+                <xsd:attribute name="id" type="elementId" use="required"/>
                 <xsd:attribute name="requires" type="requires"/>
                 <xsd:attribute name="ref" type="xsd:string"/>
                 <xsd:attribute name="when" type="xsd:string"/>
@@ -201,7 +208,7 @@
     </xsd:complexType>
 
     <xsd:complexType name="execute">
-        <xsd:attribute name="id" type="id" use="required"/>
+        <xsd:attribute name="id" type="elementId" use="required"/>
         <xsd:attribute name="requires" type="requires"/>
         <xsd:attribute name="when" type="xsd:string"/>
         <xsd:attribute name="onerror" type="xsd:string"/>
@@ -247,7 +254,7 @@
             <xsd:element name="Header" type="xheader" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="Body" type="xbody" minOccurs="0" maxOccurs="1"/>
         </xsd:choice>
-        <xsd:attribute name="id" type="id" use="required"/>
+        <xsd:attribute name="id" type="elementId" use="required"/>
         <xsd:attribute name="when" type="xsd:string"/>
         <xsd:attribute name="url" type="xsd:string" use="required"/>
         <xsd:attribute name="method" type="method" use="required"/>
