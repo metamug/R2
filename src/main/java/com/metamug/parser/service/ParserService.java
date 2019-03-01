@@ -55,6 +55,7 @@ package com.metamug.parser.service;
 
 import com.metamug.parser.RPXParser;
 import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.util.Utils;
 import com.metamug.schema.Execute;
 import com.metamug.schema.Param;
 import com.metamug.schema.Request;
@@ -203,12 +204,13 @@ public class ParserService {
                             QueryManagerService service = new QueryManagerService();
                             String url = domain+"/"+appName;
                             String version = Double.toString(resource.getVersion());
+                            String resourceName = Utils.removeExtension(resourceFile.getName());
                             
                             if(ref != null) {
                                 sql.setValue(service.saveRefWithTag(url,
-                                        ref, resourceFile.getName(), version, tag));
+                                        ref, resourceName, version, tag));
                             } else {
-                                service.saveQueryWithTag(url, sql.getValue(), resourceFile.getName(), version, tag);
+                                service.saveQueryWithTag(url, sql.getValue().trim(), resourceName, version, tag);
                             }
                         }
                         
