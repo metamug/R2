@@ -102,10 +102,11 @@ import org.xml.sax.SAXException;
  * @author Kainix
  */
 public class ParserService {
+
     protected static final String MASON_DATASOURCE = "datasource";
     protected static final String MASON_OUTPUT = "masonOutput";
     public static final String MTG_PERSIST_MAP = "mtgPersist";
-    
+
     protected String appName;
     protected String OUTPUT_FOLDER;
     OutputStream output;
@@ -123,29 +124,28 @@ public class ParserService {
             add("DELETE:false");
         }
     };*/
-    private HashSet<String> elementIds; 
-    
+    private HashSet<String> elementIds;
+
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
-
     public JSONObject transform(File uploadedFile, String appName, boolean isOldFile, String outputFolder, String domain)
             throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException,
-                  XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException, 
-                        URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
+            XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
+            URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
         this.appName = appName;
         OUTPUT_FOLDER = outputFolder;
-        
+
         RPXParser parser = new RPXParser(OUTPUT_FOLDER, appName, uploadedFile);
         Resource parsedResource = parser.parseFromXml();
-                
+
         //todo make test queries requests
-        if(null != domain) {
+        if (null != domain) {
             ResourceTestService testService = new ResourceTestService();
             testService.testResource(parsedResource, domain, appName);
         }
-       
+
         Resource resource = createJsp(parsedResource, uploadedFile, isOldFile, domain);
-        
+
         JSONObject obj = new JSONObject();
         obj.put("version", resource.getVersion());
         if (resource.getAuth() != null && !resource.getAuth().isEmpty()) {
@@ -157,104 +157,102 @@ public class ParserService {
     }
 
     public Resource createJsp(Resource resource, File resourceFile, boolean isOldFile, String domain)
-            throws JAXBException, SAXException, IOException, FileNotFoundException, XPathExpressionException, 
-                    TransformerException, URISyntaxException, XMLStreamException, ResourceTestException {
-             
-        String resourceDir = OUTPUT_FOLDER + File.separator + appName + File.separator + 
-                "WEB-INF"+File.separator+"resources"+File.separator;
-        
-        if (!new File(resourceDir + "v" + resource.getVersion()).exists()) 
+            throws JAXBException, SAXException, IOException, FileNotFoundException, XPathExpressionException,
+            TransformerException, URISyntaxException, XMLStreamException, ResourceTestException {
+
+        String resourceDir = OUTPUT_FOLDER + File.separator + appName + File.separator
+                + "WEB-INF" + File.separator + "resources" + File.separator;
+
+        if (!new File(resourceDir + "v" + resource.getVersion()).exists()) {
             Files.createDirectories(Paths.get(resourceDir + "v" + resource.getVersion()));
-        
+        }
+
         if (!new File(resourceDir + "v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp").exists() || isOldFile) {
             output = new FileOutputStream(resourceDir + "v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp");
             XMLStreamWriter writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output));
-           
+
             printHeaderAndGroup(writer, resource);
-                      
+
             elementIds = new HashSet<>();
-            
+
             for (Request req : resource.getRequest()) {
                 writer.writeStartElement("m:request");
                 initializeRequest(writer, req);
-                
+
                 //Add UploadListener tag
                 if (req.getMethod().value().equalsIgnoreCase("POST")) {
                     writer.writeEmptyElement("m:upload");
                 }
 
-                List elements = req.getParamOrSqlOrExecuteOrXrequest();   
-                        
+                List elements = req.getParamOrSqlOrExecuteOrXrequest();
+
                 for (Object object : elements) {
                     if (object instanceof Param) {
-                        Param param = (Param) object;                
+                        Param param = (Param) object;
                         printParamTag(writer, param);
 
                     } else if (object instanceof Sql) {
                         Sql sql = (Sql) object;
                         String tag = sql.getId();
                         elementIds.add(tag);
-                        
+
                         if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
-                            startValidateTag(writer, sql.getOnerror());      
+                            startValidateTag(writer, sql.getOnerror());
                         }
-                                             
-                        if(null != domain) {
+
+                        if (null != domain) {
                             String ref = sql.getRef();
                             QueryManagerService service = new QueryManagerService();
-                            String url = domain+"/"+appName;
+                            String url = domain + "/" + appName;
                             String version = Double.toString(resource.getVersion());
                             String resourceName = Utils.removeExtension(resourceFile.getName());
-                            
-                            if(ref != null) {
+
+                            if (ref != null) {
                                 sql.setValue(service.saveRefWithTag(url,
                                         ref, resourceName, version, tag));
                             } else {
                                 service.saveQueryWithTag(url, sql.getValue().trim(), resourceName, version, tag);
                             }
                         }
-                        
+
                         printSqlTag(sql, writer);
-                        
+
                         if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
                             closeValidateTag(writer);
                         }
-                        
+
                     } else if (object instanceof Execute) {
                         Execute execute = (Execute) object;
                         elementIds.add(execute.getId());
-                        
+
                         printExecuteTag(execute, writer);
-                        
+
                     } else if (object instanceof Xrequest) {
                         Xrequest xr = (Xrequest) object;
                         elementIds.add(xr.getId());
-                        
+
                         printXrequestTag(xr, writer);
                     }
                 }
                 //printGlobalOutput(writer, resourceFile);
-                
-                    //printDefaultCase(req, writer);
-                    
-                    //printRequestStatus(req, writer);
-                    
-                    //end m:request
+
+                //printDefaultCase(req, writer);
+                //printRequestStatus(req, writer);
+                //end m:request
                 closeRequest(writer);
-                
+
                 writer.writeCharacters(System.lineSeparator());
             }
-            
+
             //print404Cases(writer);
             //declareNonImplementedMethod(writer);
-                
             writer.writeEndElement();//end m:resource
             writer.flush();
             writer.close();
-               
+
             output.close();
             escapeSpecialCharacters(resource, appName, resourceFile);
-            
+
             return resource;
         } else {
             //user is trying to create new resource with already created resource 
@@ -274,21 +272,22 @@ public class ParserService {
         writer.writeEmptyElement("jsp:directive.include");
         writer.writeAttribute("file", "../fragments/mason-init.jspf");
         writer.writeCharacters(System.lineSeparator());
-        
+
         writer.writeEmptyElement("jsp:useBean");
         writer.writeAttribute("id", MTG_PERSIST_MAP);
         writer.writeAttribute("class", "java.util.LinkedHashMap");
         writer.writeAttribute("scope", "request");
         writer.writeCharacters(System.lineSeparator());
-        
+
         writer.writeStartElement("m:resource");
-        
+
         //Add a Auth group resource tag
-        if (resource.getAuth() != null) 
+        if (resource.getAuth() != null) {
             writer.writeAttribute("auth", resource.getAuth());
-        
+        }
+
         writer.writeCharacters(System.lineSeparator());
-        
+
         //Add a Parent tag
         if (resource.getParent() != null) {
             writer.writeEmptyElement("m:parent");
@@ -305,9 +304,10 @@ public class ParserService {
      * @throws XMLStreamException
      */
     private void initializeRequest(XMLStreamWriter writer, Request req) throws XMLStreamException {
-        writer.writeAttribute("method",req.getMethod().value());
-        if (req.isItem())
+        writer.writeAttribute("method", req.getMethod().value());
+        if (req.isItem()) {
             writer.writeAttribute("item", "true");
+        }
     }
 
     /**
@@ -379,25 +379,28 @@ public class ParserService {
                     throw new SAXException("Offset or limit attribute can't be used for Update query");
                 }
             }
-            
+
             writer.writeCharacters(System.lineSeparator());
-            
-            if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("update")) 
+
+            if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("update")) {
                 writer.writeStartElement("sql:update");
-            else 
+            } else {
                 writer.writeStartElement("sql:query");
-            
+            }
+
             writer.writeAttribute("var", "result");
             writer.writeAttribute("dataSource", enclose(MASON_DATASOURCE));
-            
+
             if (sql.getLimit() != null || sql.getOffset() != null) {
                 if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("query")) {
-                    if (sql.getLimit() != null) 
+                    if (sql.getLimit() != null) {
                         writer.writeAttribute("maxRows", enclose("mtgReq.params['" + sql.getLimit() + "']"));
-                    
-                    if (sql.getOffset() != null) 
+                    }
+
+                    if (sql.getOffset() != null) {
                         writer.writeAttribute("startRow", enclose("mtgReq.params['" + sql.getOffset() + "']"));
-                    
+                    }
+
                 } else {
                     throw new SAXException("Offset or limit attribute can't be used for Update query");
                 }
@@ -408,32 +411,32 @@ public class ParserService {
 
             writer.writeEndElement();//End of <sql:query/update>
             //Store the sql data in map for <sql:query> or <sql:update>  
-            
+
             writer.writeCharacters(System.lineSeparator());
-            
-            printSqlEnd(sql,writer);
+
+            printSqlEnd(sql, writer);
         }
     }
-    
-    protected void printSqlEnd(Sql sql, XMLStreamWriter writer) throws XMLStreamException{
+
+    protected void printSqlEnd(Sql sql, XMLStreamWriter writer) throws XMLStreamException {
         //Don't insert result into the map when
         /**
-        * 1. Its an 'Update' query with verbose attribute set to 'FALSE' or NOT SET at all
-        *
-        * 2. Its a 'Query' query with verbose attribute set to 'FALSE' explicitly.
-        */
+         * 1. Its an 'Update' query with verbose attribute set to 'FALSE' or NOT SET at all
+         *
+         * 2. Its a 'Query' query with verbose attribute set to 'FALSE' explicitly.
+         */
         boolean isVerbose = isVerbose(sql);
-        
+
         String sqlVar = "result";
         if (sql.getType().value().equalsIgnoreCase("update") && isVerbose && sql.getClassname() == null) {
-            
-            printCSet(writer, enclose(MASON_OUTPUT), sql.getId(), enclose(sqlVar) );
-            
+
+            printCSet(writer, enclose(MASON_OUTPUT), sql.getId(), enclose(sqlVar));
+
         } else if (sql.getType().value().equalsIgnoreCase("query")) {
             if (sql.getPersist()) {
                 printConvert(writer, enclose(MTG_PERSIST_MAP), sql.getId(), enclose(sqlVar));
             }
-            if( sql.getClassname() == null ){
+            if (sql.getClassname() == null) {
                 /*
                     if (sql.getCollect() && isVerbose) {
                         writer.writeEmptyElement("c:set");
@@ -442,20 +445,21 @@ public class ParserService {
                         writer.writeAttribute("value", enclose("result"));
                 }*/
                 if (isVerbose) {
-                    printCSet(writer, enclose(MASON_OUTPUT), sql.getId(), enclose(sqlVar) );
+                    printCSet(writer, enclose(MASON_OUTPUT), sql.getId(), enclose(sqlVar));
                 }
             } else {
                 writer.writeEmptyElement("m:execute");
                 writer.writeAttribute("className", sql.getClassname());
                 String execVar = "execResult";
-                writer.writeAttribute("var", execVar );
+                writer.writeAttribute("var", execVar);
                 writer.writeAttribute("param", enclose(sqlVar));
 
-                if(isVerbose)
-                    printCSet(writer, enclose(MASON_OUTPUT), sql.getId(), enclose(execVar) );
+                if (isVerbose) {
+                    printCSet(writer, enclose(MASON_OUTPUT), sql.getId(), enclose(execVar));
+                }
             }
         }
-        
+
         if (sql.getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
@@ -475,7 +479,7 @@ public class ParserService {
             String testString = getQuotedString(execute.getWhen());
             writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
         }
-        
+
         //Print params those are marked as 'requires' in <Execute>
         String requiredParams = execute.getRequires();
         if (requiredParams != null) {
@@ -487,24 +491,27 @@ public class ParserService {
                 writer.writeAttribute("isRequired", "true");
             }
         }
-            
+
         writer.writeCharacters(System.lineSeparator());
-        
+
         writer.writeEmptyElement("m:execute");
         String execVar = "execResult";
         writer.writeAttribute("var", execVar);
         writer.writeAttribute("className", execute.getClassName());
         writer.writeAttribute("param", enclose("mtgReq"));
-        if (execute.getPersist()) 
-            writer.writeAttribute("persistParam",enclose(MTG_PERSIST_MAP));
+        if (execute.getPersist()) {
+            writer.writeAttribute("persistParam", enclose(MTG_PERSIST_MAP));
+        }
 
         //Sets Verbose,Persist and Collect attributes
-        if (execute.getVerbose() != null && execute.getVerbose()) 
-            printCSet(writer, enclose(MASON_OUTPUT), execute.getId(), enclose(execVar) );
-        
-        if (execute.getPersist()) 
-            printCSet(writer, enclose(MTG_PERSIST_MAP), execute.getId(), enclose(execVar) );
-        
+        if (execute.getVerbose() != null && execute.getVerbose()) {
+            printCSet(writer, enclose(MASON_OUTPUT), execute.getId(), enclose(execVar));
+        }
+
+        if (execute.getPersist()) {
+            printCSet(writer, enclose(MTG_PERSIST_MAP), execute.getId(), enclose(execVar));
+        }
+
         /*
         if (execute.getCollect()) {
             writer.writeAttribute("isCollect", "true");
@@ -518,9 +525,8 @@ public class ParserService {
             writer.writeEmptyElement("mtg:status");
             writer.writeAttribute("value", String.valueOf(execute.getStatus()));
         }*/
-        
         writer.writeCharacters(System.lineSeparator());
-        
+
         if (execute.getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
@@ -541,14 +547,14 @@ public class ParserService {
             String testString = getQuotedString(xrequest.getWhen());
             writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
         }
-        
+
         writer.writeCharacters(System.lineSeparator());
 
         writer.writeStartElement("m:xrequest");
         String xreqVar = "xreqResult";
         writer.writeAttribute("var", xreqVar);
         writer.writeAttribute("method", xrequest.getMethod().name());
-        writer.writeAttribute("url", xrequest.getUrl());   
+        writer.writeAttribute("url", xrequest.getUrl());
 
         for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
             if (paramOrHeaderOrBody instanceof Xheader) {
@@ -569,31 +575,33 @@ public class ParserService {
         }
 
         writer.writeEndElement(); //End of <m:xrequest>    
-        
+
         writer.writeCharacters(System.lineSeparator());
-        
-        if (xrequest.isVerbose()) 
-            printCSet(writer, enclose(MASON_OUTPUT), xrequest.getId(), enclose(xreqVar) );
-        
-        if (xrequest.isPersist()) 
-            printConvert(writer, enclose(MTG_PERSIST_MAP), xrequest.getId(), enclose(xreqVar) );
-        
+
+        if (xrequest.isVerbose()) {
+            printCSet(writer, enclose(MASON_OUTPUT), xrequest.getId(), enclose(xreqVar));
+        }
+
+        if (xrequest.isPersist()) {
+            printConvert(writer, enclose(MTG_PERSIST_MAP), xrequest.getId(), enclose(xreqVar));
+        }
+
         if (xrequest.getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
     }
-    
+
     protected void printConvert(XMLStreamWriter writer, String target, String prop, String result) throws XMLStreamException {
         writer.writeEmptyElement("m:convert");
         writer.writeAttribute("target", target);
-        writer.writeAttribute("property", prop );
+        writer.writeAttribute("property", prop);
         writer.writeAttribute("result", result);
     }
-    
-    protected void printCSet(XMLStreamWriter writer, String target, String prop, String value) throws XMLStreamException{
+
+    protected void printCSet(XMLStreamWriter writer, String target, String prop, String value) throws XMLStreamException {
         writer.writeEmptyElement("c:set");
         writer.writeAttribute("target", target);
-        writer.writeAttribute("property", prop );
+        writer.writeAttribute("property", prop);
         writer.writeAttribute("value", value);
     }
 
@@ -607,7 +615,6 @@ public class ParserService {
         writer.writeEndElement();
     }
 
- 
     /**
      * Prints a default case when a request is made to a resource which doesn't satisfy any Request(s).
      *
@@ -649,9 +656,6 @@ public class ParserService {
             writer.writeCharacters(System.lineSeparator());
         }
     }*/
-
-   
-
     /**
      * Close the m:request for Request tag.
      *
@@ -698,22 +702,27 @@ public class ParserService {
         List<String> newLines = new ArrayList<>();
         for (String line : Files.readAllLines(Paths.get(OUTPUT_FOLDER + File.separator + appName + "/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp"), StandardCharsets.UTF_8)) {
             String modifiedStr = line;
-            
-            if (line.toLowerCase().matches(".*\\sle(\\s|\\b).*")) 
+
+            if (line.toLowerCase().matches(".*\\sle(\\s|\\b).*")) {
                 modifiedStr = line.replaceAll("\\sle(\\s|\\b)", " <= ");
-            
-            if (line.toLowerCase().matches(".*\\sge(\\s|\\b).*")) 
+            }
+
+            if (line.toLowerCase().matches(".*\\sge(\\s|\\b).*")) {
                 modifiedStr = modifiedStr.replaceAll("\\sge(\\s|\\b)", " >= ");
-            
-            if (line.toLowerCase().matches(".*\\sne(\\s|\\b).*")) 
+            }
+
+            if (line.toLowerCase().matches(".*\\sne(\\s|\\b).*")) {
                 modifiedStr = modifiedStr.replaceAll("\\sne(\\s|\\b)", " != ");
-            
-            if (line.toLowerCase().matches(".*\\slt(\\s|\\b).*")) 
+            }
+
+            if (line.toLowerCase().matches(".*\\slt(\\s|\\b).*")) {
                 modifiedStr = modifiedStr.replaceAll("\\slt(\\s|\\b)", " < ");
-            
-            if (line.toLowerCase().matches(".*\\sgt(\\s|\\b).*")) 
+            }
+
+            if (line.toLowerCase().matches(".*\\sgt(\\s|\\b).*")) {
                 modifiedStr = modifiedStr.replaceAll("\\sgt(\\s|\\b)", " > ");
-            
+            }
+
             newLines.add(modifiedStr.replaceAll("\\s+", " "));
         }
         Files.write(Paths.get(OUTPUT_FOLDER + File.separator + appName + "/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp"), newLines, StandardCharsets.UTF_8);
@@ -737,9 +746,10 @@ public class ParserService {
         while (matcher.find()) {
             String variable = matcher.group(1);
             String newVariable = "${mtgReq.params['" + variable + "']}";
-            if(paramIsPersisted(variable))
-                newVariable = "${"+MTG_PERSIST_MAP+"['" + variable + "']}";
-                
+            if (paramIsPersisted(variable)) {
+                newVariable = "${" + MTG_PERSIST_MAP + "['" + variable + "']}";
+            }
+
             inputStr = inputStr.replace("$" + variable, newVariable);
         }
         return inputStr;
@@ -747,26 +757,26 @@ public class ParserService {
 
     protected String getSqlParams(String query) {
         List<String> params = new ArrayList<>();
-        
-        collectSqlParams(params,query);
-        
+
+        collectSqlParams(params, query);
+
         StringBuilder builder = new StringBuilder(query.replaceAll("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})", "? "));
         builder.append("\n");
-        
+
         appendSqlParams(builder, params);
-        
+
         return builder.toString();
     }
-    
-    protected void collectSqlParams(List<String> params, String query){
+
+    protected void collectSqlParams(List<String> params, String query) {
         Pattern pattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
         Matcher match = pattern.matcher(query);
         while (match.find()) {
             params.add(query.substring(match.start(1), match.end(1)).trim());
         }
     }
-    
-    protected void appendSqlParams(StringBuilder builder, List<String> params){
+
+    protected void appendSqlParams(StringBuilder builder, List<String> params) {
         for (String param : params) {
             switch (param) {
                 case "id":
@@ -779,18 +789,19 @@ public class ParserService {
                     builder.append("<sql:param value=\"${mtgReq.uid}\"/>");
                     break;
                 default:
-                    if(paramIsPersisted(param))
-                        builder.append(MessageFormat.format("<sql:param value=\"$'{'"+MTG_PERSIST_MAP+"[\''{0}'\']}\" />", param));              
-                    else
+                    if (paramIsPersisted(param)) {
+                        builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\']}\" />", param));
+                    } else {
                         builder.append(MessageFormat.format("<sql:param value=\"$'{'mtgReq.params[\''{0}'\']}\" />", param));
-                    
+                    }
+
                     break;
             }
             builder.append("\n");
         }
     }
-    
-    protected boolean paramIsPersisted(String paramName){
+
+    protected boolean paramIsPersisted(String paramName) {
         //first segment of mpath param is an element id
         return elementIds.contains(paramName.split("\\.")[0]);
     }
@@ -849,7 +860,6 @@ public class ParserService {
         }
         return ((sqlCount == req.getSql().size()) && (exeCount == req.getExecute().size()));
     }*/
-
     public String getQuotedString(String plainString) throws SAXException {
         StringBuilder finalString;
         String quotedString = plainString.replaceAll("\\s+", " ");

@@ -2,46 +2,46 @@
 
 <Resource xmlns="http://xml.metamug.net/resource/1.0" v="1.0">
 
-	<Request method="GET">
-            <XRequest id="xreq" url="https://jsonplaceholder.typicode.com/todos/1"
+    <Request method="GET">
+        <XRequest id="xreq" url="https://jsonplaceholder.typicode.com/todos/1"
                   method="GET" persist="true" >
-            </XRequest>
+        </XRequest>
             
-            <Execute id="execres" classname="com.metamug.plugin.RequestExample" persist="true" />
+        <Execute id="execres" classname="com.metamug.plugin.RequestExample" persist="true" />
             
-            <Query id="getResult">
-                SELECT $xreq.body.title AS 'xreqResult', $execres AS 'execr'
-            </Query>
+        <Query id="getResult">
+            SELECT $xreq.body.title AS 'xreqResult', $execres AS 'execr'
+        </Query>
             
-	</Request>
+    </Request>
         
-        <Request method="GET" item="true">
-            <Query id="query1" persist="true">
-                SELECT * from customer WHERE customer_id=$id
-            </Query>    
+    <Request method="GET" item="true">
+        <Query id="query1" persist="true">
+            SELECT * from customer WHERE customer_id=$id
+        </Query>    
             
-            <Query id="getResult2">
-                SELECT $query1.customer_name AS 'resultName'
-            </Query>
+        <Query id="getResult2">
+            SELECT $query1.customer_name AS 'resultName'
+        </Query>
             
-	</Request>
+    </Request>
         
-        <Request method="POST">
+    <Request method="POST">
         
-            <Query id="query2" persist="true" verbose="false">
-                SELECT * from customer WHERE customer_id=$customer_id
-            </Query>
+        <Query id="query2" persist="true" verbose="false">
+            SELECT * from customer WHERE customer_id=$customer_id
+        </Query>
         
-            <XRequest verbose="true" id="xreqvalue" url="https://postman-echo.com/post" method="POST" >
-                <Header name="Content-Type" value="application/json"/>
-                <Body>
-                    {
-                        "foo1": $query1.customer_id,
-                        "foo2": "$query1.customer_name"
-                    }
-                </Body>
-            </XRequest>
+        <XRequest verbose="true" id="xreqvalue" url="https://postman-echo.com/post" method="POST" >
+            <Header name="Content-Type" value="application/json"/>
+            <Body>
+                {
+                "foo1": $query1.customer_id,
+                "foo2": "$query1.customer_name"
+                }
+            </Body>
+        </XRequest>
     
-        </Request>
+    </Request>
         
 </Resource>

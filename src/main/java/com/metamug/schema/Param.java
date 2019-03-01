@@ -229,14 +229,12 @@ public class Param {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     /**
      * Gets the value of the testvalue property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getTestvalue() {
         return testvalue;
@@ -244,16 +242,14 @@ public class Param {
 
     /**
      * Sets the value of the testvalue property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setTestvalue(String value) {
         this.testvalue = value;
     }
-    
+
     /**
      * Gets the value of the type property.
      *
