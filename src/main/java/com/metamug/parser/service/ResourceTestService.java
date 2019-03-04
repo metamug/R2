@@ -71,13 +71,13 @@ import org.json.JSONObject;
  * @author anishhirlekar
  */
 public class ResourceTestService {
-    
-    public JSONObject testResource(Resource resource, String domain, String appName) 
-            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException{
+
+    public JSONObject testResource(Resource resource, String domain, String appName)
+            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
         JSONObject result = new JSONObject();
-        
+
         for (Request req : resource.getRequest()) {
-            List elements = req.getParamOrSqlOrExecuteOrXrequest();  
+            List elements = req.getParamOrSqlOrExecuteOrXrequest();
             for (Object object : elements) {
                 if (object instanceof Sql) {
                     Sql sql = (Sql) object;
@@ -86,52 +86,52 @@ public class ResourceTestService {
                     if(null != ref){
                         JSONArray res = executeQuery(ref, appName, domain, "queryreftest");
                         result.put(ref, res);
-                    }                    
+                    }
                 }
             }
-        }     
-        
+        }
+
         verifyResult(result);
-        
+
         return result;
     }
-    
+
     private void verifyResult(JSONObject res) throws ResourceTestException {
         StringBuilder sb = new StringBuilder("Errors occurred in following queries");
         sb.append(System.getProperty("line.separator"));
-        
+
         boolean error = false;
         Iterator<String> keys = res.keys();
-        while(keys.hasNext()) {
+        while (keys.hasNext()) {
             String queryId = keys.next();
             JSONArray array = res.getJSONArray(queryId);
             JSONObject queryResult = array.getJSONObject(0);
-            
+
             int status = queryResult.getInt("status");
-            if(status == 500 || status == 403 || status == 404){
+            if (status == 500 || status == 403 || status == 404) {
                 error = true;
                 JSONArray data = queryResult.getJSONArray("data");
                 String message = data.getString(0);
-                
+
                 sb.append("Ref: ").append(queryId);
                 sb.append(System.getProperty("line.separator"));
                 sb.append("Error: ").append(message);
                 sb.append(System.getProperty("line.separator"));
             }
         }
-        
-        if(error){
+
+        if (error) {
             throw new ResourceTestException(sb.toString());
         }
     }
-    
-    private JSONArray executeQuery(String query, String appName, String domain, String type) 
+
+    private JSONArray executeQuery(String query, String appName, String domain, String type)
             throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
-        
+
         JSONArray tablesArray = new JSONArray();
         JSONObject tableData = new JSONObject();
         String result = Utils.executeQueryInApp(domain + "/" + appName, type, query);
-        
+
         if (result == null || result.isEmpty()) {
             tableData.put("status", 204);
             tablesArray.put(tableData);

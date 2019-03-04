@@ -22,8 +22,9 @@ import static javax.ws.rs.core.HttpHeaders.USER_AGENT;
  * @author anishhirlekar
  */
 public class Utils {
+
     public static String executeQueryInApp(String appUrl, String action, String query) throws IOException, ResourceTestException {
-        
+
         URL obj = new URL(appUrl + "/query");
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
@@ -39,10 +40,10 @@ public class Utils {
             wr.flush();
         }
         int statusCode = con.getResponseCode();
-        if(statusCode != 200) {
+        if (statusCode != 200) {
             throw new ResourceTestException("Server error. Could not test query!");
         }
-        
+
         try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
             String inputLine;
             StringBuilder responseBuffer = new StringBuilder();
@@ -52,17 +53,18 @@ public class Utils {
             return responseBuffer.toString();
         }
     }
-    
-    public static String removeExtension(String filename){
-        if (filename.indexOf(".") > 0)
+
+    public static String removeExtension(String filename) {
+        if (filename.indexOf(".") > 0) {
             filename = filename.substring(0, filename.lastIndexOf("."));
+        }
         return filename;
     }
-    
+
     public static String mapToUrlParams(Map<String, String> map) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        map.keySet().forEach( key -> {
+        map.keySet().forEach(key -> {
             if (stringBuilder.length() > 0) {
                 stringBuilder.append("&");
             }

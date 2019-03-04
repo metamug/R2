@@ -73,36 +73,36 @@ import org.json.JSONObject;
  * @author anishhirlekar
  */
 public class QueryManagerService {
-    
+
     public static final String ACTION_SAVE_REF_TAG = "refsavewithtag";
     public static final String ACTION_SAVE_QUERY_TAG = "querysavewithtag";
-    
+
     public String saveRefWithTag(String url, String ref, String resname, String resversion, String tag) throws IOException, ResourceTestException {
-        Map<String,String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("action", ACTION_SAVE_REF_TAG);
         params.put("ref", ref);
         params.put("resname", resname);
         params.put("resversion", resversion);
         params.put("tag", tag);
-        
-        JSONArray array = new JSONArray(makeRequest(url,params));
+
+        JSONArray array = new JSONArray(makeRequest(url, params));
         JSONObject jsonObject = array.getJSONObject(0);
-        
+
         return jsonObject.getString("query");
     }
-    
+
     public void saveQueryWithTag(String url, String query, String resname, String resversion, String tag) throws IOException, ResourceTestException {
-        Map<String,String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("action", ACTION_SAVE_QUERY_TAG);
         params.put("query", query);
         params.put("resname", resname);
         params.put("resversion", resversion);
         params.put("tag", tag);
-        
+
         makeRequest(url, params);
     }
-    
-    private static String makeRequest(String url, Map<String,String> params) throws IOException, ResourceTestException {  
+
+    private static String makeRequest(String url, Map<String, String> params) throws IOException, ResourceTestException {
         URL obj = new URL(url + "/query");
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
@@ -117,14 +117,11 @@ public class QueryManagerService {
             wr.writeBytes(urlParameters);
             wr.flush();
         }
-        int statusCode = con.getResponseCode();
-        if(statusCode != 200) {
-            System.out.println("makeRequest");
-            System.out.println("params: "+params);
-            System.out.println("statusCode: "+statusCode);
+        
+        if (con.getResponseCode() != 200) {
             throw new ResourceTestException("Server error. Could not save query references!");
         }
-        
+
         try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
             String inputLine;
             StringBuilder responseBuffer = new StringBuilder();

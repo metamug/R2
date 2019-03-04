@@ -55,7 +55,6 @@ package com.metamug.parser.service;
 import com.metamug.parser.exception.ResourceTestException;
 import java.beans.PropertyVetoException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -76,33 +75,33 @@ import org.xml.sax.SAXException;
  * @author anishhirlekar
  */
 public class ParserServiceTest {
-    
+
     private final String outputFolder = "/Users/anishhirlekar/parser-output";
     String appName = "testWebapp";
     boolean isOldFile = true;
-    
+
     @Test
     public void testParser() {
-        
-        File resDir = new File(ParserServiceTest.class.getClassLoader().getResource(".").getFile());  
-        
+
+        File resDir = new File(ParserServiceTest.class.getClassLoader().getResource(".").getFile());
+
         ParserService parseService = new ParserService();
-      
-        for(File file: resDir.listFiles()){
-            if(FilenameUtils.getExtension(file.toString()).equals("xml")) {
+
+        for (File file : resDir.listFiles()) {
+            if (FilenameUtils.getExtension(file.toString()).equals("xml")) {
                 try {
                     System.out.println(file.getName());
-                    
+
                     JSONObject jsonObj = parseService.transform(file, appName, isOldFile, outputFolder, null);
-                    
+
                     System.out.println(jsonObj);
-                    
-                } catch (SAXException | XMLStreamException | XPathExpressionException | ParserConfigurationException 
-                        | TransformerException | JAXBException | URISyntaxException | IOException | SQLException 
-                               | ClassNotFoundException | PropertyVetoException | ResourceTestException ex) {                                        
+
+                } catch (SAXException | XMLStreamException | XPathExpressionException | ParserConfigurationException
+                        | TransformerException | JAXBException | URISyntaxException | IOException | SQLException
+                        | ClassNotFoundException | PropertyVetoException | ResourceTestException ex) {
                     Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }       
+        }
     }
 }

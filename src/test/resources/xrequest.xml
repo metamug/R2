@@ -2,23 +2,23 @@
 <Resource xmlns="http://xml.metamug.net/resource/1.0" v="1.0">
 
     <Request method="GET">
-	<XRequest id="xreqvalue" url="https://postman-echo.com/get?foo1=bar1&amp;foo2=bar2"
-                      method="GET" verbose="true" >
+        <XRequest id="xreqvalue" url="https://postman-echo.com/get?foo1=bar1&amp;foo2=bar2"
+                  method="GET" verbose="true" >
             <Header name="Accept" value="application/json" />
-    	</XRequest>
+        </XRequest>
     </Request>
     
     <Request method="POST">
-	<XRequest verbose="true"
-            id="xreqvalue2" url="https://postman-echo.com/post" method="POST" >
+        <XRequest verbose="true"
+                  id="xreqvalue2" url="https://postman-echo.com/post" method="POST" >
             <Header name="Content-Type" value="application/json"/>
             <Body>
                 {
-                    "foo1": "$foo1",
-                    "foo2": $foo2
+                "foo1": "$foo1",
+                "foo2": $foo2
                 }
             </Body>
-    	</XRequest>
+        </XRequest>
     </Request>
     
 </Resource>
