@@ -62,6 +62,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static javax.ws.rs.core.HttpHeaders.USER_AGENT;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -117,6 +119,9 @@ public class QueryManagerService {
         }
         int statusCode = con.getResponseCode();
         if(statusCode != 200) {
+            System.out.println("makeRequest");
+            System.out.println("params: "+params);
+            System.out.println("statusCode: "+statusCode);
             throw new ResourceTestException("Server error. Could not save query references!");
         }
         

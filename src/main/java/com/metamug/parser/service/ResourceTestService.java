@@ -84,7 +84,7 @@ public class ResourceTestService {
                     String ref = sql.getRef();
                     
                     if(null != ref){
-                        JSONArray res = executeQuery(ref, appName, domain, "queryref");
+                        JSONArray res = executeQuery(ref, appName, domain, "queryreftest");
                         result.put(ref, res);
                     }                    
                 }
