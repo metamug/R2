@@ -92,7 +92,7 @@ public class ParserServiceTest {
                 try {
                     System.out.println(file.getName());
 
-                    JSONObject jsonObj = parseService.transform(file, appName, isOldFile, outputFolder, null);
+                    JSONObject jsonObj = parseService.transform(file, appName, isOldFile, outputFolder, null, null);
 
                     System.out.println(jsonObj);
 

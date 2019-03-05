@@ -108,10 +108,14 @@ public class ParserService {
     public static final String MTG_PERSIST_MAP = "mtgPersist";
 
     protected String appName;
+    protected String resourceName;
+    protected double resourceVersion;
+    protected JSONObject queryMap;
+    
     protected String OUTPUT_FOLDER;
     OutputStream output;
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
-    File resourceFile;
+    //File resourceFile;
     /*List<String> methodItemList = new ArrayList<String>() {
         {
             add("GET:true");
@@ -128,15 +132,21 @@ public class ParserService {
 
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
-    public JSONObject transform(File uploadedFile, String appName, boolean isOldFile, String outputFolder, String domain)
+    public JSONObject transform(File uploadedFile, String appName, boolean isOldFile, String outputFolder, 
+            String domain, JSONObject queryMap)
             throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException,
             XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
             URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
         this.appName = appName;
+        this.resourceName = Utils.removeExtension(uploadedFile.getName());
+        this.queryMap = queryMap;
+        
         OUTPUT_FOLDER = outputFolder;
 
         RPXParser parser = new RPXParser(OUTPUT_FOLDER, appName, uploadedFile);
         Resource parsedResource = parser.parseFromXml();
+        
+        this.resourceVersion = parsedResource.getVersion();
 
         //todo make test queries requests
         if (null != domain) {
@@ -204,14 +214,14 @@ public class ParserService {
                             String ref = sql.getRef();
                             QueryManagerService service = new QueryManagerService();
                             String url = domain + "/" + appName;
-                            String version = Double.toString(resource.getVersion());
-                            String resourceName = Utils.removeExtension(resourceFile.getName());
+                            String version = Double.toString(resourceVersion);
 
                             if (ref != null) {
                                 sql.setValue(service.saveRefWithTag(url,
-                                        ref, resourceName, version, tag));
+                                        ref, this.resourceName, version, tag));
                             } else {
-                                service.saveQueryWithTag(url, sql.getValue().trim(), resourceName, version, tag);
+                                service.saveQueryWithTag(url, sql.getValue().trim(), this.resourceName, 
+                                        version, tag);
                             }
                         }
 
@@ -346,7 +356,8 @@ public class ParserService {
      * @throws SAXException
      * @throws XPathExpressionException
      */
-    protected void printSqlTag(Sql sql, XMLStreamWriter writer) throws XMLStreamException, IOException, SAXException, XPathExpressionException {
+    protected void printSqlTag(Sql sql, XMLStreamWriter writer) 
+            throws XMLStreamException, IOException, SAXException, XPathExpressionException {
         //Check for empty the Sql tag
         if (!sql.getValue().trim().isEmpty()) {
             if (sql.getWhen() != null) {
@@ -406,7 +417,8 @@ public class ParserService {
                 }
             }
             //writer.writeCharacters(System.lineSeparator());
-            String sqlParams = getSqlParams(sql.getValue());
+            String sqlParams = getSqlParams(sql);
+            
             writeEscapedCharacters(writer, sqlParams);
 
             writer.writeEndElement();//End of <sql:query/update>
@@ -755,7 +767,8 @@ public class ParserService {
         return inputStr;
     }
 
-    protected String getSqlParams(String query) {
+    protected String getSqlParams(Sql sql) {
+        String query = sql.getValue();
         List<String> params = new ArrayList<>();
 
         collectSqlParams(params, query);
