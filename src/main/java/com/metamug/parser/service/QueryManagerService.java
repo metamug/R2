@@ -62,8 +62,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static javax.ws.rs.core.HttpHeaders.USER_AGENT;
 import org.json.JSONArray;
 import org.json.JSONObject;

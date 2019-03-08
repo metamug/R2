@@ -97,7 +97,7 @@ public class ResourceTestService {
     }
 
     private void verifyResult(JSONObject res) throws ResourceTestException {
-        StringBuilder sb = new StringBuilder("Errors occurred in following queries");
+        StringBuilder sb = new StringBuilder("Errors occurred while testing queries:");
         sb.append(System.getProperty("line.separator"));
 
         boolean error = false;
@@ -113,10 +113,10 @@ public class ResourceTestService {
                 JSONArray data = queryResult.getJSONArray("data");
                 String message = data.getString(0);
 
-                sb.append("Ref: ").append(queryId);
-                sb.append(System.getProperty("line.separator"));
-                sb.append("Error: ").append(message);
-                sb.append(System.getProperty("line.separator"));
+                sb.append("<b>Ref:</b> ").append("<span class='text-success'>").append(queryId).append("</span>");
+                sb.append("<br/>");
+                sb.append("<b>Error:</b> ").append(message);
+                sb.append("<br/>");
             }
         }
 

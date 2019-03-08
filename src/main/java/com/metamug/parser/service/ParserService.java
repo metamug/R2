@@ -148,7 +148,7 @@ public class ParserService {
         
         this.resourceVersion = parsedResource.getVersion();
 
-        //todo make test queries requests
+        //make test queries requests
         if (null != domain) {
             ResourceTestService testService = new ResourceTestService();
             testService.testResource(parsedResource, domain, appName);
