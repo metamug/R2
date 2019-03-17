@@ -149,10 +149,10 @@ public class ParserService {
         this.resourceVersion = parsedResource.getVersion();
 
         //make test queries requests
-        if (null != domain) {
+        /*if (null != domain) {
             ResourceTestService testService = new ResourceTestService();
             testService.testResource(parsedResource, domain, appName);
-        }
+        }*/
 
         Resource resource = createJsp(parsedResource, uploadedFile, isOldFile, domain);
 
