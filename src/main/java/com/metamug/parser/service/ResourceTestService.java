@@ -53,21 +53,26 @@
 package com.metamug.parser.service;
 
 import com.metamug.parser.exception.ResourceTestException;
-import com.metamug.parser.util.Utils;
 import com.metamug.schema.Param;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
 import com.metamug.schema.Sql;
 import java.beans.PropertyVetoException;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import static javax.ws.rs.core.HttpHeaders.USER_AGENT;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -75,7 +80,7 @@ import org.json.JSONObject;
  * @author anishhirlekar
  */
 public class ResourceTestService {
-
+    /*
     private JSONArray executeQuery(String query, String appName, String domain, String type)
             throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
 
@@ -96,6 +101,37 @@ public class ResourceTestService {
                 tablesArray.put(tableData);
                 return tablesArray;
             }
+        }
+    }*/
+    
+    public static String makeRequest(String appUrl, String action, JSONObject inputJson) throws IOException, ResourceTestException {
+
+        URL obj = new URL(appUrl + "/query");
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("User-Agent", USER_AGENT);
+        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+        String urlParameters = "action=" + action + "&querydata=" + URLEncoder.encode(inputJson.toString(), "UTF-8");
+
+        // Send post request
+        con.setDoOutput(true);
+        try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
+            wr.writeBytes(urlParameters);
+            wr.flush();
+        }
+        int statusCode = con.getResponseCode();
+        if (statusCode != 200) {
+            throw new ResourceTestException("Server error. Something went wrong!");
+        }
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            StringBuilder responseBuffer = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                responseBuffer.append(inputLine);
+            }
+            return responseBuffer.toString();
         }
     }
 
@@ -156,10 +192,10 @@ public class ResourceTestService {
         }
         if(!queries.isEmpty()){
             inputJson.put("queries", queries);
-            //makerequest
-
+            makeRequest(domain+"/"+appName,"testqueries",inputJson);
             //verifyResult(result);
         }
+        System.out.println(inputJson.toString(4));
 
         return result;
     }
