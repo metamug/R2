@@ -103,52 +103,62 @@ public class ResourceTestService {
             throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
         JSONObject result = new JSONObject();
 
+        JSONObject inputJson = new JSONObject();
+        JSONArray queries = new JSONArray();
+        
         for (Request req : resource.getRequest()) {
-            List<Param> paramsWithValue = new ArrayList<>();
+            List<Param> paramsWithValue = new ArrayList<>();    
+            
             List elements = req.getParamOrSqlOrExecuteOrXrequest();
             
-            for (Object object : elements) {
-                if (object instanceof Param) {
-                    Param param = (Param)object;
+            for (Object obj : elements) {
+                if (obj instanceof Param) {
+                    Param param = (Param)obj;
                     if(param.getValue() != null){
                         paramsWithValue.add(param);
                     }
                 }
-                else if (object instanceof Sql) {
+            }
+            
+            for (Object object : elements) {
+                
+                if (object instanceof Sql) {
                     Sql sql = (Sql) object;
                     
                     if(null == sql.getRef()){
-                        //query without ref will be tested
                         String query = sql.getValue().trim();
                         
-                        if(!paramsWithValue.isEmpty()){
-                            //test query with values from param tags
-                            List<String> sqlParamNames = getSqlParams(query);
-                            for(String paramName: sqlParamNames){
-                                //all sqlParams should be present in the paramsWithValue list
-                                boolean found = false;
-                                for(Param p: paramsWithValue){
-                                    String pName = p.getName();
-                                    if(pName.equals(paramName)){
-                                        found = true;
-                                    }
-                                }
-                                //if a single param is missing, break
-                                if(!found){
-                                    break;
+                        List<String> sqlParamNames = getSqlParams(query);
+                        JSONArray testdata = new JSONArray();
+                        
+                        for(String sqlParamName: sqlParamNames){
+                            for(Param p: paramsWithValue){
+                                if(p.getName().equals(sqlParamName)){
+                                    JSONObject testdataObject = new JSONObject();
+                                    testdataObject.put("varname", p.getName());
+                                    testdataObject.put("varvalue",p.getValue());
+                                    testdata.put(testdataObject);
                                 }
                             }
-                        } else{
-                            //test query with random values
                         }
+                        
+                        JSONObject queryObj = new JSONObject();
+                        queryObj.put("value", query);
+                        queryObj.put("testdata", testdata);
+                        
+                        queries.put(queryObj);
                         //JSONArray res = executeQuery(ref, appName, domain, "testqueries");
                         //result.put(ref, res);
-                    }
+                    }                    
                 }
             }
         }
+        if(!queries.isEmpty()){
+            inputJson.put("queries", queries);
+            //makerequest
 
-        verifyResult(result);
+            //verifyResult(result);
+        }
 
         return result;
     }
