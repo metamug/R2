@@ -54,14 +54,18 @@ package com.metamug.parser.service;
 
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.util.Utils;
+import com.metamug.schema.Param;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
 import com.metamug.schema.Sql;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,20 +76,73 @@ import org.json.JSONObject;
  */
 public class ResourceTestService {
 
+    private JSONArray executeQuery(String query, String appName, String domain, String type)
+            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
+
+        JSONArray tablesArray = new JSONArray();
+        JSONObject tableData = new JSONObject();
+        String result = Utils.executeQueryInApp(domain + "/" + appName, type, query);
+
+        if (result == null || result.isEmpty()) {
+            tableData.put("status", 204);
+            tablesArray.put(tableData);
+            return tablesArray;
+        } else {
+            try {
+                JSONArray resultArray = new JSONArray(result);
+                return resultArray;
+            } catch (JSONException ex) {
+                tableData.put("status", 204);
+                tablesArray.put(tableData);
+                return tablesArray;
+            }
+        }
+    }
+
     public JSONObject testResource(Resource resource, String domain, String appName)
             throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
         JSONObject result = new JSONObject();
 
         for (Request req : resource.getRequest()) {
+            List<Param> paramsWithValue = new ArrayList<>();
             List elements = req.getParamOrSqlOrExecuteOrXrequest();
+            
             for (Object object : elements) {
-                if (object instanceof Sql) {
+                if (object instanceof Param) {
+                    Param param = (Param)object;
+                    if(param.getValue() != null){
+                        paramsWithValue.add(param);
+                    }
+                }
+                else if (object instanceof Sql) {
                     Sql sql = (Sql) object;
-                    String ref = sql.getRef();
                     
-                    if(null != ref){
-                        JSONArray res = executeQuery(ref, appName, domain, "queryreftest");
-                        result.put(ref, res);
+                    if(null == sql.getRef()){
+                        //query without ref will be tested
+                        String query = sql.getValue().trim();
+                        
+                        if(!paramsWithValue.isEmpty()){
+                            //test query with values from param tags
+                            List<String> sqlParamNames = getSqlParams(query);
+                            for(String paramName: sqlParamNames){
+                                //all sqlParams should be present in the paramsWithValue list
+                                boolean found = false;
+                                for(Param p: paramsWithValue){
+                                    String pName = p.getName();
+                                    if(pName.equals(paramName)){
+                                        found = true;
+                                    }
+                                }
+                                //if a single param is missing, break
+                                if(!found){
+                                    break;
+                                }
+                            }
+                        } else{
+                            //test query with random values
+                        }
+                        //JSONArray res = executeQuery(ref, appName, domain, "testqueries");
+                        //result.put(ref, res);
                     }
                 }
             }
@@ -94,6 +151,16 @@ public class ResourceTestService {
         verifyResult(result);
 
         return result;
+    }
+    
+    protected List<String> getSqlParams(String query) {
+        List<String> params = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
+        Matcher match = pattern.matcher(query);
+        while (match.find()) {
+            params.add(query.substring(match.start(1), match.end(1)).trim());
+        }
+        return params;
     }
 
     private void verifyResult(JSONObject res) throws ResourceTestException {
@@ -122,29 +189,6 @@ public class ResourceTestService {
 
         if (error) {
             throw new ResourceTestException(sb.toString());
-        }
-    }
-
-    private JSONArray executeQuery(String query, String appName, String domain, String type)
-            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
-
-        JSONArray tablesArray = new JSONArray();
-        JSONObject tableData = new JSONObject();
-        String result = Utils.executeQueryInApp(domain + "/" + appName, type, query);
-
-        if (result == null || result.isEmpty()) {
-            tableData.put("status", 204);
-            tablesArray.put(tableData);
-            return tablesArray;
-        } else {
-            try {
-                JSONArray resultArray = new JSONArray(result);
-                return resultArray;
-            } catch (JSONException ex) {
-                tableData.put("status", 204);
-                tablesArray.put(tableData);
-                return tablesArray;
-            }
         }
     }
 }

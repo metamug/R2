@@ -115,19 +115,7 @@ public class ParserService {
     protected String OUTPUT_FOLDER;
     OutputStream output;
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
-    //File resourceFile;
-    /*List<String> methodItemList = new ArrayList<String>() {
-        {
-            add("GET:true");
-            add("GET:false");
-            add("PUT:true");
-            add("PUT:false");
-            add("POST:true");
-            add("POST:false");
-            add("DELETE:true");
-            add("DELETE:false");
-        }
-    };*/
+   
     private HashSet<String> elementIds;
 
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
@@ -149,10 +137,10 @@ public class ParserService {
         this.resourceVersion = parsedResource.getVersion();
 
         //make test queries requests
-        /*if (null != domain) {
+        if (null != domain) {
             ResourceTestService testService = new ResourceTestService();
             testService.testResource(parsedResource, domain, appName);
-        }*/
+        }
 
         Resource resource = createJsp(parsedResource, uploadedFile, isOldFile, domain);
 
