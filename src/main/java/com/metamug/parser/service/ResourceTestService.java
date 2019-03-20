@@ -145,6 +145,7 @@ public class ResourceTestService {
                         JSONObject queryObj = new JSONObject();
                         queryObj.put("value", query);
                         queryObj.put("testdata", testdata);
+                        queryObj.put("tag_id", sql.getId());
                         
                         queries.put(queryObj);
                         //JSONArray res = executeQuery(ref, appName, domain, "testqueries");
