@@ -67,12 +67,12 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static javax.ws.rs.core.HttpHeaders.USER_AGENT;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -80,30 +80,7 @@ import org.json.JSONObject;
  * @author anishhirlekar
  */
 public class ResourceTestService {
-    /*
-    private JSONArray executeQuery(String query, String appName, String domain, String type)
-            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
-
-        JSONArray tablesArray = new JSONArray();
-        JSONObject tableData = new JSONObject();
-        String result = Utils.executeQueryInApp(domain + "/" + appName, type, query);
-
-        if (result == null || result.isEmpty()) {
-            tableData.put("status", 204);
-            tablesArray.put(tableData);
-            return tablesArray;
-        } else {
-            try {
-                JSONArray resultArray = new JSONArray(result);
-                return resultArray;
-            } catch (JSONException ex) {
-                tableData.put("status", 204);
-                tablesArray.put(tableData);
-                return tablesArray;
-            }
-        }
-    }*/
-    
+      
     public static String makeRequest(String appUrl, String action, JSONObject inputJson) throws IOException, ResourceTestException {
 
         URL obj = new URL(appUrl + "/query");
@@ -122,7 +99,7 @@ public class ResourceTestService {
         }
         int statusCode = con.getResponseCode();
         if (statusCode != 200) {
-            throw new ResourceTestException("Server error. Something went wrong!");
+            throw new ResourceTestException("Something went wrong!");
         }
 
         try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
@@ -135,10 +112,8 @@ public class ResourceTestService {
         }
     }
 
-    public JSONObject testResource(Resource resource, String domain, String appName)
+    public void testResource(Resource resource, String domain, String appName)
             throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
-        JSONObject result = new JSONObject();
-
         JSONObject inputJson = new JSONObject();
         JSONArray queries = new JSONArray();
         
@@ -197,15 +172,11 @@ public class ResourceTestService {
         if(!queries.isEmpty()){
             inputJson.put("queries", queries);
             String testresults = makeRequest(domain+"/"+appName,"testqueries",inputJson);
-            //verifyResult(result);
-            System.out.println("PARSER-RESULT");
+            verifyResult(testresults);
+            //System.out.println("PARSER-RESULT");
             JSONArray results = new JSONArray(testresults);
-            System.out.println(results.toString(3));
+            //System.out.println(results.toString(3));
         }
-       
-        //System.out.println(inputJson.toString(4));
-
-        return result;
     }
     
     protected List<String> getSqlParams(String query) {
@@ -218,24 +189,32 @@ public class ResourceTestService {
         return params;
     }
 
-    private void verifyResult(JSONObject res) throws ResourceTestException {
-        StringBuilder sb = new StringBuilder("Errors occurred while testing queries:");
-        sb.append(System.getProperty("line.separator"));
+    private void verifyResult(String result) throws ResourceTestException {
+        
+        JSONArray resultArray;
+        try{
+            resultArray = new JSONArray(result);
+        }catch (JSONException jex){
+            throw new ResourceTestException("Something went wrong!");
+        }
+        JSONArray testResults = resultArray.getJSONObject(0).getJSONArray("test_results");
+        
+        StringBuilder sb = new StringBuilder("Errors found in queries:");
+        sb.append("<br/>");
 
         boolean error = false;
-        Iterator<String> keys = res.keys();
-        while (keys.hasNext()) {
-            String queryId = keys.next();
-            JSONArray array = res.getJSONArray(queryId);
-            JSONObject queryResult = array.getJSONObject(0);
+        
+        for(int i=0; i<testResults.length(); i++){
+            JSONObject testResult = testResults.getJSONObject(i);
 
-            int status = queryResult.getInt("status");
+            int status = testResult.getInt("status");
             if (status == 500 || status == 403 || status == 404) {
                 error = true;
-                JSONArray data = queryResult.getJSONArray("data");
+                JSONArray data = testResult.getJSONArray("data");
+                String tag_id = testResult.getString("tag_id");
                 String message = data.getString(0);
 
-                sb.append("<b>Ref:</b> ").append("<span class='text-success'>").append(queryId).append("</span>");
+                sb.append("<b>Tag ID:</b> ").append("<b class='text-info'>").append(tag_id).append("</b>");
                 sb.append("<br/>");
                 sb.append("<b>Error:</b> ").append(message);
                 sb.append("<br/>");
