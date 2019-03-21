@@ -178,24 +178,32 @@ public class ResourceTestService {
                             }
                         }
                         
+                        if(testdata.length() != sqlParamNames.size()){
+                            //if not all param values are given, do not send test data
+                            testdata = new JSONArray();
+                        }
+                        
                         JSONObject queryObj = new JSONObject();
                         queryObj.put("value", query);
                         queryObj.put("testdata", testdata);
                         queryObj.put("tag_id", sql.getId());
                         
                         queries.put(queryObj);
-                        //JSONArray res = executeQuery(ref, appName, domain, "testqueries");
-                        //result.put(ref, res);
+                        
                     }                    
                 }
             }
         }
         if(!queries.isEmpty()){
             inputJson.put("queries", queries);
-            makeRequest(domain+"/"+appName,"testqueries",inputJson);
+            String testresults = makeRequest(domain+"/"+appName,"testqueries",inputJson);
             //verifyResult(result);
+            System.out.println("PARSER-RESULT");
+            JSONArray results = new JSONArray(testresults);
+            System.out.println(results.toString(3));
         }
-        System.out.println(inputJson.toString(4));
+       
+        //System.out.println(inputJson.toString(4));
 
         return result;
     }
