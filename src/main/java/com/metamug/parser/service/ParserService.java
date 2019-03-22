@@ -711,6 +711,10 @@ public class ParserService {
                 modifiedStr = modifiedStr.replaceAll("\\sge(\\s|\\b)", " >= ");
             }
 
+            if (line.toLowerCase().matches(".*\\seq(\\s|\\b).*")) {
+                modifiedStr = modifiedStr.replaceAll("\\seq(\\s|\\b)", " = ");
+            }
+
             if (line.toLowerCase().matches(".*\\sne(\\s|\\b).*")) {
                 modifiedStr = modifiedStr.replaceAll("\\sne(\\s|\\b)", " != ");
             }

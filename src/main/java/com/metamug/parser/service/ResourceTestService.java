@@ -84,17 +84,19 @@ import org.json.JSONObject;
 public class ResourceTestService {
     
     public static Map<String, String> escapeCharacters = new HashMap<String,String>() {{
-        put(">","gt");
-        put(">=","ge");
-        put("<","lt");
-        put("<=","le");
-        put("=","eq");
-        put("!=","ne");
+        put("\\sle(\\s|\\b)"," <= ");
+        put("\\sge(\\s|\\b)"," >= ");
+        put("\\seq(\\s|\\b)"," = ");
+        put("\\sne(\\s|\\b)"," != ");
+        put("\\slt(\\s|\\b)"," < ");
+        put("\\sgt(\\s|\\b)"," > ");
     }};
       
     public static String replaceEscapeCharacters(String sql) {
         for(Map.Entry<String,String> e: escapeCharacters.entrySet()){
-            sql = sql.replaceAll(" "+e.getValue()+" ", " "+e.getKey()+" ");
+            if(sql.toLowerCase().matches(".*"+e.getKey()+".*")){
+                sql = sql.replaceAll(e.getKey(), e.getValue());
+            }
         }
         return sql;
     }
