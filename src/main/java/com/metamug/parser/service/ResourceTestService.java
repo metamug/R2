@@ -88,13 +88,13 @@ public class ResourceTestService {
         put(">=","ge");
         put("<","lt");
         put("<=","le");
-        put("=", "eq");
-        put("!=", "ne");
+        put("=","eq");
+        put("!=","ne");
     }};
       
-    private String replaceEscapeCharacters(String sql) {
+    public static String replaceEscapeCharacters(String sql) {
         for(Map.Entry<String,String> e: escapeCharacters.entrySet()){
-            sql = sql.replaceAll(" "+e.getValue()+" ", e.getKey());
+            sql = sql.replaceAll(" "+e.getValue()+" ", " "+e.getKey()+" ");
         }
         return sql;
     }

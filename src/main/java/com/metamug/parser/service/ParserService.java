@@ -203,12 +203,12 @@ public class ParserService {
                             QueryManagerService service = new QueryManagerService();
                             String url = domain + "/" + appName;
                             String version = Double.toString(resourceVersion);
-
+                            String sqlValue = ResourceTestService.replaceEscapeCharacters(sql.getValue().trim());
+                            
                             if (ref != null) {
-                                sql.setValue(service.saveRefWithTag(url,
-                                        ref, this.resourceName, version, tag));
+                                sql.setValue(service.saveRefWithTag(url, ref, this.resourceName, version, tag));
                             } else {
-                                service.saveQueryWithTag(url, sql.getValue().trim(), this.resourceName, 
+                                service.saveQueryWithTag(url, sqlValue, this.resourceName, 
                                         version, tag);
                             }
                         }
