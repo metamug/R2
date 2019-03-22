@@ -67,7 +67,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static javax.ws.rs.core.HttpHeaders.USER_AGENT;
@@ -80,7 +82,23 @@ import org.json.JSONObject;
  * @author anishhirlekar
  */
 public class ResourceTestService {
+    
+    public static Map<String, String> escapeCharacters = new HashMap<String,String>() {{
+        put(">","gt");
+        put(">=","ge");
+        put("<","lt");
+        put("<=","le");
+        put("=", "eq");
+        put("!=", "ne");
+    }};
       
+    private String replaceEscapeCharacters(String sql) {
+        for(Map.Entry<String,String> e: escapeCharacters.entrySet()){
+            sql = sql.replaceAll(" "+e.getValue()+" ", e.getKey());
+        }
+        return sql;
+    }
+    
     public static String makeRequest(String appUrl, String action, JSONObject inputJson) throws IOException, ResourceTestException {
 
         URL obj = new URL(appUrl + "/query");
@@ -137,7 +155,7 @@ public class ResourceTestService {
                     Sql sql = (Sql) object;
                     
                     if(null == sql.getRef()){
-                        String query = sql.getValue().trim();
+                        String query = replaceEscapeCharacters(sql.getValue().trim());
                         
                         List<String> sqlParamNames = getSqlParams(query);
                         JSONArray testdata = new JSONArray();
