@@ -94,6 +94,7 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
@@ -554,7 +555,7 @@ public class ParserService {
         String xreqVar = "xreqResult";
         writer.writeAttribute("var", xreqVar);
         writer.writeAttribute("method", xrequest.getMethod().name());
-        writer.writeAttribute("url", xrequest.getUrl());
+        writer.writeAttribute("url", StringEscapeUtils.unescapeXml(xrequest.getUrl()));
 
         for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
             if (paramOrHeaderOrBody instanceof Xheader) {
