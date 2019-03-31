@@ -9,13 +9,11 @@ package com.metamug.schema;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sql", propOrder = {"value"})
-@XmlSeeAlso({Query.class, Update.class})
 public class Sql {
 
     @XmlValue
@@ -237,11 +235,7 @@ public class Sql {
      *
      */
     public SqlType getType() {
-        if (type == null) {
-            return SqlType.QUERY;
-        } else {
-            return type;
-        }
+        return type;
     }
 
     /**

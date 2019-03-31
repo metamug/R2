@@ -38,19 +38,14 @@ public class Request {
     protected List<Execute> execute;
     @XmlElement(name = "XRequest")
     protected List<Xrequest> xrequest;
-
     @XmlElements({
-        @XmlElement(name = "Query", type = Query.class)
-        ,
-        @XmlElement(name = "Update", type = Update.class)
+        @XmlElement(name = "Sql", type = Sql.class)
     })
     protected List<Sql> sql;
     @XmlElements({
         @XmlElement(name = "Param", type = Param.class)
         ,
-        @XmlElement(name = "Query", type = Query.class)
-        ,
-        @XmlElement(name = "Update", type = Update.class)
+        @XmlElement(name = "Sql", type = Sql.class)
         ,
         @XmlElement(name = "Execute", type = Execute.class)
         ,
