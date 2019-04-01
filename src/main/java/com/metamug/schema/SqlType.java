@@ -28,12 +28,12 @@ public enum SqlType {
         return value;
     }
 
-//    public static SqlType fromValue(String v) {
-//        for (SqlType c : SqlType.values()) {
-//            if (c.value.equals(v)) {
-//                return c;
-//            }
-//        }
-//        throw new IllegalArgumentException(v);
-//    }
+    public static SqlType fromValue(String v) {
+        for (SqlType c : SqlType.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
+    }
 }

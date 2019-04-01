@@ -57,6 +57,7 @@ import com.metamug.schema.Param;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
 import com.metamug.schema.Sql;
+import com.metamug.schema.SqlType;
 import java.beans.PropertyVetoException;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -191,6 +192,7 @@ public class ResourceTestService {
                 }
             }
         }
+        
         if(!queries.isEmpty()){
             inputJson.put("queries", queries);
             String testresults = makeRequest(domain+"/"+appName,"testqueries",inputJson);
@@ -198,6 +200,28 @@ public class ResourceTestService {
             System.out.println("PARSER-RESULT");
             JSONArray results = new JSONArray(testresults);
             System.out.println(results.toString(3));
+            
+            for (Request req : resource.getRequest()) {
+                List elements = req.getParamOrSqlOrExecuteOrXrequest();
+                for (Object object : elements) {
+                    if (object instanceof Sql) {
+                        Sql sql = (Sql) object;
+                        String tagId = sql.getId();
+                        if(sql.getType() == null) {
+                            JSONArray test_results = results.getJSONObject(0).getJSONArray("test_results");
+                            for(int i=0; i < test_results.length(); i++) {
+                                JSONObject resultObj = test_results.getJSONObject(i);
+                                String tag_id = resultObj.getString("tag_id");
+
+                                if(tagId.equals(tag_id)) {
+                                    SqlType type = SqlType.fromValue(resultObj.getString("querytype"));
+                                    sql.setType(type);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     
