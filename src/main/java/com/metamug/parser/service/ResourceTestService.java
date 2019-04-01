@@ -182,9 +182,11 @@ public class ResourceTestService {
                         queryObj.put("value", query);
                         queryObj.put("testdata", testdata);
                         queryObj.put("tag_id", sql.getId());
+                        if(sql.getType() != null){
+                            queryObj.put("type", sql.getType().value());
+                        }
                         
                         queries.put(queryObj);
-                        
                     }                    
                 }
             }
@@ -193,9 +195,9 @@ public class ResourceTestService {
             inputJson.put("queries", queries);
             String testresults = makeRequest(domain+"/"+appName,"testqueries",inputJson);
             verifyResult(testresults);
-            //System.out.println("PARSER-RESULT");
+            System.out.println("PARSER-RESULT");
             JSONArray results = new JSONArray(testresults);
-            //System.out.println(results.toString(3));
+            System.out.println(results.toString(3));
         }
     }
     
