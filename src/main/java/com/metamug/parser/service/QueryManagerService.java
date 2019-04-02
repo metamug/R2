@@ -89,13 +89,14 @@ public class QueryManagerService {
         return jsonObject.getString("query");
     }
 
-    public void saveQueryWithTag(String url, String query, String resname, String resversion, String tag) throws IOException, ResourceTestException {
+    public void saveQueryWithTag(String url, String query, String resname, String resversion, String tag, String queryType) throws IOException, ResourceTestException {
         Map<String, String> params = new HashMap<>();
         params.put("action", ACTION_SAVE_QUERY_TAG);
         params.put("query", query);
         params.put("resname", resname);
         params.put("resversion", resversion);
         params.put("tag", tag);
+        params.put("type", queryType);
 
         makeRequest(url, params);
     }

@@ -210,7 +210,7 @@ public class ParserService {
                                 sql.setValue(service.saveRefWithTag(url, ref, this.resourceName, version, tag));
                             } else {
                                 service.saveQueryWithTag(url, sqlValue, this.resourceName, 
-                                        version, tag);
+                                        version, tag, sql.getType().value());
                             }
                         }
 
