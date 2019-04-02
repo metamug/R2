@@ -61,6 +61,7 @@ import com.metamug.schema.Param;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
 import com.metamug.schema.Sql;
+import com.metamug.schema.SqlType;
 import com.metamug.schema.Xheader;
 import com.metamug.schema.Xparam;
 import com.metamug.schema.Xrequest;
@@ -207,7 +208,11 @@ public class ParserService {
                             String sqlValue = ResourceTestService.replaceEscapeCharacters(sql.getValue().trim());
                             
                             if (ref != null) {
-                                sql.setValue(service.saveRefWithTag(url, ref, this.resourceName, version, tag));
+                                JSONObject queryObj = service.saveRefWithTag(url, ref, this.resourceName, version, tag);
+                                String type = queryObj.getString("type");                       
+                                
+                                sql.setType(SqlType.fromValue(type));
+                                sql.setValue(queryObj.getString("query"));
                             } else {
                                 service.saveQueryWithTag(url, sqlValue, this.resourceName, 
                                         version, tag, sql.getType().value());

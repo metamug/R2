@@ -75,7 +75,7 @@ public class QueryManagerService {
     public static final String ACTION_SAVE_REF_TAG = "refsavewithtag";
     public static final String ACTION_SAVE_QUERY_TAG = "querysavewithtag";
 
-    public String saveRefWithTag(String url, String ref, String resname, String resversion, String tag) throws IOException, ResourceTestException {
+    public JSONObject saveRefWithTag(String url, String ref, String resname, String resversion, String tag) throws IOException, ResourceTestException {
         Map<String, String> params = new HashMap<>();
         params.put("action", ACTION_SAVE_REF_TAG);
         params.put("ref", ref);
@@ -86,7 +86,7 @@ public class QueryManagerService {
         JSONArray array = new JSONArray(makeRequest(url, params));
         JSONObject jsonObject = array.getJSONObject(0);
 
-        return jsonObject.getString("query");
+        return jsonObject;
     }
 
     public void saveQueryWithTag(String url, String query, String resname, String resversion, String tag, String queryType) throws IOException, ResourceTestException {
