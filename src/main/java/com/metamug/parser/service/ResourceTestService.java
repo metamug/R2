@@ -197,9 +197,10 @@ public class ResourceTestService {
             inputJson.put("queries", queries);
             String testresults = makeRequest(domain+"/"+appName,"testqueries",inputJson);
             verifyResult(testresults);
-            System.out.println("PARSER-RESULT");
+            
+            //System.out.println("PARSER-RESULT");
             JSONArray results = new JSONArray(testresults);
-            System.out.println(results.toString(3));
+            //System.out.println(results.toString(3));
             
             for (Request req : resource.getRequest()) {
                 List elements = req.getParamOrSqlOrExecuteOrXrequest();
