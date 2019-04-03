@@ -275,11 +275,6 @@ public class Sql {
      *
      */
     public Boolean getVerbose() {
-        if(null == verbose){
-            if(getType().value().equals("query")){
-                return Boolean.TRUE;
-            }
-        }
         return verbose;
     }
 

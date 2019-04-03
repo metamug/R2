@@ -111,7 +111,6 @@ public class ResourceTestService {
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 
         String urlParameters = "action=" + action + "&querydata=" + URLEncoder.encode(inputJson.toString(), "UTF-8");
-
         // Send post request
         con.setDoOutput(true);
         try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
@@ -153,16 +152,16 @@ public class ResourceTestService {
             }
             
             for (Object object : elements) {
-                
                 if (object instanceof Sql) {
                     Sql sql = (Sql) object;
+                    JSONObject queryObj = new JSONObject();
+                    queryObj.put("tag_id", sql.getId());
                     
                     if(null == sql.getRef()){
+                        queryObj.put("ref",false);
                         String query = replaceEscapeCharacters(sql.getValue().trim());
-                        
                         List<String> sqlParamNames = getSqlParams(query);
                         JSONArray testdata = new JSONArray();
-                        
                         for(String sqlParamName: sqlParamNames){
                             for(Param p: paramsWithValue){
                                 if(p.getName().equals(sqlParamName)){
@@ -173,22 +172,21 @@ public class ResourceTestService {
                                 }
                             }
                         }
-                        
                         if(testdata.length() != sqlParamNames.size()){
                             //if not all param values are given, do not send test data
                             testdata = new JSONArray();
                         }
-                        
-                        JSONObject queryObj = new JSONObject();
                         queryObj.put("value", query);
                         queryObj.put("testdata", testdata);
-                        queryObj.put("tag_id", sql.getId());
                         if(sql.getType() != null){
                             queryObj.put("type", sql.getType().value());
-                        }
-                        
-                        queries.put(queryObj);
-                    }                    
+                        }                        
+                    } else {
+                        queryObj.put("ref",true);
+                        queryObj.put("query_id", sql.getRef());
+                    }   
+                    
+                    queries.put(queryObj);                
                 }
             }
         }
@@ -202,21 +200,25 @@ public class ResourceTestService {
             JSONArray results = new JSONArray(testresults);
             //System.out.println(results.toString(3));
             
+            //set type for sql tags without given type
             for (Request req : resource.getRequest()) {
                 List elements = req.getParamOrSqlOrExecuteOrXrequest();
                 for (Object object : elements) {
                     if (object instanceof Sql) {
                         Sql sql = (Sql) object;
                         String tagId = sql.getId();
-                        if(sql.getType() == null) {
-                            JSONArray test_results = results.getJSONObject(0).getJSONArray("test_results");
-                            for(int i=0; i < test_results.length(); i++) {
-                                JSONObject resultObj = test_results.getJSONObject(i);
-                                String tag_id = resultObj.getString("tag_id");
+                        
+                        JSONArray test_results = results.getJSONObject(0).getJSONArray("test_results");
+                        for(int i=0; i < test_results.length(); i++) {
+                            JSONObject resultObj = test_results.getJSONObject(i);
+                            String tag_id = resultObj.getString("tag_id");
 
-                                if(tagId.equals(tag_id)) {
-                                    SqlType type = SqlType.fromValue(resultObj.getString("querytype"));
-                                    sql.setType(type);
+                            if(tagId.equals(tag_id)) {
+                                SqlType type = SqlType.fromValue(resultObj.getString("querytype"));
+                                sql.setType(type);
+                                    
+                                if(sql.getRef()!=null){
+                                    sql.setValue(resultObj.getString("query"));
                                 }
                             }
                         }
@@ -246,25 +248,38 @@ public class ResourceTestService {
         }
         JSONArray testResults = resultArray.getJSONObject(0).getJSONArray("test_results");
         
-        StringBuilder sb = new StringBuilder("Errors found in queries:");
+        StringBuilder sb = new StringBuilder("Errors found in Sql tags:");
         sb.append("<br/>");
 
         boolean error = false;
         
-        for(int i=0; i<testResults.length(); i++){
+        for(int i=0; i < testResults.length(); i++){
             JSONObject testResult = testResults.getJSONObject(i);
+            boolean isRef = testResult.getBoolean("ref");
+            String tag_id = testResult.getString("tag_id");
+            
+            if(isRef){
+                boolean exists = testResult.getBoolean("exists");
+                if(!exists){
+                    error = true;
+                    sb.append("<b>Tag ID:</b> ").append("<b class='text-info'>").append(tag_id).append("</b>");
+                    sb.append("<br/>");
+                    String queryId = testResult.getString("query_id");
+                    sb.append("<b>Error:</b> ").append("Invalid reference ID <b class='text-success'>").append(queryId);
+                    sb.append("</b><br/>");
+                }
+            }else{
+                int status = testResult.getInt("status");
+                if (status == 500 || status == 403 || status == 404) {
+                    error = true;
+                    JSONArray data = testResult.getJSONArray("data");
+                    String message = data.getString(0);
 
-            int status = testResult.getInt("status");
-            if (status == 500 || status == 403 || status == 404) {
-                error = true;
-                JSONArray data = testResult.getJSONArray("data");
-                String tag_id = testResult.getString("tag_id");
-                String message = data.getString(0);
-
-                sb.append("<b>Tag ID:</b> ").append("<b class='text-info'>").append(tag_id).append("</b>");
-                sb.append("<br/>");
-                sb.append("<b>Error:</b> ").append(message);
-                sb.append("<br/>");
+                    sb.append("<b>Tag ID:</b> ").append("<b class='text-info'>").append(tag_id).append("</b>");
+                    sb.append("<br/>");
+                    sb.append("<b>Error:</b> ").append(message);
+                    sb.append("<br/>");
+                }
             }
         }
 

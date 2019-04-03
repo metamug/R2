@@ -61,7 +61,6 @@ import com.metamug.schema.Param;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
 import com.metamug.schema.Sql;
-import com.metamug.schema.SqlType;
 import com.metamug.schema.Xheader;
 import com.metamug.schema.Xparam;
 import com.metamug.schema.Xrequest;
@@ -206,14 +205,8 @@ public class ParserService {
                             String url = domain + "/" + appName;
                             String version = Double.toString(resourceVersion);
                             String sqlValue = ResourceTestService.replaceEscapeCharacters(sql.getValue().trim());
-                            
-                            if (ref != null) {
-                                JSONObject queryObj = service.saveRefWithTag(url, ref, this.resourceName, version, tag);
-                                String type = queryObj.getString("type");                       
-                                
-                                sql.setType(SqlType.fromValue(type));
-                                sql.setValue(queryObj.getString("query"));
-                            } else {
+                          
+                            if(ref == null) {
                                 service.saveQueryWithTag(url, sqlValue, this.resourceName, 
                                         version, tag, sql.getType().value());
                             }
@@ -852,25 +845,6 @@ public class ParserService {
         return builder.toString();
     }
 
-    /*private boolean needDefaultCase(Request req) {
-        int sqlCount = 0;
-        int exeCount = 0;
-        for (Sql sql : req.getSql()) {
-            if (sql.getWhen() != null && !sql.getWhen().isEmpty()) {
-                sqlCount++;
-            } else {
-                return false;
-            }
-        }
-        for (Execute execute : req.getExecute()) {
-            if (execute.getWhen() != null && !execute.getWhen().isEmpty()) {
-                exeCount++;
-            } else {
-                return false;
-            }
-        }
-        return ((sqlCount == req.getSql().size()) && (exeCount == req.getExecute().size()));
-    }*/
     public String getQuotedString(String plainString) throws SAXException {
         StringBuilder finalString;
         String quotedString = plainString.replaceAll("\\s+", " ");
