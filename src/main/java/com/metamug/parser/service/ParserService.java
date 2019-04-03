@@ -61,6 +61,7 @@ import com.metamug.schema.Param;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
 import com.metamug.schema.Sql;
+import com.metamug.schema.SqlType;
 import com.metamug.schema.Xheader;
 import com.metamug.schema.Xparam;
 import com.metamug.schema.Xrequest;
@@ -95,6 +96,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
@@ -122,10 +124,9 @@ public class ParserService {
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
     public JSONObject transform(File uploadedFile, String appName, boolean isOldFile, String outputFolder, 
-            String domain, JSONObject queryMap)
-            throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException,
-            XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
-            URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
+            String domain, JSONObject queryMap) throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException,
+                XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
+                    URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
         this.appName = appName;
         this.resourceName = Utils.removeExtension(uploadedFile.getName());
         this.queryMap = queryMap;
@@ -210,6 +211,23 @@ public class ParserService {
                                 service.saveQueryWithTag(url, sqlValue, this.resourceName, 
                                         version, tag, sql.getType().value());
                             }
+                        } else {
+                            System.out.println(resourceName);
+                            System.out.println(sql.getId());
+                            if(sql.getType() == null && queryMap != null){
+                                JSONArray queries = queryMap.getJSONArray("queries");
+                                for(int i=0; i<queries.length();i++){
+                                    
+                                    System.out.println("P0");
+                                    JSONObject queryData = queries.getJSONObject(i);
+                                    String queryId = Long.toString(queryData.getLong("query_id"));
+                                    if(tag.equals(queryId)){
+                                        SqlType queryType = SqlType.fromValue(queryData.getString("type"));
+                                        sql.setType(queryType);
+                                    }
+                                }
+                            }
+                            System.out.println("P1");
                         }
 
                         printSqlTag(sql, writer);
