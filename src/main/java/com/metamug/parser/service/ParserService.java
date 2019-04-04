@@ -61,7 +61,6 @@ import com.metamug.schema.Param;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
 import com.metamug.schema.Sql;
-import com.metamug.schema.SqlType;
 import com.metamug.schema.Xheader;
 import com.metamug.schema.Xparam;
 import com.metamug.schema.Xrequest;
@@ -96,7 +95,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
@@ -119,7 +117,7 @@ public class ParserService {
     OutputStream output;
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
    
-    private HashSet<String> elementIds;
+    protected HashSet<String> elementIds;
 
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
@@ -155,7 +153,7 @@ public class ParserService {
         }
         return obj;
     }
-
+    
     public Resource createJsp(Resource resource, File resourceFile, boolean isOldFile, String domain)
             throws JAXBException, SAXException, IOException, FileNotFoundException, XPathExpressionException,
             TransformerException, URISyntaxException, XMLStreamException, ResourceTestException {
@@ -186,69 +184,7 @@ public class ParserService {
 
                 List elements = req.getParamOrSqlOrExecuteOrXrequest();
 
-                for (Object object : elements) {
-                    if (object instanceof Param) {
-                        Param param = (Param) object;
-                        printParamTag(writer, param);
-
-                    } else if (object instanceof Sql) {
-                        Sql sql = (Sql) object;
-                        String tag = sql.getId();
-                        elementIds.add(tag);
-
-                        if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
-                            startValidateTag(writer, sql.getOnerror());
-                        }
-
-                        if (null != domain) {
-                            String ref = sql.getRef();
-                            QueryManagerService service = new QueryManagerService();
-                            String url = domain + "/" + appName;
-                            String version = Double.toString(resourceVersion);
-                            String sqlValue = ResourceTestService.replaceEscapeCharacters(sql.getValue().trim());
-                          
-                            if(ref == null) {
-                                service.saveQueryWithTag(url, sqlValue, this.resourceName, 
-                                        version, tag, sql.getType().value());
-                            }
-                        } else {
-                            System.out.println(resourceName);
-                            System.out.println(sql.getId());
-                            if(sql.getType() == null && queryMap != null){
-                                JSONArray queries = queryMap.getJSONArray("queries");
-                                for(int i=0; i<queries.length();i++){
-                                    
-                                    System.out.println("P0");
-                                    JSONObject queryData = queries.getJSONObject(i);
-                                    String queryId = Long.toString(queryData.getLong("query_id"));
-                                    if(tag.equals(queryId)){
-                                        SqlType queryType = SqlType.fromValue(queryData.getString("type"));
-                                        sql.setType(queryType);
-                                    }
-                                }
-                            }
-                            System.out.println("P1");
-                        }
-
-                        printSqlTag(sql, writer);
-
-                        if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
-                            closeValidateTag(writer);
-                        }
-
-                    } else if (object instanceof Execute) {
-                        Execute execute = (Execute) object;
-                        elementIds.add(execute.getId());
-
-                        printExecuteTag(execute, writer);
-
-                    } else if (object instanceof Xrequest) {
-                        Xrequest xr = (Xrequest) object;
-                        elementIds.add(xr.getId());
-
-                        printXrequestTag(xr, writer);
-                    }
-                }
+                printRequestElements(elements, writer, domain);
                 //printGlobalOutput(writer, resourceFile);
 
                 //printDefaultCase(req, writer);
@@ -273,6 +209,49 @@ public class ParserService {
             //user is trying to create new resource with already created resource 
             throw new FileAlreadyExistsException(FilenameUtils.removeExtension(resourceFile.getName())
                     + " file with version no. " + resource.getVersion() + " already exists.");
+        }
+    }
+
+    protected void printRequestElements(List elements, XMLStreamWriter writer, String domain) throws XMLStreamException, IOException, XPathExpressionException, SAXException, ResourceTestException{
+        for (Object object : elements) {
+            if (object instanceof Param) {
+                Param param = (Param) object;
+                printParamTag(writer, param);
+            } else if (object instanceof Sql) {
+                Sql sql = (Sql) object;
+                String tag = sql.getId();
+                elementIds.add(tag);
+
+                if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
+                    startValidateTag(writer, sql.getOnerror());
+                }
+
+                String ref = sql.getRef();
+                QueryManagerService service = new QueryManagerService();
+                String url = domain + "/" + appName;
+                String version = Double.toString(resourceVersion);
+                String sqlValue = ResourceTestService.replaceEscapeCharacters(sql.getValue().trim());
+                          
+                if(ref == null) {
+                    service.saveQueryWithTag(url, sqlValue, this.resourceName, version, tag, sql.getType().value());
+                } else{
+                    service.saveRefWithTag(url, ref, this.resourceName, version, tag);
+                }                    
+
+                printSqlTag(sql, writer);
+
+                if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
+                    closeValidateTag(writer);
+                }
+            } else if (object instanceof Execute) {
+                Execute execute = (Execute) object;
+                elementIds.add(execute.getId());
+                printExecuteTag(execute, writer);
+            } else if (object instanceof Xrequest) {
+                Xrequest xr = (Xrequest) object;
+                elementIds.add(xr.getId());
+                printXrequestTag(xr, writer);
+            }
         }
     }
 
@@ -334,7 +313,7 @@ public class ParserService {
      * @throws IOException
      * @throws XPathExpressionException
      */
-    private void printParamTag(XMLStreamWriter writer, Param param) throws XMLStreamException, IOException, XPathExpressionException {
+    protected void printParamTag(XMLStreamWriter writer, Param param) throws XMLStreamException, IOException, XPathExpressionException {
         writer.writeCharacters(System.lineSeparator());
         writeEscapedCharacters(writer, processParam(param));
     }
@@ -346,7 +325,7 @@ public class ParserService {
      * @param errorMessage Error message to be printed.
      * @throws XMLStreamException
      */
-    private void startValidateTag(XMLStreamWriter writer, String errorMessage) throws XMLStreamException {
+    protected void startValidateTag(XMLStreamWriter writer, String errorMessage) throws XMLStreamException {
         writer.writeStartElement("m:validate");
         writer.writeAttribute("onError", errorMessage);
     }
@@ -490,7 +469,7 @@ public class ParserService {
      * @throws XMLStreamException
      * @throws SAXException
      */
-    private void printExecuteTag(Execute execute, XMLStreamWriter writer) throws XMLStreamException, SAXException {
+    protected void printExecuteTag(Execute execute, XMLStreamWriter writer) throws XMLStreamException, SAXException {
         if (execute.getWhen() != null) {
             writer.writeStartElement("c:if");
             String testString = getQuotedString(execute.getWhen());
@@ -557,7 +536,7 @@ public class ParserService {
      * @throws XMLStreamException
      * @throws SAXException
      */
-    private void printXrequestTag(Xrequest xrequest, XMLStreamWriter writer)
+    protected void printXrequestTag(Xrequest xrequest, XMLStreamWriter writer)
             throws XMLStreamException, SAXException {
         if (xrequest.getWhen() != null) {
             writer.writeStartElement("c:if");
@@ -628,7 +607,7 @@ public class ParserService {
      * @param writer XMLStreamWriter to write to JSP file.
      * @throws XMLStreamException
      */
-    private void closeValidateTag(XMLStreamWriter writer) throws XMLStreamException {
+    protected void closeValidateTag(XMLStreamWriter writer) throws XMLStreamException {
         writer.writeEndElement();
     }
 
