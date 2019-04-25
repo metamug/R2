@@ -75,7 +75,7 @@ public class QueryManagerService {
     public static final String ACTION_SAVE_REF_TAG = "refsavewithtag";
     public static final String ACTION_SAVE_QUERY_TAG = "querysavewithtag";
 
-    public JSONObject saveRefWithTag(String url, String ref, String resname, String resversion, String tag) throws IOException, ResourceTestException {
+    public JSONObject saveRefWithTag(String url, String ref, String resname, String resversion, String tag,String appName) throws IOException, ResourceTestException {
         Map<String, String> params = new HashMap<>();
         params.put("action", ACTION_SAVE_REF_TAG);
         params.put("ref", ref);
@@ -83,13 +83,13 @@ public class QueryManagerService {
         params.put("resversion", resversion);
         params.put("tag", tag);
 
-        JSONArray array = new JSONArray(makeRequest(url, params));
+        JSONArray array = new JSONArray(makeRequest(url, params,appName));
         JSONObject jsonObject = array.getJSONObject(0);
 
         return jsonObject;
     }
 
-    public void saveQueryWithTag(String url, String query, String resname, String resversion, String tag, String queryType) throws IOException, ResourceTestException {
+    public void saveQueryWithTag(String url, String query, String resname, String resversion, String tag, String queryType,String appName) throws IOException, ResourceTestException {
         Map<String, String> params = new HashMap<>();
         params.put("action", ACTION_SAVE_QUERY_TAG);
         params.put("query", query);
@@ -98,16 +98,16 @@ public class QueryManagerService {
         params.put("tag", tag);
         params.put("type", queryType);
 
-        makeRequest(url, params);
+        makeRequest(url, params,appName);
     }
 
-    private static String makeRequest(String url, Map<String, String> params) throws IOException, ResourceTestException {
+    private static String makeRequest(String url, Map<String, String> params,String appName) throws IOException, ResourceTestException {
         URL obj = new URL(url + "/query");
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("User-Agent", USER_AGENT);
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
+        con.setRequestProperty("Authorization", Utils.getMasonApiRequestSignature(appName) );
         String urlParameters = Utils.mapToUrlParams(params);
 
         // Send post request

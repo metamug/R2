@@ -233,9 +233,9 @@ public class ParserService {
                 String sqlValue = ResourceTestService.replaceEscapeCharacters(sql.getValue().trim());
                           
                 if(ref == null) {
-                    service.saveQueryWithTag(url, sqlValue, this.resourceName, version, tag, sql.getType().value());
+                    service.saveQueryWithTag(url, sqlValue, this.resourceName, version, tag, sql.getType().value(),appName);
                 } else{
-                    service.saveRefWithTag(url, ref, this.resourceName, version, tag);
+                    service.saveRefWithTag(url, ref, this.resourceName, version, tag,appName);
                 }                    
 
                 printSqlTag(sql, writer);

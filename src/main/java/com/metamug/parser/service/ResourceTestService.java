@@ -53,6 +53,7 @@
 package com.metamug.parser.service;
 
 import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.util.Utils;
 import com.metamug.schema.Param;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
@@ -102,14 +103,14 @@ public class ResourceTestService {
         return sql;
     }
     
-    public static String makeRequest(String appUrl, String action, JSONObject inputJson) throws IOException, ResourceTestException {
+    public static String makeRequest(String appUrl, String action, JSONObject inputJson, String appName) throws IOException, ResourceTestException {
 
         URL obj = new URL(appUrl + "/query");
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("User-Agent", USER_AGENT);
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
+        con.setRequestProperty("Authorization",Utils.getMasonApiRequestSignature(appName));
         String urlParameters = "action=" + action + "&querydata=" + URLEncoder.encode(inputJson.toString(), "UTF-8");
         // Send post request
         con.setDoOutput(true);
@@ -193,7 +194,7 @@ public class ResourceTestService {
         
         if(!queries.isEmpty()){
             inputJson.put("queries", queries);
-            String testresults = makeRequest(domain+"/"+appName,"testqueries",inputJson);
+            String testresults = makeRequest(domain+"/"+appName,"testqueries",inputJson,appName);
             verifyResult(testresults);
             
             //System.out.println("PARSER-RESULT");
