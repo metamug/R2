@@ -67,6 +67,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -80,6 +81,15 @@ public class ParserServiceTest {
     String appName = "testWebapp";
     boolean isOldFile = true;
 
+    @Test
+    public void testConcat(){
+        String testQuery = "SELECT * FROM movies WHERE name LIKE '%$name' WHERE rating LIKE '%$rating%' ";
+        
+        String processedQuery = ParserService.processVariablesWithinQuotes(testQuery);
+        System.out.println(processedQuery);
+    }
+    
+    @Ignore
     @Test
     public void testParser() {
 

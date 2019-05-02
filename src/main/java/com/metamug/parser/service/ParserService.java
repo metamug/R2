@@ -661,21 +661,28 @@ public class ParserService {
     }
     
     // '%$variable%' => CONCAT('%',$variable,'%')
-    protected String processVariablesWithinQuotes(String q){
+    protected static String processVariablesWithinQuotes(String q){
         Pattern quotePattern = Pattern.compile("'(.*?)'");
-        Matcher matcher = quotePattern.matcher(q);
-        while (matcher.find()) {
-            String quotedSubstring = matcher.group(1);
-            String stringWithinQuotes = q.substring(matcher.start(1), matcher.end(1)).trim();
+        Matcher quotedSubstringMatcher = quotePattern.matcher(q);
+        while (quotedSubstringMatcher.find()) {
+            String stringWithinQuotes = quotedSubstringMatcher.group(1);
+            //String stringWithinQuotes = q.substring(matcher.start(1), matcher.end(1)).trim();
             
             Pattern varPattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
-            Matcher varMatcher = varPattern.matcher(quotedSubstring);
-            while (varMatcher.find()) {
-                String variable = varMatcher.group(1);
+            Matcher matcher = varPattern.matcher(stringWithinQuotes);
+            
+            StringBuilder builder = new StringBuilder();
+            builder.append("CONCAT(");
+            while (matcher.find()) {
+                String variable = ",$"+matcher.group(1)+",";
+                String precedent = "'"+stringWithinQuotes.substring(0,matcher.start())+"'";
+                String succedent = "'"+stringWithinQuotes.substring(matcher.end(),stringWithinQuotes.length())+"'";
                 
+                builder.append(precedent).append(variable).append(succedent).append(")");
             }
+            q = q.replace("'"+stringWithinQuotes+"'", builder.toString());
         }
-        return null;
+        return q;
     }
 
     protected String getSqlParams(Sql sql) {
