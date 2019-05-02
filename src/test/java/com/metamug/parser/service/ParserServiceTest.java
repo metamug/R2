@@ -83,7 +83,7 @@ public class ParserServiceTest {
 
     @Test
     public void testConcat(){
-        String testQuery = "SELECT * FROM 'OR $name%' WHERE name LIKE '%$name% OR %rating' WHERE rating LIKE '%$rating' ";
+        String testQuery = "SELECT * FROM '$name%' WHERE  LIKE '%$rating%' name LIKE '%$name% OR %$rating AGAIN $var' WHERE rating LIKE '%$rating' ";
         
         String processedQuery = ParserService.processVariablesWithinQuotes(testQuery);
         System.out.println(processedQuery);

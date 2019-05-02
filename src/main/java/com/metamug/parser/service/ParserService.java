@@ -674,27 +674,25 @@ public class ParserService {
             String succedent = stringWithinQuotes;
             
             builder.append("CONCAT(");
-            StringBuilder args = new StringBuilder();
+            List<String> args = new ArrayList();
             while (matcher.find()) {
                 String variable = matcher.group(1);
-               /*
-                System.out.println();
-                System.out.println(variable);
-                System.out.println(succedent);
-                System.out.println();*/
-                        
-                String precedent = succedent.substring(0, matcher.start());
-            
-                args.append("'").append(precedent).append("'");
-                
-                args.append(",$").append(variable).append(",");
-            
-                succedent = succedent.substring(matcher.end(), succedent.length());
-                
-                args.append("'").append(succedent).append("',");
+               
+                if(!args.isEmpty()){
+                    args.remove(args.size()-1);
+                }
+                String precedent = succedent.substring(0, succedent.length()-stringWithinQuotes.length()+ matcher.start());
+                if(!"".equals(precedent)){
+                    args.add("'"+precedent+"'");
+                }
+                args.add("$"+variable); 
+                succedent = succedent.substring(succedent.length()-stringWithinQuotes.length()+matcher.end(), succedent.length());
+                if(!"".equals(succedent)){
+                    args.add("'"+succedent+"'");
+                }
             }
-            args.deleteCharAt(args.length()-1);
-            builder.append(args);
+         
+            builder.append(String.join(",", args));
             builder.append(")");
             q = q.replace("'"+stringWithinQuotes+"'", builder.toString());
         }
