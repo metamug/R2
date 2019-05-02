@@ -675,7 +675,9 @@ public class ParserService {
             
             builder.append("CONCAT(");
             List<String> args = new ArrayList();
+            boolean variableFound = false;
             while (matcher.find()) {
+                variableFound = true;
                 String variable = matcher.group(1);
                
                 if(!args.isEmpty()){
@@ -694,7 +696,9 @@ public class ParserService {
          
             builder.append(String.join(",", args));
             builder.append(")");
-            q = q.replace("'"+stringWithinQuotes+"'", builder.toString());
+            if(variableFound){
+                q = q.replace("'"+stringWithinQuotes+"'", builder.toString());
+            }
         }
         return q;
     }
