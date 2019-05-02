@@ -674,20 +674,27 @@ public class ParserService {
             String succedent = stringWithinQuotes;
             
             builder.append("CONCAT(");
+            StringBuilder args = new StringBuilder();
             while (matcher.find()) {
-                String variable = ",$"+matcher.group(1)+",";
-                /*
+                String variable = matcher.group(1);
+               /*
                 System.out.println();
                 System.out.println(variable);
                 System.out.println(succedent);
                 System.out.println();*/
                         
-                String precedent = succedent.substring(0,matcher.start());
-                succedent = succedent.substring(matcher.end(),succedent.length());
+                String precedent = succedent.substring(0, matcher.start());
+            
+                args.append("'").append(precedent).append("'");
                 
-                builder.append("'").append(precedent).append("'").append(variable)
-                        .append("'").append(succedent).append("'");
+                args.append(",$").append(variable).append(",");
+            
+                succedent = succedent.substring(matcher.end(), succedent.length());
+                
+                args.append("'").append(succedent).append("',");
             }
+            args.deleteCharAt(args.length()-1);
+            builder.append(args);
             builder.append(")");
             q = q.replace("'"+stringWithinQuotes+"'", builder.toString());
         }
@@ -699,9 +706,11 @@ public class ParserService {
         List<String> params = new ArrayList<>();
 
         collectSqlParams(params, query);
-
-        //String processedQuery = processVariablesWithinQuotes(query);
-        String queryWithWildcard = query.replaceAll("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})", "? ");
+        String processedQuery = query;
+        if(processedQuery.toLowerCase().contains(" like ")){
+            processedQuery = processVariablesWithinQuotes(processedQuery);
+        }
+        String queryWithWildcard = processedQuery.replaceAll("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})", "? ");
         StringBuilder builder = new StringBuilder(queryWithWildcard);
         builder.append("\n");
 
