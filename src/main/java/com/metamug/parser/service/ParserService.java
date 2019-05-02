@@ -666,20 +666,29 @@ public class ParserService {
         Matcher quotedSubstringMatcher = quotePattern.matcher(q);
         while (quotedSubstringMatcher.find()) {
             String stringWithinQuotes = quotedSubstringMatcher.group(1);
-            //String stringWithinQuotes = q.substring(matcher.start(1), matcher.end(1)).trim();
             
             Pattern varPattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
             Matcher matcher = varPattern.matcher(stringWithinQuotes);
             
             StringBuilder builder = new StringBuilder();
+            String succedent = stringWithinQuotes;
+            
             builder.append("CONCAT(");
             while (matcher.find()) {
                 String variable = ",$"+matcher.group(1)+",";
-                String precedent = "'"+stringWithinQuotes.substring(0,matcher.start())+"'";
-                String succedent = "'"+stringWithinQuotes.substring(matcher.end(),stringWithinQuotes.length())+"'";
+                /*
+                System.out.println();
+                System.out.println(variable);
+                System.out.println(succedent);
+                System.out.println();*/
+                        
+                String precedent = succedent.substring(0,matcher.start());
+                succedent = succedent.substring(matcher.end(),succedent.length());
                 
-                builder.append(precedent).append(variable).append(succedent).append(")");
+                builder.append("'").append(precedent).append("'").append(variable)
+                        .append("'").append(succedent).append("'");
             }
+            builder.append(")");
             q = q.replace("'"+stringWithinQuotes+"'", builder.toString());
         }
         return q;
