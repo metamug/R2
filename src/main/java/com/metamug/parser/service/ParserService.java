@@ -661,7 +661,7 @@ public class ParserService {
     }
     
     // '%$variable%' => CONCAT('%',$variable,'%')
-    protected static String processVariablesWithinQuotes(String q){
+    public static String processVariablesInLikeClause(String q){
         Pattern quotePattern = Pattern.compile("'(.*?)'");
         Matcher quotedSubstringMatcher = quotePattern.matcher(q);
         while (quotedSubstringMatcher.find()) {
@@ -706,7 +706,7 @@ public class ParserService {
         collectSqlParams(params, query);
         String processedQuery = query;
         if(processedQuery.toLowerCase().contains(" like ")){
-            processedQuery = processVariablesWithinQuotes(processedQuery);
+            processedQuery = processVariablesInLikeClause(processedQuery);
         }
         String queryWithWildcard = processedQuery.replaceAll("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})", "? ");
         StringBuilder builder = new StringBuilder(queryWithWildcard);
