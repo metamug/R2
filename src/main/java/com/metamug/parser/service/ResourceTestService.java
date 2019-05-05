@@ -84,25 +84,27 @@ import org.json.JSONObject;
  * @author anishhirlekar
  */
 public class ResourceTestService {
-    
-    public static Map<String, String> escapeCharacters = new HashMap<String,String>() {{
-        put("\\sle(\\s|\\b)"," <= ");
-        put("\\sge(\\s|\\b)"," >= ");
-        put("\\seq(\\s|\\b)"," = ");
-        put("\\sne(\\s|\\b)"," != ");
-        put("\\slt(\\s|\\b)"," < ");
-        put("\\sgt(\\s|\\b)"," > ");
-    }};
-      
+
+    public static Map<String, String> escapeCharacters = new HashMap<String, String>() {
+        {
+            put("\\sle(\\s|\\b)", " <= ");
+            put("\\sge(\\s|\\b)", " >= ");
+            put("\\seq(\\s|\\b)", " = ");
+            put("\\sne(\\s|\\b)", " != ");
+            put("\\slt(\\s|\\b)", " < ");
+            put("\\sgt(\\s|\\b)", " > ");
+        }
+    };
+
     public static String replaceEscapeCharacters(String sql) {
-        for(Map.Entry<String,String> e: escapeCharacters.entrySet()){
-            if(sql.toLowerCase().matches(".*"+e.getKey()+".*")){
+        for (Map.Entry<String, String> e : escapeCharacters.entrySet()) {
+            if (sql.toLowerCase().matches(".*" + e.getKey() + ".*")) {
                 sql = sql.replaceAll(e.getKey(), e.getValue());
             }
         }
         return sql;
     }
-    
+
     public static String makeRequest(String appUrl, String action, JSONObject inputJson, String appName) throws IOException, ResourceTestException {
 
         URL obj = new URL(appUrl + "/query");
@@ -110,7 +112,7 @@ public class ResourceTestService {
         con.setRequestMethod("POST");
         con.setRequestProperty("User-Agent", USER_AGENT);
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-        con.setRequestProperty("Authorization",Utils.getMasonApiRequestSignature(appName));
+        con.setRequestProperty("Authorization", Utils.getMasonApiRequestSignature(appName));
         String urlParameters = "action=" + action + "&querydata=" + URLEncoder.encode(inputJson.toString(), "UTF-8");
         // Send post request
         con.setDoOutput(true);
@@ -137,70 +139,70 @@ public class ResourceTestService {
             throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
         JSONObject inputJson = new JSONObject();
         JSONArray queries = new JSONArray();
-        
+
         for (Request req : resource.getRequest()) {
-            List<Param> paramsWithValue = new ArrayList<>();    
-            
+            List<Param> paramsWithValue = new ArrayList<>();
+
             List elements = req.getParamOrSqlOrExecuteOrXrequest();
-            
+
             for (Object obj : elements) {
                 if (obj instanceof Param) {
-                    Param param = (Param)obj;
-                    if(param.getValue() != null){
+                    Param param = (Param) obj;
+                    if (param.getValue() != null) {
                         paramsWithValue.add(param);
                     }
                 }
             }
-            
+
             for (Object object : elements) {
                 if (object instanceof Sql) {
                     Sql sql = (Sql) object;
                     JSONObject queryObj = new JSONObject();
                     queryObj.put("tag_id", sql.getId());
-                    
-                    if(null == sql.getRef()){
-                        queryObj.put("ref",false);
+
+                    if (null == sql.getRef()) {
+                        queryObj.put("ref", false);
                         String query = replaceEscapeCharacters(sql.getValue().trim());
                         List<String> sqlParamNames = getSqlParams(query);
                         JSONArray testdata = new JSONArray();
-                        for(String sqlParamName: sqlParamNames){
-                            for(Param p: paramsWithValue){
-                                if(p.getName().equals(sqlParamName)){
+                        for (String sqlParamName : sqlParamNames) {
+                            for (Param p : paramsWithValue) {
+                                if (p.getName().equals(sqlParamName)) {
                                     JSONObject testdataObject = new JSONObject();
                                     testdataObject.put("varname", p.getName());
-                                    testdataObject.put("varvalue",p.getValue());
+                                    testdataObject.put("varvalue", p.getValue());
                                     testdata.put(testdataObject);
                                 }
                             }
                         }
-                        if(testdata.length() != sqlParamNames.size()){
+                        if (testdata.length() != sqlParamNames.size()) {
                             //if not all param values are given, do not send test data
                             testdata = new JSONArray();
                         }
                         queryObj.put("value", query);
                         queryObj.put("testdata", testdata);
-                        if(sql.getType() != null){
+                        if (sql.getType() != null) {
                             queryObj.put("type", sql.getType().value());
-                        }                        
+                        }
                     } else {
-                        queryObj.put("ref",true);
+                        queryObj.put("ref", true);
                         queryObj.put("query_id", sql.getRef());
-                    }   
-                    
-                    queries.put(queryObj);                
+                    }
+
+                    queries.put(queryObj);
                 }
             }
         }
-        
-        if(!queries.isEmpty()){
+
+        if (!queries.isEmpty()) {
             inputJson.put("queries", queries);
-            String testresults = makeRequest(domain+"/"+appName,"testqueries",inputJson,appName);
+            String testresults = makeRequest(domain + "/" + appName, "testqueries", inputJson, appName);
             verifyResult(testresults);
-            
+
             //System.out.println("PARSER-RESULT");
             JSONArray results = new JSONArray(testresults);
             //System.out.println(results.toString(3));
-            
+
             //set type for sql tags without given type
             for (Request req : resource.getRequest()) {
                 List elements = req.getParamOrSqlOrExecuteOrXrequest();
@@ -208,17 +210,17 @@ public class ResourceTestService {
                     if (object instanceof Sql) {
                         Sql sql = (Sql) object;
                         String tagId = sql.getId();
-                        
+
                         JSONArray test_results = results.getJSONObject(0).getJSONArray("test_results");
-                        for(int i=0; i < test_results.length(); i++) {
+                        for (int i = 0; i < test_results.length(); i++) {
                             JSONObject resultObj = test_results.getJSONObject(i);
                             String tag_id = resultObj.getString("tag_id");
 
-                            if(tagId.equals(tag_id)) {
+                            if (tagId.equals(tag_id)) {
                                 SqlType type = SqlType.fromValue(resultObj.getString("querytype"));
                                 sql.setType(type);
-                                    
-                                if(sql.getRef()!=null){
+
+                                if (sql.getRef() != null) {
                                     sql.setValue(resultObj.getString("query"));
                                 }
                             }
@@ -228,7 +230,7 @@ public class ResourceTestService {
             }
         }
     }
-    
+
     protected List<String> getSqlParams(String query) {
         List<String> params = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
@@ -240,28 +242,28 @@ public class ResourceTestService {
     }
 
     private void verifyResult(String result) throws ResourceTestException {
-        
+
         JSONArray resultArray;
-        try{
+        try {
             resultArray = new JSONArray(result);
-        }catch (JSONException jex){
+        } catch (JSONException jex) {
             throw new ResourceTestException("Something went wrong!");
         }
         JSONArray testResults = resultArray.getJSONObject(0).getJSONArray("test_results");
-        
+
         StringBuilder sb = new StringBuilder("Errors found in Sql tags:");
         sb.append("<br/>");
 
         boolean error = false;
-        
-        for(int i=0; i < testResults.length(); i++){
+
+        for (int i = 0; i < testResults.length(); i++) {
             JSONObject testResult = testResults.getJSONObject(i);
             boolean isRef = testResult.getBoolean("ref");
             String tag_id = testResult.getString("tag_id");
-            
-            if(isRef){
+
+            if (isRef) {
                 boolean exists = testResult.getBoolean("exists");
-                if(!exists){
+                if (!exists) {
                     error = true;
                     sb.append("<b>Tag ID:</b> ").append("<b class='text-info'>").append(tag_id).append("</b>");
                     sb.append("<br/>");
@@ -269,7 +271,7 @@ public class ResourceTestService {
                     sb.append("<b>Error:</b> ").append("Invalid reference ID <b class='text-success'>").append(queryId);
                     sb.append("</b><br/>");
                 }
-            }else{
+            } else {
                 int status = testResult.getInt("status");
                 if (status == 500 || status == 403 || status == 404) {
                     error = true;

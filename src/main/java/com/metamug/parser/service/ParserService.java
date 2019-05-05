@@ -112,28 +112,28 @@ public class ParserService {
     protected String resourceName;
     protected double resourceVersion;
     protected JSONObject queryMap;
-    
+
     protected String OUTPUT_FOLDER;
     OutputStream output;
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
-   
+
     protected HashSet<String> elementIds;
 
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
-    public JSONObject transform(File uploadedFile, String appName, boolean isOldFile, String outputFolder, 
+    public JSONObject transform(File uploadedFile, String appName, boolean isOldFile, String outputFolder,
             String domain, JSONObject queryMap) throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException,
-                XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
-                    URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
+            XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
+            URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
         this.appName = appName;
         this.resourceName = Utils.removeExtension(uploadedFile.getName());
         this.queryMap = queryMap;
-        
+
         OUTPUT_FOLDER = outputFolder;
 
         RPXParser parser = new RPXParser(OUTPUT_FOLDER, appName, uploadedFile);
         Resource parsedResource = parser.parseFromXml();
-        
+
         this.resourceVersion = parsedResource.getVersion();
 
         //make test queries requests
@@ -153,7 +153,7 @@ public class ParserService {
         }
         return obj;
     }
-    
+
     public Resource createJsp(Resource resource, File resourceFile, boolean isOldFile, String domain)
             throws JAXBException, SAXException, IOException, FileNotFoundException, XPathExpressionException,
             TransformerException, URISyntaxException, XMLStreamException, ResourceTestException {
@@ -181,11 +181,10 @@ public class ParserService {
                 /*if (req.getMethod().value().equalsIgnoreCase("POST")) {
                     writer.writeEmptyElement("m:upload");
                 }*/
-
                 List elements = req.getParamOrSqlOrExecuteOrXrequest();
 
                 printRequestElements(elements, writer, domain);
-                
+
                 //end m:request
                 closeRequest(writer);
 
@@ -207,7 +206,7 @@ public class ParserService {
         }
     }
 
-    protected void printRequestElements(List elements, XMLStreamWriter writer, String domain) throws XMLStreamException, IOException, XPathExpressionException, SAXException, ResourceTestException{
+    protected void printRequestElements(List elements, XMLStreamWriter writer, String domain) throws XMLStreamException, IOException, XPathExpressionException, SAXException, ResourceTestException {
         for (Object object : elements) {
             if (object instanceof Param) {
                 Param param = (Param) object;
@@ -226,12 +225,12 @@ public class ParserService {
                 String url = domain + "/" + appName;
                 String version = Double.toString(resourceVersion);
                 String sqlValue = ResourceTestService.replaceEscapeCharacters(sql.getValue().trim());
-                          
-                if(ref == null) {
-                    service.saveQueryWithTag(url, sqlValue, this.resourceName, version, tag, sql.getType().value(),appName);
-                } else{
-                    service.saveRefWithTag(url, ref, this.resourceName, version, tag,appName);
-                }                    
+
+                if (ref == null) {
+                    service.saveQueryWithTag(url, sqlValue, this.resourceName, version, tag, sql.getType().value(), appName);
+                } else {
+                    service.saveRefWithTag(url, ref, this.resourceName, version, tag, appName);
+                }
 
                 printSqlTag(sql, writer);
 
@@ -335,7 +334,7 @@ public class ParserService {
      * @throws SAXException
      * @throws XPathExpressionException
      */
-    protected void printSqlTag(Sql sql, XMLStreamWriter writer) 
+    protected void printSqlTag(Sql sql, XMLStreamWriter writer)
             throws XMLStreamException, IOException, SAXException, XPathExpressionException {
         //Check for empty the Sql tag
         if (!sql.getValue().trim().isEmpty()) {
@@ -397,7 +396,7 @@ public class ParserService {
             }
             //writer.writeCharacters(System.lineSeparator());
             String sqlParams = getSqlParams(sql);
-            
+
             writeEscapedCharacters(writer, sqlParams);
 
             writer.writeEndElement();//End of <sql:query/update>
@@ -659,45 +658,45 @@ public class ParserService {
         }
         return inputStr;
     }
-    
+
     // '%$variable%' => CONCAT('%',$variable,'%')
-    public static String processVariablesInLikeClause(String q){
+    public static String processVariablesInLikeClause(String q) {
         Pattern quotePattern = Pattern.compile("'(.*?)'");
         Matcher quotedSubstringMatcher = quotePattern.matcher(q);
         while (quotedSubstringMatcher.find()) {
             String stringWithinQuotes = quotedSubstringMatcher.group(1);
-            
+
             Pattern varPattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
             Matcher matcher = varPattern.matcher(stringWithinQuotes);
-            
+
             StringBuilder builder = new StringBuilder();
             String succedent = stringWithinQuotes;
-            
+
             builder.append("CONCAT(");
             List<String> args = new ArrayList();
             boolean variableFound = false;
             while (matcher.find()) {
                 variableFound = true;
                 String variable = matcher.group(1);
-               
-                if(!args.isEmpty()){
-                    args.remove(args.size()-1);
+
+                if (!args.isEmpty()) {
+                    args.remove(args.size() - 1);
                 }
-                String precedent = succedent.substring(0, succedent.length()-stringWithinQuotes.length()+ matcher.start());
-                if(!"".equals(precedent)){
-                    args.add("'"+precedent+"'");
+                String precedent = succedent.substring(0, succedent.length() - stringWithinQuotes.length() + matcher.start());
+                if (!"".equals(precedent)) {
+                    args.add("'" + precedent + "'");
                 }
-                args.add("$"+variable); 
-                succedent = succedent.substring(succedent.length()-stringWithinQuotes.length()+matcher.end(), succedent.length());
-                if(!"".equals(succedent)){
-                    args.add("'"+succedent+"'");
+                args.add("$" + variable);
+                succedent = succedent.substring(succedent.length() - stringWithinQuotes.length() + matcher.end(), succedent.length());
+                if (!"".equals(succedent)) {
+                    args.add("'" + succedent + "'");
                 }
             }
-         
+
             builder.append(String.join(",", args));
             builder.append(")");
-            if(variableFound){
-                q = q.replace("'"+stringWithinQuotes+"'", builder.toString());
+            if (variableFound) {
+                q = q.replace("'" + stringWithinQuotes + "'", builder.toString());
             }
         }
         return q;
@@ -709,7 +708,7 @@ public class ParserService {
 
         collectSqlParams(params, query);
         String processedQuery = query;
-        if(processedQuery.toLowerCase().contains(" like ")){
+        if (processedQuery.toLowerCase().contains(" like ")) {
             processedQuery = processVariablesInLikeClause(processedQuery);
         }
         String queryWithWildcard = processedQuery.replaceAll("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})", "? ");

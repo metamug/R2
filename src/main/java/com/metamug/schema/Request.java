@@ -43,12 +43,9 @@ public class Request {
     })
     protected List<Sql> sql;
     @XmlElements({
-        @XmlElement(name = "Param", type = Param.class)
-        ,
-        @XmlElement(name = "Sql", type = Sql.class)
-        ,
-        @XmlElement(name = "Execute", type = Execute.class)
-        ,
+        @XmlElement(name = "Param", type = Param.class),
+        @XmlElement(name = "Sql", type = Sql.class),
+        @XmlElement(name = "Execute", type = Execute.class),
         @XmlElement(name = "XRequest", type = Xrequest.class)
     })
     protected List paramOrSqlOrExecuteOrXrequest;

@@ -55,10 +55,8 @@ import javax.xml.bind.annotation.XmlType;
 public class Xrequest {
 
     @XmlElements({
-        @XmlElement(name = "Param", type = Xparam.class)
-        ,
-        @XmlElement(name = "Header", type = Xheader.class)
-        ,
+        @XmlElement(name = "Param", type = Xparam.class),
+        @XmlElement(name = "Header", type = Xheader.class),
         @XmlElement(name = "Body", type = String.class)
     })
     protected List<Object> paramOrHeaderOrBody;

@@ -680,9 +680,9 @@
          <div id="printerControls" style="display:none;">
             <input type="checkbox" onclick="displayMode(this.checked)"/>Printer-friendly Version</div>
          <script type="text/javascript">
-<!--
-
-             var pc = getElementObject("printerControls");
+            <!--
+            
+             var pc = g                         etElementObject("printerControls");
              if (pc != null) {
                  pc.style.display = "block";
              }
@@ -914,7 +914,8 @@
             <input type="button"
                    id="element_Resource_xibox_button"
                    class="control"
-                   onclick="switchState('element_Resource_xibox'); return false;"
+                   onclick="switchState('element_Resource_xibox');
+                           return false;"
                    style="display: none"/> 
             <span class="caption">XML Instance Representation</span>
          </div>
@@ -971,7 +972,8 @@
             <input type="button"
                    id="element_Resource_scbox_button"
                    class="control"
-                   onclick="switchState('element_Resource_scbox'); return false;"
+                   onclick="switchState('element_Resource_scbox');
+                           return false;"
                    style="display: none"/> 
             <span class="caption">Schema Component Representation</span>
          </div>
