@@ -178,9 +178,9 @@ public class ParserService {
                 initializeRequest(writer, req);
 
                 //Add UploadListener tag
-                /*if (req.getMethod().value().equalsIgnoreCase("POST")) {
+                if (req.getMethod().value().equalsIgnoreCase("POST")) {
                     writer.writeEmptyElement("m:upload");
-                }*/
+                }
                 List elements = req.getParamOrSqlOrExecuteOrXrequest();
 
                 printRequestElements(elements, writer, domain);
