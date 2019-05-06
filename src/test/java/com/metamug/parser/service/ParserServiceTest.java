@@ -82,14 +82,14 @@ public class ParserServiceTest {
     boolean isOldFile = true;
 
     @Test
-    public void testConcat(){
+    public void testConcat() {
         String testQuery = "SELECT * FROM '$name%' WHERE LIKE '%$rating%' name "
                 + "LIKE '%$name% OR %rating AGAIN $var' WHERE 'rating LIKE' ";
-        
+
         String processedQuery = ParserService.processVariablesInLikeClause(testQuery);
         System.out.println(processedQuery);
     }
-    
+
     @Ignore
     @Test
     public void testParser() {

@@ -106,8 +106,8 @@ public class RPXParser {
         XslTransformer.transform(xmlResourceFile, xsl, outHtml);
     }
 
-    public Resource parseFromXml() throws JAXBException, SAXException, IOException, FileNotFoundException, 
-                    XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
+    public Resource parseFromXml() throws JAXBException, SAXException, IOException, FileNotFoundException,
+            XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
         StreamSource xmlFile = new StreamSource(xmlResourceFile);
         SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
         Schema schema = schemaFactory.newSchema(getClass().getClassLoader().getResource("resource.xsd"));
