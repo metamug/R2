@@ -84,7 +84,7 @@ public class ParserServiceTest {
     @Test
     public void testConcat(){
         String testQuery = "SELECT * FROM '$name%' WHERE LIKE '%$rating%' name "
-                + "LIKE '%$name% OR %rating AGAIN $var' WHERE rating LIKE ";
+                + "LIKE '%$name% OR %rating AGAIN $var' WHERE 'rating LIKE' ";
         
         String processedQuery = ParserService.processVariablesInLikeClause(testQuery);
         System.out.println(processedQuery);
