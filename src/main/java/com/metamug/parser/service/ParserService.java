@@ -148,8 +148,9 @@ public class ParserService {
         obj.put("version", resource.getVersion());
         if (resource.getAuth() != null && !resource.getAuth().isEmpty()) {
             obj.put("secure", true);
+            obj.put("auth",resource.getAuth());
         } else {
-            obj.put("secure", false);
+            obj.put("secure", false);      
         }
         return obj;
     }
