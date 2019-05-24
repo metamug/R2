@@ -493,7 +493,8 @@ public class ParserService {
             printCSet(writer, enclose(MASON_OUTPUT), execute.getId(), enclose(execVar));
         }
         if (execute.getPersist()) {
-            printCSet(writer, enclose(MTG_PERSIST_MAP), execute.getId(), enclose(execVar));
+            //printCSet(writer, enclose(MTG_PERSIST_MAP), execute.getId(), enclose(execVar));
+            printConvert(writer, enclose(MTG_PERSIST_MAP), execute.getId(), enclose(execVar));
         }
 
         /*
@@ -571,7 +572,7 @@ public class ParserService {
         writer.writeEmptyElement("m:convert");
         writer.writeAttribute("target", target);
         writer.writeAttribute("property", prop);
-        writer.writeAttribute("result", result);
+        writer.writeAttribute("value", result);
     }
 
     protected void printCSet(XMLStreamWriter writer, String target, String prop, String value) throws XMLStreamException {
@@ -653,8 +654,8 @@ public class ParserService {
             String variable = matcher.group(1);
             String newVariable = "${mtgReq.params['" + variable + "']}";
             if (paramIsPersisted(variable)) {
-                //newVariable = "${" + MTG_PERSIST_MAP + "['" + variable + "']}";
-                newVariable = "${" + MTG_PERSIST_MAP + "." + variable + "}";
+                newVariable = "${" + MTG_PERSIST_MAP + "['" + variable + "']}";
+                //newVariable = "${" + MTG_PERSIST_MAP + "." + variable + "}";
             }
             inputStr = inputStr.replace("$" + variable, newVariable);
         }
@@ -744,8 +745,8 @@ public class ParserService {
                     break;
                 default:
                     if (paramIsPersisted(param)) {
-                        //builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\']}\" />", param));
-                        builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + ".{0}}\" />", param));
+                        builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\']}\" />", param));
+                        //builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + ".{0}}\" />", param));
                     } else {
                         builder.append(MessageFormat.format("<sql:param value=\"$'{'mtgReq.params[\''{0}'\']}\" />", param));
                     }
