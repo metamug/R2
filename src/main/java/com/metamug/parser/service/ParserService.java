@@ -653,7 +653,8 @@ public class ParserService {
             String variable = matcher.group(1);
             String newVariable = "${mtgReq.params['" + variable + "']}";
             if (paramIsPersisted(variable)) {
-                newVariable = "${" + MTG_PERSIST_MAP + "['" + variable + "']}";
+                //newVariable = "${" + MTG_PERSIST_MAP + "['" + variable + "']}";
+                newVariable = "${" + MTG_PERSIST_MAP + "." + variable + "}";
             }
             inputStr = inputStr.replace("$" + variable, newVariable);
         }
@@ -743,7 +744,8 @@ public class ParserService {
                     break;
                 default:
                     if (paramIsPersisted(param)) {
-                        builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\']}\" />", param));
+                        //builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\']}\" />", param));
+                        builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + ".{0}}\" />", param));
                     } else {
                         builder.append(MessageFormat.format("<sql:param value=\"$'{'mtgReq.params[\''{0}'\']}\" />", param));
                     }
