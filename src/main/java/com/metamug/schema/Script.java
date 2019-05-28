@@ -40,6 +40,10 @@ public class Script {
     protected String id;
     @XmlAttribute(name = "file", required = true)
     protected String file;
+    @XmlAttribute(name = "verbose")
+    protected Boolean verbose;
+    @XmlAttribute(name = "persist")
+    protected Boolean persist;
 
     /**
      * Gets the value of the id property.
@@ -87,6 +91,57 @@ public class Script {
      */
     public void setFile(String value) {
         this.file = value;
+    }
+    /**
+     * Gets the value of the verbose property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isVerbose() {
+        return verbose;
+    }
+
+    /**
+     * Sets the value of the verbose property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setVerbose(Boolean value) {
+        this.verbose = value;
+    }
+
+    /**
+     * Gets the value of the persist property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public boolean isPersist() {
+        if (persist == null) {
+            return false;
+        } else {
+            return persist;
+        }
+    }
+
+    /**
+     * Sets the value of the persist property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setPersist(Boolean value) {
+        this.persist = value;
     }
 
 }

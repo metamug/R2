@@ -222,6 +222,8 @@
     <xsd:complexType name="script">
         <xsd:attribute name="id" type="elementId" use="required"/>
         <xsd:attribute name="file" type="scriptFile" use="required"/>
+        <xsd:attribute name="verbose" type="xsd:boolean" use="optional"/>
+        <xsd:attribute name="persist" type="xsd:boolean" default="false" use="optional"/>
     </xsd:complexType>
 
     <xsd:complexType name="xparam">
