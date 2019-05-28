@@ -44,6 +44,8 @@ public class Script {
     protected Boolean verbose;
     @XmlAttribute(name = "persist")
     protected Boolean persist;
+    @XmlAttribute(name = "when")
+    protected String when;
 
     /**
      * Gets the value of the id property.
@@ -143,5 +145,23 @@ public class Script {
     public void setPersist(Boolean value) {
         this.persist = value;
     }
+    /**
+     * Gets the value of the when property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getWhen() {
+        return when;
+    }
 
+    /**
+     * Sets the value of the when property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setWhen(String value) {
+        this.when = value;
+    }
 }

@@ -60,6 +60,7 @@ import com.metamug.schema.Execute;
 import com.metamug.schema.Param;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
+import com.metamug.schema.Script;
 import com.metamug.schema.Sql;
 import com.metamug.schema.Xheader;
 import com.metamug.schema.Xparam;
@@ -214,24 +215,13 @@ public class ParserService {
                 printParamTag(writer, param);
             } else if (object instanceof Sql) {
                 Sql sql = (Sql) object;
-                String tag = sql.getId();
-                elementIds.add(tag);
+                elementIds.add(sql.getId());
 
                 if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
                     startValidateTag(writer, sql.getOnerror());
                 }
 
-                String ref = sql.getRef();
-                QueryManagerService service = new QueryManagerService();
-                String url = domain + "/" + appName;
-                String version = Double.toString(resourceVersion);
-                String sqlValue = ResourceTestService.replaceEscapeCharacters(sql.getValue().trim());
-
-                if (ref == null) {
-                    service.saveQueryWithTag(url, sqlValue, this.resourceName, version, tag, sql.getType().value(), appName);
-                } else {
-                    service.saveRefWithTag(url, ref, this.resourceName, version, tag, appName);
-                }
+                preProcessSqlElement(sql, domain);               
 
                 printSqlTag(sql, writer);
 
@@ -246,7 +236,26 @@ public class ParserService {
                 Xrequest xr = (Xrequest) object;
                 elementIds.add(xr.getId());
                 printXrequestTag(xr, writer);
+            } else if(object instanceof Script){
+                Script sc = (Script)object;
+                elementIds.add(sc.getId());
+                printScriptTag(sc, writer);
             }
+        }
+    }
+    
+    protected void preProcessSqlElement(Sql sql, String domain) throws IOException, ResourceTestException{
+        String tag = sql.getId();
+        String ref = sql.getRef();
+        QueryManagerService service = new QueryManagerService();
+        String url = domain + "/" + appName;
+        String version = Double.toString(resourceVersion);
+        String sqlValue = ResourceTestService.replaceEscapeCharacters(sql.getValue().trim());
+
+        if (ref == null) {
+            service.saveQueryWithTag(url, sqlValue, this.resourceName, version, tag, sql.getType().value(), appName);
+        } else {
+            service.saveRefWithTag(url, ref, this.resourceName, version, tag, appName);
         }
     }
 
@@ -513,6 +522,33 @@ public class ParserService {
         writer.writeCharacters(System.lineSeparator());
 
         if (execute.getWhen() != null) {
+            writer.writeEndElement(); //End of <c:if>
+        }
+    }
+    
+    protected void printScriptTag(Script script,XMLStreamWriter writer) throws XMLStreamException, SAXException{
+        if (script.getWhen() != null) {
+            writer.writeStartElement("c:if");
+            String testString = getQuotedString(script.getWhen());
+            writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+        }
+        writer.writeCharacters(System.lineSeparator());
+        writer.writeStartElement("m:script");
+        String var = "scriptResult";
+        writer.writeAttribute("var", var);
+        writer.writeAttribute("file", script.getFile()+".groovy");
+        
+        writer.writeEndElement(); //End of <m:script>    
+        writer.writeCharacters(System.lineSeparator());
+        
+        if (script.isVerbose()) {
+            printCSet(writer, enclose(MASON_OUTPUT), script.getId(), enclose(var));
+        }
+        if (script.isPersist()) {
+            printCSet(writer, enclose(MTG_PERSIST_MAP), script.getId(), enclose(var));
+        }
+        
+        if (script.getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
     }
