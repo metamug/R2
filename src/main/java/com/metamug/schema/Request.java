@@ -22,11 +22,12 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "request", propOrder = {
     "desc",
-    "paramOrSqlOrExecuteOrXrequest",
+    "paramOrSqlOrExecuteOrXrequestOrScript",
     "param",
     "execute",
     "sql",
-    "xrequest"
+    "xrequest",
+    "script"
 })
 public class Request {
 
@@ -38,6 +39,8 @@ public class Request {
     protected List<Execute> execute;
     @XmlElement(name = "XRequest")
     protected List<Xrequest> xrequest;
+    @XmlElement(name = "Script")
+    protected List<Script> script;
     @XmlElements({
         @XmlElement(name = "Sql", type = Sql.class)
     })
@@ -46,9 +49,10 @@ public class Request {
         @XmlElement(name = "Param", type = Param.class),
         @XmlElement(name = "Sql", type = Sql.class),
         @XmlElement(name = "Execute", type = Execute.class),
-        @XmlElement(name = "XRequest", type = Xrequest.class)
+        @XmlElement(name = "XRequest", type = Xrequest.class),
+        @XmlElement(name = "Script", type = Script.class)
     })
-    protected List paramOrSqlOrExecuteOrXrequest;
+    protected List paramOrSqlOrExecuteOrXrequestOrScript;
 
     @XmlAttribute(name = "status")
     protected Integer status;
@@ -81,17 +85,27 @@ public class Request {
 
     public List<Execute> getExecute() {
         execute = new ArrayList<>();
-        for (Object object : paramOrSqlOrExecuteOrXrequest) {
+        for (Object object : paramOrSqlOrExecuteOrXrequestOrScript) {
             if (object instanceof Execute) {
                 execute.add((Execute) object);
             }
         }
         return execute;
     }
+    
+    public List<Script> getScript() {
+        script = new ArrayList<>();
+        for (Object object : paramOrSqlOrExecuteOrXrequestOrScript) {
+            if (object instanceof Script) {
+                script.add((Script) object);
+            }
+        }
+        return script;
+    }
 
     public List<Sql> getSql() {
         sql = new ArrayList<>();
-        for (Object object : paramOrSqlOrExecuteOrXrequest) {
+        for (Object object : paramOrSqlOrExecuteOrXrequestOrScript) {
             if (object instanceof Sql) {
                 sql.add((Sql) object);
             }
@@ -101,7 +115,7 @@ public class Request {
 
     public List<Xrequest> getXRequest() {
         xrequest = new ArrayList<>();
-        for (Object object : paramOrSqlOrExecuteOrXrequest) {
+        for (Object object : paramOrSqlOrExecuteOrXrequestOrScript) {
             if (object instanceof Xrequest) {
                 xrequest.add((Xrequest) object);
             }
@@ -109,20 +123,13 @@ public class Request {
         return xrequest;
     }
 
-    public List getParamOrSqlOrExecuteOrXrequest() {
-        if (paramOrSqlOrExecuteOrXrequest == null) {
-            paramOrSqlOrExecuteOrXrequest = new ArrayList<>();
+    public List getParamOrSqlOrExecuteOrXrequestOrScript() {
+        if (paramOrSqlOrExecuteOrXrequestOrScript == null) {
+            paramOrSqlOrExecuteOrXrequestOrScript = new ArrayList<>();
         }
-        return this.paramOrSqlOrExecuteOrXrequest;
+        return this.paramOrSqlOrExecuteOrXrequestOrScript;
     }
 
-//    public String getId() {
-//        return id;
-//    }
-//    
-//    public void setId(String value) {
-//        this.id = value;
-//    }
     public String getDesc() {
         return desc;
     }

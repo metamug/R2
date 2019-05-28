@@ -182,7 +182,7 @@ public class ParserService {
                 if (req.getMethod().value().equalsIgnoreCase("POST")) {
                     writer.writeEmptyElement("m:upload");
                 }
-                List elements = req.getParamOrSqlOrExecuteOrXrequest();
+                List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
 
                 printRequestElements(elements, writer, domain);
 

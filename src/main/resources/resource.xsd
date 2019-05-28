@@ -41,7 +41,7 @@
         </xsd:restriction>
     </xsd:simpleType>
 
-    <xsd:simpleType name="script">
+    <xsd:simpleType name="scriptFile">
         <xsd:restriction base="xsd:string">
             <xsd:minLength value="1"/>
         </xsd:restriction>
@@ -97,6 +97,7 @@
                                 <xsd:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded"/>
                                 <xsd:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded"/>
                                 <xsd:element name="XRequest" type="xrequest" minOccurs="0" maxOccurs="unbounded"/>
+                                <xsd:element name="Script" type="script" minOccurs="0" maxOccurs="unbounded"/>
                             </xsd:choice>
                             <xsd:attribute name="method" type="method" use="required"/>
                             <xsd:attribute name="status" type="status"/>
@@ -109,7 +110,6 @@
                     </xsd:element>
                 </xsd:choice>
             </xsd:sequence>
-            <!--<xsd:attribute name="id" type="id" />-->
             <xsd:attribute name="v" type="version" use="required"/>
             <xsd:attribute name="parent" type="parent"/>
             <xsd:attribute name="auth">
@@ -217,6 +217,11 @@
         <xsd:attribute name="persist" type="xsd:boolean" default="false" use="optional"/>
         <xsd:attribute name="collect" type="xsd:boolean" default="false" use="optional"/>
         <xsd:attribute name="status" type="status"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="script">
+        <xsd:attribute name="id" type="elementId" use="required"/>
+        <xsd:attribute name="file" type="scriptFile" use="required"/>
     </xsd:complexType>
 
     <xsd:complexType name="xparam">

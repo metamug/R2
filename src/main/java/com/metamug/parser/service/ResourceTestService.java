@@ -143,7 +143,7 @@ public class ResourceTestService {
         for (Request req : resource.getRequest()) {
             List<Param> paramsWithValue = new ArrayList<>();
 
-            List elements = req.getParamOrSqlOrExecuteOrXrequest();
+            List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
 
             for (Object obj : elements) {
                 if (obj instanceof Param) {
@@ -205,7 +205,7 @@ public class ResourceTestService {
 
             //set type for sql tags without given type
             for (Request req : resource.getRequest()) {
-                List elements = req.getParamOrSqlOrExecuteOrXrequest();
+                List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
                 for (Object object : elements) {
                     if (object instanceof Sql) {
                         Sql sql = (Sql) object;
