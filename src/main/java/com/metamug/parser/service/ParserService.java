@@ -534,7 +534,7 @@ public class ParserService {
         }
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("m:script");
-        String var = "scriptResult";
+        String var = "res";
         writer.writeAttribute("var", var);
         writer.writeAttribute("file", script.getFile()+".groovy");
         
