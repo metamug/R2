@@ -83,7 +83,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -118,7 +118,7 @@ public class ParserService {
     OutputStream output;
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
 
-    protected HashSet<String> elementIds;
+    protected HashMap<String,String> elementIds;
 
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
@@ -173,7 +173,7 @@ public class ParserService {
 
             printHeaderAndGroup(writer, resource);
 
-            elementIds = new HashSet<>();
+            elementIds = new HashMap<>();
 
             for (Request req : resource.getRequest()) {
                 writer.writeStartElement("m:request");
@@ -215,7 +215,7 @@ public class ParserService {
                 printParamTag(writer, param);
             } else if (object instanceof Sql) {
                 Sql sql = (Sql) object;
-                elementIds.add(sql.getId());
+                elementIds.put(sql.getId(), Sql.class.getName());
 
                 if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
                     startValidateTag(writer, sql.getOnerror());
@@ -230,15 +230,15 @@ public class ParserService {
                 }
             } else if (object instanceof Execute) {
                 Execute execute = (Execute) object;
-                elementIds.add(execute.getId());
+                elementIds.put(execute.getId(), Execute.class.getName());
                 printExecuteTag(execute, writer);
             } else if (object instanceof Xrequest) {
                 Xrequest xr = (Xrequest) object;
-                elementIds.add(xr.getId());
+                elementIds.put(xr.getId(), Xrequest.class.getName());
                 printXrequestTag(xr, writer);
             } else if(object instanceof Script){
                 Script sc = (Script)object;
-                elementIds.add(sc.getId());
+                elementIds.put(sc.getId(), Script.class.getName());
                 printScriptTag(sc, writer);
             }
         }
@@ -502,8 +502,8 @@ public class ParserService {
             printCSet(writer, enclose(MASON_OUTPUT), execute.getId(), enclose(execVar));
         }
         if (execute.getPersist()) {
-            //printCSet(writer, enclose(MTG_PERSIST_MAP), execute.getId(), enclose(execVar));
-            printConvert(writer, enclose(MTG_PERSIST_MAP), execute.getId(), enclose(execVar));
+            printCSet(writer, enclose(MTG_PERSIST_MAP), execute.getId(), enclose(execVar));
+            //printConvert(writer, enclose(MTG_PERSIST_MAP), execute.getId(), enclose(execVar));
         }
 
         /*
@@ -689,9 +689,17 @@ public class ParserService {
         while (matcher.find()) {
             String variable = matcher.group(1);
             String newVariable = "${mtgReq.params['" + variable + "']}";
-            if (paramIsPersisted(variable)) {
-                newVariable = "${" + MTG_PERSIST_MAP + "['" + variable + "']}";
-                //newVariable = "${" + MTG_PERSIST_MAP + "." + variable + "}";
+            if (paramIsPersisted(variable)!=null) {
+                String element = paramIsPersisted(variable);
+                if(element.equals(Script.class.getName())){
+                    newVariable = "${" + MTG_PERSIST_MAP + "." + variable + "}";
+                }else if(element.equals(Execute.class.getName())){
+                    String elementId = variable.split("\\.")[0];
+                    String mPath = variable.replace(elementId+".", "");
+                    newVariable = "${" + MTG_PERSIST_MAP + "['" + elementId + "']." + mPath + "}";
+                }else{
+                    newVariable = "${" + MTG_PERSIST_MAP + "['" + variable + "']}";
+                }
             }
             inputStr = inputStr.replace("$" + variable, newVariable);
         }
@@ -780,9 +788,15 @@ public class ParserService {
                     builder.append("<sql:param value=\"${mtgReq.uid}\"/>");
                     break;
                 default:
-                    if (paramIsPersisted(param)) {
-                        builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\']}\" />", param));
-                        //builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + ".{0}}\" />", param));
+                    if (paramIsPersisted(param)!=null) {
+                        
+                        String element = paramIsPersisted(param);
+                        if(element.equals(Execute.class.getName()) || element.equals(Script.class.getName())){
+                            builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + ".{0}}\" />", param));
+                        }else{
+                            builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\']}\" />", param));
+                        }
+                        
                     } else {
                         builder.append(MessageFormat.format("<sql:param value=\"$'{'mtgReq.params[\''{0}'\']}\" />", param));
                     }
@@ -792,9 +806,13 @@ public class ParserService {
         }
     }
 
-    protected boolean paramIsPersisted(String paramName) {
+    protected String paramIsPersisted(String paramName) {
         //first segment of mpath param is an element id
-        return elementIds.contains(paramName.split("\\.")[0]);
+        //return elementIds.contains(paramName.split("\\.")[0]);
+        if(elementIds.containsKey(paramName.split("\\.")[0])){
+            return elementIds.get(paramName.split("\\.")[0]);
+        }
+        return null;
     }
 
     private String processParam(Param param) {
