@@ -691,9 +691,9 @@ public class ParserService {
             String newVariable = "${mtgReq.params['" + variable + "']}";
             if (paramIsPersisted(variable)!=null) {
                 String element = paramIsPersisted(variable);
-                if(element.equals(Script.class.getName())){
+                if( element.equals(Script.class.getName()) ){
                     newVariable = "${" + MTG_PERSIST_MAP + "." + variable + "}";
-                }else if(element.equals(Execute.class.getName())){
+                } else if( element.equals(Execute.class.getName()) ) {
                     String elementId = variable.split("\\.")[0];
                     String mPath = variable.replace(elementId+".", "");
                     newVariable = "${" + MTG_PERSIST_MAP + "['" + elementId + "']." + mPath + "}";
@@ -791,10 +791,14 @@ public class ParserService {
                     if (paramIsPersisted(param)!=null) {
                         
                         String element = paramIsPersisted(param);
-                        if(element.equals(Execute.class.getName()) || element.equals(Script.class.getName())){
+                        if( element.equals(Script.class.getName()) ){
                             builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + ".{0}}\" />", param));
-                        }else{
-                            builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\']}\" />", param));
+                        }else if( element.equals(Execute.class.getName()) ) {
+                            String elementId = param.split("\\.")[0];
+                            String mPath = param.replace(elementId+".", "");
+                            builder.append( MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\'].{1}}\" />", elementId, mPath ) );
+                        } else{
+                            builder.append( MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\']}\" />", param) );
                         }
                         
                     } else {
