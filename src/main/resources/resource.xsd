@@ -78,6 +78,12 @@
             <xsd:minLength value="3"/>
         </xsd:restriction>
     </xsd:simpleType>
+    
+    <xsd:complexType name="transaction">
+        <xsd:choice maxOccurs="unbounded">
+            <xsd:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:choice>
+    </xsd:complexType>
 
     <xsd:element name="Resource">
         <xsd:complexType>
@@ -96,6 +102,7 @@
                                 <xsd:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded"/>
                                 <xsd:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded"/>
                                 <xsd:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded"/>
+                                <xsd:element name="Transaction" type="transaction" minOccurs="0" maxOccurs="unbounded"/>
                                 <xsd:element name="XRequest" type="xrequest" minOccurs="0" maxOccurs="unbounded"/>
                                 <xsd:element name="Script" type="script" minOccurs="0" maxOccurs="unbounded"/>
                             </xsd:choice>

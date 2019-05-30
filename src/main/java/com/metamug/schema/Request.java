@@ -48,6 +48,7 @@ public class Request {
     @XmlElements({
         @XmlElement(name = "Param", type = Param.class),
         @XmlElement(name = "Sql", type = Sql.class),
+        @XmlElement(name = "Transaction", type = Transaction.class),
         @XmlElement(name = "Execute", type = Execute.class),
         @XmlElement(name = "XRequest", type = Xrequest.class),
         @XmlElement(name = "Script", type = Script.class)
