@@ -36,16 +36,13 @@ public class Request {
     protected String desc;
     @XmlElement(name = "Param")
     protected List<Param> param;
-    @XmlElement(name = "Execute")
+    
     protected List<Execute> execute;
-    @XmlElement(name = "XRequest")
     protected List<Xrequest> xrequest;
-    @XmlElement(name = "Script")
     protected List<Script> script;
-    @XmlElement(name = "Transaction")
     protected List<Transaction> transaction;
-    @XmlElement(name = "Sql", type = Sql.class)
     protected List<Sql> sql;
+    
     @XmlElements({
         @XmlElement(name = "Param", type = Param.class),
         @XmlElement(name = "Sql", type = Sql.class),
