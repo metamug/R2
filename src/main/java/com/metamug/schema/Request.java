@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlType;
     "param",
     "execute",
     "sql",
+    "transaction",
     "xrequest",
     "script"
 })
@@ -41,9 +42,9 @@ public class Request {
     protected List<Xrequest> xrequest;
     @XmlElement(name = "Script")
     protected List<Script> script;
-    @XmlElements({
-        @XmlElement(name = "Sql", type = Sql.class)
-    })
+    @XmlElement(name = "Transaction")
+    protected List<Transaction> transaction;
+    @XmlElement(name = "Sql", type = Sql.class)
     protected List<Sql> sql;
     @XmlElements({
         @XmlElement(name = "Param", type = Param.class),
@@ -102,6 +103,16 @@ public class Request {
             }
         }
         return script;
+    }
+    
+    public List<Transaction> getTransaction() {
+        transaction = new ArrayList<>();
+        for (Object object : paramOrSqlOrExecuteOrXrequestOrScript) {
+            if (object instanceof Transaction) {
+                transaction.add((Transaction) object);
+            }
+        }
+        return transaction;
     }
 
     public List<Sql> getSql() {
