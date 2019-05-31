@@ -138,7 +138,6 @@ public class ResourceTestService {
     private void addSqlData(JSONArray queries,Sql sql, List<Param> paramsWithValue,boolean tx){
         JSONObject queryObj = new JSONObject();
         queryObj.put("tag_id", sql.getId());
-        queryObj.put("transaction",tx);
         
                     if (null == sql.getRef()) {
                         queryObj.put("ref", false);
@@ -277,19 +276,6 @@ public class ResourceTestService {
         for (int i = 0; i < testResults.length(); i++) {
             JSONObject testResult = testResults.getJSONObject(i);
             String tag_id = testResult.getString("tag_id");
-            
-            boolean tx = testResult.getBoolean("transaction");
-            if(tx){
-                String sqlType = testResult.getString("querytype");
-                if(sqlType.equals("query")){
-                    error = true;
-                    sb.append("<b>Tag ID:</b> ").append("<b class='text-info'>").append(tag_id).append("</b>");
-                    sb.append("<br/>");
-                    sb.append("<b>Error:</b> ").append("Query cannot be written inside a Transaction.");
-                    sb.append("</b><br/>");
-                }
-            }
-            
             boolean isRef = testResult.getBoolean("ref");
 
             if (isRef) {
