@@ -55,10 +55,10 @@ package com.metamug.parser.service;
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.util.Utils;
 import com.metamug.schema.Param;
-import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
 import com.metamug.schema.Sql;
 import com.metamug.schema.SqlType;
+import com.metamug.schema.Transaction;
 import java.beans.PropertyVetoException;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -134,32 +134,12 @@ public class ResourceTestService {
             return responseBuffer.toString();
         }
     }
-
-    public void testResource(Resource resource, String domain, String appName)
-            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
-        JSONObject inputJson = new JSONObject();
-        JSONArray queries = new JSONArray();
-
-        for (Request req : resource.getRequest()) {
-            List<Param> paramsWithValue = new ArrayList<>();
-
-            List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
-
-            for (Object obj : elements) {
-                if (obj instanceof Param) {
-                    Param param = (Param) obj;
-                    if (param.getValue() != null) {
-                        paramsWithValue.add(param);
-                    }
-                }
-            }
-
-            for (Object object : elements) {
-                if (object instanceof Sql) {
-                    Sql sql = (Sql) object;
-                    JSONObject queryObj = new JSONObject();
-                    queryObj.put("tag_id", sql.getId());
-
+    
+    private void addSqlData(JSONArray queries,Sql sql, List<Param> paramsWithValue,boolean tx){
+        JSONObject queryObj = new JSONObject();
+        queryObj.put("tag_id", sql.getId());
+        queryObj.put("transaction",tx);
+        
                     if (null == sql.getRef()) {
                         queryObj.put("ref", false);
                         String query = replaceEscapeCharacters(sql.getValue().trim());
@@ -189,10 +169,39 @@ public class ResourceTestService {
                         queryObj.put("query_id", sql.getRef());
                     }
 
-                    queries.put(queryObj);
+        queries.put(queryObj);
+    }
+
+    public void testResource(Resource resource, String domain, String appName)
+            throws SQLException, ClassNotFoundException, PropertyVetoException, IOException, ResourceTestException {
+        JSONObject inputJson = new JSONObject();
+        JSONArray queries = new JSONArray();
+
+        resource.getRequest().forEach( req -> {
+            List<Param> paramsWithValue = new ArrayList<>();
+
+            List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
+
+            elements.forEach( obj -> {
+                if (obj instanceof Param) {
+                    Param param = (Param) obj;
+                    if (param.getValue() != null) {
+                        paramsWithValue.add(param);
+                    }
                 }
-            }
-        }
+            });
+
+            elements.forEach( object -> {
+                if(object instanceof Transaction){
+                    List<Sql> sqlList = ((Transaction)object).getSql();
+                    sqlList.forEach( sql -> {
+                        addSqlData(queries,sql,paramsWithValue,true);
+                    });
+                } else if (object instanceof Sql) {
+                    addSqlData(queries,(Sql)object,paramsWithValue,false);
+                }
+            });
+        });
 
         if (!queries.isEmpty()) {
             inputJson.put("queries", queries);
@@ -204,28 +213,38 @@ public class ResourceTestService {
             //System.out.println(results.toString(3));
 
             //set type for sql tags without given type
-            for (Request req : resource.getRequest()) {
+            resource.getRequest().forEach( req -> {
                 List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
-                for (Object object : elements) {
-                    if (object instanceof Sql) {
+                JSONArray test_results = results.getJSONObject(0).getJSONArray("test_results");
+                
+                elements.forEach( object -> {
+                    if(object instanceof Transaction){
+                        List<Sql> sqlList = ((Transaction)object).getSql();
+                        sqlList.forEach( sql -> {
+                            setSqlType(sql,test_results);     
+                        });
+                    }else if (object instanceof Sql) {
                         Sql sql = (Sql) object;
-                        String tagId = sql.getId();
-
-                        JSONArray test_results = results.getJSONObject(0).getJSONArray("test_results");
-                        for (int i = 0; i < test_results.length(); i++) {
-                            JSONObject resultObj = test_results.getJSONObject(i);
-                            String tag_id = resultObj.getString("tag_id");
-
-                            if (tagId.equals(tag_id)) {
-                                SqlType type = SqlType.fromValue(resultObj.getString("querytype"));
-                                sql.setType(type);
-
-                                if (sql.getRef() != null) {
-                                    sql.setValue(resultObj.getString("query"));
-                                }
-                            }
-                        }
+                        setSqlType(sql,test_results);
                     }
+                });
+            });
+        }
+    }
+    
+    private void setSqlType(Sql sql,JSONArray test_results){
+        String tagId = sql.getId();
+
+        for (int i=0; i < test_results.length(); i++) {
+            JSONObject resultObj = test_results.getJSONObject(i);
+            String tag_id = resultObj.getString("tag_id");
+
+            if (tagId.equals(tag_id)) {
+                SqlType type = SqlType.fromValue(resultObj.getString("querytype"));
+                sql.setType(type);
+
+                if (sql.getRef() != null) {
+                    sql.setValue(resultObj.getString("query"));
                 }
             }
         }
@@ -242,7 +261,6 @@ public class ResourceTestService {
     }
 
     private void verifyResult(String result) throws ResourceTestException {
-
         JSONArray resultArray;
         try {
             resultArray = new JSONArray(result);
@@ -258,8 +276,21 @@ public class ResourceTestService {
 
         for (int i = 0; i < testResults.length(); i++) {
             JSONObject testResult = testResults.getJSONObject(i);
-            boolean isRef = testResult.getBoolean("ref");
             String tag_id = testResult.getString("tag_id");
+            
+            boolean tx = testResult.getBoolean("transaction");
+            if(tx){
+                String sqlType = testResult.getString("querytype");
+                if(sqlType.equals("query")){
+                    error = true;
+                    sb.append("<b>Tag ID:</b> ").append("<b class='text-info'>").append(tag_id).append("</b>");
+                    sb.append("<br/>");
+                    sb.append("<b>Error:</b> ").append("Query cannot be written inside a Transaction.");
+                    sb.append("</b><br/>");
+                }
+            }
+            
+            boolean isRef = testResult.getBoolean("ref");
 
             if (isRef) {
                 boolean exists = testResult.getBoolean("exists");
