@@ -82,56 +82,6 @@ public class Request {
         }
     }
 
-    public List<Execute> getExecute() {
-        execute = new ArrayList<>();
-        for (Object object : paramOrSqlOrExecuteOrXrequestOrScript) {
-            if (object instanceof Execute) {
-                execute.add((Execute) object);
-            }
-        }
-        return execute;
-    }
-    
-    public List<Script> getScript() {
-        script = new ArrayList<>();
-        for (Object object : paramOrSqlOrExecuteOrXrequestOrScript) {
-            if (object instanceof Script) {
-                script.add((Script) object);
-            }
-        }
-        return script;
-    }
-    
-    public List<Transaction> getTransaction() {
-        transaction = new ArrayList<>();
-        for (Object object : paramOrSqlOrExecuteOrXrequestOrScript) {
-            if (object instanceof Transaction) {
-                transaction.add((Transaction) object);
-            }
-        }
-        return transaction;
-    }
-
-    public List<Sql> getSql() {
-        sql = new ArrayList<>();
-        for (Object object : paramOrSqlOrExecuteOrXrequestOrScript) {
-            if (object instanceof Sql) {
-                sql.add((Sql) object);
-            }
-        }
-        return sql;
-    }
-
-    public List<Xrequest> getXRequest() {
-        xrequest = new ArrayList<>();
-        for (Object object : paramOrSqlOrExecuteOrXrequestOrScript) {
-            if (object instanceof Xrequest) {
-                xrequest.add((Xrequest) object);
-            }
-        }
-        return xrequest;
-    }
-
     public List getParamOrSqlOrExecuteOrXrequestOrScript() {
         if (paramOrSqlOrExecuteOrXrequestOrScript == null) {
             paramOrSqlOrExecuteOrXrequestOrScript = new ArrayList<>();

@@ -83,6 +83,7 @@
         <xsd:choice maxOccurs="unbounded">
             <xsd:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:choice>
+        <xsd:attribute name="when" type="xsd:string"/>
     </xsd:complexType>
 
     <xsd:element name="Resource">

@@ -136,26 +136,18 @@ public class XSDValidationTest {
             if (!requests.isEmpty()) {
                 for (Request request : requests) {
                     List paramOrSqlOrExecute = request.getParamOrSqlOrExecuteOrXrequestOrScript();
-                    for (Object object : paramOrSqlOrExecute) {
-//                        System.out.println(object.getClass());
+                    for (Object o: paramOrSqlOrExecute) {
+//                      System.out.println(object.getClass());
+                        if(o instanceof Execute){
+                            execClass = ((Execute)o).getClassName();
+                            execReq = ((Execute)o).getRequires();
+                        } 
                     }
                     reqDesc = request.getDesc();
                     method = request.getMethod().value();
                     for (Param p : request.getParam()) {
                         paramName = p.getName();
                         System.out.println(paramName);
-                    }
-                    for (Execute e : request.getExecute()) {
-                        execClass = e.getClassName();
-                        execReq = e.getRequires();
-                    }
-                    for (Sql sql : request.getSql()) {
-//                        System.out.println("SqlType: " + sql.getType().value());
-//                        System.out.println("SqlWhen: " + sql.getWhen());
-//                        System.out.println("SqlClass: " + sql.getClassname());
-//                        System.out.println("SqlRequires: " + sql.getRequires());
-//                        System.out.println("SqlVal: " + sql.getValue().trim());
-//                        System.out.println();
                     }
                 }
             } else {

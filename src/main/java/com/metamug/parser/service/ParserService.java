@@ -62,6 +62,7 @@ import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
 import com.metamug.schema.Script;
 import com.metamug.schema.Sql;
+import com.metamug.schema.Transaction;
 import com.metamug.schema.Xheader;
 import com.metamug.schema.Xparam;
 import com.metamug.schema.Xrequest;
@@ -223,7 +224,7 @@ public class ParserService {
 
                 preProcessSqlElement(sql, domain);               
 
-                printSqlTag(sql, writer);
+                printSqlTag(sql, writer, true);
 
                 if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
                     closeValidateTag(writer);
@@ -240,6 +241,8 @@ public class ParserService {
                 Script sc = (Script)object;
                 elementIds.put(sc.getId(), Script.class.getName());
                 printScriptTag(sc, writer);
+            } else if(object instanceof Transaction){
+                printTransaction((Transaction)object,writer,domain);
             }
         }
     }
@@ -344,7 +347,7 @@ public class ParserService {
      * @throws SAXException
      * @throws XPathExpressionException
      */
-    protected void printSqlTag(Sql sql, XMLStreamWriter writer)
+    protected void printSqlTag(Sql sql, XMLStreamWriter writer, boolean addDatasource)
             throws XMLStreamException, IOException, SAXException, XPathExpressionException {
         //Check for empty the Sql tag
         if (!sql.getValue().trim().isEmpty()) {
@@ -388,8 +391,10 @@ public class ParserService {
             }
 
             writer.writeAttribute("var", "result");
-            writer.writeAttribute("dataSource", enclose(MASON_DATASOURCE));
-
+            if(addDatasource){
+                writer.writeAttribute("dataSource", enclose(MASON_DATASOURCE));
+            }
+            
             if (sql.getLimit() != null || sql.getOffset() != null) {
                 if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("query")) {
                     if (sql.getLimit() != null) {
@@ -522,6 +527,41 @@ public class ParserService {
         writer.writeCharacters(System.lineSeparator());
 
         if (execute.getWhen() != null) {
+            writer.writeEndElement(); //End of <c:if>
+        }
+    }
+    
+    
+    protected void printTransaction(Transaction tx, XMLStreamWriter writer, String domain) throws XMLStreamException, 
+            SAXException, IOException, XPathExpressionException, ResourceTestException{
+        if (tx.getWhen() != null) {
+            writer.writeStartElement("c:if");
+            String testString = getQuotedString(tx.getWhen());
+            writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+        }
+        writer.writeCharacters(System.lineSeparator());
+        writer.writeStartElement("sql:transaction");
+        writer.writeAttribute("dataSource", enclose(MASON_DATASOURCE));
+        
+        List<Sql> sqlList = tx.getSql();
+        for(Sql sql: sqlList){
+            elementIds.put(sql.getId(), Sql.class.getName());
+
+            if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
+                startValidateTag(writer, sql.getOnerror());
+            }
+
+            preProcessSqlElement(sql, domain);               
+
+            printSqlTag(sql, writer, false);
+
+            if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
+                closeValidateTag(writer);
+            }
+        }
+        
+        writer.writeEndElement(); //End of <sql:transaction> 
+        if (tx.getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
     }

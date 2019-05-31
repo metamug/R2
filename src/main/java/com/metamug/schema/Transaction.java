@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -43,6 +44,8 @@ public class Transaction {
 
     @XmlElement(name = "Sql")
     protected List<Sql> sql;
+    @XmlAttribute(name = "when")
+    protected String when;
 
     /**
      * Gets the value of the sql property.
@@ -72,5 +75,29 @@ public class Transaction {
         }
         return this.sql;
     }
+    
 
+    /**
+     * Gets the value of the when property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getWhen() {
+        return when;
+    }
+
+    /**
+     * Sets the value of the when property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setWhen(String value) {
+        this.when = value;
+    }
 }
