@@ -102,8 +102,12 @@ public class Script {
      *     {@link Boolean }
      *     
      */
-    public Boolean isVerbose() {
-        return verbose;
+    public boolean isVerbose() {
+        if (verbose == null) {
+            return false;
+        } else {
+            return verbose;
+        }
     }
 
     /**
