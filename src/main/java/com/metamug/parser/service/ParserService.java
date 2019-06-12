@@ -201,7 +201,7 @@ public class ParserService {
                 writer.close();
 
                 output.close();
-                escapeSpecialCharacters(resource, appName, resourceFile);
+                //escapeSpecialCharacters(resource, appName, resourceFile);
 
                 return resource;
             }catch(ResourceTestException | IOException | XMLStreamException | XPathExpressionException | SAXException
@@ -688,13 +688,47 @@ public class ParserService {
         writer.writeEndElement();
         writer.writeCharacters(System.lineSeparator());
     }
+    
+    protected String escapeSpecialCharacters(String input){
+        String lines[] = input.split("\\r?\\n");
+        
+        StringBuilder outputString = new StringBuilder();
+        
+        for(String line: lines){
+            String escapedString = line;
+            
+            if (line.toLowerCase().matches(".*\\sle(\\s|\\b).*")) {
+                escapedString = line.replaceAll("\\sle(\\s|\\b)", " <= ");
+            }
+            if (line.toLowerCase().matches(".*\\sge(\\s|\\b).*")) {
+                escapedString = escapedString.replaceAll("\\sge(\\s|\\b)", " >= ");
+            }
+            if (line.toLowerCase().matches(".*\\seq(\\s|\\b).*")) {
+                escapedString = escapedString.replaceAll("\\seq(\\s|\\b)", " = ");
+            }
+            if (line.toLowerCase().matches(".*\\sne(\\s|\\b).*")) {
+                escapedString = escapedString.replaceAll("\\sne(\\s|\\b)", " != ");
+            }
+            if (line.toLowerCase().matches(".*\\slt(\\s|\\b).*")) {
+                escapedString = escapedString.replaceAll("\\slt(\\s|\\b)", " < ");
+            }
+            if (line.toLowerCase().matches(".*\\sgt(\\s|\\b).*")) {
+                escapedString = escapedString.replaceAll("\\sgt(\\s|\\b)", " > ");
+            }
+            
+            outputString.append(escapedString).append("\n");
+        }
+        
+        System.out.println("Output: "+outputString.toString().trim());
+        return outputString.toString().trim();
+    }
 
     /**
      *
      * @param resource
      * @throws IOException
      */
-    private void escapeSpecialCharacters(Resource resource, String appName, File resourceFile) throws IOException {
+    /*private void escapeSpecialCharacters(Resource resource, String appName, File resourceFile) throws IOException {
         List<String> newLines = new ArrayList<>();
         for (String line : Files.readAllLines(Paths.get(OUTPUT_FOLDER + File.separator + appName + "/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp"), StandardCharsets.UTF_8)) {
             String modifiedStr = line;
@@ -720,7 +754,7 @@ public class ParserService {
         }
         Files.write(Paths.get(OUTPUT_FOLDER + File.separator + appName + "/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp"), newLines, StandardCharsets.UTF_8);
     }
-
+*/
     protected void writeEscapedCharacters(XMLStreamWriter writer, String data) throws XMLStreamException, IOException, XPathExpressionException {
         writer.writeCharacters("");
         writer.flush();
@@ -809,7 +843,7 @@ public class ParserService {
             processedQuery = processVariablesInLikeClause(processedQuery);
         }
         String queryWithWildcard = processedQuery.replaceAll("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})", "? ");
-        StringBuilder builder = new StringBuilder(queryWithWildcard);
+        StringBuilder builder = new StringBuilder(escapeSpecialCharacters(queryWithWildcard));
         builder.append("\n");
 
         appendSqlParams(builder, params);
