@@ -168,40 +168,50 @@ public class ParserService {
             Files.createDirectories(Paths.get(resourceDir + "v" + resource.getVersion()));
         }
 
-        if (!new File(resourceDir + "v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp").exists() || isOldFile) {
-            output = new FileOutputStream(resourceDir + "v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp");
-            XMLStreamWriter writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output));
+        String jsp = resourceDir + "v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp";
+        if (!new File(jsp).exists() || isOldFile) {
+            try{
+                output = new FileOutputStream(jsp);
+                XMLStreamWriter writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output));
 
-            printHeaderAndGroup(writer, resource);
+                printHeaderAndGroup(writer, resource);
 
-            elementIds = new HashMap<>();
+                elementIds = new HashMap<>();
 
-            for (Request req : resource.getRequest()) {
-                writer.writeStartElement("m:request");
-                initializeRequest(writer, req);
+                for (Request req : resource.getRequest()) {
+                    writer.writeStartElement("m:request");
+                    initializeRequest(writer, req);
 
-                //Add UploadListener tag
-                if (req.getMethod().value().equalsIgnoreCase("POST")) {
-                    writer.writeEmptyElement("m:upload");
+                    //Add UploadListener tag
+                    if (req.getMethod().value().equalsIgnoreCase("POST")) {
+                        writer.writeEmptyElement("m:upload");
+                    }
+                    List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
+
+                    printRequestElements(elements, writer, domain);
+
+                    //end m:request
+                    closeRequest(writer);
+
+                    writer.writeCharacters(System.lineSeparator());
                 }
-                List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
 
-                printRequestElements(elements, writer, domain);
+                writer.writeEndElement();//end m:resource
+                writer.flush();
+                writer.close();
 
-                //end m:request
-                closeRequest(writer);
+                output.close();
+                escapeSpecialCharacters(resource, appName, resourceFile);
 
-                writer.writeCharacters(System.lineSeparator());
+                return resource;
+            }catch(ResourceTestException | IOException | XMLStreamException | XPathExpressionException | SAXException
+                    | NullPointerException e){
+                if( (!isOldFile) && (new File(jsp).exists()) ) {
+                    new File(jsp).delete();
+                }
+                
+                throw e;
             }
-
-            writer.writeEndElement();//end m:resource
-            writer.flush();
-            writer.close();
-
-            output.close();
-            escapeSpecialCharacters(resource, appName, resourceFile);
-
-            return resource;
         } else {
             //user is trying to create new resource with already created resource 
             throw new FileAlreadyExistsException(FilenameUtils.removeExtension(resourceFile.getName())
