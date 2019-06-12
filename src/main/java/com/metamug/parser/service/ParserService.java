@@ -719,7 +719,6 @@ public class ParserService {
             outputString.append(escapedString).append("\n");
         }
         
-        System.out.println("Output: "+outputString.toString().trim());
         return outputString.toString().trim();
     }
 
