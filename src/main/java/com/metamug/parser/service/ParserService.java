@@ -75,7 +75,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -612,7 +611,7 @@ public class ParserService {
      * @throws SAXException
      */
     protected void printXrequestTag(Xrequest xrequest, XMLStreamWriter writer)
-            throws XMLStreamException, SAXException {
+            throws XMLStreamException, SAXException, IOException, XPathExpressionException {
         if (xrequest.getWhen() != null) {
             writer.writeStartElement("c:if");
             String testString = getQuotedString(xrequest.getWhen());
@@ -623,7 +622,9 @@ public class ParserService {
         String xreqVar = "xreqResult";
         writer.writeAttribute("var", xreqVar);
         writer.writeAttribute("method", xrequest.getMethod().name());
-        writer.writeAttribute("url", StringEscapeUtils.unescapeXml(xrequest.getUrl()));
+        //writer.writeAttribute("url", StringEscapeUtils.unescapeXml(xrequest.getUrl()));
+        writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(xrequest.getUrl())+"\"");
+                
         for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
             if (paramOrHeaderOrBody instanceof Xheader) {
                 writer.writeEmptyElement("m:xheader");
@@ -757,6 +758,12 @@ public class ParserService {
     protected void writeEscapedCharacters(XMLStreamWriter writer, String data) throws XMLStreamException, IOException, XPathExpressionException {
         writer.writeCharacters("");
         writer.flush();
+        OutputStreamWriter osw = new OutputStreamWriter(output);
+        osw.write(data);
+        osw.flush();
+    }
+    
+    protected void writeUnescapedData(String data) throws IOException{
         OutputStreamWriter osw = new OutputStreamWriter(output);
         osw.write(data);
         osw.flush();
