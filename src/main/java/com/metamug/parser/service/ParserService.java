@@ -200,7 +200,7 @@ public class ParserService {
                 writer.close();
 
                 output.close();
-                //escapeSpecialCharacters(resource, appName, resourceFile);
+                //writeUnescapedCharacters(resource, appName, resourceFile);
 
                 return resource;
             }catch(ResourceTestException | IOException | XMLStreamException | XPathExpressionException | SAXException
@@ -331,7 +331,7 @@ public class ParserService {
      */
     protected void printParamTag(XMLStreamWriter writer, Param param) throws XMLStreamException, IOException, XPathExpressionException {
         writer.writeCharacters(System.lineSeparator());
-        writeEscapedCharacters(writer, processParam(param));
+        writeUnescapedCharacters(writer, processParam(param));
     }
 
     /**
@@ -421,7 +421,7 @@ public class ParserService {
             //writer.writeCharacters(System.lineSeparator());
             String sqlParams = getSqlParams(sql);
 
-            writeEscapedCharacters(writer, sqlParams);
+            writeUnescapedCharacters(writer, sqlParams);
 
             writer.writeEndElement();//End of <sql:query/update>
             //Store the sql data in map for <sql:query> or <sql:update>  
@@ -629,16 +629,19 @@ public class ParserService {
             if (paramOrHeaderOrBody instanceof Xheader) {
                 writer.writeEmptyElement("m:xheader");
                 writer.writeAttribute("name", ((Xheader) paramOrHeaderOrBody).getName());
-                writer.writeAttribute("value", ((Xheader) paramOrHeaderOrBody).getValue());
+                
+                String value = ((Xheader) paramOrHeaderOrBody).getValue();
+                writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"");
             } else if (paramOrHeaderOrBody instanceof Xparam) {
                 writer.writeEmptyElement("m:xparam");
                 writer.writeAttribute("name", ((Xparam) paramOrHeaderOrBody).getName());
                 String v = transformXReqParams(((Xparam) paramOrHeaderOrBody).getValue());
-                writer.writeAttribute("value", v);
+                writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
             } else if (paramOrHeaderOrBody instanceof String) {
                 writer.writeStartElement("m:xbody");
                 String body = transformXReqParams((String) paramOrHeaderOrBody);
-                writer.writeCharacters(body);
+                //writer.writeCharacters(body);
+                writeUnescapedCharacters(writer, body);
                 writer.writeEndElement();
             }
         }
@@ -755,7 +758,16 @@ public class ParserService {
         Files.write(Paths.get(OUTPUT_FOLDER + File.separator + appName + "/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp"), newLines, StandardCharsets.UTF_8);
     }
 */
-    protected void writeEscapedCharacters(XMLStreamWriter writer, String data) throws XMLStreamException, IOException, XPathExpressionException {
+    
+    /**
+     *
+     * @param writer
+     * @param data
+     * @throws javax.xml.stream.XMLStreamException
+     * @throws IOException
+     * @throws javax.xml.xpath.XPathExpressionException
+     */
+    protected void writeUnescapedCharacters(XMLStreamWriter writer, String data) throws XMLStreamException, IOException, XPathExpressionException {
         writer.writeCharacters("");
         writer.flush();
         OutputStreamWriter osw = new OutputStreamWriter(output);
