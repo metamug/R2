@@ -122,7 +122,7 @@ public class ParserService {
 
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
-    public JSONObject transform(File uploadedFile, String appName, boolean isOldFile, String outputFolder,
+    public JSONObject transform(File uploadedFile, String appName, boolean updateResource, String outputFolder,
             String domain, JSONObject queryMap) throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException,
             XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
             URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
@@ -143,7 +143,7 @@ public class ParserService {
             testService.testResource(parsedResource, domain, appName);
         }
 
-        Resource resource = createJsp(parsedResource, uploadedFile, isOldFile, domain);
+        Resource resource = createJsp(parsedResource, uploadedFile, updateResource, domain);
 
         JSONObject obj = new JSONObject();
         obj.put("version", resource.getVersion());
@@ -156,7 +156,7 @@ public class ParserService {
         return obj;
     }
 
-    public Resource createJsp(Resource resource, File resourceFile, boolean isOldFile, String domain)
+    public Resource createJsp(Resource resource, File resourceFile, boolean updateResource, String domain)
             throws JAXBException, SAXException, IOException, FileNotFoundException, XPathExpressionException,
             TransformerException, URISyntaxException, XMLStreamException, ResourceTestException {
 
@@ -168,7 +168,7 @@ public class ParserService {
         }
 
         String jsp = resourceDir + "v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp";
-        if (!new File(jsp).exists() || isOldFile) {
+        if (!new File(jsp).exists() || updateResource) {
             try{
                 output = new FileOutputStream(jsp);
                 XMLStreamWriter writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output));
@@ -205,7 +205,7 @@ public class ParserService {
                 return resource;
             }catch(ResourceTestException | IOException | XMLStreamException | XPathExpressionException | SAXException
                     | NullPointerException e){
-                if( (!isOldFile) && (new File(jsp).exists()) ) {
+                if( (!updateResource) && (new File(jsp).exists()) ) {
                     new File(jsp).delete();
                 }
                 
