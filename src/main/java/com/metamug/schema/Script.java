@@ -104,7 +104,7 @@ public class Script {
      */
     public boolean isVerbose() {
         if (verbose == null) {
-            return false;
+            return true;
         } else {
             return verbose;
         }
