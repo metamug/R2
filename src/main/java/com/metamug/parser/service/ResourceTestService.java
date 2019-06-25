@@ -97,7 +97,8 @@ public class ResourceTestService {
     };
     
     public static String preprocessSql(String sql){
-        sql = sql.replace("\n", "").replace("\r", "").trim();
+        sql = sql.replace("\n", " ").replace("\r", " ").trim();
+        sql = sql.replaceAll("\\s{2,}", " ");
         return replaceEscapeCharacters(sql);         
     }
 
