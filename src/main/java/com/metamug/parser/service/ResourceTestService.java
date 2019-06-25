@@ -95,8 +95,13 @@ public class ResourceTestService {
             put("\\sgt(\\s|\\b)", " > ");
         }
     };
+    
+    public static String preprocessSql(String sql){
+        sql = sql.replace("\n", "").replace("\r", "").trim();
+        return replaceEscapeCharacters(sql);         
+    }
 
-    public static String replaceEscapeCharacters(String sql) {
+    private static String replaceEscapeCharacters(String sql) {
         for (Map.Entry<String, String> e : escapeCharacters.entrySet()) {
             if (sql.toLowerCase().matches(".*" + e.getKey() + ".*")) {
                 sql = sql.replaceAll(e.getKey(), e.getValue());
@@ -139,34 +144,34 @@ public class ResourceTestService {
         JSONObject queryObj = new JSONObject();
         queryObj.put("tag_id", sql.getId());
         
-                    if (null == sql.getRef()) {
-                        queryObj.put("ref", false);
-                        String query = replaceEscapeCharacters(sql.getValue().trim());
-                        List<String> sqlParamNames = getSqlParams(query);
-                        JSONArray testdata = new JSONArray();
-                        for (String sqlParamName : sqlParamNames) {
-                            for (Param p : paramsWithValue) {
-                                if (p.getName().equals(sqlParamName)) {
-                                    JSONObject testdataObject = new JSONObject();
-                                    testdataObject.put("varname", p.getName());
-                                    testdataObject.put("varvalue", p.getValue());
-                                    testdata.put(testdataObject);
-                                }
-                            }
-                        }
-                        if (testdata.length() != sqlParamNames.size()) {
-                            //if not all param values are given, do not send test data
-                            testdata = new JSONArray();
-                        }
-                        queryObj.put("value", query);
-                        queryObj.put("testdata", testdata);
-                        if (sql.getType() != null) {
-                            queryObj.put("type", sql.getType().value());
-                        }
-                    } else {
-                        queryObj.put("ref", true);
-                        queryObj.put("query_id", sql.getRef());
+        if (null == sql.getRef()) {
+            queryObj.put("ref", false);
+            String query = preprocessSql(sql.getValue());
+            List<String> sqlParamNames = getSqlParams(query);
+            JSONArray testdata = new JSONArray();
+            for (String sqlParamName : sqlParamNames) {
+                for (Param p : paramsWithValue) {
+                    if (p.getName().equals(sqlParamName)) {
+                        JSONObject testdataObject = new JSONObject();
+                        testdataObject.put("varname", p.getName());
+                        testdataObject.put("varvalue", p.getValue());
+                        testdata.put(testdataObject);
                     }
+                }
+            }
+            if (testdata.length() != sqlParamNames.size()) {
+                //if not all param values are given, do not send test data
+                testdata = new JSONArray();
+            }
+            queryObj.put("value", query);
+            queryObj.put("testdata", testdata);
+            if (sql.getType() != null) {
+                queryObj.put("type", sql.getType().value());
+            }
+        } else {
+            queryObj.put("ref", true);
+            queryObj.put("query_id", sql.getRef());
+        }
 
         queries.put(queryObj);
     }
