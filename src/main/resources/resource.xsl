@@ -39,16 +39,9 @@
                             <!--This span displays parameters encountered in Request and is set using JS-->
                         </span>
                         <span>
-                            <xsl:choose>
-                                <xsl:when test="@auth != ''">
-                                    <span class="fa fa-lock pull-right" style="color: #3c763d;font-size: large;"></span>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <span class="fa fa-unlock pull-right" style="color: #3c763d;font-size: large;"></span>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                            <span id="resUri" style="font-weight:bold;" class="text text-success pull-right">
-                            </span>
+                            <a id="resUri" style="font-weight:bold;cursor:pointer;" 
+                                  class="text text-success pull-right">
+                            </a>
                         </span>
                         <div style="margin-left: 5px;font-size: small;">
                             <xsl:choose>
@@ -1227,9 +1220,13 @@
                     var uriDiv = document.getElementById('resUri');
                     var version = document.getElementById('resVersion').innerHTML;
                     var group= document.getElementById('resGroup').innerHTML;
-                    var uri = ("/v"+version+"/"+resName+" "+group).toLowerCase();
+                    
+                    var urlArr = url.split("/");
+                    var uri = urlArr[0]+"//"+urlArr[2]+"/"+urlArr[3]+
+                            ("/v"+version+"/"+resName+" "+group).toLowerCase();
                     var reqUri=("/v"+version+"/"+resName).toLowerCase();
                     uriDiv.innerHTML = uri;
+                    uriDiv.href = uri;
                     
                     var parentSpan = document.getElementById('resParent');
                     if(parentSpan != null){
@@ -1281,7 +1278,7 @@
                     
                     var ReqTypeCollection = document.getElementsByClassName('ReqTypeCollection');
                     
-                    for(var i=0;i &lt; ReqTypeItem.length;i++)
+                    for(var i=0;i &lt; ReqTypeCollection.length;i++)
                     {
                     ReqTypeCollection[i].innerHTML = reqUri;
                     }
