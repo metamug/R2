@@ -39,7 +39,7 @@
                             <!--This span displays parameters encountered in Request and is set using JS-->
                         </span>
                         <span>
-                            <a id="resUri" style="font-weight:bold;cursor:pointer;" 
+                            <a id="resUri" target="_blank" style="font-weight:bold;cursor:pointer;" 
                                   class="text text-success pull-right">
                             </a>
                         </span>

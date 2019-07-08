@@ -123,26 +123,4 @@ public class RPXParser {
 
         return resource;
     }
-    /*
-    private void unescapeXmlFile(File xmlFile) throws FileNotFoundException, IOException {        
-        List<String> lines;
-        
-        try (FileReader fr = new FileReader(xmlFile);BufferedReader br = new BufferedReader(fr);) {            
-            String line;
-            lines = new ArrayList<>();
-            while ((line = br.readLine()) != null) {
-                line = StringEscapeUtils.unescapeXml(line);
-                System.out.println(line);
-                lines.add(StringEscapeUtils.unescapeXml(line));
-            }
-        }
-
-        FileWriter fw = new FileWriter(xmlFile);
-        try (BufferedWriter out = new BufferedWriter(fw)) {
-            for(String s : lines){
-                out.write(s);
-            }
-            out.flush();
-        }
-    }*/
 }
