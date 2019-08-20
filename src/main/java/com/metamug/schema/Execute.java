@@ -6,20 +6,21 @@
 //
 package com.metamug.schema;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "execute", propOrder = {
-    "className",
-    "verbose",
-    "persist",
-    "collect"
+    "arg"
 })
 public class Execute {
-
+    @XmlElement(name = "Arg")
+    protected List<Arg> arg;
     @XmlAttribute(name = "id", required = true)
     protected String id;
     @XmlAttribute(name = "requires")
@@ -34,11 +35,14 @@ public class Execute {
     protected Integer status;
     @XmlAttribute(name = "verbose")
     private Boolean verbose;
-    @XmlAttribute(name = "persist")
-    private Boolean persist;
-    @XmlAttribute(name = "collect")
-    private Boolean collect;
 
+    public List<Arg> getArg() {
+        if (arg == null) {
+            arg = new ArrayList<>();
+        }
+        return this.arg;
+    }
+    
     /**
      * Gets the value of the id property.
      *
@@ -177,53 +181,5 @@ public class Execute {
      */
     public void setVerbose(Boolean verbose) {
         this.verbose = verbose;
-    }
-
-    /**
-     * Gets the value of the persist property.
-     *
-     * @return possible object is {@link Boolean}.
-     *
-     */
-    public Boolean getPersist() {
-        if (persist != null) {
-            return persist;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Sets the value of the persist property.
-     *
-     * @param persist allowed object is {@link Boolean}
-     *
-     */
-    public void setPersist(Boolean persist) {
-        this.persist = persist;
-    }
-
-    /**
-     * Gets the value of the collect property.
-     *
-     * @return possible object is {@link Boolean}.
-     *
-     */
-    public Boolean getCollect() {
-        if (collect != null) {
-            return collect;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Sets the value of the collect property.
-     *
-     * @param collect allowed object is {@link Boolean}
-     *
-     */
-    public void setCollect(Boolean collect) {
-        this.collect = collect;
     }
 }

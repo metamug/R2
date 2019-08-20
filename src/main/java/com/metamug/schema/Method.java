@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "method")
 @XmlEnum
 public enum Method {
-
+    HEAD,
     GET,
     POST,
     PUT,

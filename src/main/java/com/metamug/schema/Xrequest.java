@@ -70,8 +70,6 @@ public class Xrequest {
     protected Method method;
     @XmlAttribute(name = "verbose")
     protected Boolean verbose;
-    @XmlAttribute(name = "persist")
-    protected Boolean persist;
 
     /**
      * Gets the value of the paramOrHeaderOrBody property.
@@ -205,29 +203,4 @@ public class Xrequest {
     public void setVerbose(Boolean value) {
         this.verbose = value;
     }
-
-    /**
-     * Gets the value of the persist property.
-     *
-     * @return possible object is {@link Boolean }
-     *
-     */
-    public boolean isPersist() {
-        if (persist == null) {
-            return false;
-        } else {
-            return persist;
-        }
-    }
-
-    /**
-     * Sets the value of the persist property.
-     *
-     * @param value allowed object is {@link Boolean }
-     *
-     */
-    public void setPersist(Boolean value) {
-        this.persist = value;
-    }
-
 }

@@ -42,10 +42,6 @@ public class Sql {
     protected Integer status;
     @XmlAttribute(name = "verbose")
     private Boolean verbose;
-    @XmlAttribute(name = "persist")
-    private Boolean persist;
-    @XmlAttribute(name = "collect")
-    private Boolean collect;
 
     /**
      * Gets the value of the value property.
@@ -286,53 +282,5 @@ public class Sql {
      */
     public void setVerbose(Boolean verbose) {
         this.verbose = verbose;
-    }
-
-    /**
-     * Gets the value of the persist property.
-     *
-     * @return possible object is {@link Boolean}.
-     *
-     */
-    public Boolean getPersist() {
-        if (persist != null) {
-            return persist;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Sets the value of the persist property.
-     *
-     * @param persist allowed object is {@link Boolean}
-     *
-     */
-    public void setPersist(Boolean persist) {
-        this.persist = persist;
-    }
-
-    /**
-     * Gets the value of the collect property.
-     *
-     * @return possible object is {@link Boolean}.
-     *
-     */
-    public Boolean getCollect() {
-        if (collect != null) {
-            return collect;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Sets the value of the collect property.
-     *
-     * @param collect allowed object is {@link Boolean}
-     *
-     */
-    public void setCollect(Boolean collect) {
-        this.collect = collect;
     }
 }

@@ -42,8 +42,6 @@ public class Script {
     protected String file;
     @XmlAttribute(name = "verbose")
     protected Boolean verbose;
-    @XmlAttribute(name = "persist")
-    protected Boolean persist;
     @XmlAttribute(name = "when")
     protected String when;
 
@@ -122,33 +120,6 @@ public class Script {
         this.verbose = value;
     }
 
-    /**
-     * Gets the value of the persist property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
-     */
-    public boolean isPersist() {
-        if (persist == null) {
-            return false;
-        } else {
-            return persist;
-        }
-    }
-
-    /**
-     * Sets the value of the persist property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
-     */
-    public void setPersist(Boolean value) {
-        this.persist = value;
-    }
     /**
      * Gets the value of the when property.
      *

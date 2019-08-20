@@ -107,7 +107,6 @@ public class ParserService {
 
     protected static final String MASON_DATASOURCE = "datasource";
     protected static final String MASON_OUTPUT = "masonOutput";
-    public static final String MTG_PERSIST_MAP = "mtgPersist";
 
     protected String appName;
     protected String resourceName;
@@ -282,12 +281,12 @@ public class ParserService {
         writer.writeEmptyElement("jsp:directive.include");
         writer.writeAttribute("file", "../fragments/mason-init.jspf");
         writer.writeCharacters(System.lineSeparator());
-
+/*
         writer.writeEmptyElement("jsp:useBean");
         writer.writeAttribute("id", MTG_PERSIST_MAP);
         writer.writeAttribute("class", "java.util.LinkedHashMap");
         writer.writeAttribute("scope", "request");
-        writer.writeCharacters(System.lineSeparator());
+        writer.writeCharacters(System.lineSeparator());*/
 
         writer.writeStartElement("m:resource");
 
@@ -445,9 +444,7 @@ public class ParserService {
         if (sql.getType().value().equalsIgnoreCase("update") && isVerbose && sql.getClassname() == null) {
             printCSet(writer, enclose(MASON_OUTPUT), sql.getId(), enclose(sqlVar));
         } else if (sql.getType().value().equalsIgnoreCase("query")) {
-            if (sql.getPersist()) {
-                printConvert(writer, enclose(MTG_PERSIST_MAP), sql.getId(), enclose(sqlVar));
-            }
+            
             if (sql.getClassname() == null) {
                 /*
                     if (sql.getCollect() && isVerbose) {
@@ -507,23 +504,11 @@ public class ParserService {
         writer.writeAttribute("var", execVar);
         writer.writeAttribute("className", execute.getClassName());
         writer.writeAttribute("param", enclose("mtgReq"));
-        if (execute.getPersist()) {
-            writer.writeAttribute("persistParam", enclose(MTG_PERSIST_MAP));
-        }
-
+        
         //Sets Verbose,Persist and Collect attributes
         if (execute.getVerbose() != null && execute.getVerbose()) {
             printCSet(writer, enclose(MASON_OUTPUT), execute.getId(), enclose(execVar));
         }
-        if (execute.getPersist()) {
-            printCSet(writer, enclose(MTG_PERSIST_MAP), execute.getId(), enclose(execVar));
-            //printConvert(writer, enclose(MTG_PERSIST_MAP), execute.getId(), enclose(execVar));
-        }
-
-        /*
-        if (execute.getCollect()) {
-            writer.writeAttribute("isCollect", "true");
-        }*/
         if (execute.getOnerror() != null && execute.getOnerror().length() > 0) {
             writer.writeAttribute("onError", execute.getOnerror());
         }
@@ -593,9 +578,6 @@ public class ParserService {
         if (script.isVerbose()) {
             printCSet(writer, enclose(MASON_OUTPUT), script.getId(), enclose(var));
         }
-        if (script.isPersist()) {
-            printCSet(writer, enclose(MTG_PERSIST_MAP), script.getId(), enclose(var));
-        }
         
         if (script.getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
@@ -649,9 +631,6 @@ public class ParserService {
         writer.writeCharacters(System.lineSeparator());
         if (xrequest.isVerbose()) {
             printCSet(writer, enclose(MASON_OUTPUT), xrequest.getId(), enclose(xreqVar));
-        }
-        if (xrequest.isPersist()) {
-            printConvert(writer, enclose(MTG_PERSIST_MAP), xrequest.getId(), enclose(xreqVar));
         }
         if (xrequest.getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
@@ -791,7 +770,7 @@ public class ParserService {
         while (matcher.find()) {
             String variable = matcher.group(1);
             String newVariable = "${mtgReq.params['" + variable + "']}";
-            if (paramIsPersisted(variable)!=null) {
+            /*if (paramIsPersisted(variable)!=null) {
                 String element = paramIsPersisted(variable);
                 if( element.equals(Script.class.getName()) ){
                     newVariable = "${" + MTG_PERSIST_MAP + "." + variable + "}";
@@ -802,7 +781,7 @@ public class ParserService {
                 }else{
                     newVariable = "${" + MTG_PERSIST_MAP + "['" + variable + "']}";
                 }
-            }
+            }*/
             inputStr = inputStr.replace("$" + variable, newVariable);
         }
         return inputStr;
@@ -891,7 +870,7 @@ public class ParserService {
                     break;
                 default:
                     if (paramIsPersisted(param)!=null) {
-                        
+                        /*
                         String element = paramIsPersisted(param);
                         if( element.equals(Script.class.getName()) ){
                             builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + ".{0}}\" />", param));
@@ -902,7 +881,7 @@ public class ParserService {
                         } else{
                             builder.append( MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\']}\" />", param) );
                         }
-                        
+                        */
                     } else {
                         builder.append(MessageFormat.format("<sql:param value=\"$'{'mtgReq.params[\''{0}'\']}\" />", param));
                     }
