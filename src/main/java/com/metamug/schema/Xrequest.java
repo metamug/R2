@@ -186,12 +186,8 @@ public class Xrequest {
      * @return possible object is {@link Boolean }
      *
      */
-    public Boolean isVerbose() {
-        if (verbose == null) {
-            return false;
-        } else {
-            return verbose;
-        }
+    public Boolean getVerbose() {
+        return verbose;
     }
 
     /**

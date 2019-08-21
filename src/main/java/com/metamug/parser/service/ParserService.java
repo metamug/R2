@@ -491,14 +491,11 @@ public class ParserService {
         }
         writer.writeCharacters(System.lineSeparator());
         writer.writeEmptyElement("m:execute");
-        String execVar = "execResult";
-        writer.writeAttribute("var", execVar);
+        writer.writeAttribute("var", execute.getId());
         writer.writeAttribute("className", execute.getClassName());
         writer.writeAttribute("param", enclose("mtgReq"));
-        
-        //Sets Verbose,Persist and Collect attributes
         if (execute.getVerbose() != null && execute.getVerbose()) {
-            printCSet(writer, enclose(MASON_OUTPUT), execute.getId(), enclose(execVar));
+            writer.writeAttribute("output", "true");
         }
         if (execute.getOnerror() != null && execute.getOnerror().length() > 0) {
             writer.writeAttribute("onError", execute.getOnerror());
@@ -567,7 +564,7 @@ public class ParserService {
         writer.writeCharacters(System.lineSeparator());
         
         if (script.isVerbose()) {
-            printCSet(writer, enclose(MASON_OUTPUT), script.getId(), enclose(var));
+            //printCSet(writer, enclose(MASON_OUTPUT), script.getId(), enclose(var));
         }
         
         if (script.getWhen() != null) {
@@ -582,6 +579,8 @@ public class ParserService {
      * @param writer XMLStreamWriter to write to JSP file.
      * @throws XMLStreamException
      * @throws SAXException
+     * @throws java.io.IOException
+     * @throws javax.xml.xpath.XPathExpressionException
      */
     protected void printXrequestTag(Xrequest xrequest, XMLStreamWriter writer)
             throws XMLStreamException, SAXException, IOException, XPathExpressionException {
@@ -592,10 +591,8 @@ public class ParserService {
         }
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("m:xrequest");
-        String xreqVar = "xreqResult";
-        writer.writeAttribute("var", xreqVar);
+        writer.writeAttribute("var", xrequest.getId());
         writer.writeAttribute("method", xrequest.getMethod().name());
-        //writer.writeAttribute("url", StringEscapeUtils.unescapeXml(xrequest.getUrl()));
         writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(xrequest.getUrl())+"\"");
                 
         for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
@@ -620,27 +617,20 @@ public class ParserService {
         }
         writer.writeEndElement(); //End of <m:xrequest>    
         writer.writeCharacters(System.lineSeparator());
-        if (xrequest.isVerbose()) {
-            printCSet(writer, enclose(MASON_OUTPUT), xrequest.getId(), enclose(xreqVar));
+        if (xrequest.getVerbose() != null && xrequest.getVerbose()) {
+            writer.writeAttribute("output", "true");
         }
         if (xrequest.getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
     }
-
-    protected void printConvert(XMLStreamWriter writer, String target, String prop, String result) throws XMLStreamException {
-        writer.writeEmptyElement("m:convert");
-        writer.writeAttribute("target", target);
-        writer.writeAttribute("property", prop);
-        writer.writeAttribute("value", result);
-    }
-
+/*
     protected void printCSet(XMLStreamWriter writer, String target, String prop, String value) throws XMLStreamException {
         writer.writeEmptyElement("c:set");
         writer.writeAttribute("target", target);
         writer.writeAttribute("property", prop);
         writer.writeAttribute("value", value);
-    }
+    }*/
 
     /**
      * Closes the m:validate tag
