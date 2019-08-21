@@ -438,25 +438,19 @@ public class ParserService {
         boolean verbose = isVerbose(sql);
 
         String var = "result";
-        if (sql.getType().value().equalsIgnoreCase("update") && verbose && sql.getClassname() == null) {
-            //printCSet(writer, enclose(MASON_OUTPUT), sql.getId(), enclose(sqlVar));
-            printSqlOutTag(writer,sql.getId(),enclose(var),"true",String.valueOf(verbose));
-        } else if (sql.getType().value().equalsIgnoreCase("query")) {
-            
-            if (sql.getClassname() != null) {     
-                //if classname is given, print <m:execute> instead of <m:sqlOut> 
-                writer.writeEmptyElement("m:execute");
-                writer.writeAttribute("className", sql.getClassname());                
-                writer.writeAttribute("var", sql.getId());
-                writer.writeAttribute("param", enclose(var));
-
-                if (verbose) {
-                    writer.writeAttribute("output", "true");
-                }               
-            } else {
-                printSqlOutTag(writer,sql.getId(),enclose(var),"true",String.valueOf(verbose));           
-            }
+              
+        if( sql.getType().value().equalsIgnoreCase("query") && (sql.getClassname() != null) ){
+            //if classname is given and type=query, print <m:execute> instead of <m:sqlOut> 
+            writer.writeEmptyElement("m:execute");
+            writer.writeAttribute("className", sql.getClassname());                
+            writer.writeAttribute("var", sql.getId());
+            writer.writeAttribute("param", enclose(var));
+            writer.writeAttribute("output", String.valueOf(verbose));        
+        } else{
+            //if no classname, print <m:sqlOut>
+            printSqlOutTag(writer,sql.getId(),enclose(var),"true",String.valueOf(verbose)); 
         }
+        
         if (sql.getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
