@@ -122,6 +122,7 @@ public class ParserService {
     protected HashMap<String,String> elementIds; // <id,elementType>  
     
     protected static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
+    protected static final String SQL_RESULT_MPATH_PATTERN = "\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)";
 
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
@@ -584,6 +585,20 @@ public class ParserService {
             String testString = getQuotedString(xrequest.getWhen());
             writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
         }
+        //Test param and body for mpath variables and print extract tags
+        for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
+            if (paramOrHeaderOrBody instanceof Xparam) {
+                //param
+                String paramValue = ((Xparam) paramOrHeaderOrBody).getValue();
+                printExtractTag(writer, paramValue);
+             } else if (paramOrHeaderOrBody instanceof String) {
+                //body
+                String body = (String) paramOrHeaderOrBody;
+                printExtractTag(writer, body);
+             }
+        }
+        
+        //print xrequest mason tags
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("m:xrequest");
         writer.writeAttribute("var", xrequest.getId());
@@ -600,12 +615,15 @@ public class ParserService {
             } else if (paramOrHeaderOrBody instanceof Xparam) {
                 writer.writeEmptyElement("m:xparam");
                 writer.writeAttribute("name", ((Xparam) paramOrHeaderOrBody).getName());
-                String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue());
+                //transform request parameters in xrequest param value
+                String v = transformRequestParams(((Xparam) paramOrHeaderOrBody).getValue());
+                //TODO: wrap mpath variables in v inside ${extracted[""]}
                 writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
             } else if (paramOrHeaderOrBody instanceof String) {
                 writer.writeStartElement("m:xbody");
-                String body = transformVariables((String) paramOrHeaderOrBody);
-                //writer.writeCharacters(body);
+                //transform request parameters in xrequest body
+                String body = transformRequestParams((String) paramOrHeaderOrBody);
+                //TODO: wrap mpath variables in body inside ${extracted[""]}
                 writeUnescapedCharacters(writer, body);
                 writer.writeEndElement();
             }
@@ -680,40 +698,7 @@ public class ParserService {
         
         return outputString.toString().trim();
     }
-
-    /**
-     *
-     * @param resource
-     * @throws IOException
-     */
-    /*private void escapeSpecialCharacters(Resource resource, String appName, File resourceFile) throws IOException {
-        List<String> newLines = new ArrayList<>();
-        for (String line : Files.readAllLines(Paths.get(OUTPUT_FOLDER + File.separator + appName + "/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp"), StandardCharsets.UTF_8)) {
-            String modifiedStr = line;
-            if (line.toLowerCase().matches(".*\\sle(\\s|\\b).*")) {
-                modifiedStr = line.replaceAll("\\sle(\\s|\\b)", " <= ");
-            }
-            if (line.toLowerCase().matches(".*\\sge(\\s|\\b).*")) {
-                modifiedStr = modifiedStr.replaceAll("\\sge(\\s|\\b)", " >= ");
-            }
-            if (line.toLowerCase().matches(".*\\seq(\\s|\\b).*")) {
-                modifiedStr = modifiedStr.replaceAll("\\seq(\\s|\\b)", " = ");
-            }
-            if (line.toLowerCase().matches(".*\\sne(\\s|\\b).*")) {
-                modifiedStr = modifiedStr.replaceAll("\\sne(\\s|\\b)", " != ");
-            }
-            if (line.toLowerCase().matches(".*\\slt(\\s|\\b).*")) {
-                modifiedStr = modifiedStr.replaceAll("\\slt(\\s|\\b)", " < ");
-            }
-            if (line.toLowerCase().matches(".*\\sgt(\\s|\\b).*")) {
-                modifiedStr = modifiedStr.replaceAll("\\sgt(\\s|\\b)", " > ");
-            }
-            newLines.add(modifiedStr.replaceAll("\\s+", " "));
-        }
-        Files.write(Paths.get(OUTPUT_FOLDER + File.separator + appName + "/WEB-INF/resources/v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp"), newLines, StandardCharsets.UTF_8);
-    }
-*/
-    
+ 
     /**
      *
      * @param writer
@@ -740,30 +725,41 @@ public class ParserService {
         return "${" + expression + "}";
     }
     
-    //$id => ${mtgReq.id}
-    //$pid => ${mtgReq.pid}
-    //$uid => ${mtgReq.uid}
-    //$variable => ${mtgReq.params['variable']}
-    protected String transformRequestParam(String param){
-        switch (param) {
-            case "id":
-                return "${mtgReq.id}";
-            case "pid":
-                return "${mtgReq.pid}";
-            case "uid":
-                return "${mtgReq.uid}";
-            default:
-                return "${mtgReq.params['" + param + "']}";
+    protected void printExtractTag(XMLStreamWriter writer, String input) throws XMLStreamException{
+        //check for result mpath -> $[sqlId][row].column
+        Pattern pattern = Pattern.compile(SQL_RESULT_MPATH_PATTERN);
+        Matcher matcher = pattern.matcher(input);
+        while (matcher.find()) {
+            String mpath = input.substring(matcher.start(), matcher.end()).trim();
+            
+            writer.writeCharacters(System.lineSeparator());
+            writer.writeEmptyElement("m:extract");
+            writer.writeAttribute("path", mpath);
         }
+        //TODO: check for json mpath -> $[id].x.y[int].z ...
     }
     
     //transforms request params and mpath variables in given string
-    protected String transformVariables(String inputStr) {
+    protected String transformRequestParams(String inputStr) {
+        String transformedStr = inputStr;
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
-        Matcher matcher = pattern.matcher(inputStr);
+        Matcher matcher = pattern.matcher(transformedStr);
         while (matcher.find()) {
-            String variable = matcher.group(1);
-            String newVariable = transformRequestParam(variable);
+            String v = transformedStr.substring(matcher.start(1), matcher.end(1)).trim();
+            String tv;
+            switch (v) {
+                case "id":
+                    tv = "${mtgReq.id}";
+                    break;
+                case "pid":
+                    tv = "${mtgReq.pid}";
+                    break;
+                case "uid":
+                    tv = "${mtgReq.uid}";
+                    break;
+                default:
+                    tv = "${mtgReq.params['" + v + "']}";
+            }
             /*if (paramIsPersisted(variable)!=null) {
                 String element = paramIsPersisted(variable);
                 if( element.equals(Script.class.getName()) ){
@@ -776,9 +772,10 @@ public class ParserService {
                     newVariable = "${" + MTG_PERSIST_MAP + "['" + variable + "']}";
                 }
             }*/
-            inputStr = inputStr.replace("$" + variable, newVariable);
+            transformedStr = transformedStr.replace(v, tv);
         }
-        return inputStr;
+       
+        return transformedStr;
     }
 
     // '%$variable%' => CONCAT('%',$variable,'%')
