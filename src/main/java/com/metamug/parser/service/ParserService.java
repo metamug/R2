@@ -120,6 +120,8 @@ public class ParserService {
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
 
     protected HashMap<String,String> elementIds; // <id,elementType>  
+    
+    protected static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
 
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
@@ -283,12 +285,6 @@ public class ParserService {
         writer.writeEmptyElement("jsp:directive.include");
         writer.writeAttribute("file", "../fragments/mason-init.jspf");
         writer.writeCharacters(System.lineSeparator());
-/*
-        writer.writeEmptyElement("jsp:useBean");
-        writer.writeAttribute("id", MTG_PERSIST_MAP);
-        writer.writeAttribute("class", "java.util.LinkedHashMap");
-        writer.writeAttribute("scope", "request");
-        writer.writeCharacters(System.lineSeparator());*/
 
         writer.writeStartElement("m:resource");
 
@@ -316,9 +312,7 @@ public class ParserService {
      */
     private void initializeRequest(XMLStreamWriter writer, Request req) throws XMLStreamException {
         writer.writeAttribute("method", req.getMethod().value());
-        if (req.isItem()) {
-            writer.writeAttribute("item", "true");
-        }
+        writer.writeAttribute("item", String.valueOf(req.isItem()) );
     }
 
     /**
@@ -352,6 +346,7 @@ public class ParserService {
      *
      * @param sql Sql object which is to be converted
      * @param writer XMLStreamWriter to write to JSP file.
+     * @param addDatasource boolean whether or not to add datasource attribute - don't add if Sql is inside Transaction
      * @throws XMLStreamException
      * @throws IOException
      * @throws SAXException
@@ -605,11 +600,11 @@ public class ParserService {
             } else if (paramOrHeaderOrBody instanceof Xparam) {
                 writer.writeEmptyElement("m:xparam");
                 writer.writeAttribute("name", ((Xparam) paramOrHeaderOrBody).getName());
-                String v = transformXReqParams(((Xparam) paramOrHeaderOrBody).getValue());
+                String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue());
                 writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
             } else if (paramOrHeaderOrBody instanceof String) {
                 writer.writeStartElement("m:xbody");
-                String body = transformXReqParams((String) paramOrHeaderOrBody);
+                String body = transformVariables((String) paramOrHeaderOrBody);
                 //writer.writeCharacters(body);
                 writeUnescapedCharacters(writer, body);
                 writer.writeEndElement();
@@ -744,13 +739,31 @@ public class ParserService {
     protected String enclose(String expression) {
         return "${" + expression + "}";
     }
-
-    private String transformXReqParams(String inputStr) {
-        Pattern pattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
+    
+    //$id => ${mtgReq.id}
+    //$pid => ${mtgReq.pid}
+    //$uid => ${mtgReq.uid}
+    //$variable => ${mtgReq.params['variable']}
+    protected String transformRequestParam(String param){
+        switch (param) {
+            case "id":
+                return "${mtgReq.id}";
+            case "pid":
+                return "${mtgReq.pid}";
+            case "uid":
+                return "${mtgReq.uid}";
+            default:
+                return "${mtgReq.params['" + param + "']}";
+        }
+    }
+    
+    //transforms request params and mpath variables in given string
+    protected String transformVariables(String inputStr) {
+        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher matcher = pattern.matcher(inputStr);
         while (matcher.find()) {
             String variable = matcher.group(1);
-            String newVariable = "${mtgReq.params['" + variable + "']}";
+            String newVariable = transformRequestParam(variable);
             /*if (paramIsPersisted(variable)!=null) {
                 String element = paramIsPersisted(variable);
                 if( element.equals(Script.class.getName()) ){
