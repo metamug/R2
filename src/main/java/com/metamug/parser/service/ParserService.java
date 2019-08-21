@@ -107,6 +107,8 @@ public class ParserService {
 
     protected static final String MASON_DATASOURCE = "datasource";
     protected static final String MASON_OUTPUT = "masonOutput";
+    public static final String MASON_BUS = "MASON_BUS";
+    public static final String EXTRACTED = "extracted";
 
     protected String appName;
     protected String resourceName;
@@ -117,7 +119,7 @@ public class ParserService {
     OutputStream output;
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
 
-    protected HashMap<String,String> elementIds;
+    protected HashMap<String,String> elementIds; // <id,elementType>  
 
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
@@ -432,45 +434,40 @@ public class ParserService {
     }
 
     protected void printSqlEnd(Sql sql, XMLStreamWriter writer) throws XMLStreamException {
-        //Don't insert result into the map when
-        /**
-         * 1. Its an 'Update' query with verbose attribute set to 'FALSE' or NOT SET at all
-         *
-         * 2. Its a 'Query' query with verbose attribute set to 'FALSE' explicitly.
-         */
-        boolean isVerbose = isVerbose(sql);
+      
+        boolean verbose = isVerbose(sql);
 
-        String sqlVar = "result";
-        if (sql.getType().value().equalsIgnoreCase("update") && isVerbose && sql.getClassname() == null) {
-            printCSet(writer, enclose(MASON_OUTPUT), sql.getId(), enclose(sqlVar));
+        String var = "result";
+        if (sql.getType().value().equalsIgnoreCase("update") && verbose && sql.getClassname() == null) {
+            //printCSet(writer, enclose(MASON_OUTPUT), sql.getId(), enclose(sqlVar));
+            printSqlOutTag(writer,sql.getId(),enclose(var),"true",String.valueOf(verbose));
         } else if (sql.getType().value().equalsIgnoreCase("query")) {
             
-            if (sql.getClassname() == null) {
-                /*
-                    if (sql.getCollect() && isVerbose) {
-                        writer.writeEmptyElement("c:set");
-                        writer.writeAttribute("target", enclose(MASON_OUTPUT));
-                        writer.writeAttribute("property", "dc" + (count++));
-                        writer.writeAttribute("value", enclose("result"));
-                }*/
-                if (isVerbose) {
-                    printCSet(writer, enclose(MASON_OUTPUT), sql.getId(), enclose(sqlVar));
-                }
-            } else {
+            if (sql.getClassname() != null) {     
+                //if classname is given, print <m:execute> instead of <m:sqlOut> 
                 writer.writeEmptyElement("m:execute");
-                writer.writeAttribute("className", sql.getClassname());
-                String execVar = "execResult";
-                writer.writeAttribute("var", execVar);
-                writer.writeAttribute("param", enclose(sqlVar));
+                writer.writeAttribute("className", sql.getClassname());                
+                writer.writeAttribute("var", sql.getId());
+                writer.writeAttribute("param", enclose(var));
 
-                if (isVerbose) {
-                    printCSet(writer, enclose(MASON_OUTPUT), sql.getId(), enclose(execVar));
-                }
+                if (verbose) {
+                    writer.writeAttribute("output", "true");
+                }               
+            } else {
+                printSqlOutTag(writer,sql.getId(),enclose(var),"true",String.valueOf(verbose));           
             }
         }
         if (sql.getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
+    }
+    
+    protected void printSqlOutTag(XMLStreamWriter writer, String var, String result, String bus, String output) throws XMLStreamException{
+        writer.writeEmptyElement("m:sqlOut");
+        writer.writeAttribute("var", var);
+        writer.writeAttribute("result", result);
+        writer.writeAttribute("bus", bus);
+        writer.writeAttribute("output", output);
     }
 
     /**
@@ -1005,8 +1002,10 @@ public class ParserService {
 
     protected boolean isVerbose(Sql sql) {
         if (sql.getType().value().equalsIgnoreCase("update") && (sql.getVerbose() != null && sql.getVerbose())) {
+            // type = update and verbose = true
             return true;
         } else {
+            // type = query and verbose != false
             return sql.getType().value().equalsIgnoreCase("query") && (sql.getVerbose() == null || sql.getVerbose());
         }
     }
