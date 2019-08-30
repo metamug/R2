@@ -60,6 +60,8 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
@@ -67,6 +69,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -80,14 +83,32 @@ public class ParserServiceTest {
     private final String outputFolder = "/Users/anishhirlekar/parser-output";
     String appName = "testWebapp";
     boolean isOldFile = true;
+    
+    @Test
+    public void detectMPathExpression1(){
+        String testString = "{\n" +
+"                    \"foo1\": $[res][0].name,\n" +
+"                    \"foo2\": $[res][0].rating\"\n" +
+"                }";
+        
+        Pattern pattern = Pattern.compile(ParserService.SQL_RESULT_MPATH_PATTERN);
+        Matcher matcher = pattern.matcher(testString);
+        while (matcher.find()) {
+            String v = testString.substring(matcher.start(), matcher.end()).trim();
+            System.out.println("v: ");
+            System.out.println(v);
+        }
+    }
 
     @Test
     public void testConcat() {
         String testQuery = "SELECT * FROM '$name%' WHERE LIKE '%$rating%' name "
-                + "LIKE '%$name% OR %rating AGAIN $var' WHERE 'rating LIKE' ";
-
-        String processedQuery = ParserService.processVariablesInLikeClause(testQuery);
-        System.out.println(processedQuery);
+                + "LIKE '%$name% OR %rating AGAIN $var' WHERE 'rating LIKE'";
+        String expected = "SELECT * FROM CONCAT($name,'%') WHERE LIKE CONCAT('%',$rating,'%') name LIKE CONCAT('%',$name,'% OR %rating AGAIN ',$var) WHERE 'rating LIKE'";
+        
+        String processed = ParserService.processVariablesInLikeClause(testQuery);
+        //System.out.println(processed);
+        Assert.assertEquals(expected,processed);
     }
 
     @Ignore
