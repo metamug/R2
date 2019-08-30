@@ -58,6 +58,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -84,20 +86,48 @@ public class ParserServiceTest {
     String appName = "testWebapp";
     boolean isOldFile = true;
     
+    @Ignore
     @Test
-    public void detectMPathExpression1(){
+    public void detectMPathInQuery(){
+        String testString = "SELECT $[xreq].body.args.foo1,$[xreq].body.args[2].foo AS 'foo1'";
+        
+        Pattern pattern = Pattern.compile(ParserService.MPATH_EXPRESSION_PATTERN);
+        Matcher matcher = pattern.matcher(testString);
+        
+        List<String> extracted = new ArrayList<>();
+        while (matcher.find()) {
+            String v = testString.substring(matcher.start(), matcher.end()).trim();
+            extracted.add(v);
+        }
+        
+        List<String> expected = new ArrayList<>();
+        expected.add("$[xreq].body.args.foo1");
+        expected.add("$[xreq].body.args[2].foo");
+        
+        Assert.assertEquals(expected, extracted);
+    }
+    
+    @Test
+    public void detectMPathInJson(){
         String testString = "{\n" +
-"                    \"foo1\": $[res][0].name,\n" +
+"                    \"foo1\": $[res].id.name,\n" +
 "                    \"foo2\": $[res][0].rating\"\n" +
 "                }";
         
-        Pattern pattern = Pattern.compile(ParserService.SQL_RESULT_MPATH_PATTERN);
+        Pattern pattern = Pattern.compile(ParserService.MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(testString);
+        
+        List<String> extracted = new ArrayList<>();
         while (matcher.find()) {
             String v = testString.substring(matcher.start(), matcher.end()).trim();
-            System.out.println("v: ");
-            System.out.println(v);
+            extracted.add(v);
         }
+        
+        List<String> expected = new ArrayList<>();
+        expected.add("$[res].id.name");
+        expected.add("$[res][0].rating");
+        
+        Assert.assertEquals(expected, extracted);
     }
 
     @Test
