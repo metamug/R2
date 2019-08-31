@@ -106,9 +106,8 @@ import org.xml.sax.SAXException;
 public class ParserService {
 
     protected static final String MASON_DATASOURCE = "datasource";
-    protected static final String MASON_OUTPUT = "masonOutput";
-    public static final String MASON_BUS = "MASON_BUS";
-    public static final String EXTRACTED = "extracted";
+    protected static final String MASON_OUTPUT = "output";
+    public static final String MASON_BUS = "bus";
 
     protected String appName;
     protected String resourceName;
@@ -397,7 +396,9 @@ public class ParserService {
                 writer.writeStartElement("sql:query");
             }
 
-            writer.writeAttribute("var", "result");
+            String var = "result";
+            
+            writer.writeAttribute("var", var);
             if(addDatasource){
                 writer.writeAttribute("dataSource", enclose(MASON_DATASOURCE));
             }
@@ -426,15 +427,13 @@ public class ParserService {
 
             writer.writeCharacters(System.lineSeparator());
 
-            printSqlEnd(sql, writer);
+            printSqlEnd(sql, writer, var);
         }
     }
 
-    protected void printSqlEnd(Sql sql, XMLStreamWriter writer) throws XMLStreamException {
+    protected void printSqlEnd(Sql sql, XMLStreamWriter writer, String var) throws XMLStreamException {
       
         boolean verbose = isVerbose(sql);
-
-        String var = "result";
               
         if( sql.getType().value().equalsIgnoreCase("query") && (sql.getClassname() != null) ){
             //if classname is given and type=query, print <m:execute> instead of <m:sqlOut> 
@@ -444,8 +443,9 @@ public class ParserService {
             writer.writeAttribute("param", enclose(var));
             writer.writeAttribute("output", String.valueOf(verbose));        
         } else{
-            //if no classname, print <m:sqlOut>
-            printSqlOutTag(writer,sql.getId(),enclose(var),"true",String.valueOf(verbose)); 
+            //if no classname and verbose, print <c:set>
+            if(verbose)
+                printCSet(writer,enclose(MASON_OUTPUT),var,enclose(var)); 
         }
         
         if (sql.getWhen() != null) {
@@ -453,12 +453,11 @@ public class ParserService {
         }
     }
     
-    protected void printSqlOutTag(XMLStreamWriter writer, String var, String result, String bus, String output) throws XMLStreamException{
-        writer.writeEmptyElement("m:sqlOut");
-        writer.writeAttribute("var", var);
-        writer.writeAttribute("result", result);
-        writer.writeAttribute("bus", bus);
-        writer.writeAttribute("output", output);
+    protected void printCSet(XMLStreamWriter writer, String target, String property, String value) throws XMLStreamException{
+        writer.writeEmptyElement("c:set");
+        writer.writeAttribute("target", target);
+        writer.writeAttribute("property", property);
+        writer.writeAttribute("value", value);
     }
 
     /**
