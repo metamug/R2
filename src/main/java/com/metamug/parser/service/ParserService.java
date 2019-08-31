@@ -738,7 +738,7 @@ public class ParserService {
     }
     
     //transforms MPath variables in given string
-    protected String transformMPathVariables(String input) {
+    protected String transformMPathVariables(String input) throws ResourceTestException {
         String transformed = input;
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(input);
@@ -746,6 +746,10 @@ public class ParserService {
             String mpathVariable = input.substring(matcher.start(), matcher.end()).trim();
             //get element id from mpath variable
             String elementId = getMPathId(mpathVariable);
+            
+            if(!elementIds.containsKey(elementId)){
+                throw new ResourceTestException("Could not find element with ID: "+elementId);
+            }
             //get type of element
             String type = elementIds.get(elementId);
             String tv = mpathVariable;
@@ -769,12 +773,12 @@ public class ParserService {
                 //${m:jsonPath('$.body.args.foo1',bus['id'])}
                 String locator = getMPathLocator(mpathVariable);
                 
-                tv = "${m:jsonPath('$"+locator+"',bus['"+elementId+"])}";
+                tv = "${m:jsonPath('$"+locator+"',"+MASON_BUS+"['"+elementId+"])}";
             }else if(type.equals(Execute.class.getName())){
                 // ${bus[id].name}
                 String locator = getMPathLocator(mpathVariable);
                 
-                tv = "${bus["+elementId+"]"+locator;
+                tv = "${"+MASON_BUS+"["+elementId+"]"+locator;
             }
             
             transformed = transformed.replace(mpathVariable, tv);
