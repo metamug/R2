@@ -56,6 +56,7 @@ package com.metamug.parser.service;
 import com.metamug.parser.RPXParser;
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.util.Utils;
+import com.metamug.schema.Arg;
 import com.metamug.schema.Execute;
 import com.metamug.schema.Param;
 import com.metamug.schema.Request;
@@ -468,7 +469,7 @@ public class ParserService {
      * @throws XMLStreamException
      * @throws SAXException
      */
-    protected void printExecuteTag(Execute execute, XMLStreamWriter writer) throws XMLStreamException, SAXException {
+    protected void printExecuteTag(Execute execute, XMLStreamWriter writer) throws XMLStreamException, SAXException, ResourceTestException {
         if (execute.getWhen() != null) {
             writer.writeStartElement("c:if");
             String testString = getQuotedString(execute.getWhen());
@@ -486,7 +487,7 @@ public class ParserService {
             }
         }
         writer.writeCharacters(System.lineSeparator());
-        writer.writeEmptyElement("m:execute");
+        writer.writeStartElement("m:execute");
         writer.writeAttribute("var", execute.getId());
         writer.writeAttribute("className", execute.getClassName());
         writer.writeAttribute("param", enclose("mtgReq"));
@@ -497,7 +498,25 @@ public class ParserService {
         if (execute.getOnerror() != null && execute.getOnerror().length() > 0) {
             writer.writeAttribute("onError", execute.getOnerror());
         }
-
+        
+        for(Arg arg: execute.getArg()){
+            writer.writeEmptyElement("m:arg");
+            writer.writeAttribute("name", arg.getName());
+            if(arg.getValue()!=null){
+                writer.writeAttribute("value", arg.getValue());
+            }else{
+                //value is null, check path
+                if(arg.getPath()!=null){
+                    writer.writeAttribute("value", transformMPathVariables(arg.getPath()));
+                } else{
+                    writer.writeAttribute("value","null");
+                }
+            }
+        }
+        
+        writer.writeCharacters(System.lineSeparator());
+        writer.writeEndElement(); // </m:execute>
+        
         // Sets status code
         /*if (execute.getStatus() != null) {
             writer.writeEmptyElement("mtg:status");
@@ -580,7 +599,7 @@ public class ParserService {
      * @throws javax.xml.xpath.XPathExpressionException
      */
     protected void printXrequestTag(Xrequest xrequest, XMLStreamWriter writer)
-            throws XMLStreamException, SAXException, IOException, XPathExpressionException {
+            throws XMLStreamException, SAXException, IOException, XPathExpressionException, ResourceTestException {
         if (xrequest.getWhen() != null) {
             writer.writeStartElement("c:if");
             String testString = getQuotedString(xrequest.getWhen());
@@ -604,14 +623,13 @@ public class ParserService {
             } else if (paramOrHeaderOrBody instanceof Xparam) {
                 writer.writeEmptyElement("m:xparam");
                 writer.writeAttribute("name", ((Xparam) paramOrHeaderOrBody).getName());
-                //transform request parameters in xrequest param value
-                String v = transformRequestVariables(((Xparam) paramOrHeaderOrBody).getValue());
-               
+                //transform request parameters and mpath variables in xrequest param value
+                String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue());
                 writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
             } else if (paramOrHeaderOrBody instanceof String) {
                 writer.writeStartElement("m:xbody");
-                //transform request parameters in xrequest body
-                String body = transformRequestVariables((String) paramOrHeaderOrBody);
+                //transform request parameters and mpath variables in xrequest body
+                String body = transformVariables((String) paramOrHeaderOrBody);
               
                 writeUnescapedCharacters(writer, body);
                 writer.writeEndElement();
@@ -627,13 +645,6 @@ public class ParserService {
             writer.writeEndElement(); //End of <c:if>
         }
     }
-/*
-    protected void printCSet(XMLStreamWriter writer, String target, String prop, String value) throws XMLStreamException {
-        writer.writeEmptyElement("c:set");
-        writer.writeAttribute("target", target);
-        writer.writeAttribute("property", prop);
-        writer.writeAttribute("value", value);
-    }*/
 
     /**
      * Closes the m:validate tag
@@ -737,6 +748,12 @@ public class ParserService {
     
     protected static String getMPathLocator(String path){
         return path.replaceFirst("\\$\\[(.*?)\\]","");
+    }
+    
+    protected String transformVariables(String input) throws ResourceTestException{
+        input = transformRequestVariables(input);
+        input = transformMPathVariables(input);
+        return input;
     }
     
     //transforms MPath variables in given string
@@ -890,7 +907,7 @@ public class ParserService {
                     builder.append("<sql:param value=\"${mtgReq.uid}\"/>");
                     break;
                 default:
-                    if (paramIsPersisted(param)!=null) {
+                    /*if (paramIsPersisted(param)!=null) {
                         /*
                         String element = paramIsPersisted(param);
                         if( element.equals(Script.class.getName()) ){
@@ -902,16 +919,16 @@ public class ParserService {
                         } else{
                             builder.append( MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\']}\" />", param) );
                         }
-                        */
-                    } else {
+                        
+                    } else {*/
                         builder.append(MessageFormat.format("<sql:param value=\"$'{'mtgReq.params[\''{0}'\']}\" />", param));
-                    }
+                    //}
                     break;
             }
             builder.append("\n");
         }
     }
-
+/*
     protected String paramIsPersisted(String paramName) {
         //first segment of mpath param is an element id
         //return elementIds.contains(paramName.split("\\.")[0]);
@@ -919,7 +936,7 @@ public class ParserService {
             return elementIds.get(paramName.split("\\.")[0]);
         }
         return null;
-    }
+    }*/
 
     private String processParam(Param param) {
         StringBuilder builder = new StringBuilder();
