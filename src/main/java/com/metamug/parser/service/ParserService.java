@@ -722,7 +722,45 @@ public class ParserService {
         }
     }
     
-    //transforms request params variables in given string
+    public static String getIdFromMPath(String path){
+        Pattern p = Pattern.compile("^\\$\\[(.*?)\\]");// $[varname]
+
+        Matcher m = p.matcher(path);
+        
+        while(m.find()) {
+            return m.group(1);
+        }
+        
+        return null;
+    }
+    
+    //transforms MPath variables in given string
+    protected String transformMPathVariables(String input) {
+        String transformed = input;
+        Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
+        Matcher matcher = pattern.matcher(input);
+        while (matcher.find()) {
+            String mpathVariable = input.substring(matcher.start(), matcher.end()).trim();
+            //get element id from mpath variable
+            String elementId = getIdFromMPath(mpathVariable);
+            //get type of element
+            String type = elementIds.get(elementId);
+            String tv = mpathVariable;
+            if(type.equals(Sql.class.getName())) {
+            
+            }else if(type.equals(Xrequest.class.getName())){
+                
+            }else if(type.equals(Execute.class.getName())){
+                
+            }
+            transformed = transformed.replace(mpathVariable, tv);
+        }
+       
+        return transformed;
+
+    }
+    
+    //transforms request variables in given string
     protected static String transformRequestVariables(String input) {
         String output = input;
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
