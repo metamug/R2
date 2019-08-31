@@ -750,19 +750,38 @@ public class ParserService {
             //get type of element
             String type = elementIds.get(elementId);
             String tv = mpathVariable;
+            
             if(type.equals(Sql.class.getName())) {
+                // ${id.rows[0].name
+                String rowIndex = "0";
+                String colName = null;
+
+                Pattern p = Pattern.compile("^\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)$");
+                Matcher m = p.matcher(mpathVariable);
+
+                if(m.find()) {
+                    rowIndex = m.group(2);
+                    colName = m.group(3);
+                }
+                
+                tv = "${"+elementId+".rows"+"["+rowIndex+"]."+colName+"}";
                 
             }else if(type.equals(Xrequest.class.getName())){
+                //${m:jsonPath('$.body.args.foo1',bus['id'])}
+                String locator = getMPathLocator(mpathVariable);
                 
+                tv = "${m:jsonPath('$"+locator+"',bus['"+elementId+"])}";
             }else if(type.equals(Execute.class.getName())){
+                // ${bus[id].name}
+                String locator = getMPathLocator(mpathVariable);
                 
+                tv = "${bus["+elementId+"]"+locator;
             }
             
             transformed = transformed.replace(mpathVariable, tv);
         }
        
         return transformed;
-
     }
     
     //transforms request variables in given string
