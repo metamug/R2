@@ -490,7 +490,8 @@ public class ParserService {
         writer.writeAttribute("var", execute.getId());
         writer.writeAttribute("className", execute.getClassName());
         writer.writeAttribute("param", enclose("mtgReq"));
-        if (execute.getVerbose() != null && execute.getVerbose()) {
+        if ( (execute.getVerbose() != null && execute.getVerbose()) 
+                || execute.getOutput() != null && execute.getOutput() ) {
             writer.writeAttribute("output", "true");
         }
         if (execute.getOnerror() != null && execute.getOnerror().length() > 0) {
@@ -618,7 +619,8 @@ public class ParserService {
         }
         writer.writeEndElement(); //End of <m:xrequest>    
         writer.writeCharacters(System.lineSeparator());
-        if (xrequest.getVerbose() != null && xrequest.getVerbose()) {
+        if ( (xrequest.getVerbose() != null && xrequest.getVerbose() ) 
+                || (xrequest.getOutput() != null && xrequest.getOutput() ) ) {
             writer.writeAttribute("output", "true");
         }
         if (xrequest.getWhen() != null) {
@@ -1023,12 +1025,14 @@ public class ParserService {
     }
 
     protected boolean isVerbose(Sql sql) {
-        if (sql.getType().value().equalsIgnoreCase("update") && (sql.getVerbose() != null && sql.getVerbose())) {
+        if (sql.getType().value().equalsIgnoreCase("update") &&
+                ( (sql.getVerbose() != null && sql.getVerbose()) || (sql.getOutput() != null && sql.getOutput()) ) ) {
             // type = update and verbose = true
             return true;
         } else {
             // type = query and verbose != false
-            return sql.getType().value().equalsIgnoreCase("query") && (sql.getVerbose() == null || sql.getVerbose());
+            return sql.getType().value().equalsIgnoreCase("query") && 
+                   ( ( sql.getVerbose() == null || sql.getVerbose() || sql.getOutput() == null || sql.getOutput() ) );
         }
     }
 }

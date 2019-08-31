@@ -70,6 +70,8 @@ public class Xrequest {
     protected Method method;
     @XmlAttribute(name = "verbose")
     protected Boolean verbose;
+    @XmlAttribute(name = "output")
+    private Boolean output;
 
     /**
      * Gets the value of the paramOrHeaderOrBody property.
@@ -198,5 +200,24 @@ public class Xrequest {
      */
     public void setVerbose(Boolean value) {
         this.verbose = value;
+    }
+    /**
+     * Gets the value of the output property.
+     *
+     * @return possible object is {@link Boolean}.
+     *
+     */
+    public Boolean getOutput() {
+        return output;
+    }
+
+    /**
+     * Sets the value of the verbose property.
+     *
+     * @param output allowed object is {@link Boolean}
+     *
+     */
+    public void setOutput(Boolean output) {
+        this.output = output;
     }
 }
