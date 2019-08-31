@@ -722,7 +722,7 @@ public class ParserService {
         }
     }
     
-    public static String getIdFromMPath(String path){
+    public static String getMPathId(String path){
         Pattern p = Pattern.compile("^\\$\\[(.*?)\\]");// $[varname]
 
         Matcher m = p.matcher(path);
@@ -734,6 +734,10 @@ public class ParserService {
         return null;
     }
     
+    protected static String getMPathLocator(String path){
+        return path.replaceFirst("\\$\\[(.*?)\\]","");
+    }
+    
     //transforms MPath variables in given string
     protected String transformMPathVariables(String input) {
         String transformed = input;
@@ -742,17 +746,18 @@ public class ParserService {
         while (matcher.find()) {
             String mpathVariable = input.substring(matcher.start(), matcher.end()).trim();
             //get element id from mpath variable
-            String elementId = getIdFromMPath(mpathVariable);
+            String elementId = getMPathId(mpathVariable);
             //get type of element
             String type = elementIds.get(elementId);
             String tv = mpathVariable;
             if(type.equals(Sql.class.getName())) {
-            
+                
             }else if(type.equals(Xrequest.class.getName())){
                 
             }else if(type.equals(Execute.class.getName())){
                 
             }
+            
             transformed = transformed.replace(mpathVariable, tv);
         }
        

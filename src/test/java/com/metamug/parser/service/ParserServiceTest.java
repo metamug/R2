@@ -113,10 +113,10 @@ public class ParserServiceTest {
             "$[res].id.name","$[res][0].rating"};
         String[] expected = {"xreq","xreq","res","res"};
         
-        Assert.assertEquals(ParserService.getIdFromMPath(paths[0]),expected[0]);
-        Assert.assertEquals(ParserService.getIdFromMPath(paths[1]),expected[1]);
-        Assert.assertEquals(ParserService.getIdFromMPath(paths[2]),expected[2]);
-        Assert.assertEquals(ParserService.getIdFromMPath(paths[3]),expected[3]);        
+        Assert.assertEquals(ParserService.getMPathId(paths[0]),expected[0]);
+        Assert.assertEquals(ParserService.getMPathId(paths[1]),expected[1]);
+        Assert.assertEquals(ParserService.getMPathId(paths[2]),expected[2]);
+        Assert.assertEquals(ParserService.getMPathId(paths[3]),expected[3]);        
     }
     
     @Test
