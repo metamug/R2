@@ -129,6 +129,22 @@ public class ParserServiceTest {
         
         Assert.assertEquals(expected, extracted);
     }
+    
+    @Test
+    public void transformRequestVariables(){
+        String input = "{\n" +
+"                    \"foo1\": $id,\n" +
+"                    \"foo2\": $rating\n" +
+"                }";
+        String exp = "{\n" +
+"                    \"foo1\": ${mtgReq.id},\n" +
+"                    \"foo2\": ${mtgReq.params['rating']}\n" +
+"                }";
+        String output = ParserService.transformRequestVariables(input);
+        //System.out.println(output);
+        //System.out.println(exp);
+        Assert.assertEquals(exp, output);
+    }
 
     @Test
     public void testConcat() {

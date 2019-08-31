@@ -122,7 +122,7 @@ public class ParserService {
     protected HashMap<String,String> elementIds; // <id,elementType>  
     
     protected static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
-    protected static final String SQL_RESULT_MPATH_PATTERN = "\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)";
+    //protected static final String SQL_RESULT_MPATH_PATTERN = "\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)";
     protected static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
 
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
@@ -586,19 +586,7 @@ public class ParserService {
             String testString = getQuotedString(xrequest.getWhen());
             writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
         }
-        //Test param and body for mpath variables and print extract tags
-        for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
-            if (paramOrHeaderOrBody instanceof Xparam) {
-                //param
-                String paramValue = ((Xparam) paramOrHeaderOrBody).getValue();
-                printExtractTag(writer, paramValue);
-             } else if (paramOrHeaderOrBody instanceof String) {
-                //body
-                String body = (String) paramOrHeaderOrBody;
-                printExtractTag(writer, body);
-             }
-        }
-        
+   
         //print xrequest mason tags
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("m:xrequest");
@@ -617,14 +605,14 @@ public class ParserService {
                 writer.writeEmptyElement("m:xparam");
                 writer.writeAttribute("name", ((Xparam) paramOrHeaderOrBody).getName());
                 //transform request parameters in xrequest param value
-                String v = transformRequestParams(((Xparam) paramOrHeaderOrBody).getValue());
-                //TODO: wrap mpath variables in v inside ${extracted[""]}
+                String v = transformRequestVariables(((Xparam) paramOrHeaderOrBody).getValue());
+               
                 writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
             } else if (paramOrHeaderOrBody instanceof String) {
                 writer.writeStartElement("m:xbody");
                 //transform request parameters in xrequest body
-                String body = transformRequestParams((String) paramOrHeaderOrBody);
-                //TODO: wrap mpath variables in body inside ${extracted[""]}
+                String body = transformRequestVariables((String) paramOrHeaderOrBody);
+              
                 writeUnescapedCharacters(writer, body);
                 writer.writeEndElement();
             }
@@ -726,27 +714,21 @@ public class ParserService {
         return "${" + expression + "}";
     }
     
-    protected void printExtractTag(XMLStreamWriter writer, String input) throws XMLStreamException{
-        //check for result mpath -> $[sqlId][row].column
-        Pattern pattern = Pattern.compile(SQL_RESULT_MPATH_PATTERN);
-        Matcher matcher = pattern.matcher(input);
-        while (matcher.find()) {
-            String mpath = input.substring(matcher.start(), matcher.end()).trim();
-            
-            writer.writeCharacters(System.lineSeparator());
-            writer.writeEmptyElement("m:extract");
-            writer.writeAttribute("path", mpath);
+    protected void collectSqlParams(List<String> params, String query) {
+        Pattern pattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
+        Matcher match = pattern.matcher(query);
+        while (match.find()) {
+            params.add(query.substring(match.start(1), match.end(1)).trim());
         }
-        //TODO: check for json mpath -> $[id].x.y[int].z ...
     }
     
-    //transforms request params and mpath variables in given string
-    protected String transformRequestParams(String inputStr) {
-        String transformedStr = inputStr;
+    //transforms request params variables in given string
+    protected static String transformRequestVariables(String input) {
+        String output = input;
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
-        Matcher matcher = pattern.matcher(transformedStr);
+        Matcher matcher = pattern.matcher(input);
         while (matcher.find()) {
-            String v = transformedStr.substring(matcher.start(1), matcher.end(1)).trim();
+            String v = input.substring(matcher.start(1), matcher.end(1)).trim();
             String tv;
             switch (v) {
                 case "id":
@@ -761,22 +743,10 @@ public class ParserService {
                 default:
                     tv = "${mtgReq.params['" + v + "']}";
             }
-            /*if (paramIsPersisted(variable)!=null) {
-                String element = paramIsPersisted(variable);
-                if( element.equals(Script.class.getName()) ){
-                    newVariable = "${" + MTG_PERSIST_MAP + "." + variable + "}";
-                } else if( element.equals(Execute.class.getName()) ) {
-                    String elementId = variable.split("\\.")[0];
-                    String mPath = variable.replace(elementId+".", "");
-                    newVariable = "${" + MTG_PERSIST_MAP + "['" + elementId + "']." + mPath + "}";
-                }else{
-                    newVariable = "${" + MTG_PERSIST_MAP + "['" + variable + "']}";
-                }
-            }*/
-            transformedStr = transformedStr.replace(v, tv);
+            output = output.replace("$"+v, tv);
         }
        
-        return transformedStr;
+        return output;
     }
 
     // '%$variable%' => CONCAT('%',$variable,'%')
@@ -838,14 +808,6 @@ public class ParserService {
         appendSqlParams(builder, params);
 
         return builder.toString();
-    }
-
-    protected void collectSqlParams(List<String> params, String query) {
-        Pattern pattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
-        Matcher match = pattern.matcher(query);
-        while (match.find()) {
-            params.add(query.substring(match.start(1), match.end(1)).trim());
-        }
     }
 
     protected void appendSqlParams(StringBuilder builder, List<String> params) {
