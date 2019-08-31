@@ -86,7 +86,7 @@ public class ParserServiceTest {
     String appName = "testWebapp";
     boolean isOldFile = true;
     
-    @Ignore
+    
     @Test
     public void detectMPathInQuery(){
         String testString = "SELECT $[xreq].body.args.foo1,$[xreq].body.args[2].foo AS 'foo1'";

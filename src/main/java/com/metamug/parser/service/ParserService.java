@@ -123,7 +123,7 @@ public class ParserService {
     
     protected static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
     protected static final String SQL_RESULT_MPATH_PATTERN = "\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)";
-    protected static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(.\\w+(\\[\\d+\\]){0,1}){0,}";
+    protected static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
 
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
