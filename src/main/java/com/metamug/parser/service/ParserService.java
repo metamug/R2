@@ -397,7 +397,7 @@ public class ParserService {
                 writer.writeStartElement("sql:query");
             }
 
-            String var = "result";
+            String var = sql.getId();//"result";
             
             writer.writeAttribute("var", var);
             if(addDatasource){
