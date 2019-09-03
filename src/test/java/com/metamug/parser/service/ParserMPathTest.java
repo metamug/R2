@@ -53,70 +53,176 @@
 package com.metamug.parser.service;
 
 import com.metamug.parser.exception.ResourceTestException;
-import java.beans.PropertyVetoException;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.sql.SQLException;
+import com.metamug.schema.Execute;
+import com.metamug.schema.Sql;
+import com.metamug.schema.Xrequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.io.FilenameUtils;
-import org.json.JSONObject;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
 /**
  *
  * @author anishhirlekar
  */
-public class ParserServiceTest {
-
-    private final String outputFolder = "/Users/anishhirlekar/parser-output";
-    String appName = "testWebapp";
-    boolean isOldFile = true;  
+public class ParserMPathTest {
     
-
-    @Test
-    public void testConcat() {
-        String testQuery = "SELECT * FROM '$name%' WHERE LIKE '%$rating%' name "
-                + "LIKE '%$name% OR %rating AGAIN $var' WHERE 'rating LIKE'";
-        String expected = "SELECT * FROM CONCAT($name,'%') WHERE LIKE CONCAT('%',$rating,'%') name LIKE CONCAT('%',$name,'% OR %rating AGAIN ',$var) WHERE 'rating LIKE'";
+    Map<String,String> elementIds = new HashMap<>();
+    
+    @Before
+    public void init(){
+        elementIds.put("sqlresult", Sql.class.getName());
+        elementIds.put("xreq", Xrequest.class.getName());
+        elementIds.put("exec", Execute.class.getName());
         
-        String processed = ParserService.processVariablesInLikeClause(testQuery);
-        //System.out.println(processed);
-        Assert.assertEquals(expected,processed);
     }
-
-    @Ignore
+    
     @Test
-    public void testParser() {
-
-        File resDir = new File(ParserServiceTest.class.getClassLoader().getResource(".").getFile());
-
-        ParserService parseService = new ParserService();
-
-        for (File file : resDir.listFiles()) {
-            if (FilenameUtils.getExtension(file.toString()).equals("xml")) {
-                try {
-                    System.out.println(file.getName());
-
-                    JSONObject jsonObj = parseService.transform(file, appName, isOldFile, outputFolder, null, null);
-
-                    System.out.println(jsonObj);
-
-                } catch (SAXException | XMLStreamException | XPathExpressionException | ParserConfigurationException
-                        | TransformerException | JAXBException | URISyntaxException | IOException | SQLException
-                        | ClassNotFoundException | PropertyVetoException | ResourceTestException ex) {
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+    public void getMPathIdRegex(){
+        String[] paths = {"$[xreq].body.args[2].foo","$[xreq].body.args.foo1",
+            "$[res].id.name","$[res][0].rating"};
+        String[] expected = {"xreq","xreq","res","res"};
+        
+        Assert.assertEquals(ParserService.getMPathId(paths[0]),expected[0]);
+        Assert.assertEquals(ParserService.getMPathId(paths[1]),expected[1]);
+        Assert.assertEquals(ParserService.getMPathId(paths[2]),expected[2]);
+        Assert.assertEquals(ParserService.getMPathId(paths[3]),expected[3]);        
+    }
+    
+    @Test
+    public void detectMPathInQueryRegex(){
+        String testString = "SELECT $[xreq].body.args.foo1,$[xreq].body.args[2].foo AS 'foo1'";
+        
+        Pattern pattern = Pattern.compile(ParserService.MPATH_EXPRESSION_PATTERN);
+        Matcher matcher = pattern.matcher(testString);
+        
+        List<String> extracted = new ArrayList<>();
+        while (matcher.find()) {
+            String v = testString.substring(matcher.start(), matcher.end()).trim();
+            extracted.add(v);
         }
+        
+        List<String> expected = new ArrayList<>();
+        expected.add("$[xreq].body.args.foo1");
+        expected.add("$[xreq].body.args[2].foo");
+        
+        Assert.assertEquals(expected, extracted);
+    }
+    
+    
+    @Test
+    public void detectMPathInJsonRegex(){
+        String testString = "{\n" +
+"                    \"foo1\": $[res].id.name,\n" +
+"                    \"foo2\": $[res][0].rating\"\n" +
+"                }";
+        
+        Pattern pattern = Pattern.compile(ParserService.MPATH_EXPRESSION_PATTERN);
+        Matcher matcher = pattern.matcher(testString);
+        
+        List<String> extracted = new ArrayList<>();
+        while (matcher.find()) {
+            String v = testString.substring(matcher.start(), matcher.end()).trim();
+            extracted.add(v);
+        }
+        
+        List<String> expected = new ArrayList<>();
+        expected.add("$[res].id.name");
+        expected.add("$[res][0].rating");
+        
+        Assert.assertEquals(expected, extracted);
+    }  
+    
+    @Test
+    public void transformRequestVariables(){
+        String input = "{\n" +
+"                    \"foo1\": $id,\n" +
+"                    \"foo2\": $rating\n" +
+"                }";
+        String exp = "{\n" +
+"                    \"foo1\": ${mtgReq.id},\n" +
+"                    \"foo2\": ${mtgReq.params['rating']}\n" +
+"                }";
+        String output = ParserService.transformRequestVariables(input);
+        //System.out.println(output);
+        //System.out.println(exp);
+        Assert.assertEquals(exp, output);
+    }
+    
+    @Test
+    public void transformMPathXReq(){
+        String input = "{\n" +
+"                    \"foo1\": $[sqlresult][1].id.name,\n" +
+"                    \"foo2\": $[sqlresult][0].rating\"\n" +
+"                }";
+        String expected = "{\n" +
+"                    \"foo1\": ${sqlresult.rows[1].id.name},\n" +
+"                    \"foo2\": ${sqlresult.rows[0].rating}\"\n" +
+"                }";
+        try {
+            String output = ParserService.transformMPathVariables(input, elementIds);
+            //System.out.println(output);
+            Assert.assertEquals(output,expected);
+        } catch (ResourceTestException ex) {
+            Logger.getLogger(ParserMPathTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    @Test
+    public void transformMPathExec(){
+        String input = "{\n" +
+"                   \"foo1\": \"Hello\",\n" +
+"                   \"foo2\": ${exec.name}\"\n" +
+"                   \"foo3\": ${exec.contact.phone}\"\n" +
+"               }";
+        String expected = "{\n" +
+"                   \"foo1\": \"Hello\",\n" +
+"                   \"foo2\": ${exec.name}\"\n" +
+"                   \"foo3\": ${exec.contact.phone}\"\n" +
+"               }";
+        try {
+            String output = ParserService.transformMPathVariables(input, elementIds);
+            //System.out.println(output);
+            Assert.assertEquals(output,expected);
+        } catch (ResourceTestException ex) {
+            Logger.getLogger(ParserMPathTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    @Test
+    public void transformMPathSql(){
+        String input = "SELECT $[xreq].body.args.foo1,$[xreq].body.args[2].foo[0].bar AS 'foo1'";
+        String expected = "SELECT ${m:jsonPath('$.body.args.foo1',xreq )},${m:jsonPath('$.body.args[2].foo[0].bar',xreq )} AS 'foo1'";
+        
+        try {
+            String output = ParserService.transformMPathVariables(input, elementIds);
+            Assert.assertEquals(output,expected);
+        } catch (ResourceTestException ex) {
+            Logger.getLogger(ParserMPathTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    @Test
+    public void transformMPathInvalidId(){
+        String input = "SELECT $[invalidId].body.args.foo1,$[xreq].body.args[2].foo[0].bar AS 'foo1'";
+        
+        try {
+            String output = ParserService.transformMPathVariables(input, elementIds);
+            //Assert.assertEquals(output,null);
+        } catch (ResourceTestException ex) {
+            //Logger.getLogger(ParserMPathTest.class.getName()).log(Level.SEVERE, null, ex);
+            Assert.assertTrue(ex.getMessage().contains("Could not find element with ID"));
+        }
+        
     }
 }

@@ -86,6 +86,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.bind.JAXBException;
@@ -108,7 +109,6 @@ public class ParserService {
 
     protected static final String MASON_DATASOURCE = "datasource";
     protected static final String MASON_OUTPUT = "output";
-    public static final String MASON_BUS = "bus";
 
     protected String appName;
     protected String resourceName;
@@ -507,7 +507,7 @@ public class ParserService {
             }else{
                 //value is null, check path
                 if(arg.getPath()!=null){
-                    writer.writeAttribute("value", transformMPathVariables(arg.getPath()));
+                    writer.writeAttribute("value", transformVariables(arg.getPath(),elementIds));
                 } else{
                     writer.writeAttribute("value","null");
                 }
@@ -624,12 +624,12 @@ public class ParserService {
                 writer.writeEmptyElement("m:xparam");
                 writer.writeAttribute("name", ((Xparam) paramOrHeaderOrBody).getName());
                 //transform request parameters and mpath variables in xrequest param value
-                String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue());
+                String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue(),elementIds);
                 writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
             } else if (paramOrHeaderOrBody instanceof String) {
                 writer.writeStartElement("m:xbody");
                 //transform request parameters and mpath variables in xrequest body
-                String body = transformVariables((String) paramOrHeaderOrBody);
+                String body = transformVariables((String) paramOrHeaderOrBody,elementIds);
               
                 writeUnescapedCharacters(writer, body);
                 writer.writeEndElement();
@@ -750,14 +750,14 @@ public class ParserService {
         return path.replaceFirst("\\$\\[(.*?)\\]","");
     }
     
-    protected String transformVariables(String input) throws ResourceTestException{
+    protected String transformVariables(String input, Map<String,String> elementIds) throws ResourceTestException{
         input = transformRequestVariables(input);
-        input = transformMPathVariables(input);
+        input = transformMPathVariables(input, elementIds);
         return input;
     }
     
     //transforms MPath variables in given string
-    protected String transformMPathVariables(String input) throws ResourceTestException {
+    protected static String transformMPathVariables(String input, Map<String,String> elementIds) throws ResourceTestException {
         String transformed = input;
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(input);
@@ -792,12 +792,12 @@ public class ParserService {
                 //${m:jsonPath('$.body.args.foo1',bus['id'])}
                 String locator = getMPathLocator(mpathVariable);
                 
-                tv = "${m:jsonPath('$"+locator+"',"+MASON_BUS+"['"+elementId+"])}";
+                tv = "${m:jsonPath('$"+locator+"',"+elementId+" )}";
             }else if(type.equals(Execute.class.getName())){
                 // ${bus[id].name}
                 String locator = getMPathLocator(mpathVariable);
                 
-                tv = "${"+MASON_BUS+"["+elementId+"]"+locator;
+                tv = "${"+elementId+"."+locator+"}";
             }
             
             transformed = transformed.replace(mpathVariable, tv);
