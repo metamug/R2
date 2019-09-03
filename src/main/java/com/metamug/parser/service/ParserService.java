@@ -729,13 +729,13 @@ public class ParserService {
     }
     
     protected void collectVariables(LinkedList<String> requestParams, LinkedList<String> mPathParams, String query) throws ResourceTestException {
-        Pattern pattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
+        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher match = pattern.matcher(query);
         while (match.find()) {
             requestParams.add(query.substring(match.start(1), match.end(1)).trim());
         }
         //collect Mpath variables
-        mPathParams = collectMPathParams(query, elementIds);
+        collectMPathParams(mPathParams,query, elementIds);
     }
     
     public static String getMPathId(String path){
@@ -792,9 +792,7 @@ public class ParserService {
     }
     
     //collects MPath variables for sql:param tags
-    protected static LinkedList<String> collectMPathParams(String sql, Map<String,String> elementIds) throws ResourceTestException {
-        LinkedList<String> params = new LinkedList<>();
-        
+    protected static void collectMPathParams(LinkedList<String> params,String sql, Map<String,String> elementIds) throws ResourceTestException {
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(sql);
         
@@ -812,8 +810,6 @@ public class ParserService {
             
             params.add(tv);
         }
-       
-        return params;
     }
     
     //transforms MPath variables in given string
@@ -908,10 +904,14 @@ public class ParserService {
         }
         return q;
     }
+    
+    protected String getSqlParams(Sql sql, HashMap<String,String> elementIds) throws ResourceTestException{
+        this.elementIds = elementIds;
+        return getSqlParams(sql);
+    }
 
     protected String getSqlParams(Sql sql) throws ResourceTestException {
         String query = sql.getValue();
-
         LinkedList<String> params = new LinkedList<>();
         LinkedList<String> mpathParams = new LinkedList<>();
         
@@ -921,28 +921,37 @@ public class ParserService {
         if (processedQuery.toLowerCase().contains(" like ")) {
             processedQuery = processVariablesInLikeClause(processedQuery);
         }
-        // replace request variables with ?$ and mpath variables with ?$[]
-        String queryWithWildcard = processedQuery.replaceAll(REQUEST_PARAM_PATTERN, "?$R ");
-        queryWithWildcard = queryWithWildcard.replaceAll(MPATH_EXPRESSION_PATTERN, "?$M ");
         
-        StringBuilder builder = new StringBuilder(escapeSpecialCharacters(queryWithWildcard));
+        //System.out.println("MPath: "+mpathParams);
+        //System.out.println("ReqParams: "+params);
+        String wildcardQry = processedQuery.replaceAll(REQUEST_PARAM_PATTERN, "? ");
+        wildcardQry = wildcardQry.replaceAll(MPATH_EXPRESSION_PATTERN, "? ");
+        System.out.println("WildcardQry: "+wildcardQry);
+        
+        String queryWithPlaceholder = processedQuery.replaceAll(REQUEST_PARAM_PATTERN, "?R ");  
+        queryWithPlaceholder = queryWithPlaceholder.replaceAll(MPATH_EXPRESSION_PATTERN, "?M ");
+        System.out.println("QryPlaceholder: "+queryWithPlaceholder);
+       
+        StringBuilder builder = new StringBuilder(escapeSpecialCharacters(wildcardQry));
         builder.append("\n");
 
-        appendSqlParams(builder, params, mpathParams, queryWithWildcard);
+        System.out.println("Builder: "+builder.toString());
+        appendSqlParams(builder, params, mpathParams, queryWithPlaceholder);
 
+        System.out.println("4");
         return builder.toString();
     }
 
     protected void appendSqlParams(StringBuilder builder, LinkedList<String> reqParams, LinkedList<String> mpathParams, String sql) throws ResourceTestException {
-        // append param tags according to ?$R and ?$M notations in order
+        System.out.println("AppM: "+mpathParams);
+        System.out.println("AppR: "+reqParams);
         for (int i = 0; i < sql.length(); i++){
             char c = sql.charAt(i);   
             
-            char d = sql.charAt(i+1);
-            if(c == '?' && d == '$'){     
+            if(c == '?'){     
                 
-                    char e = sql.charAt(i+2);
-                    char f = sql.charAt(i+3);
+                    char e = sql.charAt(i+1);
+                    char f = sql.charAt(i+2);
                     if(e == 'R' && f == ' '){
                         //append request params
                         String reqParam = reqParams.getFirst();
@@ -951,10 +960,11 @@ public class ParserService {
                     } else if (e == 'M' && f == ' '){
                         //append mpath variables
                         String mpathParam = mpathParams.getFirst();
+                        System.out.println("mpathParam: "+mpathParam);
                         mpathParams.removeFirst();
                         
                         String elementId = getMPathId(mpathParam);
-            
+                        System.out.println(elementId);
                         if(!elementIds.containsKey(elementId)){
                             throw new ResourceTestException("Could not find element with ID: "+elementId);
                         }
@@ -967,6 +977,7 @@ public class ParserService {
                     }
                 
             }
+            //System.out.println("B: "+builder.toString());
         }
     }
     
