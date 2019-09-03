@@ -80,11 +80,11 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -121,9 +121,9 @@ public class ParserService {
 
     protected HashMap<String,String> elementIds; // <id,elementType>  
     
-    protected static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
+    public static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
     //protected static final String SQL_RESULT_MPATH_PATTERN = "\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)";
-    protected static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
+    public static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
 
     // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
     //int count = 0;
@@ -353,9 +353,10 @@ public class ParserService {
      * @throws IOException
      * @throws SAXException
      * @throws XPathExpressionException
+     * @throws com.metamug.parser.exception.ResourceTestException
      */
     protected void printSqlTag(Sql sql, XMLStreamWriter writer, boolean addDatasource)
-            throws XMLStreamException, IOException, SAXException, XPathExpressionException {
+            throws XMLStreamException, IOException, SAXException, XPathExpressionException, ResourceTestException {
         //Check for empty the Sql tag
         if (!sql.getValue().trim().isEmpty()) {
             if (sql.getWhen() != null) {
@@ -597,6 +598,7 @@ public class ParserService {
      * @throws SAXException
      * @throws java.io.IOException
      * @throws javax.xml.xpath.XPathExpressionException
+     * @throws com.metamug.parser.exception.ResourceTestException
      */
     protected void printXrequestTag(Xrequest xrequest, XMLStreamWriter writer)
             throws XMLStreamException, SAXException, IOException, XPathExpressionException, ResourceTestException {
@@ -726,12 +728,14 @@ public class ParserService {
         return "${" + expression + "}";
     }
     
-    protected void collectSqlParams(List<String> params, String query) {
+    protected void collectVariables(LinkedList<String> requestParams, LinkedList<String> mPathParams, String query) throws ResourceTestException {
         Pattern pattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
         Matcher match = pattern.matcher(query);
         while (match.find()) {
-            params.add(query.substring(match.start(1), match.end(1)).trim());
+            requestParams.add(query.substring(match.start(1), match.end(1)).trim());
         }
+        //collect Mpath variables
+        mPathParams = collectMPathParams(query, elementIds);
     }
     
     public static String getMPathId(String path){
@@ -756,24 +760,9 @@ public class ParserService {
         return input;
     }
     
-    //transforms MPath variables in given string
-    protected static String transformMPathVariables(String input, Map<String,String> elementIds) throws ResourceTestException {
-        String transformed = input;
-        Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
-        Matcher matcher = pattern.matcher(input);
-        while (matcher.find()) {
-            String mpathVariable = input.substring(matcher.start(), matcher.end()).trim();
-            //get element id from mpath variable
-            String elementId = getMPathId(mpathVariable);
-            
-            if(!elementIds.containsKey(elementId)){
-                throw new ResourceTestException("Could not find element with ID: "+elementId);
-            }
-            //get type of element
-            String type = elementIds.get(elementId);
-            String tv = mpathVariable;
-            
-            if(type.equals(Sql.class.getName())) {
+    protected static String getJspVariableForMPath(String mpathVariable, String type, String elementId){
+        String tv = mpathVariable;
+        if(type.equals(Sql.class.getName())) {
                 // ${id.rows[0].name
                 String rowIndex = "0";
                 String colName = null;
@@ -799,6 +788,50 @@ public class ParserService {
                 
                 tv = "${"+elementId+"."+locator+"}";
             }
+        return tv;
+    }
+    
+    //collects MPath variables for sql:param tags
+    protected static LinkedList<String> collectMPathParams(String sql, Map<String,String> elementIds) throws ResourceTestException {
+        LinkedList<String> params = new LinkedList<>();
+        
+        Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
+        Matcher matcher = pattern.matcher(sql);
+        
+        while (matcher.find()) {
+            String mpathVariable = sql.substring(matcher.start(), matcher.end()).trim();
+            //get element id from mpath variable
+            String elementId = getMPathId(mpathVariable);
+            
+            if(!elementIds.containsKey(elementId)){
+                throw new ResourceTestException("Could not find element with ID: "+elementId);
+            }
+            //get type of element
+            String type = elementIds.get(elementId);
+            String tv = getJspVariableForMPath(mpathVariable, type, elementId);
+            
+            params.add(tv);
+        }
+       
+        return params;
+    }
+    
+    //transforms MPath variables in given string
+    protected static String transformMPathVariables(String input, Map<String,String> elementIds) throws ResourceTestException {
+        String transformed = input;
+        Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
+        Matcher matcher = pattern.matcher(input);
+        while (matcher.find()) {
+            String mpathVariable = input.substring(matcher.start(), matcher.end()).trim();
+            //get element id from mpath variable
+            String elementId = getMPathId(mpathVariable);
+            
+            if(!elementIds.containsKey(elementId)){
+                throw new ResourceTestException("Could not find element with ID: "+elementId);
+            }
+            //get type of element
+            String type = elementIds.get(elementId);
+            String tv = getJspVariableForMPath(mpathVariable, type, elementId);
             
             transformed = transformed.replace(mpathVariable, tv);
         }
@@ -876,67 +909,79 @@ public class ParserService {
         return q;
     }
 
-    protected String getSqlParams(Sql sql) {
+    protected String getSqlParams(Sql sql) throws ResourceTestException {
         String query = sql.getValue();
-        List<String> params = new ArrayList<>();
 
-        collectSqlParams(params, query);
+        LinkedList<String> params = new LinkedList<>();
+        LinkedList<String> mpathParams = new LinkedList<>();
+        
+        collectVariables(params, mpathParams, query);
+        
         String processedQuery = query;
         if (processedQuery.toLowerCase().contains(" like ")) {
             processedQuery = processVariablesInLikeClause(processedQuery);
         }
-        String queryWithWildcard = processedQuery.replaceAll("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})", "? ");
+        // replace request variables with ?$ and mpath variables with ?$[]
+        String queryWithWildcard = processedQuery.replaceAll(REQUEST_PARAM_PATTERN, "?$R ");
+        queryWithWildcard = queryWithWildcard.replaceAll(MPATH_EXPRESSION_PATTERN, "?$M ");
+        
         StringBuilder builder = new StringBuilder(escapeSpecialCharacters(queryWithWildcard));
         builder.append("\n");
 
-        appendSqlParams(builder, params);
+        appendSqlParams(builder, params, mpathParams, queryWithWildcard);
 
         return builder.toString();
     }
 
-    protected void appendSqlParams(StringBuilder builder, List<String> params) {
-        for (String param : params) {
-            switch (param) {
-                case "id":
-                    builder.append("<sql:param value=\"${mtgReq.id}\"/>");
-                    break;
-                case "pid":
-                    builder.append("<sql:param value=\"${mtgReq.pid}\"/>");
-                    break;
-                case "uid":
-                    builder.append("<sql:param value=\"${mtgReq.uid}\"/>");
-                    break;
-                default:
-                    /*if (paramIsPersisted(param)!=null) {
-                        /*
-                        String element = paramIsPersisted(param);
-                        if( element.equals(Script.class.getName()) ){
-                            builder.append(MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + ".{0}}\" />", param));
-                        }else if( element.equals(Execute.class.getName()) ) {
-                            String elementId = param.split("\\.")[0];
-                            String mPath = param.replace(elementId+".", "");
-                            builder.append( MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\'].{1}}\" />", elementId, mPath ) );
-                        } else{
-                            builder.append( MessageFormat.format("<sql:param value=\"$'{'" + MTG_PERSIST_MAP + "[\''{0}'\']}\" />", param) );
-                        }
+    protected void appendSqlParams(StringBuilder builder, LinkedList<String> reqParams, LinkedList<String> mpathParams, String sql) throws ResourceTestException {
+        // append param tags according to ?$R and ?$M notations in order
+        for (int i = 0; i < sql.length(); i++){
+            char c = sql.charAt(i);   
+            
+            char d = sql.charAt(i+1);
+            if(c == '?' && d == '$'){     
+                
+                    char e = sql.charAt(i+2);
+                    char f = sql.charAt(i+3);
+                    if(e == 'R' && f == ' '){
+                        //append request params
+                        String reqParam = reqParams.getFirst();
+                        reqParams.removeFirst();
+                        builder.append("<sql:param value=\"").append(getJspVariableForRequestParam(reqParam)).append("\"/>");
+                    } else if (e == 'M' && f == ' '){
+                        //append mpath variables
+                        String mpathParam = mpathParams.getFirst();
+                        mpathParams.removeFirst();
                         
-                    } else {*/
-                        builder.append(MessageFormat.format("<sql:param value=\"$'{'mtgReq.params[\''{0}'\']}\" />", param));
-                    //}
-                    break;
+                        String elementId = getMPathId(mpathParam);
+            
+                        if(!elementIds.containsKey(elementId)){
+                            throw new ResourceTestException("Could not find element with ID: "+elementId);
+                        }
+                        //get type of element
+                        String type = elementIds.get(elementId);
+                        
+                        builder.append("<sql:param value=\"")
+                                .append(getJspVariableForMPath(mpathParam,type,elementId))
+                                .append("\"/>");
+                    }
+                
             }
-            builder.append("\n");
         }
     }
-/*
-    protected String paramIsPersisted(String paramName) {
-        //first segment of mpath param is an element id
-        //return elementIds.contains(paramName.split("\\.")[0]);
-        if(elementIds.containsKey(paramName.split("\\.")[0])){
-            return elementIds.get(paramName.split("\\.")[0]);
+    
+    protected String getJspVariableForRequestParam(String param){
+        switch (param) {
+            case "id":
+                return "${mtgReq.id}";
+            case "pid":
+                return "${mtgReq.pid}";
+            case "uid":
+                return "${mtgReq.uid}";
+            default:
+                return "${mtgReq.params[\'"+param+"\']}\" />";
         }
-        return null;
-    }*/
+    }
 
     private String processParam(Param param) {
         StringBuilder builder = new StringBuilder();
