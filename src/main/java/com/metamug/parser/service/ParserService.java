@@ -607,6 +607,10 @@ public class ParserService {
         writer.writeStartElement("m:xrequest");
         writer.writeAttribute("var", xrequest.getId());
         writer.writeAttribute("method", xrequest.getMethod().name());
+        if ( (xrequest.getVerbose() != null && xrequest.getVerbose() ) 
+                || (xrequest.getOutput() != null && xrequest.getOutput() ) ) {
+            writer.writeAttribute("output", "true");
+        }
         writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(xrequest.getUrl())+"\"");
                 
         for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
@@ -633,10 +637,7 @@ public class ParserService {
         }
         writer.writeEndElement(); //End of <m:xrequest>    
         writer.writeCharacters(System.lineSeparator());
-        if ( (xrequest.getVerbose() != null && xrequest.getVerbose() ) 
-                || (xrequest.getOutput() != null && xrequest.getOutput() ) ) {
-            writer.writeAttribute("output", "true");
-        }
+        
         if (xrequest.getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }

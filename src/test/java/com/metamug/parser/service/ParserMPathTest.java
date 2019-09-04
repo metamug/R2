@@ -227,7 +227,7 @@ public class ParserMPathTest {
         ParserService p = new ParserService();
         String op = p.getSqlParams(sql,elementIds);
         Assert.assertEquals(expected.trim(), op.trim());
-        System.out.println(op);
+        //System.out.println(op);
         //System.out.println(expected);
     }
 }
