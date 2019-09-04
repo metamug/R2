@@ -148,7 +148,7 @@ public class ResourceTestService {
         if (null == sql.getRef()) {
             queryObj.put("ref", false);
             String query = preprocessSql(sql.getValue());
-            List<String> sqlParamNames = getSqlParams(query);
+            List<String> sqlParamNames = getRequestParams(query);
             JSONArray testdata = new JSONArray();
             for (String sqlParamName : sqlParamNames) {
                 for (Param p : paramsWithValue) {
@@ -255,9 +255,9 @@ public class ResourceTestService {
         }
     }
 
-    protected List<String> getSqlParams(String query) {
+    protected List<String> getRequestParams(String query) {
         List<String> params = new ArrayList<>();
-        Pattern pattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
+        Pattern pattern = Pattern.compile(ParserService.REQUEST_PARAM_PATTERN);
         Matcher match = pattern.matcher(query);
         while (match.find()) {
             params.add(query.substring(match.start(1), match.end(1)).trim());
@@ -273,7 +273,7 @@ public class ResourceTestService {
             throw new ResourceTestException("Something went wrong!");
         }
         JSONArray testResults = resultArray.getJSONObject(0).getJSONArray("test_results");
-
+        //System.out.println(testResults.toString(3));
         StringBuilder sb = new StringBuilder("Errors found in Sql tags:");
         sb.append("<br/>");
 
@@ -283,7 +283,7 @@ public class ResourceTestService {
             JSONObject testResult = testResults.getJSONObject(i);
             String tag_id = testResult.getString("tag_id");
             boolean isRef = testResult.getBoolean("ref");
-
+            
             if (isRef) {
                 boolean exists = testResult.getBoolean("exists");
                 if (!exists) {
