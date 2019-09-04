@@ -318,7 +318,6 @@ public class ParserService {
     }
 
     /**
-     * I
      *
      * @param writer XMLStreamWriter to write to JSP file.
      * @param param Parameter set that has to be initialized.
@@ -517,12 +516,7 @@ public class ParserService {
         
         writer.writeCharacters(System.lineSeparator());
         writer.writeEndElement(); // </m:execute>
-        
-        // Sets status code
-        /*if (execute.getStatus() != null) {
-            writer.writeEmptyElement("mtg:status");
-            writer.writeAttribute("value", String.valueOf(execute.getStatus()));
-        }*/
+       
         writer.writeCharacters(System.lineSeparator());
 
         if (execute.getWhen() != null) {
@@ -785,8 +779,7 @@ public class ParserService {
             }else if(type.equals(Execute.class.getName())){
                 // ${bus[id].name}
                 String locator = getMPathLocator(mpathVariable);
-                
-                tv = "${"+elementId+"."+locator+"}";
+                tv = "${"+elementId+locator+"}";
             }
         return tv;
     }
@@ -797,18 +790,7 @@ public class ParserService {
         Matcher matcher = pattern.matcher(sql);
         
         while (matcher.find()) {
-            String mpathVariable = sql.substring(matcher.start(), matcher.end()).trim();
-            //get element id from mpath variable
-            String elementId = getMPathId(mpathVariable);
-            
-            if(!elementIds.containsKey(elementId)){
-                throw new ResourceTestException("Could not find element with ID: "+elementId);
-            }
-            //get type of element
-            String type = elementIds.get(elementId);
-            String tv = getJspVariableForMPath(mpathVariable, type, elementId);
-            
-            params.add(tv);
+            params.add(sql.substring(matcher.start(), matcher.end()).trim());
         }
     }
     
@@ -926,58 +908,50 @@ public class ParserService {
         //System.out.println("ReqParams: "+params);
         String wildcardQry = processedQuery.replaceAll(REQUEST_PARAM_PATTERN, "? ");
         wildcardQry = wildcardQry.replaceAll(MPATH_EXPRESSION_PATTERN, "? ");
-        System.out.println("WildcardQry: "+wildcardQry);
+        //System.out.println("WildcardQry: "+wildcardQry);
         
-        String queryWithPlaceholder = processedQuery.replaceAll(REQUEST_PARAM_PATTERN, "?R ");  
-        queryWithPlaceholder = queryWithPlaceholder.replaceAll(MPATH_EXPRESSION_PATTERN, "?M ");
-        System.out.println("QryPlaceholder: "+queryWithPlaceholder);
+        String queryWithPlaceholder = processedQuery.replaceAll(REQUEST_PARAM_PATTERN, "?\\$R ");  
+        queryWithPlaceholder = queryWithPlaceholder.replaceAll(MPATH_EXPRESSION_PATTERN, "?\\$M ");
+        //System.out.println("QryPlaceholder: "+queryWithPlaceholder);
        
         StringBuilder builder = new StringBuilder(escapeSpecialCharacters(wildcardQry));
-        builder.append("\n");
+        builder.append(System.lineSeparator());
 
-        System.out.println("Builder: "+builder.toString());
         appendSqlParams(builder, params, mpathParams, queryWithPlaceholder);
 
-        System.out.println("4");
         return builder.toString();
     }
 
     protected void appendSqlParams(StringBuilder builder, LinkedList<String> reqParams, LinkedList<String> mpathParams, String sql) throws ResourceTestException {
-        System.out.println("AppM: "+mpathParams);
-        System.out.println("AppR: "+reqParams);
-        for (int i = 0; i < sql.length(); i++){
+        for (int i = 0; i < sql.length()-3; i++){
             char c = sql.charAt(i);   
-            
-            if(c == '?'){     
+            char d = sql.charAt(i+1);
+            if(c == '?' && d == '$'){     
                 
-                    char e = sql.charAt(i+1);
-                    char f = sql.charAt(i+2);
+                    char e = sql.charAt(i+2);
+                    char f = sql.charAt(i+3);
                     if(e == 'R' && f == ' '){
                         //append request params
                         String reqParam = reqParams.getFirst();
                         reqParams.removeFirst();
                         builder.append("<sql:param value=\"").append(getJspVariableForRequestParam(reqParam)).append("\"/>");
+                        builder.append(System.lineSeparator());
                     } else if (e == 'M' && f == ' '){
                         //append mpath variables
                         String mpathParam = mpathParams.getFirst();
-                        System.out.println("mpathParam: "+mpathParam);
                         mpathParams.removeFirst();
                         
                         String elementId = getMPathId(mpathParam);
-                        System.out.println(elementId);
                         if(!elementIds.containsKey(elementId)){
                             throw new ResourceTestException("Could not find element with ID: "+elementId);
                         }
                         //get type of element
                         String type = elementIds.get(elementId);
                         
-                        builder.append("<sql:param value=\"")
-                                .append(getJspVariableForMPath(mpathParam,type,elementId))
-                                .append("\"/>");
-                    }
-                
+                        builder.append("<sql:param value=\"").append(getJspVariableForMPath(mpathParam,type,elementId)).append("\"/>");
+                        builder.append(System.lineSeparator());
+                    }             
             }
-            //System.out.println("B: "+builder.toString());
         }
     }
     
@@ -990,7 +964,7 @@ public class ParserService {
             case "uid":
                 return "${mtgReq.uid}";
             default:
-                return "${mtgReq.params[\'"+param+"\']}\" />";
+                return "${mtgReq.params[\'"+param+"\']}";
         }
     }
 

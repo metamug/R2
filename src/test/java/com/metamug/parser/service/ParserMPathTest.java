@@ -210,14 +210,24 @@ public class ParserMPathTest {
     
     @Test
     public void sqlParamTest() throws ResourceTestException{
-        String input = "SELECT $[exec].body.args.foo1,$reqvar1,$reqvar2,$[xreq].body.args[2].foo[0].bar AS 'foo1'"
+        String input = "SELECT $[exec].body.args.foo1,$reqvar1,$[sqlresult][1].id.name,$reqvar2,$[xreq].body.args[2].foo[0].bar AS 'foo1'"
                 + " WHERE id=$id";
+        
+        String expected = "SELECT ? ,? ,? ,? ,?  AS 'foo1' WHERE id=?\n" +
+"<sql:param value=\"${exec.body.args.foo1}\"/>\n" +
+"<sql:param value=\"${mtgReq.params['reqvar1']}\"/>\n" +
+"<sql:param value=\"${sqlresult.rows[1].id.name}\"/>\n" +
+"<sql:param value=\"${mtgReq.params['reqvar2']}\"/>\n" +
+"<sql:param value=\"${m:jsonPath('$.body.args[2].foo[0].bar',xreq )}\"/>\n" +
+"<sql:param value=\"${mtgReq.id}\"/>";
+        
         Sql sql = new Sql();
         sql.setValue(input);
         
         ParserService p = new ParserService();
         String op = p.getSqlParams(sql,elementIds);
-        
+        Assert.assertEquals(expected.trim(), op.trim());
         System.out.println(op);
+        //System.out.println(expected);
     }
 }
