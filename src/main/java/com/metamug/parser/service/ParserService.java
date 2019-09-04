@@ -58,6 +58,7 @@ import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.util.Utils;
 import com.metamug.schema.Arg;
 import com.metamug.schema.Execute;
+import com.metamug.schema.Output;
 import com.metamug.schema.Param;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
@@ -257,8 +258,20 @@ public class ParserService {
                 printScriptTag(sc, writer);
             } else if(object instanceof Transaction){
                 printTransaction((Transaction)object,writer,domain);
+            } else if(object instanceof Output){
+                Output op = (Output)object;
+                elementIds.put(op.getId(), Output.class.getName());
+                printOutputTag(op,writer);
             }
         }
+    }
+    
+    protected void printOutputTag(Output output, XMLStreamWriter writer) throws XMLStreamException, ResourceTestException{
+        writer.writeCharacters(System.lineSeparator());
+        
+        String value = transformVariables(output.getValue(),elementIds);
+        
+        printCSet(writer,enclose(MASON_OUTPUT),output.getId(),value);
     }
     
     protected void preProcessSqlElement(Sql sql, String domain) throws IOException, ResourceTestException{
