@@ -106,6 +106,7 @@
                                 <xsd:element name="Transaction" type="transaction" minOccurs="0" maxOccurs="unbounded"/>
                                 <xsd:element name="XRequest" type="xrequest" minOccurs="0" maxOccurs="unbounded"/>
                                 <xsd:element name="Script" type="script" minOccurs="0" maxOccurs="unbounded"/>
+                                <xsd:element name="Output" type="output" minOccurs="0" maxOccurs="unbounded"/>
                             </xsd:choice>
                             <xsd:attribute name="method" type="method" use="required"/>
                             <xsd:attribute name="status" type="status"/>
@@ -180,9 +181,6 @@
         </xsd:restriction>
     </xsd:simpleType>
 
-    <xsd:complexType name="paramOrSqlOrExecute">
-    </xsd:complexType>
-
     <xsd:complexType name="sql">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
@@ -219,6 +217,11 @@
         <xsd:attribute name="name" type="xsd:string" use="required"/>
         <xsd:attribute name="value" type="xsd:string" />
         <xsd:attribute name="path" type="xsd:string" />
+    </xsd:complexType>
+    
+    <xsd:complexType name="output">
+        <xsd:attribute name="id" type="elementId" use="required" />
+        <xsd:attribute name="value" type="xsd:string" />
     </xsd:complexType>
 
     <xsd:complexType name="execute">
