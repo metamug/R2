@@ -188,9 +188,9 @@ public class ParserService {
                     initializeRequest(writer, req);
 
                     //Add UploadListener tag
-                    if (req.getMethod().value().equalsIgnoreCase("POST")) {
+                    /*if (req.getMethod().value().equalsIgnoreCase("POST")) {
                         writer.writeEmptyElement("m:upload");
-                    }
+                    }*/
                     List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
 
                     printRequestElements(elements, writer, domain);
@@ -628,7 +628,7 @@ public class ParserService {
                 
         for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
             if (paramOrHeaderOrBody instanceof Xheader) {
-                writer.writeEmptyElement("m:xheader");
+                writer.writeEmptyElement("m:header");
                 writer.writeAttribute("name", ((Xheader) paramOrHeaderOrBody).getName());
                 
                 String value = ((Xheader) paramOrHeaderOrBody).getValue();
