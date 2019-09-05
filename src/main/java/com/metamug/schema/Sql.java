@@ -267,16 +267,6 @@ public class Sql {
     }
 
     /**
-     * Gets the value of the verbose property.
-     *
-     * @return possible object is {@link Boolean}.
-     *
-     */
-    public Boolean getVerbose() {
-        return verbose;
-    }
-
-    /**
      * Sets the value of the verbose property.
      *
      * @param verbose allowed object is {@link Boolean}
@@ -293,7 +283,12 @@ public class Sql {
      *
      */
     public Boolean getOutput() {
-        return output;
+        if(output != null){
+            return output;
+        }else if(verbose != null){
+            return verbose;
+        }
+        return null;
     }
 
     /**

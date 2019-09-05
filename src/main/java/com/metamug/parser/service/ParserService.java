@@ -1084,16 +1084,30 @@ public class ParserService {
         }
         return finalString;
     }
-
+/*
     protected boolean isVerbose(Sql sql) {
         if (sql.getType().value().equalsIgnoreCase("update") &&
-                ( (sql.getVerbose() != null && sql.getVerbose()) || (sql.getOutput() != null && sql.getOutput()) ) ) {
+               ( (sql.getVerbose() != null && sql.getVerbose()) || (sql.getOutput() != null && sql.getOutput()) ) ) {
             // type = update and verbose = true
             return true;
         } else {
             // type = query and verbose != false
             return sql.getType().value().equalsIgnoreCase("query") && 
-                   ( ( sql.getVerbose() == null || sql.getVerbose() || sql.getOutput() == null || sql.getOutput() ) );
+               ( ( sql.getVerbose() == null || sql.getVerbose() || sql.getOutput() == null || sql.getOutput() ) );
+        }
+    }*/
+    
+    
+    protected boolean isVerbose(Sql sql) {
+        if (sql.getType().value().equalsIgnoreCase("update") && (sql.getOutput() != null && sql.getOutput())) {
+            // type = update and verbose = true
+            return true;
+        } else {
+            // type = query and verbose != false
+            return sql.getType().value().equalsIgnoreCase("query") && (sql.getOutput() == null || sql.getOutput());
         }
     }
+
+    
+   
 }
