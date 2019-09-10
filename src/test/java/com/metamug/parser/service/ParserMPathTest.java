@@ -80,7 +80,7 @@ public class ParserMPathTest {
         elementIds.put("sqlresult", Sql.class.getName());
         elementIds.put("xreq", Xrequest.class.getName());
         elementIds.put("exec", Execute.class.getName());
-        
+        elementIds.put(ParserService.UPLOAD_OBJECT,ParserService.UPLOAD_OBJECT);    
     }
     
     @Test
@@ -205,6 +205,18 @@ public class ParserMPathTest {
         } catch (ResourceTestException ex) {
             //Logger.getLogger(ParserMPathTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.assertTrue(ex.getMessage().contains("Could not find element with ID"));
+        }
+    }
+    
+    @Test
+    public void mPathUploadId(){
+        String input = "SELECT $[_upload],$[xreq].body.args[2].foo[0].bar AS 'foo1'";
+        
+        try {
+            String o = ParserService.transformMPathVariables(input, elementIds);
+            Assert.assertEquals("SELECT ${_upload},${m:jsonPath('$.body.args[2].foo[0].bar',xreq )} AS 'foo1'", o);
+            //System.out.print("Hello: "+o);
+        } catch (ResourceTestException ex) {
         }
     }
     

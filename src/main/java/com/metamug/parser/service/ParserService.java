@@ -110,6 +110,8 @@ public class ParserService {
 
     protected static final String MASON_DATASOURCE = "datasource";
     protected static final String MASON_OUTPUT = "output";
+    
+    public static final String UPLOAD_OBJECT = "_upload";
 
     protected String appName;
     protected String resourceName;
@@ -120,7 +122,11 @@ public class ParserService {
     OutputStream output;
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
 
-    protected HashMap<String,String> elementIds; // <id,elementType>  
+    protected HashMap<String,String> elementIds = new HashMap<String,String>() {
+        {
+            put(UPLOAD_OBJECT, UPLOAD_OBJECT);
+        }
+    }; // <id,elementType>  
     
     public static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
     //protected static final String SQL_RESULT_MPATH_PATTERN = "\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)";
@@ -770,6 +776,7 @@ public class ParserService {
     
     protected static String getJspVariableForMPath(String mpathVariable, String type, String elementId){
         String tv = mpathVariable;
+                
         if(type.equals(Sql.class.getName())) {
                 // ${id.rows[0].name
                 String rowIndex = "0";
@@ -785,16 +792,19 @@ public class ParserService {
                 
                 tv = "${"+elementId+".rows"+"["+rowIndex+"]."+colName+"}";
                 
-            }else if(type.equals(Xrequest.class.getName())){
+        }else if(type.equals(Xrequest.class.getName())){
                 //${m:jsonPath('$.body.args.foo1',bus['id'])}
                 String locator = getMPathLocator(mpathVariable);
                 
                 tv = "${m:jsonPath('$"+locator+"',"+elementId+" )}";
-            }else if(type.equals(Execute.class.getName())){
+        }else if(type.equals(Execute.class.getName())){
                 // ${bus[id].name}
                 String locator = getMPathLocator(mpathVariable);
                 tv = "${"+elementId+locator+"}";
-            }
+        }else if(type.equals(UPLOAD_OBJECT)){
+            tv = "${"+elementId+"}";
+        }
+        
         return tv;
     }
     
