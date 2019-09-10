@@ -187,16 +187,12 @@ public class ParserService {
 
                 printHeaderAndGroup(writer, resource);
 
-                elementIds = new HashMap<>();
+                //elementIds = new HashMap<>();
 
                 for (Request req : resource.getRequest()) {
                     writer.writeStartElement("m:request");
                     initializeRequest(writer, req);
 
-                    //Add UploadListener tag
-                    /*if (req.getMethod().value().equalsIgnoreCase("POST")) {
-                        writer.writeEmptyElement("m:upload");
-                    }*/
                     List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
 
                     printRequestElements(elements, writer, domain);
