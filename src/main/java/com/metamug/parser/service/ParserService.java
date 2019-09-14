@@ -518,11 +518,11 @@ public class ParserService {
             writer.writeEmptyElement("m:arg");
             writer.writeAttribute("name", arg.getName());
             if(arg.getValue()!=null){
-                writer.writeAttribute("value", arg.getValue());
+                writer.writeAttribute("value", transformVariables(arg.getValue(),elementIds) );
             }else{
                 //value is null, check path
                 if(arg.getPath()!=null){
-                    writer.writeAttribute("value", transformVariables(arg.getPath(),elementIds));
+                    writer.writeAttribute("value", transformVariables(arg.getPath(),elementIds) );
                 } else{
                     writer.writeAttribute("value","null");
                 }
