@@ -53,7 +53,6 @@ import javax.xml.bind.annotation.XmlType;
     "paramOrHeaderOrBody"
 })
 public class Xrequest {
-
     @XmlElements({
         @XmlElement(name = "Param", type = Xparam.class),
         @XmlElement(name = "Header", type = Xheader.class),
@@ -72,6 +71,8 @@ public class Xrequest {
     protected Boolean verbose;
     @XmlAttribute(name = "output")
     private Boolean output;
+    @XmlAttribute(name = "outputHeaders")
+    private Boolean outputHeaders;
 
     /**
      * Gets the value of the paramOrHeaderOrBody property.
@@ -219,5 +220,25 @@ public class Xrequest {
      */
     public void setOutput(Boolean output) {
         this.output = output;
+    }
+    
+    /**
+     * Gets the value of the output property.
+     *
+     * @return possible object is {@link Boolean}.
+     *
+     */
+    public Boolean getOutputHeaders() {
+        return outputHeaders;
+    }
+
+    /**
+     * Sets the value of the verbose property.
+     *
+     * @param outputHeaders allowed object is {@link Boolean}
+     *
+     */
+    public void setOutputHeaders(Boolean outputHeaders) {
+        this.outputHeaders = outputHeaders;
     }
 }

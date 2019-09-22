@@ -626,6 +626,10 @@ public class ParserService {
                 || (xrequest.getOutput() != null && xrequest.getOutput() ) ) {
             writer.writeAttribute("output", "true");
         }
+        if(xrequest.getOutputHeaders()!=null && xrequest.getOutputHeaders()) {
+            writer.writeAttribute("outputHeaders", "true");
+        }
+        
         writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(xrequest.getUrl())+"\"");
                 
         for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
