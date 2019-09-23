@@ -273,7 +273,7 @@ public class ParserService {
     
     protected void printHeaderTag(Xheader header, XMLStreamWriter writer) throws XMLStreamException, ResourceTestException, IOException{
         writer.writeCharacters(System.lineSeparator());
-        writer.writeStartElement("m:header");
+        writer.writeEmptyElement("m:header");
         writer.writeAttribute("name", header.getName());
                 
         String value = header.getValue();
