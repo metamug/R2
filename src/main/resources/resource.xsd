@@ -221,8 +221,12 @@
     </xsd:complexType>
     
     <xsd:complexType name="output">
-        <xsd:attribute name="id" type="elementId" use="required" />
-        <xsd:attribute name="value" type="xsd:string" />
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="id" type="elementId" use="required" />
+                <xsd:attribute name="value" type="xsd:string" />
+            </xsd:extension>
+        </xsd:simpleContent>
     </xsd:complexType>
 
     <xsd:complexType name="execute">
