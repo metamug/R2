@@ -231,6 +231,9 @@ public class ParserService {
             if (object instanceof Param) {
                 Param param = (Param) object;
                 printParamTag(writer, param);
+            } else if (object instanceof Xheader) {
+                Xheader header = (Xheader)object;
+                printHeaderTag(header, writer);
             } else if (object instanceof Sql) {
                 Sql sql = (Sql) object;
                 elementIds.put(sql.getId(), Sql.class.getName());
@@ -266,6 +269,15 @@ public class ParserService {
                 printOutputTag(op,writer);
             }
         }
+    }
+    
+    protected void printHeaderTag(Xheader header, XMLStreamWriter writer) throws XMLStreamException, ResourceTestException, IOException{
+        writer.writeCharacters(System.lineSeparator());
+        writer.writeStartElement("m:header");
+        writer.writeAttribute("name", header.getName());
+                
+        String value = header.getValue();
+        writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"");
     }
     
     protected void printOutputTag(Output output, XMLStreamWriter writer) throws XMLStreamException, ResourceTestException{
