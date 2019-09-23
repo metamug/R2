@@ -285,7 +285,7 @@ public class ParserService {
         
         String value = transformVariables(output.getValue(),elementIds);
         
-        printCSet(writer,enclose(MASON_OUTPUT),output.getId(),value);
+        printCSet(writer,enclose(MASON_OUTPUT),output.getId(),value.trim());
     }
     
     protected void preProcessSqlElement(Sql sql, String domain) throws IOException, ResourceTestException{
