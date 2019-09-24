@@ -16,8 +16,7 @@
                       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
             </head>
-            <body>
-                
+            <body>         
                 <div class="container" style="padding-top:25px">
                     <div class="panel-body">
                         
@@ -75,8 +74,7 @@
                         <xsl:variable name="DistinctAllValues" select="string-join($DistAllValues,',')"/>
                         <xsl:variable name="TokDistinctAllValues" select="tokenize($DistinctAllValues,',')"/>
                         
-                        <div class="col-md-12" style="padding-top:10px">
-                            
+                        <div class="col-md-12" style="padding-top:10px">            
                                     <xsl:variable name="panelClass">
                                         <xsl:choose>
                                             <xsl:when test="contains(@method,'GET')">panel panel-info</xsl:when>
@@ -144,8 +142,7 @@
                                                 <div style="color:darkgrey;font-weight:bold;">
                                                     Parameters
                                                 </div>
-                                                <div class="sqlVariables" style="padding-top:6px">
-                                                                                                       
+                                                <div class="sqlVariables" style="padding-top:6px">                                                                                 
                                                     <xsl:for-each select="mtg:Query">
                                                         <xsl:choose>
                                                             <xsl:when test="@when">
@@ -208,8 +205,7 @@
                                                         </xsl:matching-substring>
                                                         <xsl:non-matching-substring>
                                                         </xsl:non-matching-substring>
-                                                    </xsl:analyze-string>
-                                                    
+                                                    </xsl:analyze-string>                                              
                                                 </div>    
                                             </div>
                                             <xsl:choose>
@@ -495,11 +491,9 @@
                                                 </div>
                                             </div>   
                                         </div>
-                                    </div>
-                                
+                                    </div>                         
                         </div>
                     </xsl:for-each>
-
                 </div>
                 <script>
                     var url = window.location.href;
@@ -522,43 +516,42 @@
                     
                     var parentSpan = document.getElementById('resParent');
                     if(parentSpan != null){
-                    parentSpan.innerHTML = parentSpan.innerHTML.toUpperCase();
+                        parentSpan.innerHTML = parentSpan.innerHTML.toUpperCase();
                     }
                     
                     var paramListClasses = document.getElementsByClassName("sqlVariables");
                     for (var i = 0; i &lt; paramListClasses.length; i++) {
-                    var unique = [];
-                    var paramList = paramListClasses[i].childNodes;
-                    for(var j = 0; j &lt; paramList.length; j++){
-                    var param = paramList[j];
-                    unique.push(param.innerHTML);
-                    unique = eliminateDuplicates(unique);
-                    }
-                    var l = paramList.length;
-                    for(var j=l-1; j &gt;= 0; j--){
-                    paramList[j].parentNode.removeChild(paramList[j]);
-                    }
-                    for(var j=0; j &lt; unique.length; j++){
-                    var span = document.createElement('span');
-                    span.classList.add('label','label-primary');
-                    span.innerHTML = unique[j];
-                    span.style['margin-right'] = '5px';
-                    if(span.innerHTML=="No Variable Passed")
-                    {
-                    span.style['background-color'] = 'orange';
-                    }
-                    paramListClasses[i].appendChild(span);
-                    }
+                        var unique = [];
+                        var paramList = paramListClasses[i].childNodes;
+                        for(var j = 0; j &lt; paramList.length; j++){
+                            var param = paramList[j];
+                            unique.push(param.innerHTML);
+                            unique = eliminateDuplicates(unique);
+                        }
+                        var l = paramList.length;
+                        for(var j=l-1; j &gt;= 0; j--){
+                            paramList[j].parentNode.removeChild(paramList[j]);
+                        }
+                        for(var j=0; j &lt; unique.length; j++) {
+                            var span = document.createElement('span');
+                            span.classList.add('label','label-primary');
+                            span.innerHTML = unique[j];
+                            span.style['margin-right'] = '5px';
+                            if(span.innerHTML=="No Variable Passed") {
+                                span.style['background-color'] = 'orange';
+                            }
+                            paramListClasses[i].appendChild(span);
+                        }
                     }
                     function eliminateDuplicates(arr) {
-                    var i, len=arr.length, out=[], obj={};
-                    for (i=0;i &lt; len;i++) {
-                    obj[arr[i]]=0;
-                    }
-                    for (i in obj) {
-                    out.push(i);
-                    }
-                    return out;
+                        var i, len=arr.length, out=[], obj={};
+                        for (i=0;i &lt; len;i++) {
+                            obj[arr[i]]=0;
+                        }
+                        for (i in obj) {
+                            out.push(i);
+                        }
+                        return out;
                     }
                     
                     var ReqTypeItem = document.getElementsByClassName('ReqTypeItem');             
@@ -573,5 +566,4 @@
             </body>
         </html>
     </xsl:template>
-
 </xsl:stylesheet>
