@@ -79,7 +79,17 @@
                             <xsl:choose>
                                 <!-- condition - item request and method not DELETE -->
                                 <xsl:when test="contains(@item,'true') and not(contains(@method,'DELETE'))" >
-                                    <div class="panel panel-success">
+                                    <xsl:variable name="panelClass">
+                                        <xsl:choose>
+                                            <xsl:when test="contains(@method,'GET')">panel panel-info</xsl:when>
+                                            <xsl:when test="contains(@method,'POST')">panel panel-success</xsl:when>
+                                            <xsl:when test="contains(@method,'PUT')">panel panel-warning</xsl:when>
+                                        </xsl:choose>
+                                    </xsl:variable>
+                                    <div>
+                                        <xsl:attribute name="class">
+                                            <xsl:value-of select="$panelClass"/>
+                                        </xsl:attribute>
                                         <div class="panel-heading">
                                             <span class="ReqTypeItem" style="font-weight:bold">ITEM REQUEST</span>
                                             <span class="pull-right" style="font-size:14px">
@@ -858,7 +868,26 @@
                                 </xsl:when>
                                 <!-- condition - collection request and all methods -->
                                 <xsl:when test="not(@item) or contains(@item,'false')">
-                                    <div class="panel panel-info">
+                                    <xsl:variable name="panelClass">
+                                        <xsl:choose>
+                                            <xsl:when test="contains(@method,'GET')">panel panel-info</xsl:when>
+                                            <xsl:when test="contains(@method,'POST')">panel panel-success</xsl:when>
+                                            <xsl:when test="contains(@method,'PUT')">panel panel-warning</xsl:when>
+                                            <xsl:when test="contains(@method,'DELETE')">panel panel-danger</xsl:when>
+                                        </xsl:choose>
+                                    </xsl:variable>
+                                    <xsl:variable name="labelClass">
+                                        <xsl:choose>
+                                            <xsl:when test="contains(@method,'GET')">label label-info</xsl:when>
+                                            <xsl:when test="contains(@method,'POST')">label label-success</xsl:when>
+                                            <xsl:when test="contains(@method,'PUT')">label label-warning</xsl:when>
+                                            <xsl:when test="contains(@method,'DELETE')">label label-danger</xsl:when>
+                                        </xsl:choose>
+                                    </xsl:variable>
+                                    <div>
+                                        <xsl:attribute name="class">
+                                            <xsl:value-of select="$panelClass"/>
+                                        </xsl:attribute>
                                         <div class="panel-heading">
                                             <span class="ReqTypeCollection" style="font-weight:bold">COLLECTION REQUEST</span>
                                             
