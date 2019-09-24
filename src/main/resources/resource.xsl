@@ -39,7 +39,7 @@
                         </span>
                         <span>
                             <a id="resUri" target="_blank" style="font-weight:bold;cursor:pointer;" 
-                                  class="text text-success pull-right">
+                               class="text text-success pull-right">
                             </a>
                         </span>
                         <div style="margin-left: 5px;font-size: small;">
@@ -75,146 +75,269 @@
                         <xsl:variable name="TokDistinctAllValues" select="tokenize($DistinctAllValues,',')"/>
                         
                         <div class="col-md-12" style="padding-top:10px">            
-                                    <xsl:variable name="panelClass">
-                                        <xsl:choose>
-                                            <xsl:when test="contains(@method,'GET')">panel panel-info</xsl:when>
-                                            <xsl:when test="contains(@method,'POST')">panel panel-success</xsl:when>
-                                            <xsl:when test="contains(@method,'PUT')">panel panel-warning</xsl:when>
-                                            <xsl:when test="contains(@method,'DELETE')">panel panel-danger</xsl:when>
-                                        </xsl:choose>
-                                    </xsl:variable>                                    
-                                    <xsl:variable name="labelClass">
-                                        <xsl:choose>
-                                            <xsl:when test="contains(@method,'GET')">label label-info</xsl:when>
-                                            <xsl:when test="contains(@method,'POST')">label label-success</xsl:when>
-                                            <xsl:when test="contains(@method,'PUT')">label label-warning</xsl:when>
-                                            <xsl:when test="contains(@method,'DELETE')">label label-danger</xsl:when>
-                                        </xsl:choose>
-                                    </xsl:variable>
-                                    <div>
-                                        <xsl:attribute name="class">
-                                            <xsl:value-of select="$panelClass"/>
-                                        </xsl:attribute>
-                                        <div class="panel-heading">
-                                            <span class="ReqTypeItem" style="font-weight:bold">ITEM REQUEST</span>
-                                            <span class="pull-right" style="font-size:14px">
-                                                <div class="badge" style="margin-right:10px;">
+                            <xsl:variable name="panelClass">
+                                <xsl:choose>
+                                    <xsl:when test="contains(@method,'GET')">panel panel-info</xsl:when>
+                                    <xsl:when test="contains(@method,'POST')">panel panel-success</xsl:when>
+                                    <xsl:when test="contains(@method,'PUT')">panel panel-warning</xsl:when>
+                                    <xsl:when test="contains(@method,'DELETE')">panel panel-danger</xsl:when>
+                                </xsl:choose>
+                            </xsl:variable>                                    
+                            <xsl:variable name="labelClass">
+                                <xsl:choose>
+                                    <xsl:when test="contains(@method,'GET')">label label-info</xsl:when>
+                                    <xsl:when test="contains(@method,'POST')">label label-success</xsl:when>
+                                    <xsl:when test="contains(@method,'PUT')">label label-warning</xsl:when>
+                                    <xsl:when test="contains(@method,'DELETE')">label label-danger</xsl:when>
+                                </xsl:choose>
+                            </xsl:variable>
+                            <div>
+                                <xsl:attribute name="class">
+                                    <xsl:value-of select="$panelClass"/>
+                                </xsl:attribute>
+                                <div class="panel-heading">
+                                    <span class="ReqTypeItem" style="font-weight:bold">ITEM REQUEST</span>
+                                    <span class="pull-right" style="font-size:14px">
+                                        <div class="badge" style="margin-right:10px;">
+                                            <xsl:choose>
+                                                <xsl:when test='string-length(@status) &gt; 0'>
+                                                    <xsl:value-of select="@status"/>
+                                                </xsl:when>
+                                                <xsl:otherwise>
                                                     <xsl:choose>
-                                                        <xsl:when test='string-length(@status) &gt; 0'>
-                                                            <xsl:value-of select="@status"/>
+                                                        <xsl:when test="contains(@method,'DELETE')">
+                                                            <div>410</div>                                                               
                                                         </xsl:when>
                                                         <xsl:otherwise>
-                                                            <xsl:choose>
-                                                                <xsl:when test="contains(@method,'DELETE')">
-                                                                    <div>410</div>                                                               
-                                                                </xsl:when>
-                                                                <xsl:otherwise>
-                                                                    <div>200</div>
-                                                                </xsl:otherwise>
-                                                            </xsl:choose>
+                                                            <div>200</div>
                                                         </xsl:otherwise>
                                                     </xsl:choose>
-                                                </div>
-                                                <div style="font-size:14px">
-                                                        <xsl:attribute name="class">
-                                                            <xsl:value-of select="$labelClass"/>
-                                                        </xsl:attribute>
-                                                        <span>
-                                                            <xsl:value-of select="@method"/>
-                                                        </span>
-                                                    </div>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
+                                        </div>
+                                        <div style="font-size:14px">
+                                            <xsl:attribute name="class">
+                                                <xsl:value-of select="$labelClass"/>
+                                            </xsl:attribute>
+                                            <span>
+                                                <xsl:value-of select="@method"/>
                                             </span>
                                         </div>
-                                        <div class="panel-body">
-                                            <!-- Desc -->
-                                            <xsl:choose>
-                                                <xsl:when test='string-length(mtg:Desc) &gt; 0'>
-                                                    <div style="padding-bottom:12px">
-                                                        <div style="color:darkgrey;font-weight:bold;">
-                                                            Description
-                                                        </div>
-                                                        <xsl:value-of select="mtg:Desc"/>
-                                                    </div>    
-                                                </xsl:when>
-                                            </xsl:choose>  
-                                                                                       
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                    <!-- Desc -->
+                                    <xsl:choose>
+                                        <xsl:when test='string-length(mtg:Desc) &gt; 0'>
                                             <div style="padding-bottom:12px">
                                                 <div style="color:darkgrey;font-weight:bold;">
-                                                    Parameters
+                                                    Description
                                                 </div>
-                                                <div class="sqlVariables" style="padding-top:6px">                                                                                 
-                                                    <xsl:for-each select="mtg:Query">
-                                                        <xsl:choose>
-                                                            <xsl:when test="@when">
-                                                                <xsl:analyze-string select="@when" regex="\$([\w.]+)">
-                                                                    <xsl:matching-substring>
-                                                                        <span class="label label-primary" style="margin-right:5px">
-                                                                            <xsl:value-of select="regex-group(1)"/>
-                                                                        </span>
-                                                                    </xsl:matching-substring>
-                                                                    <xsl:non-matching-substring>
-                                                                    </xsl:non-matching-substring>
-                                                                </xsl:analyze-string>
-                                                            </xsl:when>
-                                                            <xsl:otherwise>
-                                                                <span class="label label-warning" style="margin-right: 5px; background-color: #f1d408;">No Variable Passed</span>
-                                                            </xsl:otherwise>
-                                                        </xsl:choose>
-                                                    </xsl:for-each>
-                                                    <xsl:for-each select="mtg:Update">
-                                                        <xsl:choose>
-                                                            <xsl:when test="@when">
-                                                                <xsl:analyze-string select="@when" regex="\$([\w.]+)">
-                                                                    <xsl:matching-substring>
-                                                                        <span class="label label-primary" style="margin-right:5px">
-                                                                            <xsl:value-of select="regex-group(1)"/>
-                                                                        </span>
-                                                                    </xsl:matching-substring>
-                                                                    <xsl:non-matching-substring>
-                                                                    </xsl:non-matching-substring>
-                                                                </xsl:analyze-string>
-                                                            </xsl:when>
-                                                            <xsl:otherwise>
-                                                                <span class="label label-warning" style="margin-right: 5px; background-color: #f1d408;">No Variable Passed</span>
-                                                            </xsl:otherwise>
-                                                        </xsl:choose>
-                                                    </xsl:for-each>
-                                                    <xsl:for-each select="mtg:Execute">
-                                                        <xsl:choose>
-                                                            <xsl:when test="@when">
-                                                                <xsl:analyze-string select="@when" regex="\$([\w.]+)">
-                                                                    <xsl:matching-substring>
-                                                                        <span class="label label-primary" style="margin-right:5px">
-                                                                            <xsl:value-of select="regex-group(1)"/>
-                                                                        </span>
-                                                                    </xsl:matching-substring>
-                                                                    <xsl:non-matching-substring>
-                                                                    </xsl:non-matching-substring>
-                                                                </xsl:analyze-string>
-                                                            </xsl:when>
-                                                            <xsl:otherwise>
-                                                                <span class="label label-warning" style="margin-right: 5px; background-color: #f1d408;">No Variable Passed</span>
-                                                            </xsl:otherwise>
-                                                        </xsl:choose>
-                                                    </xsl:for-each>
-                                                    <xsl:analyze-string select="." regex="\$([\w.]+)">
-                                                        <xsl:matching-substring>
-                                                            <span class="label label-primary" style="margin-right:5px">
-                                                                <xsl:value-of select="regex-group(1)"/>
-                                                            </span>
-                                                        </xsl:matching-substring>
-                                                        <xsl:non-matching-substring>
-                                                        </xsl:non-matching-substring>
-                                                    </xsl:analyze-string>                                              
-                                                </div>    
+                                                <xsl:value-of select="mtg:Desc"/>
+                                            </div>    
+                                        </xsl:when>
+                                    </xsl:choose>  
+                                                                                       
+                                    <div style="padding-bottom:12px">
+                                        <div style="color:darkgrey;font-weight:bold;">
+                                            Parameters
+                                        </div>
+                                        <div class="sqlVariables" style="padding-top:6px">                                                                                 
+                                            <xsl:for-each select="mtg:Query">
+                                                <xsl:choose>
+                                                    <xsl:when test="@when">
+                                                        <xsl:analyze-string select="@when" regex="\$([\w.]+)">
+                                                            <xsl:matching-substring>
+                                                                <span class="label label-primary" style="margin-right:5px">
+                                                                    <xsl:value-of select="regex-group(1)"/>
+                                                                </span>
+                                                            </xsl:matching-substring>
+                                                            <xsl:non-matching-substring>
+                                                            </xsl:non-matching-substring>
+                                                        </xsl:analyze-string>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <span class="label label-warning" style="margin-right: 5px; background-color: #f1d408;">No Variable Passed</span>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
+                                            </xsl:for-each>
+                                            <xsl:for-each select="mtg:Update">
+                                                <xsl:choose>
+                                                    <xsl:when test="@when">
+                                                        <xsl:analyze-string select="@when" regex="\$([\w.]+)">
+                                                            <xsl:matching-substring>
+                                                                <span class="label label-primary" style="margin-right:5px">
+                                                                    <xsl:value-of select="regex-group(1)"/>
+                                                                </span>
+                                                            </xsl:matching-substring>
+                                                            <xsl:non-matching-substring>
+                                                            </xsl:non-matching-substring>
+                                                        </xsl:analyze-string>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <span class="label label-warning" style="margin-right: 5px; background-color: #f1d408;">No Variable Passed</span>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
+                                            </xsl:for-each>
+                                            <xsl:for-each select="mtg:Execute">
+                                                <xsl:choose>
+                                                    <xsl:when test="@when">
+                                                        <xsl:analyze-string select="@when" regex="\$([\w.]+)">
+                                                            <xsl:matching-substring>
+                                                                <span class="label label-primary" style="margin-right:5px">
+                                                                    <xsl:value-of select="regex-group(1)"/>
+                                                                </span>
+                                                            </xsl:matching-substring>
+                                                            <xsl:non-matching-substring>
+                                                            </xsl:non-matching-substring>
+                                                        </xsl:analyze-string>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <span class="label label-warning" style="margin-right: 5px; background-color: #f1d408;">No Variable Passed</span>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
+                                            </xsl:for-each>
+                                            <xsl:analyze-string select="." regex="\$([\w.]+)">
+                                                <xsl:matching-substring>
+                                                    <span class="label label-primary" style="margin-right:5px">
+                                                        <xsl:value-of select="regex-group(1)"/>
+                                                    </span>
+                                                </xsl:matching-substring>
+                                                <xsl:non-matching-substring>
+                                                </xsl:non-matching-substring>
+                                            </xsl:analyze-string>                                              
+                                        </div>    
+                                    </div>
+                                    <xsl:choose>
+                                        <xsl:when test="mtg:Param">  
+                                            <div>
+                                                <div style="color:darkgrey;font-weight:bold;">
+                                                    Parameter(s) criteria
+                                                </div>
+                                                <div class="paramList" style="font-size:16px;">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>
+                                                                    Parameter
+                                                                </th>
+                                                                <th>
+                                                                    Type
+                                                                </th>
+                                                                <th>
+                                                                    Min
+                                                                </th>
+                                                                <th>
+                                                                    Max
+                                                                </th>
+                                                                <th>
+                                                                    Min Length
+                                                                </th>
+                                                                <th>
+                                                                    Max Length
+                                                                </th>
+                                                                <th>
+                                                                    Value
+                                                                </th>
+                                                                <th>
+                                                                    Nullable
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                                
+                                                        <xsl:for-each select="mtg:Param">
+                                                            <xsl:variable name="tempName" select="@name"/>
+                                                            <xsl:variable name="exempt" select="index-of(($TokenizedVarReqs),$tempName)"/>
+                                                            <xsl:if test="empty($exempt)">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <xsl:choose>
+                                                                                <xsl:when test="@name">
+                                                                                    <xsl:if test=" @name ">
+                                                                                        <span>
+                                                                                            <xsl:value-of select="@name"/>
+                                                                                        </span>
+                                                                                    </xsl:if>
+                                                                                </xsl:when>
+                                                                                <xsl:otherwise>
+                                                                                    <span>
+                                                                                        <xsl:value-of select="@name"/>
+                                                                                    </span>
+                                                                                </xsl:otherwise>
+                                                                            </xsl:choose>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span>
+                                                                                <xsl:value-of select="@type"/>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <xsl:if test=" @type='number'">
+                                                                                <span>
+                                                                                    <xsl:value-of select="@min"/>
+                                                                                </span>
+                                                                            </xsl:if>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <xsl:if test=" @type='number'">
+                                                                                <span>
+                                                                                    <xsl:value-of select="@max"/>
+                                                                                </span>
+                                                                            </xsl:if>
+                                                                        </td>
+                                                                        <td>
+                                                                            <xsl:if test=" @type='text'">
+                                                                                <span>
+                                                                                    <xsl:value-of select="@minlength"/>
+                                                                                </span>
+                                                                            </xsl:if>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <xsl:if test=" @type='text'">
+                                                                                <span>
+                                                                                    <xsl:value-of select="@maxlength"/>
+                                                                                </span>
+                                                                            </xsl:if>
+                                                                        </td>
+                                                                        <td>
+                                                                            <xsl:choose>
+                                                                                <xsl:when test="@value">
+                                                                                    <xsl:if test=" @value !=''">
+                                                                                        <span>
+                                                                                            <xsl:value-of select="@value"/>
+                                                                                        </span>
+                                                                                    </xsl:if>
+                                                                                </xsl:when>
+                                                                            </xsl:choose>
+                                                                        </td>
+                                                                        <td>
+                                                                            <xsl:choose>                                                                                   
+                                                                                <xsl:when test="@required or matches($JointVarReqs,@name)">
+                                                                                    <span class="glyphicon glyphicon-ok" style="color:green;"></span>
+                                                                                </xsl:when>
+                                                                                <xsl:otherwise>
+                                                                                    <span class="glyphicon glyphicon-ok" style="color:green;"></span>
+                                                                                </xsl:otherwise>
+                                                                            </xsl:choose>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </xsl:if>
+                                                        </xsl:for-each>
+                                                    </table>
+                                                </div>
                                             </div>
                                             <xsl:choose>
-                                                <xsl:when test="mtg:Param">  
+                                                <xsl:when test="mtg:Update/@requires or mtg:Query/@requires or mtg:Execute/@requires">
                                                     <div>
                                                         <div style="color:darkgrey;font-weight:bold;">
-                                                            Parameter(s) criteria
+                                                            Parameter(s) criteria (Compulsory)
                                                         </div>
                                                         <div class="paramList" style="font-size:16px;">
+
                                                             <table class="table table-hover">
                                                                 <thead>
                                                                     <tr>
@@ -244,216 +367,23 @@
                                                                         </th>
                                                                     </tr>
                                                                 </thead>
-                                                                
-                                                                <xsl:for-each select="mtg:Param">
-                                                                    <xsl:variable name="tempName" select="@name"/>
-                                                                    <xsl:variable name="exempt" select="index-of(($TokenizedVarReqs),$tempName)"/>
-                                                                    <xsl:if test="empty($exempt)">
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <xsl:choose>
-                                                                                        <xsl:when test="@name">
-                                                                                            <xsl:if test=" @name ">
-                                                                                                <span>
-                                                                                                    <xsl:value-of select="@name"/>
-                                                                                                </span>
-                                                                                            </xsl:if>
-                                                                                        </xsl:when>
-                                                                                        <xsl:otherwise>
-                                                                                            <span>
-                                                                                                <xsl:value-of select="@name"/>
-                                                                                            </span>
-                                                                                        </xsl:otherwise>
-                                                                                    </xsl:choose>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <span>
-                                                                                        <xsl:value-of select="@type"/>
-                                                                                    </span>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <xsl:if test=" @type='number'">
-                                                                                        <span>
-                                                                                            <xsl:value-of select="@min"/>
-                                                                                        </span>
-                                                                                    </xsl:if>
-                                                                                </td>
-
-                                                                                <td>
-                                                                                    <xsl:if test=" @type='number'">
-                                                                                        <span>
-                                                                                            <xsl:value-of select="@max"/>
-                                                                                        </span>
-                                                                                    </xsl:if>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <xsl:if test=" @type='text'">
-                                                                                        <span>
-                                                                                            <xsl:value-of select="@minlength"/>
-                                                                                        </span>
-                                                                                    </xsl:if>
-                                                                                </td>
-
-                                                                                <td>
-                                                                                    <xsl:if test=" @type='text'">
-                                                                                        <span>
-                                                                                            <xsl:value-of select="@maxlength"/>
-                                                                                        </span>
-                                                                                    </xsl:if>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <xsl:choose>
-                                                                                        <xsl:when test="@value">
-                                                                                            <xsl:if test=" @value !=''">
-                                                                                                <span>
-                                                                                                    <xsl:value-of select="@value"/>
-                                                                                                </span>
-                                                                                            </xsl:if>
-                                                                                        </xsl:when>
-                                                                                    </xsl:choose>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <xsl:choose>                                                                                   
-                                                                                        <xsl:when test="@required or matches($JointVarReqs,@name)">
-                                                                                            <span class="glyphicon glyphicon-ok" style="color:green;"></span>
-                                                                                        </xsl:when>
-                                                                                        <xsl:otherwise>
-                                                                                            <span class="glyphicon glyphicon-ok" style="color:green;"></span>
-                                                                                        </xsl:otherwise>
-                                                                                    </xsl:choose>
-                                                                                </td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </xsl:if>
-                                                                </xsl:for-each>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                    <xsl:choose>
-                                                        <xsl:when test="mtg:Update/@requires or mtg:Query/@requires or mtg:Execute/@requires">
-                                                            <div>
-                                                                <div style="color:darkgrey;font-weight:bold;">
-                                                                    Parameter(s) criteria (Compulsory)
-                                                                </div>
-                                                                <div class="paramList" style="font-size:16px;">
-
-                                                                    <table class="table table-hover">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>
-                                                                                    Parameter
-                                                                                </th>
-                                                                                <th>
-                                                                                    Type
-                                                                                </th>
-                                                                                <th>
-                                                                                    Min
-                                                                                </th>
-                                                                                <th>
-                                                                                    Max
-                                                                                </th>
-                                                                                <th>
-                                                                                    Min Length
-                                                                                </th>
-                                                                                <th>
-                                                                                    Max Length
-                                                                                </th>
-                                                                                <th>
-                                                                                    Value
-                                                                                </th>
-                                                                                <th>
-                                                                                    Nullable
-                                                                                </th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <xsl:choose>
-                                                                            <xsl:when test="mtg:Param"> 
-                                                                                <xsl:for-each select="mtg:Param">
-                                                                                    <xsl:variable name="tempName" select="@name"/>
-                                                                                    <xsl:variable name="tempType" select="@type"/>
-                                                                                    <xsl:variable name="tempValue" select="@value"/>
-                                                                                    <xsl:variable name="tempMin" select="@min"/>
-                                                                                    <xsl:variable name="tempMax" select="@max"/>
-                                                                                    <xsl:variable name="tempMinLen" select="@minlength"/>
-                                                                                    <xsl:variable name="tempMaxLen" select="@maxlength"/>
-                                                                                    <xsl:for-each select="$TokDistinctAllValues">
-                                                                                        <xsl:variable name="i" select="position()" />
-                                                                                        <xsl:if test="not(compare($TokDistinctAllValues[$i],$tempName))">
-                                                                                            <xsl:if test="$i &lt; (last()-1)">
-                                                                                                <tbody>
-                                                                                                    <tr>
-                                                                                                        <td>
-                                                                                                            <span>
-                                                                                                                <xsl:value-of select="$TokDistinctAllValues[$i]"/>
-                                                                                                                <sup>
-                                                                                                                    <span style="color:red;">*</span>
-                                                                                                                </sup>
-                                                                                                            </span>
-                                                                                                        </td>
-                                                                                                        <td>
-                                                                                                            <span>
-                                                                                                                <xsl:value-of select="$tempType"/>
-                                                                                                            </span>
-                                                                                                        </td>
-                                                                                                        <td>
-                                                                                                            <xsl:if test=" $tempType='number'">
-                                                                                                                <span>
-                                                                                                                    <xsl:value-of select="$tempMin"/>
-                                                                                                                </span>
-                                                                                                            </xsl:if>
-                                                                                                        </td>
-
-                                                                                                        <td>
-                                                                                                            <xsl:if test=" $tempType='number'">
-                                                                                                                <span>
-                                                                                                                    <xsl:value-of select="$tempMax"/>
-                                                                                                                </span>
-                                                                                                            </xsl:if>
-                                                                                                        </td>
-                                                                                                        <td>
-                                                                                                            <xsl:if test=" $tempType='text'">
-                                                                                                                <span>
-                                                                                                                    <xsl:value-of select="$tempMinLen"/>
-                                                                                                                </span>
-                                                                                                            </xsl:if>
-                                                                                                        </td>
-
-                                                                                                        <td>
-                                                                                                            <xsl:if test=" $tempType='text'">
-                                                                                                                <span>
-                                                                                                                    <xsl:value-of select="$tempMaxLen"/>
-                                                                                                                </span>
-                                                                                                            </xsl:if>
-                                                                                                        </td>
-                                                                                                        <td>
-                                                                                                            <xsl:choose>
-                                                                                                                <xsl:when test="$tempValue">
-                                                                                                                    <xsl:if test=" $tempValue !=''">
-                                                                                                                        <span>
-                                                                                                                            <xsl:value-of select="$tempValue"/>
-                                                                                                                        </span>
-                                                                                                                    </xsl:if>
-                                                                                                                </xsl:when>
-                                                                                                            </xsl:choose>
-                                                                                                        </td>
-                                                                                                        <td>
-                                                                                                            <span class="glyphicon glyphicon-remove" style="color:red;"></span>
-                                                                                                        </td>
-                                                                                                    </tr>                     
-                                                                                                </tbody>
-                                                                                            </xsl:if>
-                                                                                        </xsl:if>
-                                                                                    </xsl:for-each>
-                                                                                </xsl:for-each>
-                                                                            </xsl:when>
-                                                                            <xsl:otherwise>
-                                                                                <xsl:for-each select="$TokDistinctAllValues">
-                                                                                    <xsl:variable name="i" select="position()" />
+                                                                <xsl:choose>
+                                                                    <xsl:when test="mtg:Param"> 
+                                                                        <xsl:for-each select="mtg:Param">
+                                                                            <xsl:variable name="tempName" select="@name"/>
+                                                                            <xsl:variable name="tempType" select="@type"/>
+                                                                            <xsl:variable name="tempValue" select="@value"/>
+                                                                            <xsl:variable name="tempMin" select="@min"/>
+                                                                            <xsl:variable name="tempMax" select="@max"/>
+                                                                            <xsl:variable name="tempMinLen" select="@minlength"/>
+                                                                            <xsl:variable name="tempMaxLen" select="@maxlength"/>
+                                                                            <xsl:for-each select="$TokDistinctAllValues">
+                                                                                <xsl:variable name="i" select="position()" />
+                                                                                <xsl:if test="not(compare($TokDistinctAllValues[$i],$tempName))">
                                                                                     <xsl:if test="$i &lt; (last()-1)">
                                                                                         <tbody>
                                                                                             <tr>
-                                                                                                <td colspan="7">
+                                                                                                <td>
                                                                                                     <span>
                                                                                                         <xsl:value-of select="$TokDistinctAllValues[$i]"/>
                                                                                                         <sup>
@@ -462,58 +392,129 @@
                                                                                                     </span>
                                                                                                 </td>
                                                                                                 <td>
+                                                                                                    <span>
+                                                                                                        <xsl:value-of select="$tempType"/>
+                                                                                                    </span>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <xsl:if test=" $tempType='number'">
+                                                                                                        <span>
+                                                                                                            <xsl:value-of select="$tempMin"/>
+                                                                                                        </span>
+                                                                                                    </xsl:if>
+                                                                                                </td>
+
+                                                                                                <td>
+                                                                                                    <xsl:if test=" $tempType='number'">
+                                                                                                        <span>
+                                                                                                            <xsl:value-of select="$tempMax"/>
+                                                                                                        </span>
+                                                                                                    </xsl:if>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <xsl:if test=" $tempType='text'">
+                                                                                                        <span>
+                                                                                                            <xsl:value-of select="$tempMinLen"/>
+                                                                                                        </span>
+                                                                                                    </xsl:if>
+                                                                                                </td>
+
+                                                                                                <td>
+                                                                                                    <xsl:if test=" $tempType='text'">
+                                                                                                        <span>
+                                                                                                            <xsl:value-of select="$tempMaxLen"/>
+                                                                                                        </span>
+                                                                                                    </xsl:if>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <xsl:choose>
+                                                                                                        <xsl:when test="$tempValue">
+                                                                                                            <xsl:if test=" $tempValue !=''">
+                                                                                                                <span>
+                                                                                                                    <xsl:value-of select="$tempValue"/>
+                                                                                                                </span>
+                                                                                                            </xsl:if>
+                                                                                                        </xsl:when>
+                                                                                                    </xsl:choose>
+                                                                                                </td>
+                                                                                                <td>
                                                                                                     <span class="glyphicon glyphicon-remove" style="color:red;"></span>
                                                                                                 </td>
                                                                                             </tr>                     
                                                                                         </tbody>
                                                                                     </xsl:if>
-                                                                                </xsl:for-each>
-                                                                            </xsl:otherwise>
-                                                                        </xsl:choose>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </xsl:when>
-                                                    </xsl:choose>           
+                                                                                </xsl:if>
+                                                                            </xsl:for-each>
+                                                                        </xsl:for-each>
+                                                                    </xsl:when>
+                                                                    <xsl:otherwise>
+                                                                        <xsl:for-each select="$TokDistinctAllValues">
+                                                                            <xsl:variable name="i" select="position()" />
+                                                                            <xsl:if test="$i &lt; (last()-1)">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td colspan="7">
+                                                                                            <span>
+                                                                                                <xsl:value-of select="$TokDistinctAllValues[$i]"/>
+                                                                                                <sup>
+                                                                                                    <span style="color:red;">*</span>
+                                                                                                </sup>
+                                                                                            </span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <span class="glyphicon glyphicon-remove" style="color:red;"></span>
+                                                                                        </td>
+                                                                                    </tr>                     
+                                                                                </tbody>
+                                                                            </xsl:if>
+                                                                        </xsl:for-each>
+                                                                    </xsl:otherwise>
+                                                                </xsl:choose>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </xsl:when>
+                                            </xsl:choose>           
+                                        </xsl:when>
+                                    </xsl:choose>
+                                    <!-- Headers -->
+                                    <div style="padding-bottom:12px">
+                                        <div style="color:darkgrey;font-weight:bold;margin-bottom:4px">
+                                            Response Headers
+                                        </div>
+                                        <div>
+                                                
+                                            <xsl:choose>
+                                                <xsl:when test="mtg:Header">  
+                                                    <div>
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Value</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <xsl:for-each select="mtg:Header">    
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <xsl:value-of select="@name"/>
+                                                                        </td>
+                                                                        <td>
+                                                                            <xsl:value-of select="@value"/>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>            
+                                                            </xsl:for-each> 
+                                                        </table>
+                                                    </div>            
                                                 </xsl:when>
                                             </xsl:choose>
-                                            <!-- Headers -->
-                                            <div style="padding-bottom:12px">
-                                                <div style="color:darkgrey;font-weight:bold;margin-bottom:4px">
-                                                    Response Headers
-                                                </div>
-                                                <div>
-                                                
-                                                    <xsl:choose>
-                                                        <xsl:when test="mtg:Header">  
-                                                            <div>
-                                                                <table class="table table-hover">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Name</th><th>Value</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <xsl:for-each select="mtg:Header">    
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <xsl:value-of select="@name"/>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <xsl:value-of select="@value"/>
-                                                                                </td>
-                                                                            </tr>
-                                                                        </tbody>            
-                                                                    </xsl:for-each> 
-                                                                </table>
-                                                            </div>            
-                                                        </xsl:when>
-                                                    </xsl:choose>
                                                     
-                                                </div>
-                                            </div>   
                                         </div>
-                                    </div>                         
+                                    </div>   
+                                </div>
+                            </div>                         
                         </div>
                     </xsl:for-each>
                 </div>
@@ -531,58 +532,58 @@
                     
                     var urlArr = url.split("/");
                     var uri = urlArr[0]+"//"+urlArr[2]+"/"+urlArr[3]+
-                            ("/v"+version+"/"+resName+" "+group).toLowerCase();
+                    ("/v"+version+"/"+resName+" "+group).toLowerCase();
                     var reqUri=("/v"+version+"/"+resName).toLowerCase();
                     uriDiv.innerHTML = uri;
                     uriDiv.href = uri;
                     
                     var parentSpan = document.getElementById('resParent');
                     if(parentSpan != null){
-                        parentSpan.innerHTML = parentSpan.innerHTML.toUpperCase();
+                    parentSpan.innerHTML = parentSpan.innerHTML.toUpperCase();
                     }
                     
                     var paramListClasses = document.getElementsByClassName("sqlVariables");
                     for (var i = 0; i &lt; paramListClasses.length; i++) {
-                        var unique = [];
-                        var paramList = paramListClasses[i].childNodes;
-                        for(var j = 0; j &lt; paramList.length; j++){
-                            var param = paramList[j];
-                            unique.push(param.innerHTML);
-                            unique = eliminateDuplicates(unique);
-                        }
-                        var l = paramList.length;
-                        for(var j=l-1; j &gt;= 0; j--){
-                            paramList[j].parentNode.removeChild(paramList[j]);
-                        }
-                        for(var j=0; j &lt; unique.length; j++) {
-                            var span = document.createElement('span');
-                            span.classList.add('label','label-primary');
-                            span.innerHTML = unique[j];
-                            span.style['margin-right'] = '5px';
-                            if(span.innerHTML=="No Variable Passed") {
-                                span.style['background-color'] = 'orange';
-                            }
-                            paramListClasses[i].appendChild(span);
-                        }
+                    var unique = [];
+                    var paramList = paramListClasses[i].childNodes;
+                    for(var j = 0; j &lt; paramList.length; j++){
+                    var param = paramList[j];
+                    unique.push(param.innerHTML);
+                    unique = eliminateDuplicates(unique);
+                    }
+                    var l = paramList.length;
+                    for(var j=l-1; j &gt;= 0; j--){
+                    paramList[j].parentNode.removeChild(paramList[j]);
+                    }
+                    for(var j=0; j &lt; unique.length; j++) {
+                    var span = document.createElement('span');
+                    span.classList.add('label','label-primary');
+                    span.innerHTML = unique[j];
+                    span.style['margin-right'] = '5px';
+                    if(span.innerHTML=="No Variable Passed") {
+                    span.style['background-color'] = 'orange';
+                    }
+                    paramListClasses[i].appendChild(span);
+                    }
                     }
                     function eliminateDuplicates(arr) {
-                        var i, len=arr.length, out=[], obj={};
-                        for (i=0;i &lt; len;i++) {
-                            obj[arr[i]]=0;
-                        }
-                        for (i in obj) {
-                            out.push(i);
-                        }
-                        return out;
+                    var i, len=arr.length, out=[], obj={};
+                    for (i=0;i &lt; len;i++) {
+                    obj[arr[i]]=0;
+                    }
+                    for (i in obj) {
+                    out.push(i);
+                    }
+                    return out;
                     }
                     
                     var ReqTypeItem = document.getElementsByClassName('ReqTypeItem');             
                     for(var i=0;i &lt; ReqTypeItem.length;i++) {
-                        ReqTypeItem[i].innerHTML = reqUri+"/{id}";
+                    ReqTypeItem[i].innerHTML = reqUri+"/{id}";
                     }
                     var ReqTypeCollection = document.getElementsByClassName('ReqTypeCollection');                    
                     for(var i=0;i &lt; ReqTypeCollection.length;i++) {
-                        ReqTypeCollection[i].innerHTML = reqUri;
+                    ReqTypeCollection[i].innerHTML = reqUri;
                     }
                 </script>
             </body>
