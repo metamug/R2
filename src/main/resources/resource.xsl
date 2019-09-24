@@ -85,6 +85,13 @@
                                             <xsl:when test="contains(@method,'POST')">panel panel-success</xsl:when>
                                             <xsl:when test="contains(@method,'PUT')">panel panel-warning</xsl:when>
                                         </xsl:choose>
+                                    </xsl:variable>                                    
+                                    <xsl:variable name="labelClass">
+                                        <xsl:choose>
+                                            <xsl:when test="contains(@method,'GET')">label label-info</xsl:when>
+                                            <xsl:when test="contains(@method,'POST')">label label-success</xsl:when>
+                                            <xsl:when test="contains(@method,'PUT')">label label-warning</xsl:when>
+                                        </xsl:choose>
                                     </xsl:variable>
                                     <div>
                                         <xsl:attribute name="class">
@@ -103,23 +110,14 @@
                                                         </xsl:otherwise>
                                                     </xsl:choose>
                                                 </div>
-                                                <xsl:choose>
-                                                    <xsl:when test="contains(@method,'GET')">
-                                                        <div class="label label-success" style="font-size:14px;background-color: #5cb85c;">
-                                                            GET
-                                                        </div>
-                                                    </xsl:when>
-                                                    <xsl:when test="contains(@method,'POST')">
-                                                        <div class="label label-info" style="font-size:14px;background-color: #5cb85c;">
-                                                            POST
-                                                        </div>
-                                                    </xsl:when>
-                                                    <xsl:when test="contains(@method,'PUT')">
-                                                        <div class="label label-warning" style="font-size:14px;background-color: #5cb85c;">
-                                                            PUT
-                                                        </div>
-                                                    </xsl:when>
-                                                </xsl:choose>
+                                                <div style="font-size:14px">
+                                                        <xsl:attribute name="class">
+                                                            <xsl:value-of select="$labelClass"/>
+                                                        </xsl:attribute>
+                                                        <span>
+                                                            <xsl:value-of select="@method"/>
+                                                        </span>
+                                                    </div>
                                             </span>
                                         </div>
                                         <div class="panel-body">
@@ -134,20 +132,7 @@
                                                     </div>    
                                                 </xsl:when>
                                             </xsl:choose>  
-                                            <!-- Headers -->
-                                            <div style="padding-bottom:12px">
-                                                <div style="color:darkgrey;font-weight:bold;margin-bottom:4px">
-                                                    Response Headers
-                                                </div>
-                                                <div>
-                                                    <xsl:for-each select="mtg:Header">    
-                                                        <span class="label label-primary" style="margin-right:5px">
-                                                            <xsl:value-of select="@name"/>
-                                                        </span>
-                                                    </xsl:for-each> 
-                                                </div>
-                                            </div>   
-                                            
+                                                                                       
                                             <div style="padding-bottom:12px">
                                                 <div style="color:darkgrey;font-weight:bold;">
                                                     Parameters
@@ -489,6 +474,19 @@
                                                     </xsl:choose>           
                                                 </xsl:when>
                                             </xsl:choose>
+                                            <!-- Headers -->
+                                            <div style="padding-bottom:12px">
+                                                <div style="color:darkgrey;font-weight:bold;margin-bottom:4px">
+                                                    Response Headers
+                                                </div>
+                                                <div>
+                                                    <xsl:for-each select="mtg:Header">    
+                                                        <span class="label label-primary" style="margin-right:5px">
+                                                            <xsl:value-of select="@name"/>
+                                                        </span>
+                                                    </xsl:for-each> 
+                                                </div>
+                                            </div>   
                                         </div>
                                     </div>
                                 </xsl:when>
@@ -530,19 +528,7 @@
                                                     </div>    
                                                 </xsl:when>
                                             </xsl:choose>  
-                                            <!-- Headers -->
-                                            <div style="padding-bottom:12px">
-                                                <div style="color:darkgrey;font-weight:bold;margin-bottom:4px">
-                                                    Response Headers
-                                                </div>
-                                                <div>
-                                                    <xsl:for-each select="mtg:Header">    
-                                                        <span class="label label-primary" style="margin-right:5px">
-                                                            <xsl:value-of select="@name"/>
-                                                        </span>
-                                                    </xsl:for-each> 
-                                                </div>
-                                            </div>        
+                                             
                                             <div style="padding-bottom:12px">
                                                 <div style="color:darkgrey;font-weight:bold;">
                                                     Parameters
@@ -863,6 +849,19 @@
                                                     </xsl:choose> 
                                                 </xsl:when>
                                             </xsl:choose>
+                                            <!-- Headers -->
+                                            <div style="padding-bottom:12px">
+                                                <div style="color:darkgrey;font-weight:bold;margin-bottom:4px">
+                                                    Response Headers
+                                                </div>
+                                                <div>
+                                                    <xsl:for-each select="mtg:Header">    
+                                                        <span class="label label-primary" style="margin-right:5px">
+                                                            <xsl:value-of select="@name"/>
+                                                        </span>
+                                                    </xsl:for-each> 
+                                                </div>
+                                            </div>       
                                         </div>
                                     </div>
                                 </xsl:when>
@@ -902,28 +901,14 @@
                                                         </xsl:otherwise>
                                                     </xsl:choose>
                                                 </div>
-                                                <xsl:choose>
-                                                    <xsl:when test="contains(@method,'GET')">
-                                                        <div class="label label-success" style="font-size:14px;background-color: #5bc0de;">
-                                                            GET
-                                                        </div>
-                                                    </xsl:when>
-                                                    <xsl:when test="contains(@method,'POST')">
-                                                        <div class="label label-info" style="font-size:14px;background-color: #5bc0de;">
-                                                            POST
-                                                        </div>
-                                                    </xsl:when>
-                                                    <xsl:when test="contains(@method,'PUT')">
-                                                        <div class="label label-warning" style="font-size:14px;background-color: #5bc0de;">
-                                                            PUT
-                                                        </div>
-                                                    </xsl:when>
-                                                    <xsl:when test="contains(@method,'DELETE')">
-                                                        <div class="label label-danger" style="font-size:14px;background-color: #5bc0de;">
-                                                            DELETE
-                                                        </div>
-                                                    </xsl:when>
-                                                </xsl:choose>
+                                                    <div style="font-size:14px">
+                                                        <xsl:attribute name="class">
+                                                            <xsl:value-of select="$labelClass"/>
+                                                        </xsl:attribute>
+                                                        <span>
+                                                            <xsl:value-of select="@method"/>
+                                                        </span>
+                                                    </div>
                                             </span>
                                         </div>
                                         <div class="panel-body">
@@ -938,19 +923,7 @@
                                                     </div>    
                                                 </xsl:when>
                                             </xsl:choose> 
-                                            <!-- Headers -->
-                                            <div style="padding-bottom:12px">
-                                                <div style="color:darkgrey;font-weight:bold;margin-bottom:4px">
-                                                    Response Headers
-                                                </div>
-                                                <div>
-                                                    <xsl:for-each select="mtg:Header">    
-                                                        <span class="label label-primary" style="margin-right:5px">
-                                                            <xsl:value-of select="@name"/>
-                                                        </span>
-                                                    </xsl:for-each> 
-                                                </div>
-                                            </div>        
+                                                
                                             <div style="padding-bottom:12px">
                                                 <div style="color:darkgrey;font-weight:bold;">
                                                     Parameters
@@ -1272,7 +1245,19 @@
                                                     </xsl:choose> 
                                                 </xsl:when>
                                             </xsl:choose>    
-
+                                            <!-- Headers -->
+                                            <div style="padding-bottom:12px">
+                                                <div style="color:darkgrey;font-weight:bold;margin-bottom:4px">
+                                                    Response Headers
+                                                </div>
+                                                <div>
+                                                    <xsl:for-each select="mtg:Header">    
+                                                        <span class="label label-primary" style="margin-right:5px">
+                                                            <xsl:value-of select="@name"/>
+                                                        </span>
+                                                    </xsl:for-each> 
+                                                </div>
+                                            </div>    
                                         </div>
                                     </div>
                                 </xsl:when>
