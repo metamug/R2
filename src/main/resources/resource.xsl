@@ -76,6 +76,7 @@
                         
                         <div class="col-md-12" style="padding-top:10px">
                             <xsl:choose>
+                                <!-- condition - item request and method not DELETE -->
                                 <xsl:when test="contains(@item,'true') and not(contains(@method,'DELETE'))" >
                                     <div class="panel panel-success">
                                         <div class="panel-heading">
@@ -466,6 +467,7 @@
                                         </div>
                                     </div>
                                 </xsl:when>
+                                <!-- condition - item/collection request and DELETE -->
                                 <xsl:when test="contains(@method,'DELETE')">
                                     <div class="panel panel-success" style="border-color: #e0bab9;">
                                         <div class="panel-heading" style="color: #d9534f;background-color: #fbd8d7;border-color: #e0bab9;">
@@ -826,6 +828,7 @@
                                         </div>
                                     </div>
                                 </xsl:when>
+                                <!-- condition - collection request and all methods -->
                                 <xsl:when test="not(@item) or contains(@item,'false')">
                                     <div class="panel panel-info">
                                         <div class="panel-heading">
