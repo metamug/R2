@@ -1269,18 +1269,13 @@
                     return out;
                     }
                     
-                    var ReqTypeItem = document.getElementsByClassName('ReqTypeItem');
-                    
-                    for(var i=0;i &lt; ReqTypeItem.length;i++)
-                    {
-                    ReqTypeItem[i].innerHTML = reqUri+"/{id}";
+                    var ReqTypeItem = document.getElementsByClassName('ReqTypeItem');             
+                    for(var i=0;i &lt; ReqTypeItem.length;i++) {
+                        ReqTypeItem[i].innerHTML = reqUri+"/{id}";
                     }
-                    
-                    var ReqTypeCollection = document.getElementsByClassName('ReqTypeCollection');
-                    
-                    for(var i=0;i &lt; ReqTypeCollection.length;i++)
-                    {
-                    ReqTypeCollection[i].innerHTML = reqUri;
+                    var ReqTypeCollection = document.getElementsByClassName('ReqTypeCollection');                    
+                    for(var i=0;i &lt; ReqTypeCollection.length;i++) {
+                        ReqTypeCollection[i].innerHTML = reqUri;
                     }
                 </script>
             </body>

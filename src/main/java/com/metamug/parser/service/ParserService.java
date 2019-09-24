@@ -132,8 +132,6 @@ public class ParserService {
     //protected static final String SQL_RESULT_MPATH_PATTERN = "\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)";
     public static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
 
-    // Number added as prefix to 'data' so as to generate unique keys to store in map against the resultset of sql:query
-    //int count = 0;
     public JSONObject transform(File uploadedFile, String appName, boolean updateResource, String outputFolder,
             String domain, JSONObject queryMap) throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException,
             XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
