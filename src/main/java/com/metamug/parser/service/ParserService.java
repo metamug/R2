@@ -127,7 +127,7 @@ public class ParserService {
             put(UPLOAD_OBJECT, UPLOAD_OBJECT);
         }
     }; // <id,elementType>  
-    
+                                             
     public static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
     //protected static final String SQL_RESULT_MPATH_PATTERN = "\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)";
     public static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
@@ -186,8 +186,6 @@ public class ParserService {
                 XMLStreamWriter writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output));
 
                 printHeaderAndGroup(writer, resource);
-
-                //elementIds = new HashMap<>();
 
                 for (Request req : resource.getRequest()) {
                     writer.writeStartElement("m:request");
@@ -1095,7 +1093,7 @@ public class ParserService {
     }
 
     private StringBuilder enclose(StringBuilder finalString) {
-        Pattern pattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
+        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher match = pattern.matcher(finalString.toString());
         if (match.find()) {
             int start = match.start(1);
@@ -1128,8 +1126,5 @@ public class ParserService {
             // type = query and verbose != false
             return sql.getType().value().equalsIgnoreCase("query") && (sql.getOutput() == null || sql.getOutput());
         }
-    }
-
-    
-   
+    }  
 }
