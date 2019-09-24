@@ -65,6 +65,7 @@
                         <xsl:variable name="QueryRequires" select="mtg:Query/@requires"/>
                         <xsl:variable name="ExecuteRequires" select="mtg:Execute/@requires"/>
                         <xsl:variable name="ParamName" select="mtg:Param/@name"/>
+                        <xsl:variable name="HeaderName" select="mtg:Header/@name"/>
                         <xsl:variable name="JointVarReqs" select="string-join( ($UpdateRequires,$QueryRequires,$ExecuteRequires), ',')"/>
                         <xsl:variable name="JointVarPN" select="string-join( ($ParamName), ',')"/>
                         <xsl:variable name="TokenizedVarReqs" select="tokenize($JointVarReqs,'[,]')"/>
@@ -112,7 +113,7 @@
                                             </span>
                                         </div>
                                         <div class="panel-body">
-                                            
+                                            <!-- Desc -->
                                             <xsl:choose>
                                                 <xsl:when test='string-length(mtg:Desc) &gt; 0'>
                                                     <div style="padding-bottom:12px">
@@ -122,7 +123,21 @@
                                                         <xsl:value-of select="mtg:Desc"/>
                                                     </div>    
                                                 </xsl:when>
-                                            </xsl:choose>       
+                                            </xsl:choose>  
+                                            <!-- Headers -->
+                                            <div style="padding-bottom:12px">
+                                                <div style="color:darkgrey;font-weight:bold;margin-bottom:4px">
+                                                    Response Headers
+                                                </div>
+                                                <div>
+                                                    <xsl:for-each select="mtg:Header">    
+                                                        <span class="label label-primary" style="margin-right:5px">
+                                                            <xsl:value-of select="@name"/>
+                                                        </span>
+                                                    </xsl:for-each> 
+                                                </div>
+                                            </div>   
+                                            
                                             <div style="padding-bottom:12px">
                                                 <div style="color:darkgrey;font-weight:bold;">
                                                     Parameters
@@ -504,7 +519,20 @@
                                                         <xsl:value-of select="mtg:Desc"/>
                                                     </div>    
                                                 </xsl:when>
-                                            </xsl:choose>       
+                                            </xsl:choose>  
+                                            <!-- Headers -->
+                                            <div style="padding-bottom:12px">
+                                                <div style="color:darkgrey;font-weight:bold;margin-bottom:4px">
+                                                    Response Headers
+                                                </div>
+                                                <div>
+                                                    <xsl:for-each select="mtg:Header">    
+                                                        <span class="label label-primary" style="margin-right:5px">
+                                                            <xsl:value-of select="@name"/>
+                                                        </span>
+                                                    </xsl:for-each> 
+                                                </div>
+                                            </div>        
                                             <div style="padding-bottom:12px">
                                                 <div style="color:darkgrey;font-weight:bold;">
                                                     Parameters
@@ -880,7 +908,20 @@
                                                         <xsl:value-of select="mtg:Desc"/>
                                                     </div>    
                                                 </xsl:when>
-                                            </xsl:choose>      
+                                            </xsl:choose> 
+                                            <!-- Headers -->
+                                            <div style="padding-bottom:12px">
+                                                <div style="color:darkgrey;font-weight:bold;margin-bottom:4px">
+                                                    Response Headers
+                                                </div>
+                                                <div>
+                                                    <xsl:for-each select="mtg:Header">    
+                                                        <span class="label label-primary" style="margin-right:5px">
+                                                            <xsl:value-of select="@name"/>
+                                                        </span>
+                                                    </xsl:for-each> 
+                                                </div>
+                                            </div>        
                                             <div style="padding-bottom:12px">
                                                 <div style="color:darkgrey;font-weight:bold;">
                                                     Parameters
