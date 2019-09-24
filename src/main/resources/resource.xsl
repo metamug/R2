@@ -483,11 +483,33 @@
                                                     Response Headers
                                                 </div>
                                                 <div>
-                                                    <xsl:for-each select="mtg:Header">    
-                                                        <span class="label label-primary" style="margin-right:5px">
-                                                            <xsl:value-of select="@name"/>
-                                                        </span>
-                                                    </xsl:for-each> 
+                                                
+                                                    <xsl:choose>
+                                                        <xsl:when test="mtg:Header">  
+                                                            <div>
+                                                                <table class="table table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Name</th><th>Value</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <xsl:for-each select="mtg:Header">    
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <xsl:value-of select="@name"/>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <xsl:value-of select="@value"/>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>            
+                                                                    </xsl:for-each> 
+                                                                </table>
+                                                            </div>            
+                                                        </xsl:when>
+                                                    </xsl:choose>
+                                                    
                                                 </div>
                                             </div>   
                                         </div>
