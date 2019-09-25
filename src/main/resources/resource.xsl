@@ -96,7 +96,14 @@
                                     <xsl:value-of select="$panelClass"/>
                                 </xsl:attribute>
                                 <div class="panel-heading">
-                                    <span class="ReqTypeItem" style="font-weight:bold">ITEM REQUEST</span>
+                                    <xsl:choose>
+                                        <xsl:when test="contains(@item,'true')">
+                                            <span class="ReqTypeItem" style="font-weight:bold"></span>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <span class="ReqTypeCollection" style="font-weight:bold"></span>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
                                     <span class="pull-right" style="font-size:14px">
                                         <div class="badge" style="margin-right:10px;">
                                             <xsl:choose>
