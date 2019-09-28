@@ -150,7 +150,7 @@ public class ParserMPathTest {
 "                    \"foo2\": ${sqlresult.rows[0].rating}\"\n" +
 "                }";
         try {
-            String output = ParserService.transformMPathVariables(input, elementIds);
+            String output = ParserService.transformMPathVariables(input, elementIds,true);
             //System.out.println(output);
             Assert.assertEquals(output,expected);
         } catch (ResourceTestException ex) {
@@ -172,7 +172,7 @@ public class ParserMPathTest {
 "                   \"foo3\": ${exec.contact.phone}\"\n" +
 "               }";
         try {
-            String output = ParserService.transformMPathVariables(input, elementIds);
+            String output = ParserService.transformMPathVariables(input, elementIds,true);
             //System.out.println(output);
             Assert.assertEquals(output,expected);
         } catch (ResourceTestException ex) {
@@ -184,10 +184,11 @@ public class ParserMPathTest {
     @Test
     public void transformMPathSql(){
         String input = "SELECT $[xreq].body.args.foo1,$[xreq].body.args[2].foo[0].bar AS 'foo1'";
-        String expected = "SELECT ${m:jsonPath('$.body.args.foo1',xreq )},${m:jsonPath('$.body.args[2].foo[0].bar',xreq )} AS 'foo1'";
+        String expected = "SELECT ${m:jsonPath('$.body.args.foo1',xreq)},${m:jsonPath('$.body.args[2].foo[0].bar',xreq)} AS 'foo1'";
         
         try {
-            String output = ParserService.transformMPathVariables(input, elementIds);
+            String output = ParserService.transformMPathVariables(input, elementIds,true);
+        
             Assert.assertEquals(output,expected);
         } catch (ResourceTestException ex) {
             Logger.getLogger(ParserMPathTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -200,7 +201,7 @@ public class ParserMPathTest {
         String input = "SELECT $[invalidId].body.args.foo1,$[xreq].body.args[2].foo[0].bar AS 'foo1'";
         
         try {
-            String output = ParserService.transformMPathVariables(input, elementIds);
+            String output = ParserService.transformMPathVariables(input, elementIds,true);
             //Assert.assertEquals(output,null);
         } catch (ResourceTestException ex) {
             //Logger.getLogger(ParserMPathTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -211,11 +212,11 @@ public class ParserMPathTest {
     @Test
     public void mPathUploadId(){
         String input = "SELECT $[_upload],$[xreq].body.args[2].foo[0].bar AS 'foo1'";
-        
+            
         try {
-            String o = ParserService.transformMPathVariables(input, elementIds);
-            Assert.assertEquals("SELECT ${_upload},${m:jsonPath('$.body.args[2].foo[0].bar',xreq )} AS 'foo1'", o);
-            //System.out.print("Hello: "+o);
+            String o = ParserService.transformMPathVariables(input, elementIds,true);
+            Assert.assertEquals("SELECT ${_upload},${m:jsonPath('$.body.args[2].foo[0].bar',xreq)} AS 'foo1'", o);
+            //System.out.println("Hello: "+o);
         } catch (ResourceTestException ex) {
         }
     }
@@ -230,7 +231,7 @@ public class ParserMPathTest {
 "<sql:param value=\"${mtgReq.params['reqvar1']}\"/>\n" +
 "<sql:param value=\"${sqlresult.rows[1].id.name}\"/>\n" +
 "<sql:param value=\"${mtgReq.params['reqvar2']}\"/>\n" +
-"<sql:param value=\"${m:jsonPath('$.body.args[2].foo[0].bar',xreq )}\"/>\n" +
+"<sql:param value=\"${m:jsonPath('$.body.args[2].foo[0].bar',xreq)}\"/>\n" +
 "<sql:param value=\"${mtgReq.id}\"/>";
         
         Sql sql = new Sql();

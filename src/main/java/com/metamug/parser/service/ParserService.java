@@ -82,8 +82,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -279,7 +277,7 @@ public class ParserService {
     protected void printOutputTag(Output output, XMLStreamWriter writer) throws XMLStreamException, ResourceTestException{
         writer.writeCharacters(System.lineSeparator());
         
-        String value = transformVariables(output.getValue(),elementIds);
+        String value = transformVariables(output.getValue(),elementIds,true);
         
         printCSet(writer,enclose(MASON_OUTPUT),output.getId(),value.trim());
     }
@@ -383,8 +381,13 @@ public class ParserService {
         if (!sql.getValue().trim().isEmpty()) {
             if (sql.getWhen() != null) {
                 writer.writeStartElement("c:if");
-                String testString = getQuotedString(sql.getWhen());
-                writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+                //String testString = getQuotedString(sql.getWhen());
+                //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+                
+                String test = transformVariables(sql.getWhen(),elementIds,false);
+                writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"");
+                //String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue(),elementIds);
+                //writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
             }
             //Print params those are marked as 'requires' in <Sql>
             String requiredParams = sql.getRequires();
@@ -492,11 +495,13 @@ public class ParserService {
      * @throws XMLStreamException
      * @throws SAXException
      */
-    protected void printExecuteTag(Execute execute, XMLStreamWriter writer) throws XMLStreamException, SAXException, ResourceTestException {
+    protected void printExecuteTag(Execute execute, XMLStreamWriter writer) throws XMLStreamException, SAXException, ResourceTestException, IOException {
         if (execute.getWhen() != null) {
             writer.writeStartElement("c:if");
-            String testString = getQuotedString(execute.getWhen());
-            writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            //String testString = getQuotedString(execute.getWhen());
+            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            String test = transformVariables(execute.getWhen(),elementIds,false);
+            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"");
         }
         //Print params those are marked as 'requires' in <Execute>
         String requiredParams = execute.getRequires();
@@ -526,11 +531,11 @@ public class ParserService {
             writer.writeEmptyElement("m:arg");
             writer.writeAttribute("name", arg.getName());
             if(arg.getValue()!=null){
-                writer.writeAttribute("value", transformVariables(arg.getValue(),elementIds) );
+                writer.writeAttribute("value", transformVariables(arg.getValue(),elementIds,true) );
             }else{
                 //value is null, check path
                 if(arg.getPath()!=null){
-                    writer.writeAttribute("value", transformVariables(arg.getPath(),elementIds) );
+                    writer.writeAttribute("value", transformVariables(arg.getPath(),elementIds,true) );
                 } else{
                     writer.writeAttribute("value","null");
                 }
@@ -552,8 +557,10 @@ public class ParserService {
             SAXException, IOException, XPathExpressionException, ResourceTestException{
         if (tx.getWhen() != null) {
             writer.writeStartElement("c:if");
-            String testString = getQuotedString(tx.getWhen());
-            writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            //String testString = getQuotedString(tx.getWhen());
+            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            String test = transformVariables(tx.getWhen(),elementIds,false);
+            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"");
         }
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("sql:transaction");
@@ -582,11 +589,13 @@ public class ParserService {
         }
     }
     
-    protected void printScriptTag(Script script,XMLStreamWriter writer) throws XMLStreamException, SAXException{
+    protected void printScriptTag(Script script,XMLStreamWriter writer) throws XMLStreamException, SAXException, ResourceTestException, IOException{
         if (script.getWhen() != null) {
             writer.writeStartElement("c:if");
-            String testString = getQuotedString(script.getWhen());
-            writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            //String testString = getQuotedString(script.getWhen());
+            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            String test = transformVariables(script.getWhen(),elementIds,false);
+            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"");
         }
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("m:script");
@@ -621,8 +630,10 @@ public class ParserService {
             throws XMLStreamException, SAXException, IOException, XPathExpressionException, ResourceTestException {
         if (xrequest.getWhen() != null) {
             writer.writeStartElement("c:if");
-            String testString = getQuotedString(xrequest.getWhen());
-            writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            //String testString = getQuotedString(xrequest.getWhen());
+            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            String test = transformVariables(xrequest.getWhen(),elementIds,false);
+            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"");
         }
    
         //print xrequest mason tags
@@ -651,12 +662,12 @@ public class ParserService {
                 writer.writeEmptyElement("m:xparam");
                 writer.writeAttribute("name", ((Xparam) paramOrHeaderOrBody).getName());
                 //transform request parameters and mpath variables in xrequest param value
-                String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue(),elementIds);
+                String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue(),elementIds,true);
                 writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
             } else if (paramOrHeaderOrBody instanceof String) {
                 writer.writeStartElement("m:xbody");
                 //transform request parameters and mpath variables in xrequest body
-                String body = transformVariables((String) paramOrHeaderOrBody,elementIds);
+                String body = transformVariables((String) paramOrHeaderOrBody,elementIds,true);
               
                 writeUnescapedCharacters(writer, body);
                 writer.writeEndElement();
@@ -776,44 +787,55 @@ public class ParserService {
         return path.replaceFirst("\\$\\[(.*?)\\]","");
     }
     
-    protected String transformVariables(String input, Map<String,String> elementIds) throws ResourceTestException{
-        input = transformRequestVariables(input);
-        input = transformMPathVariables(input, elementIds);
+    protected String transformVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException{
+        input = transformRequestVariables(input,enclose);
+        input = transformMPathVariables(input, elementIds, enclose);
         return input;
     }
     
-    protected static String getJspVariableForMPath(String mpathVariable, String type, String elementId){
+    protected static String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
         String tv = mpathVariable;
-                
+        
+        StringBuilder sb = new StringBuilder();
+        if(enclose){
+            sb.append("${");
+        }
+        
         if(type.equals(Sql.class.getName())) {
-                // ${id.rows[0].name
-                String rowIndex = "0";
-                String colName = null;
+            // id.rows[0].name
+            String rowIndex = "0";
+            String colName = null;
 
-                Pattern p = Pattern.compile("^\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)$");
-                Matcher m = p.matcher(mpathVariable);
+            Pattern p = Pattern.compile("^\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)$");
+            Matcher m = p.matcher(mpathVariable);
 
-                if(m.find()) {
-                    rowIndex = m.group(2);
-                    colName = m.group(3);
-                }
+            if(m.find()) {
+                rowIndex = m.group(2);
+                colName = m.group(3);
+            }
                 
-                tv = "${"+elementId+".rows"+"["+rowIndex+"]."+colName+"}";
-                
+            tv = elementId+".rows"+"["+rowIndex+"]."+colName;
+              
         }else if(type.equals(Xrequest.class.getName())){
-                //${m:jsonPath('$.body.args.foo1',bus['id'])}
-                String locator = getMPathLocator(mpathVariable);
+            // m:jsonPath('$.body.args.foo1',bus['id'])
+            String locator = getMPathLocator(mpathVariable);
                 
-                tv = "${m:jsonPath('$"+locator+"',"+elementId+" )}";
+            tv = "m:jsonPath('$"+locator+"',"+elementId+")";
         }else if(type.equals(Execute.class.getName())){
                 // ${bus[id].name}
                 String locator = getMPathLocator(mpathVariable);
-                tv = "${"+elementId+locator+"}";
+                tv = elementId+locator;
         }else if(type.equals(UPLOAD_OBJECT)){
-            tv = "${"+elementId+"}";
+            tv = elementId;
         }
         
-        return tv;
+        sb.append(tv);
+        
+        if(enclose){
+            sb.append("}");
+        }
+        
+        return sb.toString();
     }
     
     //collects MPath variables for sql:param tags
@@ -827,7 +849,7 @@ public class ParserService {
     }
     
     //transforms MPath variables in given string
-    protected static String transformMPathVariables(String input, Map<String,String> elementIds) throws ResourceTestException {
+    protected static String transformMPathVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException {
         String transformed = input;
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(input);
@@ -841,7 +863,7 @@ public class ParserService {
             }
             //get type of element
             String type = elementIds.get(elementId);
-            String tv = getJspVariableForMPath(mpathVariable, type, elementId);
+            String tv = getJspVariableForMPath(mpathVariable, type, elementId, enclose);
             
             transformed = transformed.replace(mpathVariable, tv);
         }
@@ -850,27 +872,37 @@ public class ParserService {
     }
     
     //transforms request variables in given string
-    protected static String transformRequestVariables(String input) {
+    protected static String transformRequestVariables(String input, boolean enclose) {
         String output = input;
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher matcher = pattern.matcher(input);
         while (matcher.find()) {
             String v = input.substring(matcher.start(1), matcher.end(1)).trim();
             String tv;
+            StringBuilder sb = new StringBuilder();
+            if(enclose){
+                sb.append("${");
+            }
             switch (v) {
                 case "id":
-                    tv = "${mtgReq.id}";
+                    tv = "mtgReq.id";
                     break;
                 case "pid":
-                    tv = "${mtgReq.pid}";
+                    tv = "mtgReq.pid";
                     break;
                 case "uid":
-                    tv = "${mtgReq.uid}";
+                    tv = "mtgReq.uid";
                     break;
                 default:
-                    tv = "${mtgReq.params['" + v + "']}";
+                    tv = "mtgReq.params['" + v + "']";
             }
-            output = output.replace("$"+v, tv);
+            sb.append(tv);
+            
+            if(enclose){
+                sb.append("}");
+            }
+            
+            output = output.replace("$"+v, sb.toString());
         }
        
         return output;
@@ -936,15 +968,11 @@ public class ParserService {
             processedQuery = processVariablesInLikeClause(processedQuery);
         }
         
-        //System.out.println("MPath: "+mpathParams);
-        //System.out.println("ReqParams: "+params);
         String wildcardQry = processedQuery.replaceAll(REQUEST_PARAM_PATTERN, "? ");
         wildcardQry = wildcardQry.replaceAll(MPATH_EXPRESSION_PATTERN, "? ");
-        //System.out.println("WildcardQry: "+wildcardQry);
         
         String queryWithPlaceholder = processedQuery.replaceAll(REQUEST_PARAM_PATTERN, "?\\$R ");  
         queryWithPlaceholder = queryWithPlaceholder.replaceAll(MPATH_EXPRESSION_PATTERN, "?\\$M ");
-        //System.out.println("QryPlaceholder: "+queryWithPlaceholder);
        
         StringBuilder builder = new StringBuilder(escapeSpecialCharacters(wildcardQry));
         builder.append(System.lineSeparator());
@@ -980,7 +1008,7 @@ public class ParserService {
                         //get type of element
                         String type = elementIds.get(elementId);
                         
-                        builder.append("<sql:param value=\"").append(getJspVariableForMPath(mpathParam,type,elementId)).append("\"/>");
+                        builder.append("<sql:param value=\"").append(getJspVariableForMPath(mpathParam,type,elementId,true)).append("\"/>");
                         builder.append(System.lineSeparator());
                     }             
             }
@@ -1034,7 +1062,7 @@ public class ParserService {
         builder.append("/>");
         return builder.toString();
     }
-
+/*
     public String getQuotedString(String plainString) throws SAXException {
         StringBuilder finalString;
         String quotedString = plainString.replaceAll("\\s+", " ");
@@ -1048,6 +1076,9 @@ public class ParserService {
         quotedString = quotedString.replaceAll("\\}\\s+", "\\}");
         String temp = quotedString.trim();
         quotedString = quotedString.replaceAll("\\s+", " ");
+        //System.out.println("q1: "+quotedString);
+        
+        
         Pattern pattern = Pattern.compile("((\\$|\\'|\\\"){0,1}\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,}(\\'|\\\"){0,1})");
         Matcher matcher = pattern.matcher(temp);
         String[] tokens = temp.split("\\s+");
@@ -1087,7 +1118,10 @@ public class ParserService {
         } else {
             throw new SAXException("Incorrect conditional operator used in 'when' attribute");
         }
-        return finalString.toString();
+        //System.out.println("q2: "+finalString.toString());
+        //return finalString.toString();
+        
+        return null;
     }
 
     private StringBuilder enclose(StringBuilder finalString) {
@@ -1100,8 +1134,10 @@ public class ParserService {
             String modified = "['" + old + "']";
             finalString.replace(start, end, modified);
         }
+        
+        System.out.println("q3: "+finalString.toString());
         return finalString;
-    }
+    }*/
 /*
     protected boolean isVerbose(Sql sql) {
         if (sql.getType().value().equalsIgnoreCase("update") &&

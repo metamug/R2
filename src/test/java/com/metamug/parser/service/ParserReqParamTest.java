@@ -70,7 +70,7 @@ public class ParserReqParamTest {
 "                    \"foo1\": ${mtgReq.id},\n" +
 "                    \"foo2\": ${mtgReq.params['rating']}\n" +
 "                }";
-        String output = ParserService.transformRequestVariables(input);
+        String output = ParserService.transformRequestVariables(input,true);
        
         Assert.assertEquals(exp, output);
     }
