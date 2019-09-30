@@ -162,6 +162,14 @@
             <xsd:enumeration value="DELETE"/>
         </xsd:restriction>
     </xsd:simpleType>
+    
+    <xsd:simpleType name="xrequestOutput">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="true"/>
+            <xsd:enumeration value="false"/>
+            <xsd:enumeration value="headers"/>
+        </xsd:restriction>
+    </xsd:simpleType>
 
     <xsd:simpleType name="paramType">
         <xsd:restriction base="xsd:string">
@@ -225,6 +233,7 @@
             <xsd:extension base="xsd:string">
                 <xsd:attribute name="id" type="elementId" use="required" />
                 <xsd:attribute name="value" type="xsd:string" />
+                <xsd:attribute name="when" type="xsd:string"/>
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
@@ -276,8 +285,7 @@
         <xsd:attribute name="url" type="xsd:string" use="required"/>
         <xsd:attribute name="method" type="method" use="required"/>
         <xsd:attribute name="verbose" type="xsd:boolean" use="optional"/>
-        <xsd:attribute name="output" type="xsd:boolean" use="optional"/>
-        <xsd:attribute name="outputHeaders" type="xsd:boolean" use="optional"/>
+        <xsd:attribute name="output" type="xrequestOutput" use="optional" />
     </xsd:complexType>
 
     <xsd:complexType name="param">

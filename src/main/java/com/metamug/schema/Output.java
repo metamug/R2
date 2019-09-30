@@ -41,6 +41,8 @@ public class Output {
     protected String id;
     @XmlAttribute(name = "value")
     protected String value;
+    @XmlAttribute(name = "when")
+    protected String when;
     @XmlValue
     protected String childValue;
     
@@ -96,5 +98,24 @@ public class Output {
     public void setValue(String value) {
         this.value = value;
     }
+    
+    /**
+     * Gets the value of the when property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getWhen() {
+        return when;
+    }
 
+    /**
+     * Sets the value of the when property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setWhen(String value) {
+        this.when = value;
+    }
 }

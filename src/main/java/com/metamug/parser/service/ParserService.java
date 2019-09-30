@@ -274,12 +274,21 @@ public class ParserService {
         writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"");
     }
     
-    protected void printOutputTag(Output output, XMLStreamWriter writer) throws XMLStreamException, ResourceTestException{
+    protected void printOutputTag(Output output, XMLStreamWriter writer) throws XMLStreamException, ResourceTestException, IOException{
+        if (output.getWhen() != null) {
+            writer.writeStartElement("c:if");
+            String test = transformVariables(output.getWhen(),elementIds,false);
+            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"");
+        }
         writer.writeCharacters(System.lineSeparator());
         
         String value = transformVariables(output.getValue(),elementIds,true);
         
         printCSet(writer,enclose(MASON_OUTPUT),output.getId(),value.trim());
+        
+        if (output.getWhen() != null) {
+            writer.writeEndElement();
+        }
     }
     
     protected void preProcessSqlElement(Sql sql, String domain) throws IOException, ResourceTestException{
@@ -641,12 +650,14 @@ public class ParserService {
         writer.writeStartElement("m:xrequest");
         writer.writeAttribute("var", xrequest.getId());
         writer.writeAttribute("method", xrequest.getMethod().name());
-        if ( (xrequest.getVerbose() != null && xrequest.getVerbose() ) 
-                || (xrequest.getOutput() != null && xrequest.getOutput() ) ) {
-            writer.writeAttribute("output", "true");
-        }
-        if(xrequest.getOutputHeaders()!=null && xrequest.getOutputHeaders()) {
-            writer.writeAttribute("outputHeaders", "true");
+        if ( xrequest.getOutput() != null ) { 
+            String outputVal = xrequest.getOutput().value();
+            if(outputVal.equals("headers")){
+                writer.writeAttribute("outputHeaders", "true");
+                writer.writeAttribute("output", "true");
+            } else {
+                writer.writeAttribute("outputHeaders", outputVal);
+            }
         }
         
         writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(xrequest.getUrl())+"\"");

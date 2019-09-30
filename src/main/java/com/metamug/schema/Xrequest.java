@@ -67,12 +67,8 @@ public class Xrequest {
     protected String url;
     @XmlAttribute(name = "method", required = true)
     protected Method method;
-    @XmlAttribute(name = "verbose")
-    protected Boolean verbose;
     @XmlAttribute(name = "output")
-    private Boolean output;
-    @XmlAttribute(name = "outputHeaders")
-    private Boolean outputHeaders;
+    protected XrequestOutput output;
 
     /**
      * Gets the value of the paramOrHeaderOrBody property.
@@ -184,61 +180,22 @@ public class Xrequest {
     }
 
     /**
-     * Gets the value of the verbose property.
-     *
-     * @return possible object is {@link Boolean }
-     *
-     */
-    public Boolean getVerbose() {
-        return verbose;
-    }
-
-    /**
-     * Sets the value of the verbose property.
-     *
-     * @param value allowed object is {@link Boolean }
-     *
-     */
-    public void setVerbose(Boolean value) {
-        this.verbose = value;
-    }
-    /**
      * Gets the value of the output property.
      *
-     * @return possible object is {@link Boolean}.
+     * @return possible object is {@link XrequestOutput}.
      *
      */
-    public Boolean getOutput() {
+    public XrequestOutput getOutput() {
         return output;
     }
 
     /**
      * Sets the value of the verbose property.
      *
-     * @param output allowed object is {@link Boolean}
+     * @param output allowed object is {@link XrequestOutput}
      *
      */
-    public void setOutput(Boolean output) {
+    public void setOutput(XrequestOutput output) {
         this.output = output;
-    }
-    
-    /**
-     * Gets the value of the output property.
-     *
-     * @return possible object is {@link Boolean}.
-     *
-     */
-    public Boolean getOutputHeaders() {
-        return outputHeaders;
-    }
-
-    /**
-     * Sets the value of the verbose property.
-     *
-     * @param outputHeaders allowed object is {@link Boolean}
-     *
-     */
-    public void setOutputHeaders(Boolean outputHeaders) {
-        this.outputHeaders = outputHeaders;
     }
 }
