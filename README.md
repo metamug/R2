@@ -1,4 +1,4 @@
-# openapi-rest
+# openapi-rest-model
 
 Convert [OpenAPI](https://www.openapis.org/) Spec file into [Resource Resource XML](https://metamug.com/docs/resource-file) files.
 This project aims to generate compatible resource xmls for a given spec file json/yml.
