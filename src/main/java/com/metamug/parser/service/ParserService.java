@@ -660,6 +660,10 @@ public class ParserService {
             }
         }
         
+        if ( xrequest.getClassName() != null ) {
+            writer.writeAttribute("className", xrequest.getClassName());
+        }
+        
         writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(xrequest.getUrl())+"\"");
                 
         for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {

@@ -286,6 +286,7 @@
         <xsd:attribute name="method" type="method" use="required"/>
         <xsd:attribute name="verbose" type="xsd:boolean" use="optional"/>
         <xsd:attribute name="output" type="xrequestOutput" use="optional" />
+        <xsd:attribute name="classname" type="className" />
     </xsd:complexType>
 
     <xsd:complexType name="param">

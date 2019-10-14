@@ -69,6 +69,8 @@ public class Xrequest {
     protected Method method;
     @XmlAttribute(name = "output")
     protected XrequestOutput output;
+    @XmlAttribute(name = "classname")
+    protected String className;
 
     /**
      * Gets the value of the paramOrHeaderOrBody property.
@@ -197,5 +199,24 @@ public class Xrequest {
      */
     public void setOutput(XrequestOutput output) {
         this.output = output;
+    }
+    /**
+     * Gets the value of the className property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getClassName() {
+        return className;
+    }
+
+    /**
+     * Sets the value of the className property.
+     *
+     * @param value allowed object is {@link String }
+     *
+     */
+    public void setClassName(String value) {
+        this.className = value;
     }
 }
