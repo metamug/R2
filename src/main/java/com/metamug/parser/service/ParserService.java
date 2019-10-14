@@ -655,8 +655,8 @@ public class ParserService {
             if(outputVal.equals("headers")){
                 writer.writeAttribute("outputHeaders", "true");
                 writer.writeAttribute("output", "true");
-            } else {
-                writer.writeAttribute("outputHeaders", outputVal);
+            } else if(outputVal.equals("true")) {
+                writer.writeAttribute("output", "true");
             }
         }
         
