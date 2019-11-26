@@ -3,14 +3,13 @@
 
     <Request method="GET">
         <XRequest id="xreqvalue" url="https://postman-echo.com/get?foo1=bar1&amp;foo2=bar2"
-                  method="GET" verbose="true" >
+                  method="GET" output="true" >
             <Header name="Accept" value="application/json" />
         </XRequest>
     </Request>
     
     <Request method="POST">
-        <XRequest verbose="true"
-                  id="xreqvalue2" url="https://postman-echo.com/post" method="POST" >
+        <XRequest output="true" id="xreqvalue2" url="https://postman-echo.com/post" method="POST" >
             <Header name="Content-Type" value="application/json"/>
             <Body>
                 {

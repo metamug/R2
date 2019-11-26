@@ -52,23 +52,19 @@
  */
 package com.metamug.parser.service;
 
-import com.metamug.parser.exception.ResourceTestException;
-import java.beans.PropertyVetoException;
+import com.metamug.parser.RPXParser;
+import com.metamug.schema.Request;
+import com.metamug.schema.Resource;
+import com.metamug.schema.Xrequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.io.FilenameUtils;
-import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -76,49 +72,34 @@ import org.xml.sax.SAXException;
  *
  * @author anishhirlekar
  */
-public class ParserServiceTest {
-
+public class MarshalTest {
     private final String outputFolder = "/Users/anishhirlekar/parser-output";
     String appName = "testWebapp";
-    boolean isOldFile = true;  
-    
-    @Ignore
+   
     @Test
-    public void testConcat() {
-        String testQuery = "SELECT * FROM '$name%' WHERE LIKE '%$rating%' name "
-                + "LIKE '%$name% OR %rating AGAIN $var' WHERE 'rating LIKE'";
-        String expected = "SELECT * FROM CONCAT($name,'%') WHERE LIKE CONCAT('%',$rating,'%') name LIKE CONCAT('%',$name,'% OR %rating AGAIN ',$var) WHERE 'rating LIKE'";
-        
-        String processed = ParserService.processVariablesInLikeClause(testQuery);
-        //System.out.println(processed);
-        Assert.assertEquals(expected,processed);
-    }
+    public void unmarshal() {
+        File file = new File(ParserServiceTest.class.getClassLoader().getResource("xrequest.xml").getFile());
 
-    @Ignore
-    @Test
-    public void testParser() {
+        try {
+            System.out.println(file.getName());
 
-        File resDir = new File(ParserServiceTest.class.getClassLoader().getResource(".").getFile());
+            RPXParser parser = new RPXParser(outputFolder, appName, file);
+            Resource res = parser.parseFromXml();
 
-        ParserService parseService = new ParserService();
-
-        for (File file : resDir.listFiles()) {
-            if (FilenameUtils.getExtension(file.toString()).equals("xml")) {
-                try {
-                    System.out.println(file.getName());
-
-                    JSONObject jsonObj = parseService.transform(file, appName, isOldFile, outputFolder, null, null);
-
-                    System.out.println(jsonObj);
-
-                } catch (SAXException | XMLStreamException | XPathExpressionException | ParserConfigurationException
-                        | TransformerException | JAXBException | URISyntaxException | IOException | SQLException
-                        | ClassNotFoundException | PropertyVetoException | ResourceTestException ex) {
-                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+            Request firstReq = res.getRequest().get(0);
+                    
+            
+            Xrequest xreq = (Xrequest)firstReq.getParamOrSqlOrExecuteOrXrequestOrScript().get(0);
+                    
+            System.out.println(xreq.getId());
+            
+            String outputXmlFile = outputFolder+File.separator+"unmarshalled"+File.separator+file.getName();
+            
+            parser.marshalToXml(res, outputXmlFile);
+                    
+        } catch (SAXException | XMLStreamException | XPathExpressionException | TransformerException | JAXBException | URISyntaxException | IOException ex) {
+            Logger.getLogger(MarshalTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+            
     }
-    
-    
 }

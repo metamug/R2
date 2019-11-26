@@ -57,6 +57,7 @@ import com.metamug.schema.Resource;
 import com.metamug.xslttransformer.XslTransformer;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -64,6 +65,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
@@ -122,5 +124,19 @@ public class RPXParser {
         new DocGenerator().generate(appDirectory + File.separator + appName);
 
         return resource;
+    }
+    
+    public void marshalToXml(Resource resource, String xmlFilePath) throws JAXBException, FileNotFoundException, IOException {
+        File file = new File(xmlFilePath);
+        if(!file.exists()){
+            file.createNewFile();
+        }
+        
+        JAXBContext contextObj = JAXBContext.newInstance(Resource.class);  
+  
+        Marshaller marshallerObj = contextObj.createMarshaller();  
+        marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);  
+
+        marshallerObj.marshal(resource, new FileOutputStream(xmlFilePath));  
     }
 }

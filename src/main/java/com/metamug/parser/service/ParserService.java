@@ -425,7 +425,6 @@ public class ParserService {
             }
 
             writer.writeCharacters(System.lineSeparator());
-
             if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("update")) {
                 writer.writeStartElement("sql:update");
             } else {
