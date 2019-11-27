@@ -52,6 +52,7 @@
  */
 package com.metamug.parser.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.metamug.schema.Method;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
@@ -60,15 +61,22 @@ import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import java.util.HashMap;
 import java.util.Map;
-
+import io.swagger.util.Json;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author anishhirlekar
  */
 public class OpenAPIService {
     
+    public static String generateSpec(OpenAPI openAPI) throws JsonProcessingException{
+        return Json.mapper().writeValueAsString(openAPI);
+    }
+    
     public static Map<String,Resource> getResources(String specUri){
         OpenAPI openAPI = new OpenAPIV3Parser().read("https://petstore3.swagger.io/api/v3/openapi.json");
+        
         
         Map<String,Resource> resources = new HashMap<>();
         

@@ -67,8 +67,10 @@ import org.junit.Test;
  */
 public class OpenAPIServiceTest {
     private final String outputFolder = "/Users/anishhirlekar/parser-output/openApiUnmarshalled";
+    
+    
     @Test
-    public void test(){
+    public void parseSpec(){
         String specUri = "https://petstore3.swagger.io/api/v3/openapi.json";
         Map<String,Resource> resources = OpenAPIService.getResources(specUri);
                 
