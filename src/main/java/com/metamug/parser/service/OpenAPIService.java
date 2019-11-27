@@ -52,54 +52,44 @@
  */
 package com.metamug.parser.service;
 
-import com.metamug.parser.RPXParser;
-import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
-import com.metamug.schema.Xrequest;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpressionException;
-import org.junit.Test;
-import org.xml.sax.SAXException;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.parser.OpenAPIV3Parser;
+import java.util.Map;
 
 /**
  *
  * @author anishhirlekar
  */
-public class MarshalTest {
-    private final String outputFolder = "/Users/anishhirlekar/parser-output";
-    String appName = "testWebapp";
-   
-    @Test
-    public void unmarshal() {
-        File file = new File(ParserServiceTest.class.getClassLoader().getResource("xrequest.xml").getFile());
-
-        try {
-            System.out.println(file.getName());
-
-            RPXParser parser = new RPXParser(outputFolder, appName, file);
-            Resource res = parser.parseFromXml();
-
-            Request firstReq = res.getRequest().get(0);
-                    
+public class OpenAPIService {
+    public static Map<String,Resource> getResources(String specUri){
+        OpenAPI openAPI = new OpenAPIV3Parser().read("https://petstore3.swagger.io/api/v3/openapi.json");
+      
+        openAPI.getPaths().entrySet().forEach( entry -> {
+            String path = entry.getKey();
+            PathItem pathItem = entry.getValue();
             
-            Xrequest xreq = (Xrequest)firstReq.getParamOrSqlOrExecuteOrXrequestOrScript().get(0);
-                    
-            System.out.println(xreq.getId());
-            
-            String outputXmlFile = outputFolder+File.separator+"unmarshalled"+File.separator+file.getName();
-            
-            parser.marshalToXml(res, outputXmlFile);
-                    
-        } catch (SAXException | XMLStreamException | XPathExpressionException | TransformerException | JAXBException | URISyntaxException | IOException ex) {
-            Logger.getLogger(MarshalTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
+            String method = null;
+            if (path.equals("/pet")) {
+                if(null!=pathItem.getGet()){
+                    method = "GET";
+                    System.out.println(method);
+                }
+                if(null!=pathItem.getPost()){
+                    method = "POST";
+                    System.out.println(method);
+                }
+                if(null!=pathItem.getPut()){
+                    method = "PUT";
+                    System.out.println(method);
+                }
+                if(null!=pathItem.getDelete()){                    
+                    method = "DELETE";
+                    System.out.println(method);
+                }
+            }
+        });
+        return null;
     }
 }

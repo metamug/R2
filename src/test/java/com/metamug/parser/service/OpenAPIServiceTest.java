@@ -50,158 +50,20 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.jaxb.tests;
+package com.metamug.parser.service;
 
-import com.metamug.parser.RPXParser;
-import com.metamug.schema.Execute;
-import com.metamug.schema.Param;
-import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
-import com.metamug.schema.Sql;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpressionException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
+import java.util.Map;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
 /**
  *
- * @author deepak+anish
+ * @author anishhirlekar
  */
-public class XSDValidationTest {
-
-    private static String XML_FILE_PATH;
-
-    private static String RES_VER, RES_DESC, RES_ID, RES_PARENT, RES_IS_AUTH;
-
-    private static String EXEC_CLASS, EXEC_REQUIRES;
-
-    private static String REQ_METHOD, REQ_DESC;
-
-    private static String PARAM_NAME;
-
-    private static String[] testArray;
-    private static RPXParser parser;
-    private File resourceFile;
-
-    @Before
-    public void init() {
-        XML_FILE_PATH = "/test.xml";
-        resourceFile = new File(this.getClass().getResource(XML_FILE_PATH).getFile());
-        parser = new RPXParser("/opt/tomcat8/api", "testApp", resourceFile);
-
-        RES_VER = "1.0";
-        RES_DESC = "This works";
-        RES_ID = "testIdString";
-        RES_PARENT = "exam";
-        RES_IS_AUTH = "true";
-
-        EXEC_CLASS = "execute_classname";
-        EXEC_REQUIRES = "param1";
-
-        REQ_METHOD = "POST";
-        REQ_DESC = "POST Desc 1";
-
-        PARAM_NAME = "param1";
-
-        testArray = new String[]{RES_VER, RES_DESC, RES_ID, RES_PARENT, RES_IS_AUTH,
-            REQ_METHOD, REQ_DESC, PARAM_NAME, EXEC_CLASS, EXEC_REQUIRES};
-    }
-
-    //validate xml against xsd
-    //yet to add validation code for param validation
+public class OpenAPIServiceTest {
     @Test
-    public void testValidation1() throws IOException, URISyntaxException {
-        try {
-            Resource rs = parser.parseFromXml();
-            //System.out.println(rs);
-            String resourceVersion = Double.toString(rs.getVersion());
-            String method = null;
-            String reqDesc = null;
-            String paramName = null;
-            String execClass = null, execReq = null;
-
-            List<Request> requests = rs.getRequest();
-            if (!requests.isEmpty()) {
-                for (Request request : requests) {
-                    List paramOrSqlOrExecute = request.getParamOrSqlOrExecuteOrXrequestOrScript();
-                    for (Object o: paramOrSqlOrExecute) {
-//                      System.out.println(object.getClass());
-                        if(o instanceof Execute){
-                            execClass = ((Execute)o).getClassName();
-                            execReq = ((Execute)o).getRequires();
-                        } 
-                    }
-                    reqDesc = request.getDesc();
-                    method = request.getMethod().value();
-                    for (Param p : request.getParam()) {
-                        paramName = p.getName();
-                        System.out.println(paramName);
-                    }
-                }
-            } else {
-                Assert.fail("No <Request> element found!");
-            }
-            String[] resultArray = new String[]{resourceVersion, rs.getDesc(), rs.getId(), rs.getParent(),
-                method, reqDesc, paramName, execClass, execReq};
-            Assert.assertArrayEquals(testArray, resultArray);
-
-        } catch (JAXBException ex) {
-            Assert.fail(ex.toString());
-        } catch (SAXException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (FileNotFoundException | XMLStreamException | XPathExpressionException | TransformerException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Ignore
-    @Test
-    public void TestValidation2() {
-        try {
-            resourceFile = new File(this.getClass().getResource("/movies.xml").getFile());
-            parser = new RPXParser("/opt/tomcat8/api", "testApp", resourceFile);
-            Resource rs = parser.parseFromXml();
-            String[] expectedResultArray = new String[]{"1.1"};
-            String[] resultArray = new String[]{Double.toString(rs.getVersion())};
-            Assert.assertArrayEquals(expectedResultArray, resultArray);
-        } catch (JAXBException ex) {
-            Assert.fail(ex.toString());
-        } catch (SAXException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (IOException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (XMLStreamException | XPathExpressionException | TransformerException | URISyntaxException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Ignore
-    @Test
-    public void TestValidation3() {
-        try {
-            resourceFile = new File(this.getClass().getResource("/apple.xml").getFile());
-            parser = new RPXParser("/opt/tomcat8/api", "testApp", resourceFile);
-            Resource rs = parser.parseFromXml();
-        } catch (JAXBException ex) {
-            Assert.fail(ex.toString());
-        } catch (SAXException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (IOException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (XMLStreamException | XPathExpressionException | TransformerException | URISyntaxException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
-        }
+    public void test(){
+        String specUri = "https://petstore3.swagger.io/api/v3/openapi.json";
+        Map<String,Resource> resources = OpenAPIService.getResources(specUri);
     }
 }
