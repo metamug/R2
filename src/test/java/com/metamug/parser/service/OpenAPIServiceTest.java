@@ -52,8 +52,13 @@
  */
 package com.metamug.parser.service;
 
+import com.metamug.parser.RPXParser;
 import com.metamug.schema.Resource;
+import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.bind.JAXBException;
 import org.junit.Test;
 
 /**
@@ -61,9 +66,27 @@ import org.junit.Test;
  * @author anishhirlekar
  */
 public class OpenAPIServiceTest {
+    private final String outputFolder = "/Users/anishhirlekar/parser-output/openApiUnmarshalled";
     @Test
     public void test(){
         String specUri = "https://petstore3.swagger.io/api/v3/openapi.json";
         Map<String,Resource> resources = OpenAPIService.getResources(specUri);
+                
+        RPXParser parser = new RPXParser(outputFolder, "testWebapp", null);
+        
+        resources.forEach( (key,value) -> {
+            try {
+                String resourceName = key;
+                if(key.equals("/pet")){
+                    Resource resource = value;
+                    String outputXmlFile = outputFolder+resourceName+".xml";
+                    System.out.println(resourceName);
+                    System.out.println(outputXmlFile);
+                    parser.marshalToXml(resource, outputXmlFile);
+                }
+            } catch (JAXBException | IOException ex) {
+                Logger.getLogger(OpenAPIServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
 }

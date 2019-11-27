@@ -79,6 +79,10 @@ public class Resource {
         }
         return this.request;
     }
+    
+    public void addRequest(Request request) {
+        getRequest().add(request);
+    }
 
     /**
      * Gets the value of the version property.

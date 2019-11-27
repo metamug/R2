@@ -52,10 +52,13 @@
  */
 package com.metamug.parser.service;
 
+import com.metamug.schema.Method;
+import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.parser.OpenAPIV3Parser;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -63,33 +66,55 @@ import java.util.Map;
  * @author anishhirlekar
  */
 public class OpenAPIService {
+    
     public static Map<String,Resource> getResources(String specUri){
         OpenAPI openAPI = new OpenAPIV3Parser().read("https://petstore3.swagger.io/api/v3/openapi.json");
-      
+        
+        Map<String,Resource> resources = new HashMap<>();
+        
         openAPI.getPaths().entrySet().forEach( entry -> {
+            
             String path = entry.getKey();
             PathItem pathItem = entry.getValue();
+            Resource resource = new Resource();
             
-            String method = null;
-            if (path.equals("/pet")) {
-                if(null!=pathItem.getGet()){
-                    method = "GET";
-                    System.out.println(method);
-                }
-                if(null!=pathItem.getPost()){
-                    method = "POST";
-                    System.out.println(method);
-                }
-                if(null!=pathItem.getPut()){
-                    method = "PUT";
-                    System.out.println(method);
-                }
-                if(null!=pathItem.getDelete()){                    
-                    method = "DELETE";
-                    System.out.println(method);
-                }
+            resource.setVersion(1.0);
+            
+            if(null!=pathItem.getGet()){
+                //create Request object
+                Request request = new Request();
+                request.setMethod(Method.GET);
+                    
+                //System.out.println(request.getMethod().value());
+                resource.addRequest(request);
             }
+            if(null!=pathItem.getPost()){
+                //create Request object
+                Request request = new Request();
+                request.setMethod(Method.POST);
+                    
+                //System.out.println(request.getMethod().value());
+                resource.addRequest(request);
+            }
+            if(null!=pathItem.getPut()){                       
+                //create Request object
+                Request request = new Request();
+                request.setMethod(Method.PUT);
+                    
+                //System.out.println(request.getMethod().value());
+                resource.addRequest(request);
+            }
+            if(null!=pathItem.getDelete()){  
+                //create Request object
+                Request request = new Request();
+                request.setMethod(Method.DELETE);
+                    
+                //System.out.println(request.getMethod().value());
+                resource.addRequest(request);
+            }
+            
+            resources.put(path, resource);
         });
-        return null;
+        return resources;
     }
 }
