@@ -270,7 +270,7 @@ public class ParserService {
         writer.writeEmptyElement("m:header");
         writer.writeAttribute("name", header.getName());
                 
-        String value = header.getValue();
+        String value = transformVariables(header.getValue(),elementIds,true);
         writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"");
     }
     

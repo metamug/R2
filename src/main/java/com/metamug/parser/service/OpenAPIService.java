@@ -62,8 +62,6 @@ import io.swagger.v3.parser.OpenAPIV3Parser;
 import java.util.HashMap;
 import java.util.Map;
 import io.swagger.util.Json;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  *
  * @author anishhirlekar
@@ -76,8 +74,15 @@ public class OpenAPIService {
     
     public static Map<String,Resource> getResources(String specUri){
         OpenAPI openAPI = new OpenAPIV3Parser().read("https://petstore3.swagger.io/api/v3/openapi.json");
-        
-        
+        /*
+        String jsonSpec;
+        try {
+            jsonSpec = generateSpec(openAPI);
+            System.out.println(jsonSpec);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(OpenAPIService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        */
         Map<String,Resource> resources = new HashMap<>();
         
         openAPI.getPaths().entrySet().forEach( entry -> {
