@@ -113,10 +113,6 @@
                             <xsd:attribute name="status" type="status"/>
                             <xsd:attribute name="item" type="xsd:boolean" default="false"/>
                         </xsd:complexType>
-                        <xsd:unique name="uniqueWhen">
-                            <xsd:selector xpath="mtmg:*"/>
-                            <xsd:field xpath="@when"/>
-                        </xsd:unique>
                     </xsd:element>
                 </xsd:choice>
             </xsd:sequence>
