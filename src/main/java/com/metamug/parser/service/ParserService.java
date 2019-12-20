@@ -282,9 +282,13 @@ public class ParserService {
         }
         writer.writeCharacters(System.lineSeparator());
         
-        String value = transformVariables(txt.getValue(),elementIds,true);
+        String value = transformVariables(txt.getValue(),elementIds,true).trim();
         
-        printCSet(writer,enclose(MASON_OUTPUT),txt.getId(),value.trim());
+        printPageScopeCSet(writer, txt.getId(), value);
+        
+        if(txt.isOutput()){
+            printTargetCSet(writer, enclose(MASON_OUTPUT), txt.getId(), enclose(txt.getId()) );
+        }
         
         if (txt.getWhen() != null) {
             writer.writeEndElement();
@@ -480,7 +484,7 @@ public class ParserService {
         } else{
             //if no classname and verbose, print <c:set>
             if(verbose)
-                printCSet(writer,enclose(MASON_OUTPUT),var,enclose(var)); 
+                printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclose(var)); 
         }
         
         if (sql.getWhen() != null) {
@@ -488,10 +492,21 @@ public class ParserService {
         }
     }
     
-    protected void printCSet(XMLStreamWriter writer, String target, String property, String value) throws XMLStreamException{
+    protected void printTargetCSet(XMLStreamWriter writer, String target, String property, String value) throws XMLStreamException{
         writer.writeEmptyElement("c:set");
         writer.writeAttribute("target", target);
         writer.writeAttribute("property", property);
+        writer.writeAttribute("value", value);
+    }
+    
+    protected void printPageScopeCSet(XMLStreamWriter writer, String var, String value) throws XMLStreamException{
+        printScopeCSet(writer,"page",var,value);
+    }
+    
+    protected void printScopeCSet(XMLStreamWriter writer, String scope, String var, String value) throws XMLStreamException{
+        writer.writeEmptyElement("c:set");
+        writer.writeAttribute("var", var);
+        writer.writeAttribute("scope", scope);    
         writer.writeAttribute("value", value);
     }
 
