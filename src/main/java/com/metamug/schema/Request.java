@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
     "transaction",
     "xrequest",
     "script",
-    "output"
+    "text"
 })
 public class Request {
 
@@ -42,7 +42,7 @@ public class Request {
     protected List<Execute> execute;
     protected List<Xrequest> xrequest;
     protected List<Script> script;
-    protected List<Output> output;
+    protected List<Text> text;
     protected List<Transaction> transaction;
     protected List<Sql> sql;
     
@@ -54,7 +54,7 @@ public class Request {
         @XmlElement(name = "Execute", type = Execute.class),
         @XmlElement(name = "XRequest", type = Xrequest.class),
         @XmlElement(name = "Script", type = Script.class),
-        @XmlElement(name = "Output", type = Output.class)
+        @XmlElement(name = "Text", type = Text.class)
     })
     protected List paramOrSqlOrExecuteOrXrequestOrScript;
 

@@ -58,7 +58,7 @@ import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.util.Utils;
 import com.metamug.schema.Arg;
 import com.metamug.schema.Execute;
-import com.metamug.schema.Output;
+import com.metamug.schema.Text;
 import com.metamug.schema.Param;
 import com.metamug.schema.Request;
 import com.metamug.schema.Resource;
@@ -257,10 +257,10 @@ public class ParserService {
                 printScriptTag(sc, writer);
             } else if(object instanceof Transaction){
                 printTransaction((Transaction)object,writer,domain);
-            } else if(object instanceof Output){
-                Output op = (Output)object;
-                elementIds.put(op.getId(), Output.class.getName());
-                printOutputTag(op,writer);
+            } else if(object instanceof Text){
+                Text txt = (Text)object;
+                elementIds.put(txt.getId(), Text.class.getName());
+                printTextTag(txt,writer);
             }
         }
     }
@@ -274,19 +274,19 @@ public class ParserService {
         writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"");
     }
     
-    protected void printOutputTag(Output output, XMLStreamWriter writer) throws XMLStreamException, ResourceTestException, IOException{
-        if (output.getWhen() != null) {
+    protected void printTextTag(Text txt, XMLStreamWriter writer) throws XMLStreamException, ResourceTestException, IOException{
+        if (txt.getWhen() != null) {
             writer.writeStartElement("c:if");
-            String test = transformVariables(output.getWhen(),elementIds,false);
+            String test = transformVariables(txt.getWhen(),elementIds,false);
             writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"");
         }
         writer.writeCharacters(System.lineSeparator());
         
-        String value = transformVariables(output.getValue(),elementIds,true);
+        String value = transformVariables(txt.getValue(),elementIds,true);
         
-        printCSet(writer,enclose(MASON_OUTPUT),output.getId(),value.trim());
+        printCSet(writer,enclose(MASON_OUTPUT),txt.getId(),value.trim());
         
-        if (output.getWhen() != null) {
+        if (txt.getWhen() != null) {
             writer.writeEndElement();
         }
     }
