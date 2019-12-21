@@ -81,7 +81,6 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -797,188 +796,17 @@ public class ParserService {
             requestParams.add(query.substring(match.start(1), match.end(1)).trim());
         }
         //collect Mpath variables
-        collectMPathParams(mPathParams,query, elementIds);
+        ParserServiceUtil.collectMPathParams(mPathParams,query, elementIds);
     }
     
-    public static String getMPathId(String path){
-        Pattern p = Pattern.compile("^\\$\\[(.*?)\\]");// $[varname]
-
-        Matcher m = p.matcher(path);
-        
-        while(m.find()) {
-            return m.group(1);
-        }
-        
-        return null;
-    }
-    
-    protected static String getMPathLocator(String path){
-        return path.replaceFirst("\\$\\[(.*?)\\]","");
-    }
     
     protected String transformVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException{
-        input = transformRequestVariables(input,enclose);
-        input = transformMPathVariables(input, elementIds, enclose);
+        input = ParserServiceUtil.transformRequestVariables(input,enclose);
+        input = ParserServiceUtil.transformMPathVariables(input, elementIds, enclose);
         return input;
     }
     
-    protected static String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
-        String tv = mpathVariable;
-        
-        StringBuilder sb = new StringBuilder();
-        if(enclose){
-            sb.append("${");
-        }
-        
-        if(type.equals(Sql.class.getName())) {
-            // id.rows[0].name
-            String rowIndex = "0";
-            String colName = null;
-
-            Pattern p = Pattern.compile("^\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)$");
-            Matcher m = p.matcher(mpathVariable);
-
-            if(m.find()) {
-                rowIndex = m.group(2);
-                colName = m.group(3);
-            }
-                
-            tv = elementId+".rows"+"["+rowIndex+"]."+colName;
-              
-        }else if(type.equals(Xrequest.class.getName())){
-            // m:jsonPath('$.body.args.foo1',bus['id'])
-            String locator = getMPathLocator(mpathVariable);
-                
-            tv = "m:jsonPath('$"+locator+"',"+elementId+")";
-        }else if(type.equals(Execute.class.getName())){
-                // ${bus[id].name}
-                String locator = getMPathLocator(mpathVariable);
-                tv = elementId+locator;
-        }else if(type.equals(UPLOAD_OBJECT)){
-            tv = elementId;
-        }
-        
-        sb.append(tv);
-        
-        if(enclose){
-            sb.append("}");
-        }
-        
-        return sb.toString();
-    }
     
-    //collects MPath variables for sql:param tags
-    protected static void collectMPathParams(LinkedList<String> params,String sql, Map<String,String> elementIds) throws ResourceTestException {
-        Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
-        Matcher matcher = pattern.matcher(sql);
-        
-        while (matcher.find()) {
-            params.add(sql.substring(matcher.start(), matcher.end()).trim());
-        }
-    }
-    
-    //transforms MPath variables in given string
-    protected static String transformMPathVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException {
-        String transformed = input;
-        Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
-        Matcher matcher = pattern.matcher(input);
-        while (matcher.find()) {
-            String mpathVariable = input.substring(matcher.start(), matcher.end()).trim();
-            //get element id from mpath variable
-            String elementId = getMPathId(mpathVariable);
-            
-            if(!elementIds.containsKey(elementId)){
-                throw new ResourceTestException("Could not find element with ID: "+elementId);
-            }
-            //get type of element
-            String type = elementIds.get(elementId);
-            String tv = getJspVariableForMPath(mpathVariable, type, elementId, enclose);
-            
-            transformed = transformed.replace(mpathVariable, tv);
-        }
-       
-        return transformed;
-    }
-    
-    //transforms request variables in given string
-    protected static String transformRequestVariables(String input, boolean enclose) {
-        String output = input;
-        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
-        Matcher matcher = pattern.matcher(input);
-        while (matcher.find()) {
-            String v = input.substring(matcher.start(1), matcher.end(1)).trim();
-            String tv;
-            StringBuilder sb = new StringBuilder();
-            if(enclose){
-                sb.append("${");
-            }
-            switch (v) {
-                case "id":
-                    tv = "mtgReq.id";
-                    break;
-                case "pid":
-                    tv = "mtgReq.pid";
-                    break;
-                case "uid":
-                    tv = "mtgReq.uid";
-                    break;
-                default:
-                    tv = "mtgReq.params['" + v + "']";
-            }
-            sb.append(tv);
-            
-            if(enclose){
-                sb.append("}");
-            }
-            
-            output = output.replace("$"+v, sb.toString());
-        }
-       
-        return output;
-    }
-
-    // '%$variable%' => CONCAT('%',$variable,'%')
-    public static String processVariablesInLikeClause(String q) {
-        Pattern quotePattern = Pattern.compile("'(.*?)'");
-        Matcher quotedSubstringMatcher = quotePattern.matcher(q);
-        while (quotedSubstringMatcher.find()) {
-            String stringWithinQuotes = quotedSubstringMatcher.group(1);
-
-            Pattern varPattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
-            Matcher matcher = varPattern.matcher(stringWithinQuotes);
-
-            StringBuilder builder = new StringBuilder();
-            String succedent = stringWithinQuotes;
-
-            builder.append("CONCAT(");
-            List<String> args = new ArrayList();
-            boolean variableFound = false;
-            while (matcher.find()) {
-                variableFound = true;
-                String variable = matcher.group(1);
-
-                if (!args.isEmpty()) {
-                    args.remove(args.size() - 1);
-                }
-                String precedent = succedent.substring(0, succedent.length() - stringWithinQuotes.length() + matcher.start());
-                if (!"".equals(precedent)) {
-                    args.add("'" + precedent + "'");
-                }
-                args.add("$" + variable);
-                succedent = succedent.substring(succedent.length() - stringWithinQuotes.length() + matcher.end(), succedent.length());
-                if (!"".equals(succedent)) {
-                    args.add("'" + succedent + "'");
-                }
-            }
-
-            builder.append(String.join(",", args));
-            builder.append(")");
-            if (variableFound) {
-                q = q.replace("'" + stringWithinQuotes + "'", builder.toString());
-            }
-        }
-        return q;
-    }
     
     protected String getSqlParams(Sql sql, HashMap<String,String> elementIds) throws ResourceTestException{
         this.elementIds = elementIds;
@@ -994,7 +822,7 @@ public class ParserService {
         
         String processedQuery = query;
         if (processedQuery.toLowerCase().contains(" like ")) {
-            processedQuery = processVariablesInLikeClause(processedQuery);
+            processedQuery = ParserServiceUtil.processVariablesInLikeClause(processedQuery);
         }
         
         String wildcardQry = processedQuery.replaceAll(REQUEST_PARAM_PATTERN, "? ");
@@ -1030,14 +858,16 @@ public class ParserService {
                         String mpathParam = mpathParams.getFirst();
                         mpathParams.removeFirst();
                         
-                        String elementId = getMPathId(mpathParam);
+                        String elementId = ParserServiceUtil.getMPathId(mpathParam);
                         if(!elementIds.containsKey(elementId)){
                             throw new ResourceTestException("Could not find element with ID: "+elementId);
                         }
                         //get type of element
                         String type = elementIds.get(elementId);
                         
-                        builder.append("<sql:param value=\"").append(getJspVariableForMPath(mpathParam,type,elementId,true)).append("\"/>");
+                        builder.append("<sql:param value=\"");
+                        builder.append(ParserServiceUtil.getJspVariableForMPath(mpathParam,type,elementId,true));
+                        builder.append("\"/>");
                         builder.append(System.lineSeparator());
                     }             
             }

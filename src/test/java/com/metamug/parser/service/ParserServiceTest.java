@@ -89,7 +89,7 @@ public class ParserServiceTest {
                 + "LIKE '%$name% OR %rating AGAIN $var' WHERE 'rating LIKE'";
         String expected = "SELECT * FROM CONCAT($name,'%') WHERE LIKE CONCAT('%',$rating,'%') name LIKE CONCAT('%',$name,'% OR %rating AGAIN ',$var) WHERE 'rating LIKE'";
         
-        String processed = ParserService.processVariablesInLikeClause(testQuery);
+        String processed = ParserServiceUtil.processVariablesInLikeClause(testQuery);
         //System.out.println(processed);
         Assert.assertEquals(expected,processed);
     }

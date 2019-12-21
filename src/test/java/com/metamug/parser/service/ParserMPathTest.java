@@ -53,6 +53,7 @@
 package com.metamug.parser.service;
 
 import com.metamug.parser.exception.ResourceTestException;
+import static com.metamug.parser.service.ParserServiceUtil.getMPathId;
 import com.metamug.schema.Execute;
 import com.metamug.schema.Sql;
 import com.metamug.schema.Xrequest;
@@ -89,10 +90,10 @@ public class ParserMPathTest {
             "$[res].id.name","$[res][0].rating"};
         String[] expected = {"xreq","xreq","res","res"};
         
-        Assert.assertEquals(ParserService.getMPathId(paths[0]),expected[0]);
-        Assert.assertEquals(ParserService.getMPathId(paths[1]),expected[1]);
-        Assert.assertEquals(ParserService.getMPathId(paths[2]),expected[2]);
-        Assert.assertEquals(ParserService.getMPathId(paths[3]),expected[3]);        
+        Assert.assertEquals(getMPathId(paths[0]),expected[0]);
+        Assert.assertEquals(getMPathId(paths[1]),expected[1]);
+        Assert.assertEquals(getMPathId(paths[2]),expected[2]);
+        Assert.assertEquals(getMPathId(paths[3]),expected[3]);        
     }
     
     @Test
@@ -150,7 +151,7 @@ public class ParserMPathTest {
 "                    \"foo2\": ${sqlresult.rows[0].rating}\"\n" +
 "                }";
         try {
-            String output = ParserService.transformMPathVariables(input, elementIds,true);
+            String output = ParserServiceUtil.transformMPathVariables(input, elementIds,true);
             //System.out.println(output);
             Assert.assertEquals(output,expected);
         } catch (ResourceTestException ex) {
@@ -172,7 +173,7 @@ public class ParserMPathTest {
 "                   \"foo3\": ${exec.contact.phone}\"\n" +
 "               }";
         try {
-            String output = ParserService.transformMPathVariables(input, elementIds,true);
+            String output = ParserServiceUtil.transformMPathVariables(input, elementIds,true);
             //System.out.println(output);
             Assert.assertEquals(output,expected);
         } catch (ResourceTestException ex) {
@@ -187,7 +188,7 @@ public class ParserMPathTest {
         String expected = "SELECT ${m:jsonPath('$.body.args.foo1',xreq)},${m:jsonPath('$.body.args[2].foo[0].bar',xreq)} AS 'foo1'";
         
         try {
-            String output = ParserService.transformMPathVariables(input, elementIds,true);
+            String output = ParserServiceUtil.transformMPathVariables(input, elementIds,true);
         
             Assert.assertEquals(output,expected);
         } catch (ResourceTestException ex) {
@@ -201,7 +202,7 @@ public class ParserMPathTest {
         String input = "SELECT $[invalidId].body.args.foo1,$[xreq].body.args[2].foo[0].bar AS 'foo1'";
         
         try {
-            String output = ParserService.transformMPathVariables(input, elementIds,true);
+            String output = ParserServiceUtil.transformMPathVariables(input, elementIds,true);
             //Assert.assertEquals(output,null);
         } catch (ResourceTestException ex) {
             //Logger.getLogger(ParserMPathTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -214,7 +215,7 @@ public class ParserMPathTest {
         String input = "SELECT $[_upload],$[xreq].body.args[2].foo[0].bar AS 'foo1'";
             
         try {
-            String o = ParserService.transformMPathVariables(input, elementIds,true);
+            String o = ParserServiceUtil.transformMPathVariables(input, elementIds,true);
             Assert.assertEquals("SELECT ${_upload},${m:jsonPath('$.body.args[2].foo[0].bar',xreq)} AS 'foo1'", o);
             //System.out.println("Hello: "+o);
         } catch (ResourceTestException ex) {
