@@ -58,6 +58,7 @@ import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
 import static com.metamug.parser.service.ParserService.UPLOAD_OBJECT;
 import com.metamug.schema.Execute;
 import com.metamug.schema.Sql;
+import com.metamug.schema.Text;
 import com.metamug.schema.Xrequest;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -109,10 +110,10 @@ public class ParserServiceUtil {
     }
     
     protected static String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
-        String tv = mpathVariable;
+        String transformedVariable = mpathVariable;
         
         StringBuilder sb = new StringBuilder();
-        if(enclose){
+        if(enclose) {
             sb.append("${");
         }
         
@@ -128,23 +129,31 @@ public class ParserServiceUtil {
                 rowIndex = m.group(2);
                 colName = m.group(3);
             }
-                
-            tv = elementId+".rows"+"["+rowIndex+"]."+colName;
+            //System.out.println("Sql");
+            //System.out.println("elementId: "+elementId);
+            transformedVariable = elementId+".rows"+"["+rowIndex+"]."+colName;
               
         }else if(type.equals(Xrequest.class.getName())){
             // m:jsonPath('$.body.args.foo1',bus['id'])
             String locator = getMPathLocator(mpathVariable);
                 
-            tv = "m:jsonPath('$"+locator+"',"+elementId+")";
-        }else if(type.equals(Execute.class.getName())){
-                // ${bus[id].name}
-                String locator = getMPathLocator(mpathVariable);
-                tv = elementId+locator;
-        }else if(type.equals(UPLOAD_OBJECT)){
-            tv = elementId;
+            transformedVariable = "m:jsonPath('$"+locator+"',"+elementId+")";
+            
+        } else if(type.equals(Execute.class.getName())){
+            // bus[id].name
+            String locator = getMPathLocator(mpathVariable);
+            transformedVariable = elementId+locator;
+            
+        } else if(type.equals(Text.class.getName())){
+            //System.out.println("Text");
+            //System.out.println("elementId: "+elementId);
+            transformedVariable = elementId;
+            
+        } else if(type.equals(UPLOAD_OBJECT)){
+            transformedVariable = elementId;
         }
         
-        sb.append(tv);
+        sb.append(transformedVariable);
         
         if(enclose){
             sb.append("}");
