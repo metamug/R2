@@ -68,7 +68,7 @@ import javax.xml.transform.stream.StreamSource;
 public class XslTransformer {
 
     public static void transform(File xmlFile, InputStream xslFile, File htmlFile)
-            throws TransformerConfigurationException, TransformerException {
+            throws TransformerException {
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
         TransformerFactory factory = TransformerFactory.newInstance();
         StreamSource xslStream = new StreamSource(XslTransformer.class.getClassLoader().getResourceAsStream("resource.xsl"));

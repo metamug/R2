@@ -124,7 +124,7 @@ public class XSDValidationTest {
     @Test
     public void testValidation1() throws IOException, URISyntaxException {
         try {
-            Resource rs = parser.parseFromXml();
+            Resource rs = parser.parse();
             //System.out.println(rs);
             String resourceVersion = Double.toString(rs.getVersion());
             String method = null;
@@ -172,7 +172,7 @@ public class XSDValidationTest {
         try {
             resourceFile = new File(this.getClass().getResource("/movies.xml").getFile());
             parser = new RPXParser("/opt/tomcat8/api", "testApp", resourceFile);
-            Resource rs = parser.parseFromXml();
+            Resource rs = parser.parse();
             String[] expectedResultArray = new String[]{"1.1"};
             String[] resultArray = new String[]{Double.toString(rs.getVersion())};
             Assert.assertArrayEquals(expectedResultArray, resultArray);
@@ -193,7 +193,7 @@ public class XSDValidationTest {
         try {
             resourceFile = new File(this.getClass().getResource("/apple.xml").getFile());
             parser = new RPXParser("/opt/tomcat8/api", "testApp", resourceFile);
-            Resource rs = parser.parseFromXml();
+            Resource rs = parser.parse();
         } catch (JAXBException ex) {
             Assert.fail(ex.toString());
         } catch (SAXException ex) {

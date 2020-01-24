@@ -80,7 +80,7 @@ public class DocGenerator {
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
     XMLStreamWriter writer;
 
-    public void generate(String appDirectory) throws FileNotFoundException, XMLStreamException, IOException, XPathExpressionException {
+    public void generate(String appDirectory) throws XMLStreamException, IOException, XPathExpressionException {
         try {
             List<File> htmlFilenameList = new ArrayList<>();
             File docsDirectory = new File(appDirectory + "/docs");

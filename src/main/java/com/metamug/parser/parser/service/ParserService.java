@@ -71,7 +71,6 @@ import com.metamug.parser.schema.Xrequest;
 import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
 import java.beans.PropertyVetoException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -130,7 +129,7 @@ public class ParserService {
     public static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
 
     public JSONObject transform(File uploadedFile, String appName, boolean updateResource, String outputFolder,
-            String domain, JSONObject queryMap) throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException,
+            String domain, JSONObject queryMap) throws SAXException, XMLStreamException,
             XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
             URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
         this.appName = appName;
@@ -140,7 +139,7 @@ public class ParserService {
         OUTPUT_FOLDER = outputFolder;
 
         RPXParser parser = new RPXParser(OUTPUT_FOLDER, appName, uploadedFile);
-        Resource parsedResource = parser.parseFromXml();
+        Resource parsedResource = parser.parse();
 
         this.resourceVersion = parsedResource.getVersion();
 
@@ -164,7 +163,7 @@ public class ParserService {
     }
 
     public Resource createJsp(Resource resource, File resourceFile, boolean updateResource, String domain)
-            throws JAXBException, SAXException, IOException, FileNotFoundException, XPathExpressionException,
+            throws JAXBException, SAXException, IOException, XPathExpressionException,
             TransformerException, URISyntaxException, XMLStreamException, ResourceTestException {
 
         String resourceDir = OUTPUT_FOLDER + File.separator + appName + File.separator
@@ -731,7 +730,7 @@ public class ParserService {
     }
     
     protected String escapeSpecialCharacters(String input){
-        String lines[] = input.split("\\r?\\n");
+        String[] lines = input.split("\\r?\\n");
         
         StringBuilder outputString = new StringBuilder();
         
@@ -883,7 +882,7 @@ public class ParserService {
             case "uid":
                 return "${mtgReq.uid}";
             default:
-                return "${mtgReq.params[\'"+param+"\']}";
+                return "${mtgReq.params['" +param+ "']}";
         }
     }
 

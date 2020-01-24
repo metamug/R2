@@ -84,7 +84,7 @@ public class MarshalTest {
             System.out.println(file.getName());
 
             RPXParser parser = new RPXParser(outputFolder, appName, file);
-            Resource res = parser.parseFromXml();
+            Resource res = parser.parse();
 
             Request firstReq = res.getRequest().get(0);
                     
@@ -95,7 +95,7 @@ public class MarshalTest {
             
             String outputXmlFile = outputFolder+File.separator+"unmarshalled"+File.separator+file.getName();
             
-            parser.marshalToXml(res, outputXmlFile);
+            parser.marshal(res, outputXmlFile);
                     
         } catch (SAXException | XMLStreamException | XPathExpressionException | TransformerException | JAXBException | URISyntaxException | IOException ex) {
             Logger.getLogger(MarshalTest.class.getName()).log(Level.SEVERE, null, ex);

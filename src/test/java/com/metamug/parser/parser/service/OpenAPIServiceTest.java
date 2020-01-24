@@ -85,7 +85,7 @@ public class OpenAPIServiceTest {
                     String outputXmlFile = outputFolder+resourceName+".xml";
                     System.out.println(resourceName);
                     System.out.println(outputXmlFile);
-                    parser.marshalToXml(resource, outputXmlFile);
+                    parser.marshal(resource, outputXmlFile);
                 }
             } catch (JAXBException | IOException ex) {
                 Logger.getLogger(OpenAPIServiceTest.class.getName()).log(Level.SEVERE, null, ex);

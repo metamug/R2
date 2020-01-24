@@ -100,7 +100,7 @@ public class RPXParser {
         this.xmlResourceFile = resourceFile;
     }
 
-    private void createHtml(Resource resource) throws IOException, FileNotFoundException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
+    private void createHtml(Resource resource) throws IOException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
         InputStream xsl = getClass().getClassLoader().getResourceAsStream("resource.xsl");
         if (!new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()).exists()) {
             Files.createDirectories(Paths.get(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()));
@@ -109,25 +109,45 @@ public class RPXParser {
         XslTransformer.transform(xmlResourceFile, xsl, outHtml);
     }
 
-    public Resource parseFromXml() throws JAXBException, SAXException, IOException, FileNotFoundException,
+    /**
+     *
+     * @return Resource after parsing
+     * @throws JAXBException
+     * @throws SAXException
+     * @throws IOException
+     * @throws XMLStreamException
+     * @throws XPathExpressionException
+     * @throws TransformerException
+     * @throws URISyntaxException
+     */
+    public Resource parse() throws JAXBException, SAXException, IOException,
             XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
+
+
+        Resource resource = generateResource(xmlResourceFile);
+
+        if (resource != null) {
+            createHtml(resource);
+        }
+
+        new DocGenerator().generate(appDirectory + File.separator + appName);
+
+        return resource;
+    }
+
+    public static Resource generateResource(File xmlResourceFile) throws IOException, SAXException, JAXBException {
         StreamSource xmlFile = new StreamSource(xmlResourceFile);
         SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
-        Schema schema = schemaFactory.newSchema(getClass().getClassLoader().getResource("resource.xsd"));
+        Schema schema = schemaFactory.newSchema(RPXParser.class.getClassLoader().getResource("resource.xsd"));
         Validator validator = schema.newValidator();
         validator.validate(xmlFile);
         JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         Resource resource = (Resource) jaxbUnmarshaller.unmarshal(xmlResourceFile);
-        if (resource != null) {
-            createHtml(resource);
-        }
-        new DocGenerator().generate(appDirectory + File.separator + appName);
-
-        return resource;
+        return  resource;
     }
     
-    public void marshalToXml(Resource resource, String xmlFilePath) throws JAXBException, FileNotFoundException, IOException {
+    public void marshal(Resource resource, String xmlFilePath) throws JAXBException, IOException {
         File file = new File(xmlFilePath);
         if(!file.exists()){
             file.createNewFile();

@@ -227,7 +227,7 @@ public class ParserServiceUtil {
                     args.add("'" + precedent + "'");
                 }
                 args.add("$" + variable);
-                succedent = succedent.substring(succedent.length() - stringWithinQuotes.length() + matcher.end(), succedent.length());
+                succedent = succedent.substring(succedent.length() - stringWithinQuotes.length() + matcher.end());
                 if (!"".equals(succedent)) {
                     args.add("'" + succedent + "'");
                 }
