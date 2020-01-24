@@ -11,6 +11,7 @@ import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Info;
 
 import java.util.List;
+import java.util.Map;
 
 public class OpenAPIGenerator {
     public static String generateSpec(OpenAPI openAPI) throws JsonProcessingException {
@@ -32,17 +33,18 @@ public class OpenAPIGenerator {
         info.setTitle(backend.getName());
         info.setDescription(backend.getDescription());
         api.setInfo(info);
-
+        api.setPaths(buildPath(backend.getResourceList()));
 
         return api;
     }
 
-    private Paths setPath(List<Resource> resources){
+    private Paths buildPath(Map<String, Resource> resources){
         Paths paths = new Paths();
-        for (Resource resource : resources) {
+        for (Map.Entry<String, Resource> resource : resources.entrySet()) {
             PathItem item = new PathItem();
-            item.setDescription(resource.getDesc());
-            paths.addPathItem("resource", item);
+
+            item.setDescription(resource.getValue().getDesc());
+            paths.addPathItem(resource.getKey(), item);
         }
         return paths;
     }

@@ -2,7 +2,10 @@ package com.metamug.parser.parser.service;
 
 import com.metamug.parser.schema.Resource;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Backend Entity to represent Metamug API Backend
@@ -10,9 +13,11 @@ import java.util.List;
 public class Backend {
 
     String name, description, email;
-    List<Resource> resourceList;
+    Map<String, Resource> resourceList;
 
     public Backend(String name, String description, String email) {
+        resourceList = new HashMap<>();
+
         this.name = name;
         this.description = description;
         this.email = email;
@@ -42,11 +47,14 @@ public class Backend {
         this.email = email;
     }
 
-    public List<Resource> getResourceList() {
+    public Map<String, Resource> getResourceList() {
         return resourceList;
     }
 
-    public void setResourceList(List<Resource> resourceList) {
-        this.resourceList = resourceList;
+    public void addResource(String name, Resource resource) {
+
+        resourceList.put(name, resource);
     }
+
+
 }

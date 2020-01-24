@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Resource xmlns="http://xml.metamug.net/resource/1.0" v="1.0">
 
+
     <Request method="GET">
         <Sql id="getReq1" when="$q eq 1"> SELECT 'Hello When!' </Sql>
         <Sql id="getReq3" when="$q eq 3"> SELECT * from customer </Sql>

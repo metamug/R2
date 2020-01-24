@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Resource xmlns="http://xml.metamug.net/resource/1.0" v="1.1">
 
+    <Desc>REST API Resource for Movie Review Operation. This is not as good as rotten tomato</Desc>
+
     <Request method="GET">
-        <Query id="getResult">SELECT * FROM movie
-        </Query>
+        <Sql id="getResult">SELECT * FROM movie
+        </Sql>
     </Request>
 
     <Request method='POST'>
-        <Update id="postResult" verbose="true">
+        <Desc>Post A Review about a new movie</Desc>
+        <Sql id="postResult" verbose="true">
             INSERT INTO movie (name,rating) values ($name,$rating)
-
-        </Update>
+        </Sql>
     </Request>
 
     <Request method='PUT' item="true">
-        <Update id="putResult" verbose="true">
+        <Sql id="putResult" verbose="true">
             UPDATE movie SET rating=$rating where id=$id
-        </Update>
+        </Sql>
     </Request>
 
     <Request method='DELETE' item="true">
-        <Update id="deleteResult" verbose="true">
+        <Sql id="deleteResult" verbose="true">
             DELETE FROM movie WHERE id=$id
-
-        </Update>
+        </Sql>
     </Request>
-
 </Resource>

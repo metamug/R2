@@ -5,6 +5,7 @@ import com.metamug.parser.parser.RPXParser;
 import com.metamug.parser.parser.service.Backend;
 import com.metamug.parser.schema.Resource;
 import io.swagger.v3.oas.models.OpenAPI;
+import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -17,14 +18,19 @@ import java.util.List;
 
 public class TestOpenAPI {
 
-    @Test
-    public void tesOpenAPIGeneration() throws JAXBException, SAXException, IOException {
-        OpenAPIGenerator generator = new OpenAPIGenerator();
-        Backend backend = new Backend("bookmark", "A bookmarking backend", "hi@metamug.com");
+    Backend backend;
+
+    @Before
+    public void setup() throws JAXBException, SAXException, IOException {
+        backend = new Backend("bookmark", "A bookmarking backend", "hi@metamug.com");
         List<Resource> resources = new ArrayList<>();
-        File file = new File(TestOpenAPI.class.getClassLoader().getResource("./customer.xml").getFile());
-        resources.add(RPXParser.generateResource(file));
-        backend.setResourceList(resources);
+        File file = new File(TestOpenAPI.class.getClassLoader().getResource("./movie.xml").getFile());
+        backend.addResource("movie", RPXParser.generateResource(file));
+    }
+
+    @Test
+    public void tesOpenAPIGeneration() {
+        OpenAPIGenerator generator = new OpenAPIGenerator();
         OpenAPI api = generator.buildOpenAPI(backend);
         String str = generator.serializeJSON(api);
         System.out.println(str);
