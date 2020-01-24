@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <Resource xmlns="http://xml.metamug.net/resource/1.0" v="1.0">
 
     <Request method="GET">
-        <Query id="getReq1" when="$q eq 1"> SELECT 'Hello When!' </Query>
-        <Query id="getReq3" when="$q eq 3"> SELECT * from customer </Query>
-        <Query id="getReq4" when="$q eq 4" ref="qe1" /> 
+        <Sql id="getReq1" when="$q eq 1"> SELECT 'Hello When!' </Sql>
+        <Sql id="getReq3" when="$q eq 3"> SELECT * from customer </Sql>
+        <Sql id="getReq4" when="$q eq 4" ref="qe1" />
     </Request>
         
     <Request method="GET" item="true">
-        <Query id="getReq2"> 
-                 
+        <Sql id="getReq2" >
             SELECT * from customer where customer_id=$id
-                    
-        </Query>
+        </Sql>
     </Request>
 
 </Resource>
