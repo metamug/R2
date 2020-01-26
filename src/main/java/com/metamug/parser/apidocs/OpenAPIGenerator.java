@@ -1,16 +1,18 @@
 package com.metamug.parser.apidocs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.metamug.parser.parser.service.Backend;
+import com.metamug.parser.schema.Request;
 import com.metamug.parser.schema.Resource;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.Yaml;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.responses.ApiResponses;
 
-import java.util.List;
 import java.util.Map;
 
 public class OpenAPIGenerator {
@@ -27,13 +29,15 @@ public class OpenAPIGenerator {
 
         OpenAPI api = new OpenAPI();
 
-
         //Set Info
         Info info = new Info();
+        info.version("1.0.0");
         info.setTitle(backend.getName());
         info.setDescription(backend.getDescription());
         api.setInfo(info);
+
         api.setPaths(buildPath(backend.getResourceList()));
+
 
         return api;
     }
@@ -41,12 +45,37 @@ public class OpenAPIGenerator {
     private Paths buildPath(Map<String, Resource> resources){
         Paths paths = new Paths();
         for (Map.Entry<String, Resource> resource : resources.entrySet()) {
-            PathItem item = new PathItem();
-
-            item.setDescription(resource.getValue().getDesc());
-            paths.addPathItem(resource.getKey(), item);
+            paths.addPathItem(resource.getKey(), buildPathItem(resource.getValue()));
         }
         return paths;
+    }
+
+    private PathItem buildPathItem(Resource resource){
+        PathItem item = new PathItem();
+        item.setDescription(resource.getDesc());
+        for (Request request : resource.getRequest()) {
+            if (request.getMethod().value().equalsIgnoreCase("post")) {
+                Operation operation = new Operation();
+                operation.setDescription(request.getDesc());
+                item.setPost(operation);
+                setStandardResponses(operation);
+            }
+        }
+
+
+        return item;
+    }
+
+    /**
+     * Set standard set of responses by Mason
+     * @param operation
+     */
+    private void setStandardResponses(Operation operation){
+        ApiResponses responses = new ApiResponses();
+        ApiResponse response = new ApiResponse();
+        response.description("API Response");
+        responses.addApiResponse("200", response);
+        operation.setResponses(responses);
     }
 
     public String serializeJSON(OpenAPI api){

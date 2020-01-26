@@ -52,7 +52,8 @@
  */
 package com.metamug.parser.parser;
 
-import com.metamug.parser.parser.service.ParserServiceTest;
+import com.metamug.parser.RPXParser;
+import com.metamug.parser.service.ParserServiceTest;
 import com.metamug.parser.schema.Request;
 import com.metamug.parser.schema.Resource;
 import com.metamug.parser.schema.Xrequest;

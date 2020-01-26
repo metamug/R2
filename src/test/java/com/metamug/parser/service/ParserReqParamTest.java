@@ -50,114 +50,28 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.parser.parser;
+package com.metamug.parser.service;
 
-import com.metamug.parser.apidocs.DocGenerator;
-import com.metamug.parser.apidocs.XslTransformer;
-import com.metamug.parser.schema.Resource;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.io.FilenameUtils;
-import org.xml.sax.SAXException;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  *
- * @author anish
+ * @author anishhirlekar
  */
-public class RPXParser {
-
-    private final String appDirectory;
-    private final String appName;
-    private final File xmlResourceFile;
-
-    /**
-     *
-     * @param appDirectory Application path where docs has to be generated.
-     * @param appName App name
-     * @param resourceFile XML file to parsed.
-     */
-    public RPXParser(String appDirectory, String appName, File resourceFile) {
-        this.appDirectory = appDirectory;
-        this.appName = appName;
-        this.xmlResourceFile = resourceFile;
-    }
-
-    private void createHtml(Resource resource) throws IOException, XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
-        InputStream xsl = getClass().getClassLoader().getResourceAsStream("resource.xsl");
-        if (!new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()).exists()) {
-            Files.createDirectories(Paths.get(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion()));
-        }
-        File outHtml = new File(appDirectory + File.separator + appName + File.separator + "docs/v" + resource.getVersion() + "/" + FilenameUtils.removeExtension(xmlResourceFile.getName()) + ".html");
-        XslTransformer.transform(xmlResourceFile, xsl, outHtml);
-    }
-
-    /**
-     *
-     * @return Resource after parsing
-     * @throws JAXBException
-     * @throws SAXException
-     * @throws IOException
-     * @throws XMLStreamException
-     * @throws XPathExpressionException
-     * @throws TransformerException
-     * @throws URISyntaxException
-     */
-    public Resource parse() throws JAXBException, SAXException, IOException,
-            XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
-
-
-        Resource resource = generateResource(xmlResourceFile);
-
-        if (resource != null) {
-            createHtml(resource);
-        }
-
-        new DocGenerator().generate(appDirectory + File.separator + appName);
-
-        return resource;
-    }
-
-    public static Resource generateResource(File xmlResourceFile) throws IOException, SAXException, JAXBException {
-        StreamSource xmlFile = new StreamSource(xmlResourceFile);
-        SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
-        Schema schema = schemaFactory.newSchema(RPXParser.class.getClassLoader().getResource("resource.xsd"));
-        Validator validator = schema.newValidator();
-        validator.validate(xmlFile);
-        JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        Resource resource = (Resource) jaxbUnmarshaller.unmarshal(xmlResourceFile);
-        return  resource;
-    }
-    
-    public void marshal(Resource resource, String xmlFilePath) throws JAXBException, IOException {
-        File file = new File(xmlFilePath);
-        if(!file.exists()){
-            file.createNewFile();
-        }
-        
-        JAXBContext contextObj = JAXBContext.newInstance(Resource.class);  
-  
-        Marshaller marshallerObj = contextObj.createMarshaller();  
-        marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);  
-
-        marshallerObj.marshal(resource, new FileOutputStream(xmlFilePath));  
+public class ParserReqParamTest {
+    @Test
+    public void transformRequestVariables(){
+        String input = "{\n" +
+"                    \"foo1\": $id,\n" +
+"                    \"foo2\": $rating\n" +
+"                }";
+        String exp = "{\n" +
+"                    \"foo1\": ${mtgReq.id},\n" +
+"                    \"foo2\": ${mtgReq.params['rating']}\n" +
+"                }";
+        String output = ParserServiceUtil.transformRequestVariables(input,true);
+       
+        Assert.assertEquals(exp, output);
     }
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.metamug.parser.parser.util;
+package com.metamug.parser.util;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -20,12 +20,7 @@ import java.util.logging.Logger;
  */
 public class Utils {
 
-    public static String removeExtension(String filename) {
-        if (filename.indexOf(".") > 0) {
-            filename = filename.substring(0, filename.lastIndexOf("."));
-        }
-        return filename;
-    }
+
 
     public static String getMasonApiRequestSignature(String backendName) {
         try {

@@ -50,68 +50,15 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.parser.jaxb;
+package com.metamug.parser.exception;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.xml.transform.TransformerException;
+/**
+ *
+ * @author anishhirlekar
+ */
+public class ResourceTestException extends Exception {
 
-import com.metamug.parser.apidocs.XslTransformer;
-import org.junit.Before;
-import org.junit.Test;
-
-public class DocGenerationTest {
-
-    private String xs3pOutputFilePath, resDocPath1, resDocPath2, resDocPath3;
-    private File xsd;
-    InputStream xs3pXsl, resourceXsl;
-
-    @Before
-    public void init() {
-        //change this accordingly
-        String basePath = "/Users/anishhirlekar/metamug/RPXParser/rpx-parser/src/test/resources";
-
-        xs3pOutputFilePath = basePath + "/XSDDoc.html";
-        resDocPath1 = basePath + "/test.html";
-        resDocPath2 = basePath + "/movies.html";
-        resDocPath3 = basePath + "/apple.html";
-
-        Class cl = XslTransformer.class;
-        xsd = new File(cl.getResource("/resource.xsd").getFile());
-        xs3pXsl = cl.getResourceAsStream("/xs3p.xsl");
-        resourceXsl = cl.getResourceAsStream("/resource.xsl");
+    public ResourceTestException(String message) {
+        super(message);
     }
-
-    @Test
-    public void TestXs3pTransformation() throws TransformerException, IOException {
-        File xsdDocFile = new File(xs3pOutputFilePath);
-        xsdDocFile.createNewFile();
-        XslTransformer.transform(xsd, xs3pXsl, xsdDocFile);
-    }
-
-    @Test
-    public void TestResourceXslTransformation1() throws IOException, TransformerException {
-        File xml = new File(this.getClass().getResource("/test.xml").getFile());
-        File docFile = new File(resDocPath1);
-        docFile.createNewFile();
-        XslTransformer.transform(xml, resourceXsl, docFile);
-    }
-
-    @Test
-    public void TestResourceXslTransformation2() throws IOException, TransformerException {
-        File xml = new File(this.getClass().getResource("/movies.xml").getFile());
-        File docFile = new File(resDocPath2);
-        docFile.createNewFile();
-        XslTransformer.transform(xml, resourceXsl, docFile);
-    }
-
-    @Test
-    public void TestResourceXslTransformation3() throws IOException, TransformerException {
-        File xml = new File(this.getClass().getResource("/apple.xml").getFile());
-        File docFile = new File(resDocPath3);
-        docFile.createNewFile();
-        XslTransformer.transform(xml, resourceXsl, docFile);
-    }
-
 }

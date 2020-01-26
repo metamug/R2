@@ -51,11 +51,11 @@
  *
  * This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.parser.parser.service;
+package com.metamug.parser.service;
 
-import com.metamug.parser.parser.RPXParser;
-import com.metamug.parser.parser.exception.ResourceTestException;
-import com.metamug.parser.parser.util.Utils;
+import com.metamug.parser.RPXParser;
+
+import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.schema.Arg;
 import com.metamug.parser.schema.Execute;
 import com.metamug.parser.schema.Text;
@@ -133,7 +133,7 @@ public class ParserService {
             XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
             URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
         this.appName = appName;
-        this.resourceName = Utils.removeExtension(uploadedFile.getName());
+        this.resourceName = FilenameUtils.removeExtension(uploadedFile.getName());
         this.queryMap = queryMap;
 
         OUTPUT_FOLDER = outputFolder;
@@ -1018,5 +1018,7 @@ public class ParserService {
             // type = query and verbose != false
             return sql.getType().value().equalsIgnoreCase("query") && (sql.getOutput() == null || sql.getOutput());
         }
-    }  
+    }
+
+
 }

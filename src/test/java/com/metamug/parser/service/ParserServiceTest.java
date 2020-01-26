@@ -50,15 +50,77 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.parser.parser.exception;
+package com.metamug.parser.service;
+
+
+import java.beans.PropertyVetoException;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+
+import com.metamug.parser.exception.ResourceTestException;
+import org.apache.commons.io.FilenameUtils;
+import org.json.JSONObject;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author anishhirlekar
  */
-public class ResourceTestException extends Exception {
+public class ParserServiceTest {
 
-    public ResourceTestException(String message) {
-        super(message);
+    private final String outputFolder = "/Users/anishhirlekar/parser-output";
+    String appName = "testWebapp";
+    boolean isOldFile = true;  
+    
+    @Ignore
+    @Test
+    public void testConcat() {
+        String testQuery = "SELECT * FROM '$name%' WHERE LIKE '%$rating%' name "
+                + "LIKE '%$name% OR %rating AGAIN $var' WHERE 'rating LIKE'";
+        String expected = "SELECT * FROM CONCAT($name,'%') WHERE LIKE CONCAT('%',$rating,'%') name LIKE CONCAT('%',$name,'% OR %rating AGAIN ',$var) WHERE 'rating LIKE'";
+        
+        String processed = ParserServiceUtil.processVariablesInLikeClause(testQuery);
+        //System.out.println(processed);
+        Assert.assertEquals(expected,processed);
     }
+
+    @Ignore
+    @Test
+    public void testParser() {
+
+        File resDir = new File(ParserServiceTest.class.getClassLoader().getResource(".").getFile());
+
+        ParserService parseService = new ParserService();
+
+        for (File file : resDir.listFiles()) {
+            if (FilenameUtils.getExtension(file.toString()).equals("xml")) {
+                try {
+                    System.out.println(file.getName());
+
+                    JSONObject jsonObj = parseService.transform(file, appName, isOldFile, outputFolder, null, null);
+
+                    System.out.println(jsonObj);
+
+                } catch (SAXException | XMLStreamException | XPathExpressionException | ParserConfigurationException
+                        | TransformerException | JAXBException | URISyntaxException | IOException | SQLException
+                        | ClassNotFoundException | PropertyVetoException | ResourceTestException ex) {
+                    Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+    
+    
 }

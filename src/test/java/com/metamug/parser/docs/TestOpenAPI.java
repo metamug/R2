@@ -1,8 +1,8 @@
-package com.metamug.parser;
+package com.metamug.parser.docs;
 
+import com.metamug.parser.RPXParser;
+import com.metamug.parser.apidocs.Backend;
 import com.metamug.parser.apidocs.OpenAPIGenerator;
-import com.metamug.parser.parser.RPXParser;
-import com.metamug.parser.parser.service.Backend;
 import com.metamug.parser.schema.Resource;
 import io.swagger.v3.oas.models.OpenAPI;
 import org.junit.Before;
@@ -25,8 +25,9 @@ public class TestOpenAPI {
         backend = new Backend("bookmark", "A bookmarking backend", "hi@metamug.com");
         List<Resource> resources = new ArrayList<>();
         File file = new File(TestOpenAPI.class.getClassLoader().getResource("./movie.xml").getFile());
-        backend.addResource("movie", RPXParser.generateResource(file));
+        backend.addResource("/backend/v1.0/movie", RPXParser.generateResource(file));
     }
+
 
     @Test
     public void tesOpenAPIGeneration() {

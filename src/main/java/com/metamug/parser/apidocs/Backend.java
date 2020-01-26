@@ -1,10 +1,8 @@
-package com.metamug.parser.parser.service;
+package com.metamug.parser.apidocs;
 
 import com.metamug.parser.schema.Resource;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

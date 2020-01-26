@@ -50,84 +50,45 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.parser.parser.service;
+package com.metamug.parser.service;
 
-import com.metamug.parser.parser.exception.ResourceTestException;
-import com.metamug.parser.parser.util.Utils;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
+import com.metamug.parser.RPXParser;
+import com.metamug.parser.schema.Resource;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
-import static javax.ws.rs.core.HttpHeaders.USER_AGENT;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.bind.JAXBException;
+import org.junit.Test;
 
 /**
  *
  * @author anishhirlekar
  */
-public class QueryManagerService {
-
-    public static final String ACTION_SAVE_REF_TAG = "refsavewithtag";
-    public static final String ACTION_SAVE_QUERY_TAG = "querysavewithtag";
-
-    public JSONObject saveRefWithTag(String url, String ref, String resname, String resversion, String tag, String appName) throws IOException, ResourceTestException {
-        Map<String, String> params = new HashMap<>();
-        params.put("action", ACTION_SAVE_REF_TAG);
-        params.put("ref", ref);
-        params.put("resname", resname);
-        params.put("resversion", resversion);
-        params.put("tag", tag);
-
-        JSONArray array = new JSONArray(makeRequest(url, params, appName));
-        JSONObject jsonObject = array.getJSONObject(0);
-
-        return jsonObject;
-    }
-
-    public void saveQueryWithTag(String url, String query, String resname, String resversion, String tag, String queryType, String appName) throws IOException, ResourceTestException {
-        Map<String, String> params = new HashMap<>();
-        params.put("action", ACTION_SAVE_QUERY_TAG);
-        params.put("query", query);
-        params.put("resname", resname);
-        params.put("resversion", resversion);
-        params.put("tag", tag);
-        params.put("type", queryType);
-
-        makeRequest(url, params, appName);
-    }
-
-    private static String makeRequest(String url, Map<String, String> params, String appName) throws IOException, ResourceTestException {
-        URL obj = new URL(url + "/query");
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("POST");
-        con.setRequestProperty("User-Agent", USER_AGENT);
-        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-        con.setRequestProperty("Authorization", Utils.getMasonApiRequestSignature(appName));
-        String urlParameters = Utils.mapToUrlParams(params);
-
-        // Send post request
-        con.setDoOutput(true);
-        try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
-            wr.writeBytes(urlParameters);
-            wr.flush();
-        }
-
-        if (con.getResponseCode() != 200) {
-            throw new ResourceTestException("Server error. Could not save query references!");
-        }
-
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-            String inputLine;
-            StringBuilder responseBuffer = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                responseBuffer.append(inputLine);
+public class OpenAPIServiceTest {
+    private final String outputFolder = "/Users/anishhirlekar/parser-output/openApiUnmarshalled";
+    
+    
+    @Test
+    public void parseSpec(){
+        String specUri = "https://petstore3.swagger.io/api/v3/openapi.json";
+        Map<String, Resource> resources = OpenAPIService.getResources(specUri);
+                
+        RPXParser parser = new RPXParser(outputFolder, "testWebapp", null);
+        
+        resources.forEach( (key,value) -> {
+            try {
+                String resourceName = key;
+                if(key.equals("/pet")){
+                    Resource resource = value;
+                    String outputXmlFile = outputFolder+resourceName+".xml";
+                    System.out.println(resourceName);
+                    System.out.println(outputXmlFile);
+                    parser.marshal(resource, outputXmlFile);
+                }
+            } catch (JAXBException | IOException ex) {
+                Logger.getLogger(OpenAPIServiceTest.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return responseBuffer.toString();
-        }
+        });
     }
 }
