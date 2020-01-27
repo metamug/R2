@@ -628,8 +628,8 @@ public class ParserService {
         writer.writeEndElement(); //End of <m:script>    
         writer.writeCharacters(System.lineSeparator());
         
-        if (script.isVerbose()) {
-            //printCSet(writer, enclose(MASON_OUTPUT), script.getId(), enclose(var));
+        if (script.getOutput()) {
+            printTargetCSet(writer,enclose(MASON_OUTPUT),script.getId(),enclose(var)); 
         }
         
         if (script.getWhen() != null) {

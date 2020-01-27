@@ -251,7 +251,7 @@
     <xsd:complexType name="script">
         <xsd:attribute name="id" type="elementId" use="required"/>
         <xsd:attribute name="file" type="scriptFile" use="required"/>
-        <xsd:attribute name="verbose" type="xsd:boolean" default="true" use="optional"/>
+        <xsd:attribute name="output" type="xsd:boolean" default="true" />
         <xsd:attribute name="when" type="xsd:string"/>
     </xsd:complexType>
 

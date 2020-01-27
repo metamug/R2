@@ -40,8 +40,8 @@ public class Script {
     protected String id;
     @XmlAttribute(name = "file", required = true)
     protected String file;
-    @XmlAttribute(name = "verbose")
-    protected Boolean verbose;
+    @XmlAttribute(name = "output")
+    private Boolean output;
     @XmlAttribute(name = "when")
     protected String when;
 
@@ -92,34 +92,7 @@ public class Script {
     public void setFile(String value) {
         this.file = value;
     }
-    /**
-     * Gets the value of the verbose property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
-     */
-    public boolean isVerbose() {
-        if (verbose == null) {
-            return true;
-        } else {
-            return verbose;
-        }
-    }
-
-    /**
-     * Sets the value of the verbose property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
-     */
-    public void setVerbose(Boolean value) {
-        this.verbose = value;
-    }
-
+    
     /**
      * Gets the value of the when property.
      *
@@ -138,5 +111,28 @@ public class Script {
      */
     public void setWhen(String value) {
         this.when = value;
+    }
+    /**
+     * Gets the value of the output property.
+     *
+     * @return possible object is {@link Boolean}.
+     *
+     */
+    public Boolean getOutput() {
+        if (output == null) {
+            return true;
+        } else {
+            return output;
+        }
+    }
+
+    /**
+     * Sets the value of the verbose property.
+     *
+     * @param output allowed object is {@link Boolean}
+     *
+     */
+    public void setOutput(Boolean output) {
+        this.output = output;
     }
 }
