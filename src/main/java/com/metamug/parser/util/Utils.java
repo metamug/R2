@@ -20,12 +20,7 @@ import java.util.logging.Logger;
  */
 public class Utils {
 
-    public static String removeExtension(String filename) {
-        if (filename.indexOf(".") > 0) {
-            filename = filename.substring(0, filename.lastIndexOf("."));
-        }
-        return filename;
-    }
+
 
     public static String getMasonApiRequestSignature(String backendName) {
         try {

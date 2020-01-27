@@ -50,45 +50,96 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.parser.service;
+package com.metamug.parser.resourcenesting;
 
-import com.metamug.parser.RPXParser;
-import com.metamug.parser.schema.Resource;
-import java.io.IOException;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.bind.JAXBException;
-import org.junit.Test;
+import java.util.HashSet;
 
 /**
  *
- * @author anishhirlekar
+ * @author anish
  */
-public class OpenAPIServiceTest {
-    private final String outputFolder = "/Users/anishhirlekar/parser-output/openApiUnmarshalled";
-    
-    
-    @Test
-    public void parseSpec(){
-        String specUri = "https://petstore3.swagger.io/api/v3/openapi.json";
-        Map<String, Resource> resources = OpenAPIService.getResources(specUri);
-                
-        RPXParser parser = new RPXParser(outputFolder, "testWebapp", null);
-        
-        resources.forEach( (key,value) -> {
-            try {
-                String resourceName = key;
-                if(key.equals("/pet")){
-                    Resource resource = value;
-                    String outputXmlFile = outputFolder+resourceName+".xml";
-                    System.out.println(resourceName);
-                    System.out.println(outputXmlFile);
-                    parser.marshal(resource, outputXmlFile);
+public class Node {
+
+    private final String resourceName;
+    private HashSet<Node> childNodes;
+
+    public Node(String name) {
+        this.resourceName = name;
+        this.childNodes = new HashSet<>();
+    }
+
+    public String getName() {
+        return this.resourceName;
+    }
+
+    public void setChildNodes(HashSet<Node> nodes) {
+        this.childNodes = nodes;
+    }
+
+    public void addChildNodes(HashSet<Node> nodes) {
+        for (Node n : nodes) {
+            this.childNodes.add(n);
+        }
+    }
+
+    //add child to this node
+    public void addChild(Node child) {
+        this.childNodes.add(child);
+    }
+
+    //get children of this node
+    public HashSet<Node> getChildNodes() {
+        return this.childNodes;
+    }
+
+    //return child of any order if exists or else return null
+    public Node getChildIfExists(Node child) {
+        if (!childNodes.isEmpty()) {
+            for (Node n : childNodes) {
+                //if node is direct child of iterating node
+                if (n.equals(child)) {
+                    return n;
+                } //if not direct child, call method inside iterating node
+                else {
+                    Node n1 = n.getChildIfExists(child);
+                    if (null != n1) {
+                        return n1;
+                    }
                 }
-            } catch (JAXBException | IOException ex) {
-                Logger.getLogger(OpenAPIServiceTest.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
+        }
+        return null;
+    }
+
+    //remove child if exists
+    //can be a child of any order
+    //returns child which is removed, null if not found
+    public Node removeChildIfExists(Node child) {
+        if (!childNodes.isEmpty()) {
+            for (Node n : childNodes) {
+                //if node is direct child of iterating node
+                if (n.equals(child)) {
+                    childNodes.remove(n);
+                    return n;
+                } //if not direct child, call method inside iterating node
+                else {
+                    Node n1 = n.removeChildIfExists(child);
+                    if (null != n1) {
+                        return n1;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.resourceName.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.resourceName.equals(((Node) obj).getName());
     }
 }

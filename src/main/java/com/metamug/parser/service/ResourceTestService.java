@@ -54,11 +54,11 @@ package com.metamug.parser.service;
 
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.util.Utils;
-import com.metamug.schema.Param;
-import com.metamug.schema.Resource;
-import com.metamug.schema.Sql;
-import com.metamug.schema.SqlType;
-import com.metamug.schema.Transaction;
+import com.metamug.parser.schema.Param;
+import com.metamug.parser.schema.Resource;
+import com.metamug.parser.schema.Sql;
+import com.metamug.parser.schema.SqlType;
+import com.metamug.parser.schema.Transaction;
 import java.beans.PropertyVetoException;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -141,7 +141,7 @@ public class ResourceTestService {
         }
     }
     
-    private void addSqlData(JSONArray queries,Sql sql, List<Param> paramsWithValue,boolean tx){
+    private void addSqlData(JSONArray queries, Sql sql, List<Param> paramsWithValue, boolean tx){
         JSONObject queryObj = new JSONObject();
         queryObj.put("tag_id", sql.getId());
         

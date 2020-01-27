@@ -50,45 +50,44 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.parser.service;
+package com.metamug.parser.schema;
 
-import com.metamug.parser.RPXParser;
-import com.metamug.parser.schema.Resource;
-import java.io.IOException;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.bind.JAXBException;
-import org.junit.Test;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  *
  * @author anishhirlekar
  */
-public class OpenAPIServiceTest {
-    private final String outputFolder = "/Users/anishhirlekar/parser-output/openApiUnmarshalled";
+@XmlType(name = "xrequestOutput")
+@XmlEnum
+public enum XrequestOutput {
+    @XmlEnumValue("true")
+    TRUE("true"),
+    @XmlEnumValue("false")
+    FALSE("false"),
+    @XmlEnumValue("headers")
+    HEADERS("headers");
+    private final String value;
+
+    XrequestOutput(String value) {
+        this.value = value;
+    }
     
-    
-    @Test
-    public void parseSpec(){
-        String specUri = "https://petstore3.swagger.io/api/v3/openapi.json";
-        Map<String, Resource> resources = OpenAPIService.getResources(specUri);
-                
-        RPXParser parser = new RPXParser(outputFolder, "testWebapp", null);
-        
-        resources.forEach( (key,value) -> {
-            try {
-                String resourceName = key;
-                if(key.equals("/pet")){
-                    Resource resource = value;
-                    String outputXmlFile = outputFolder+resourceName+".xml";
-                    System.out.println(resourceName);
-                    System.out.println(outputXmlFile);
-                    parser.marshal(resource, outputXmlFile);
-                }
-            } catch (JAXBException | IOException ex) {
-                Logger.getLogger(OpenAPIServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+    public String value() {
+        return this.value;
+    }
+
+    public static XrequestOutput fromValue(String value) {
+        if(value.equals("")){
+            return TRUE;
+        }
+        for (XrequestOutput xo : XrequestOutput.values()) {
+            if (xo.value.equals(value)) {
+                return xo;
             }
-        });
+        }
+        throw new IllegalArgumentException(value);
     }
 }

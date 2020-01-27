@@ -53,10 +53,11 @@
 package com.metamug.parser.service;
 
 import com.metamug.parser.exception.ResourceTestException;
-import static com.metamug.parser.service.ParserServiceUtil.getMPathId;
-import com.metamug.schema.Execute;
-import com.metamug.schema.Sql;
-import com.metamug.schema.Xrequest;
+
+import com.metamug.parser.schema.Execute;
+import com.metamug.parser.schema.Sql;
+import com.metamug.parser.schema.Xrequest;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,10 +91,10 @@ public class ParserMPathTest {
             "$[res].id.name","$[res][0].rating"};
         String[] expected = {"xreq","xreq","res","res"};
         
-        Assert.assertEquals(getMPathId(paths[0]),expected[0]);
-        Assert.assertEquals(getMPathId(paths[1]),expected[1]);
-        Assert.assertEquals(getMPathId(paths[2]),expected[2]);
-        Assert.assertEquals(getMPathId(paths[3]),expected[3]);        
+        Assert.assertEquals(ParserServiceUtil.getMPathId(paths[0]),expected[0]);
+        Assert.assertEquals(ParserServiceUtil.getMPathId(paths[1]),expected[1]);
+        Assert.assertEquals(ParserServiceUtil.getMPathId(paths[2]),expected[2]);
+        Assert.assertEquals(ParserServiceUtil.getMPathId(paths[3]),expected[3]);
     }
     
     @Test

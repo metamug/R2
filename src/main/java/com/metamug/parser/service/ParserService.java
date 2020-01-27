@@ -54,24 +54,23 @@
 package com.metamug.parser.service;
 
 import com.metamug.parser.RPXParser;
+
 import com.metamug.parser.exception.ResourceTestException;
-import com.metamug.parser.util.Utils;
-import com.metamug.schema.Arg;
-import com.metamug.schema.Execute;
-import com.metamug.schema.Text;
-import com.metamug.schema.Param;
-import com.metamug.schema.Request;
-import com.metamug.schema.Resource;
-import com.metamug.schema.Script;
-import com.metamug.schema.Sql;
-import com.metamug.schema.Transaction;
-import com.metamug.schema.Xheader;
-import com.metamug.schema.Xparam;
-import com.metamug.schema.Xrequest;
+import com.metamug.parser.schema.Arg;
+import com.metamug.parser.schema.Execute;
+import com.metamug.parser.schema.Text;
+import com.metamug.parser.schema.Param;
+import com.metamug.parser.schema.Request;
+import com.metamug.parser.schema.Resource;
+import com.metamug.parser.schema.Script;
+import com.metamug.parser.schema.Sql;
+import com.metamug.parser.schema.Transaction;
+import com.metamug.parser.schema.Xheader;
+import com.metamug.parser.schema.Xparam;
+import com.metamug.parser.schema.Xrequest;
 import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
 import java.beans.PropertyVetoException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -130,17 +129,17 @@ public class ParserService {
     public static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
 
     public JSONObject transform(File uploadedFile, String appName, boolean updateResource, String outputFolder,
-            String domain, JSONObject queryMap) throws SAXException, FileAlreadyExistsException, FileNotFoundException, XMLStreamException,
+            String domain, JSONObject queryMap) throws SAXException, XMLStreamException,
             XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
             URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
         this.appName = appName;
-        this.resourceName = Utils.removeExtension(uploadedFile.getName());
+        this.resourceName = FilenameUtils.removeExtension(uploadedFile.getName());
         this.queryMap = queryMap;
 
         OUTPUT_FOLDER = outputFolder;
 
         RPXParser parser = new RPXParser(OUTPUT_FOLDER, appName, uploadedFile);
-        Resource parsedResource = parser.parseFromXml();
+        Resource parsedResource = parser.parse();
 
         this.resourceVersion = parsedResource.getVersion();
 
@@ -164,7 +163,7 @@ public class ParserService {
     }
 
     public Resource createJsp(Resource resource, File resourceFile, boolean updateResource, String domain)
-            throws JAXBException, SAXException, IOException, FileNotFoundException, XPathExpressionException,
+            throws JAXBException, SAXException, IOException, XPathExpressionException,
             TransformerException, URISyntaxException, XMLStreamException, ResourceTestException {
 
         String resourceDir = OUTPUT_FOLDER + File.separator + appName + File.separator
@@ -385,7 +384,7 @@ public class ParserService {
      * @throws IOException
      * @throws SAXException
      * @throws XPathExpressionException
-     * @throws com.metamug.parser.exception.ResourceTestException
+     * @throws ResourceTestException
      */
     protected void printSqlTag(Sql sql, XMLStreamWriter writer, boolean addDatasource)
             throws XMLStreamException, IOException, SAXException, XPathExpressionException, ResourceTestException {
@@ -646,7 +645,7 @@ public class ParserService {
      * @throws SAXException
      * @throws java.io.IOException
      * @throws javax.xml.xpath.XPathExpressionException
-     * @throws com.metamug.parser.exception.ResourceTestException
+     * @throws ResourceTestException
      */
     protected void printXrequestTag(Xrequest xrequest, XMLStreamWriter writer)
             throws XMLStreamException, SAXException, IOException, XPathExpressionException, ResourceTestException {
@@ -731,7 +730,7 @@ public class ParserService {
     }
     
     protected String escapeSpecialCharacters(String input){
-        String lines[] = input.split("\\r?\\n");
+        String[] lines = input.split("\\r?\\n");
         
         StringBuilder outputString = new StringBuilder();
         
@@ -883,7 +882,7 @@ public class ParserService {
             case "uid":
                 return "${mtgReq.uid}";
             default:
-                return "${mtgReq.params[\'"+param+"\']}";
+                return "${mtgReq.params['" +param+ "']}";
         }
     }
 
@@ -1019,5 +1018,7 @@ public class ParserService {
             // type = query and verbose != false
             return sql.getType().value().equalsIgnoreCase("query") && (sql.getOutput() == null || sql.getOutput());
         }
-    }  
+    }
+
+
 }

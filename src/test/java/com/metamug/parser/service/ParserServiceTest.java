@@ -52,7 +52,7 @@
  */
 package com.metamug.parser.service;
 
-import com.metamug.parser.exception.ResourceTestException;
+
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
@@ -65,6 +65,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+
+import com.metamug.parser.exception.ResourceTestException;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 import org.junit.Assert;

@@ -56,10 +56,12 @@ import com.metamug.parser.exception.ResourceTestException;
 import static com.metamug.parser.service.ParserService.MPATH_EXPRESSION_PATTERN;
 import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
 import static com.metamug.parser.service.ParserService.UPLOAD_OBJECT;
-import com.metamug.schema.Execute;
-import com.metamug.schema.Sql;
-import com.metamug.schema.Text;
-import com.metamug.schema.Xrequest;
+
+import com.metamug.parser.schema.Execute;
+import com.metamug.parser.schema.Sql;
+import com.metamug.parser.schema.Text;
+import com.metamug.parser.schema.Xrequest;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -225,7 +227,7 @@ public class ParserServiceUtil {
                     args.add("'" + precedent + "'");
                 }
                 args.add("$" + variable);
-                succedent = succedent.substring(succedent.length() - stringWithinQuotes.length() + matcher.end(), succedent.length());
+                succedent = succedent.substring(succedent.length() - stringWithinQuotes.length() + matcher.end());
                 if (!"".equals(succedent)) {
                     args.add("'" + succedent + "'");
                 }
