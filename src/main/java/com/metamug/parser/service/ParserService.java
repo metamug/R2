@@ -620,7 +620,7 @@ public class ParserService {
         }
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("m:script");
-        String var = "res";
+        String var = script.getId();
         writer.writeAttribute("var", var);
         writer.writeAttribute("file", script.getFile());
         
@@ -628,7 +628,7 @@ public class ParserService {
         writer.writeCharacters(System.lineSeparator());
         
         if (script.getOutput()) {
-            printTargetCSet(writer,enclose(MASON_OUTPUT),script.getId(),enclose(var)); 
+            printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclose(var)); 
         }
         
         if (script.getWhen() != null) {

@@ -58,6 +58,7 @@ import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
 import static com.metamug.parser.service.ParserService.UPLOAD_OBJECT;
 
 import com.metamug.parser.schema.Execute;
+import com.metamug.parser.schema.Script;
 import com.metamug.parser.schema.Sql;
 import com.metamug.parser.schema.Text;
 import com.metamug.parser.schema.Xrequest;
@@ -142,6 +143,11 @@ public class ParserServiceUtil {
             transformedVariable = "m:jsonPath('$"+locator+"',"+elementId+")";
             
         } else if(type.equals(Execute.class.getName())){
+            // bus[id].name
+            String locator = getMPathLocator(mpathVariable);
+            transformedVariable = elementId+locator;
+            
+        } else if(type.equals(Script.class.getName())){
             // bus[id].name
             String locator = getMPathLocator(mpathVariable);
             transformedVariable = elementId+locator;
