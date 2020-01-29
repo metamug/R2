@@ -125,7 +125,6 @@ public class ParserService {
     }; // <id,elementType>  
                                              
     public static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
-    //protected static final String SQL_RESULT_MPATH_PATTERN = "\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)";
     public static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
 
     public JSONObject transform(File uploadedFile, String appName, boolean updateResource, String outputFolder,
@@ -265,11 +264,13 @@ public class ParserService {
     
     protected void printHeaderTag(Xheader header, XMLStreamWriter writer) throws XMLStreamException, ResourceTestException, IOException{
         writer.writeCharacters(System.lineSeparator());
-        writer.writeEmptyElement("m:header");
+        writer.writeStartElement("m:header");
         writer.writeAttribute("name", header.getName());
                 
         String value = transformVariables(header.getValue(),elementIds,true);
-        writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"");
+        //writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"");
+        writer.writeCharacters(value);
+        writer.writeEndElement();
     }
     
     protected void printTextTag(Text txt, XMLStreamWriter writer) throws XMLStreamException, ResourceTestException, IOException{

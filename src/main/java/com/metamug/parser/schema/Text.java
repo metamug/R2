@@ -131,7 +131,7 @@ public class Text {
      */
     public boolean isOutput() {
         if (output == null) {
-            return false;
+            return true;
         } else {
             return output;
         }

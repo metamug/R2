@@ -229,7 +229,7 @@
             <xsd:extension base="xsd:string">
                 <xsd:attribute name="id" type="elementId" use="required" />
                 <xsd:attribute name="when" type="xsd:string"/>
-                <xsd:attribute name="output" type="xsd:boolean" default="false" />
+                <xsd:attribute name="output" type="xsd:boolean" default="true" />
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
