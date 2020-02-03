@@ -54,7 +54,6 @@
 package com.metamug.parser.service;
 
 import com.metamug.parser.RPXParser;
-
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.schema.Arg;
 import com.metamug.parser.schema.Execute;
@@ -172,7 +171,8 @@ public class ParserService {
             Files.createDirectories(Paths.get(resourceDir + "v" + resource.getVersion()));
         }
 
-        String jsp = resourceDir + "v" + resource.getVersion() + File.separator + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp";
+        String jsp = resourceDir + "v" + resource.getVersion() + File.separator 
+                + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp";
         if (!new File(jsp).exists() || updateResource) {
             try{
                 output = new FileOutputStream(jsp);
