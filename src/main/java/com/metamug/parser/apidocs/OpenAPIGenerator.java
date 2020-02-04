@@ -1,6 +1,7 @@
 package com.metamug.parser.apidocs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.metamug.parser.schema.Param;
 import com.metamug.parser.schema.Request;
 import com.metamug.parser.schema.Resource;
 import io.swagger.v3.core.util.Json;
@@ -10,11 +11,20 @@ import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
+import net.sf.saxon.expr.instruct.ParameterSet;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+/**
+ * Generate open api 3.0 specification using backend information
+ */
 public class OpenAPIGenerator {
     public static String generateSpec(OpenAPI openAPI) throws JsonProcessingException {
         return Json.mapper().writeValueAsString(openAPI);
@@ -50,16 +60,51 @@ public class OpenAPIGenerator {
         return paths;
     }
 
+    /**
+     * One path corresponds to one resource.
+     * @param resource Metamug API Console REST Resource
+     * @return Open API Path Item equivalent
+     */
     private PathItem buildPathItem(Resource resource){
         PathItem item = new PathItem();
         item.setDescription(resource.getDesc());
+
+        //loop over all request tags
         for (Request request : resource.getRequest()) {
-            if (request.getMethod().value().equalsIgnoreCase("post")) {
-                Operation operation = new Operation();
-                operation.setDescription(request.getDesc());
-                item.setPost(operation);
-                setStandardResponses(operation);
+
+            Operation operation = new Operation();
+            operation.setDescription(request.getDesc());
+
+            Set<Param> requestParameters = request.getParam();
+            List<Parameter> openAPIParams = new ArrayList<>();
+
+            for(Param param: requestParameters){
+                Parameter parameter = new Parameter();
+                parameter.setName(param.getName());
+                parameter.setRequired(param.isRequired());
+                parameter.setIn("query");
+                Schema schema = new Schema();
+                schema.setType(param.getType().value());
+                parameter.setSchema(schema);
+                openAPIParams.add(parameter);
             }
+            operation.setParameters(openAPIParams);
+
+            switch (request.getMethod().value().toLowerCase()){
+                case "post":
+                    item.setGet(operation);
+                    break;
+                case "get":
+                    item.setPost(operation);
+                    break;
+                case "put":
+                    item.setPut(operation);
+                    break;
+                case "delete":
+                    item.setDelete(operation);
+                    break;
+            }
+            setStandardResponses(operation);
         }
 
 

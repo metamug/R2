@@ -104,9 +104,11 @@ import org.xml.sax.SAXException;
  */
 public class ParserService {
 
+    public static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
+    public static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
     protected static final String MASON_DATASOURCE = "datasource";
     protected static final String MASON_OUTPUT = "output";
-    
+
     public static final String UPLOAD_OBJECT = "_upload";
 
     protected String appName;
@@ -122,10 +124,8 @@ public class ParserService {
         {
             put(UPLOAD_OBJECT, UPLOAD_OBJECT);
         }
-    }; // <id,elementType>  
-                                             
-    public static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
-    public static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
+    }; // <id,elementType>
+
 
     public JSONObject transform(File uploadedFile, String appName, boolean updateResource, String outputFolder,
             String domain, JSONObject queryMap) throws SAXException, XMLStreamException,

@@ -8,22 +8,25 @@
         </Sql>
     </Request>
 
-    <Request method='POST'>
+    <Request method="POST">
+        <Param name="name" type="text" minlength="1" max="100"/>
+        <Param name="rating" type="number" min="1" max="5"/>
         <Desc>Post A Review about a new movie</Desc>
         <Sql id="postResult" verbose="true">
             INSERT INTO movie (name,rating) values ($name,$rating)
         </Sql>
     </Request>
 
-    <Request method='PUT' item="true">
+    <Request method="PUT" item="true">
         <Sql id="putResult" verbose="true">
             UPDATE movie SET rating=$rating where id=$id
         </Sql>
     </Request>
 
-    <Request method='DELETE' item="true">
+    <Request method="DELETE" item="true">
         <Sql id="deleteResult" verbose="true">
             DELETE FROM movie WHERE id=$id
         </Sql>
     </Request>
+
 </Resource>
