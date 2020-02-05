@@ -180,6 +180,16 @@ public class ParserServiceUtil {
         }
     }
     
+    //collects request variables for sql:param tags
+    protected static void collectRequestParams(LinkedList<String> params,String sql) throws ResourceTestException {
+        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
+        Matcher matcher = pattern.matcher(sql);
+        while (matcher.find()) {
+            String variable = sql.substring(matcher.start(1), matcher.end(1)).trim();
+            params.add(variable);
+        }
+    }
+    
     //transforms MPath variables in given string
     protected static String transformMPathVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException {
         String transformed = input;
