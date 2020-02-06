@@ -76,7 +76,7 @@ import java.util.regex.Pattern;
  */
 public class ParserServiceUtil {
     //transforms request variables in given string
-    protected static String transformRequestVariables(String input, boolean enclose) {
+    public static String transformRequestVariables(String input, boolean enclose) {
         String output = input;
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher matcher = pattern.matcher(input);
@@ -112,7 +112,7 @@ public class ParserServiceUtil {
         return output;
     }
     
-    protected static String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
+    public static String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
         String transformedVariable = mpathVariable;
         
         StringBuilder sb = new StringBuilder();
@@ -171,7 +171,7 @@ public class ParserServiceUtil {
     }
     
     //collects MPath variables for sql:param tags
-    protected static void collectMPathParams(LinkedList<String> params,String sql, Map<String,String> elementIds) throws ResourceTestException {
+    public static void collectMPathParams(LinkedList<String> params,String sql, Map<String,String> elementIds) throws ResourceTestException {
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(sql);
         
@@ -181,7 +181,7 @@ public class ParserServiceUtil {
     }
     
     //collects request variables for sql:param tags
-    protected static void collectRequestParams(LinkedList<String> params,String sql) throws ResourceTestException {
+    public static void collectRequestParams(LinkedList<String> params,String sql) throws ResourceTestException {
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher matcher = pattern.matcher(sql);
         while (matcher.find()) {
@@ -191,7 +191,7 @@ public class ParserServiceUtil {
     }
     
     //transforms MPath variables in given string
-    protected static String transformMPathVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException {
+    public static String transformMPathVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException {
         String transformed = input;
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(input);

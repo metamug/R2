@@ -6,10 +6,16 @@
 //
 package com.metamug.parser.schema;
 
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.service.ParserService;
+import java.io.IOException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * <p>
@@ -33,7 +39,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "xheader")
-public class Xheader {
+public class Xheader extends RequestTag {
 
     @XmlAttribute(name = "name", required = true)
     protected String name;
@@ -78,5 +84,18 @@ public class Xheader {
      */
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public void print(XMLStreamWriter writer, Object tag, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException {
+        Xheader header = (Xheader)tag;
+        writer.writeCharacters(System.lineSeparator());
+        writer.writeStartElement("m:header");
+        writer.writeAttribute("name", header.getName());
+                
+        String value = transformVariables(header.getValue(),parent.elementIds,true);
+        //writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"");
+        writer.writeCharacters(value);
+        writer.writeEndElement();
     }
 }

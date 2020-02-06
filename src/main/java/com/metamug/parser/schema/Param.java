@@ -6,10 +6,15 @@
 //
 package com.metamug.parser.schema;
 
+import com.metamug.parser.service.ParserService;
+import java.io.IOException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  *
@@ -45,7 +50,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "param")
-public class Param {
+public class Param extends RequestTag {
 
     @XmlAttribute(name = "name", required = true)
     protected String name;
@@ -287,4 +292,48 @@ public class Param {
     public boolean isRequired() {
         return this.required;
     }
+
+    @Override
+    public void print(XMLStreamWriter writer, Object tag, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException {
+     
+        Param param = (Param)tag;
+        writer.writeCharacters(System.lineSeparator());
+        writeUnescapedCharacters(writer, processParam(param), parent.output);
+    }
+    
+    private String processParam(Param param) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<m:param name=\"").append(param.getName()).append("\" ");
+        if (param.getType() != null) {
+            builder.append("type=\"").append(param.getType()).append("\" ");
+        }
+        builder.append("value=\"").append("${mtgReq.params['").append(param.getName()).append("']}\" ");
+        if (param.getMax() != null) {
+            builder.append("max=\"").append(param.getMax()).append("\" ");
+        }
+        if (param.getMaxlength() != null) {
+            builder.append("maxLen=\"").append(param.getMaxlength()).append("\" ");
+        }
+        if (param.getMin() != null) {
+            builder.append("min=\"").append(param.getMin()).append("\" ");
+        }
+        if (param.getMinlength() != null) {
+            builder.append("minLen=\"").append(param.getMinlength()).append("\" ");
+        }
+        if (param.getPattern() != null) {
+            builder.append("pattern=\"").append(param.getPattern()).append("\" ");
+        }
+        if (param.getExists() != null) {
+            builder.append("exists=\"").append(param.getExists()).append("\" ");
+        }
+        if (param.getValue() != null) {
+            builder.append("defaultValue=\"").append(param.getValue()).append("\" ");
+        }
+        if (param.isRequired()) {
+            builder.append("isRequired=\"true\"");
+        }
+        builder.append("/>");
+        return builder.toString();
+    }
+
 }
