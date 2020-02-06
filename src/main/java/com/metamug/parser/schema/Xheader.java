@@ -89,13 +89,12 @@ public class Xheader extends RequestChild {
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException {
         this.parent = parent;
-        Xheader header = (Xheader)this;
         
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("m:header");
-        writer.writeAttribute("name", header.getName());
+        writer.writeAttribute("name", getName());
                 
-        String value = transformVariables(header.getValue(),parent.elementIds,true);
+        String value = transformVariables(getValue(),parent.elementIds,true);
         //writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"");
         writer.writeCharacters(value);
         writer.writeEndElement();

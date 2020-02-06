@@ -231,23 +231,23 @@ public class Xrequest extends RequestChild{
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
         this.parent = parent;
-        Xrequest xrequest = (Xrequest)this;
+        //Xrequest xrequest = (Xrequest)this;
         
-        if (xrequest.getWhen() != null) {
+        if (getWhen() != null) {
             writer.writeStartElement("c:if");
             //String testString = getQuotedString(xrequest.getWhen());
             //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
-            String test = transformVariables(xrequest.getWhen(),parent.elementIds,false);
+            String test = transformVariables(getWhen(),parent.elementIds,false);
             writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
         }
    
         //print xrequest mason tags
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("m:xrequest");
-        writer.writeAttribute("var", xrequest.getId());
-        writer.writeAttribute("method", xrequest.getMethod().name());
-        if ( xrequest.getOutput() != null ) { 
-            String outputVal = xrequest.getOutput().value();
+        writer.writeAttribute("var", getId());
+        writer.writeAttribute("method", getMethod().name());
+        if ( getOutput() != null ) { 
+            String outputVal = getOutput().value();
             if(outputVal.equals("headers")){
                 writer.writeAttribute("outputHeaders", "true");
                 writer.writeAttribute("output", "true");
@@ -256,13 +256,13 @@ public class Xrequest extends RequestChild{
             }
         }
         
-        if ( xrequest.getClassName() != null ) {
-            writer.writeAttribute("className", xrequest.getClassName());
+        if ( getClassName() != null ) {
+            writer.writeAttribute("className", getClassName());
         }
         
-        writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(xrequest.getUrl())+"\"",parent.output);
+        writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(getUrl())+"\"",parent.output);
                 
-        for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
+        for (Object paramOrHeaderOrBody : getParamOrHeaderOrBody()) {
             if (paramOrHeaderOrBody instanceof Xheader) {
                 writer.writeEmptyElement("m:header");
                 writer.writeAttribute("name", ((Xheader) paramOrHeaderOrBody).getName());
@@ -287,7 +287,7 @@ public class Xrequest extends RequestChild{
         writer.writeEndElement(); //End of <m:xrequest>    
         writer.writeCharacters(System.lineSeparator());
         
-        if (xrequest.getWhen() != null) {
+        if (getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
     }

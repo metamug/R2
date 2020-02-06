@@ -321,32 +321,32 @@ public class Sql extends RequestChild{
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
         this.parent = parent;
-        Sql sql = this;
-        parent.elementIds.put(sql.getId(), Sql.class.getName());
+        //Sql sql = this;
+        parent.elementIds.put(getId(), Sql.class.getName());
 
-        if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
-            startValidateTag(writer, sql.getOnerror());
+        if (getOnerror() != null && getOnerror().length() > 0) {
+            startValidateTag(writer, getOnerror());
         }
 
-        preProcessSqlElement(sql, parent.domain);               
+        preProcessSqlElement();               
 
-        printSqlTag(sql, writer, true);
+        printSqlTag(writer, true);
 
-        if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
+        if (getOnerror() != null && getOnerror().length() > 0) {
             closeValidateTag(writer);
         }
     }
     
-    protected void preProcessSqlElement(Sql sql, String domain) throws IOException, ResourceTestException{
-        String tag = sql.getId();
-        String ref = sql.getRef();
+    protected void preProcessSqlElement() throws IOException, ResourceTestException{
+        String tag = getId();
+        String ref = getRef();
         QueryManagerService service = new QueryManagerService();
-        String url = domain + "/" + parent.appName;
+        String url = parent.domain + "/" + parent.appName;
         String version = Double.toString(parent.resourceVersion);
-        String sqlValue = ResourceTestService.preprocessSql(sql.getValue());
+        String sqlValue = ResourceTestService.preprocessSql(getValue());
 
         if (ref == null) {
-            service.saveQueryWithTag(url, sqlValue, parent.resourceName, version, tag, sql.getType().value(), parent.appName);
+            service.saveQueryWithTag(url, sqlValue, parent.resourceName, version, tag, getType().value(), parent.appName);
         } else {
             service.saveRefWithTag(url, ref, parent.resourceName, version, tag, parent.appName);
         }
@@ -355,7 +355,6 @@ public class Sql extends RequestChild{
     /**
      * Prints Query tag along with necessary test conditions as mentioned in Query tag.
      *
-     * @param sql Sql object which is to be converted
      * @param writer XMLStreamWriter to write to JSP file.
      * @param addDatasource boolean whether or not to add datasource attribute - don't add if Sql is inside Transaction
      * @throws XMLStreamException
@@ -364,22 +363,22 @@ public class Sql extends RequestChild{
      * @throws XPathExpressionException
      * @throws ResourceTestException
      */
-    protected void printSqlTag(Sql sql, XMLStreamWriter writer, boolean addDatasource)
+    protected void printSqlTag(XMLStreamWriter writer, boolean addDatasource)
             throws XMLStreamException, IOException, SAXException, XPathExpressionException, ResourceTestException {
-        //Check for empty the Sql tag
-        if (!sql.getValue().trim().isEmpty()) {
-            if (sql.getWhen() != null) {
+        //Check for empty tag
+        if (!getValue().trim().isEmpty()) {
+            if (getWhen() != null) {
                 writer.writeStartElement("c:if");
                 //String testString = getQuotedString(sql.getWhen());
                 //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
                 
-                String test = transformVariables(sql.getWhen(),parent.elementIds,false);
+                String test = transformVariables(getWhen(),parent.elementIds,false);
                 writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"", parent.output);
                 //String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue(),elementIds);
                 //writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
             }
             //Print params those are marked as 'requires' in <Sql>
-            String requiredParams = sql.getRequires();
+            String requiredParams = getRequires();
             if (requiredParams != null) {
                 for (String param : requiredParams.split(",")) {
                     writer.writeEmptyElement("m:param");
@@ -390,12 +389,12 @@ public class Sql extends RequestChild{
                 }
             }
 
-            if (sql.getLimit() != null || sql.getOffset() != null) {
-                if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("query")) {
-                    if (sql.getLimit() != null) {
+            if (getLimit() != null || getOffset() != null) {
+                if (getType() != null && getType().value().equalsIgnoreCase("query")) {
+                    if (getLimit() != null) {
                         writer.writeEmptyElement("m:param");
-                        writer.writeAttribute("name", String.valueOf(sql.getLimit()));
-                        writer.writeAttribute("value", enclose("mtgReq.params['" + sql.getLimit() + "']"));
+                        writer.writeAttribute("name", String.valueOf(getLimit()));
+                        writer.writeAttribute("value", enclose("mtgReq.params['" + getLimit() + "']"));
                         writer.writeAttribute("type", "number");
                         writer.writeAttribute("defaultValue", "-1");
                     }
@@ -405,27 +404,27 @@ public class Sql extends RequestChild{
             }
 
             writer.writeCharacters(System.lineSeparator());
-            if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("update")) {
+            if (getType() != null && getType().value().equalsIgnoreCase("update")) {
                 writer.writeStartElement("sql:update");
             } else {
                 writer.writeStartElement("sql:query");
             }
 
-            String var = sql.getId();//"result";
+            String var = getId();//"result";
             
             writer.writeAttribute("var", var);
             if(addDatasource){
                 writer.writeAttribute("dataSource", enclose(MASON_DATASOURCE));
             }
             
-            if (sql.getLimit() != null || sql.getOffset() != null) {
-                if (sql.getType() != null && sql.getType().value().equalsIgnoreCase("query")) {
-                    if (sql.getLimit() != null) {
-                        writer.writeAttribute("maxRows", enclose("mtgReq.params['" + sql.getLimit() + "']"));
+            if (getLimit() != null || getOffset() != null) {
+                if (getType() != null && getType().value().equalsIgnoreCase("query")) {
+                    if (getLimit() != null) {
+                        writer.writeAttribute("maxRows", enclose("mtgReq.params['" + getLimit() + "']"));
                     }
 
-                    if (sql.getOffset() != null) {
-                        writer.writeAttribute("startRow", enclose("mtgReq.params['" + sql.getOffset() + "']"));
+                    if (getOffset() != null) {
+                        writer.writeAttribute("startRow", enclose("mtgReq.params['" + getOffset() + "']"));
                     }
 
                 } else {
@@ -433,7 +432,7 @@ public class Sql extends RequestChild{
                 }
             }
             //writer.writeCharacters(System.lineSeparator());
-            String sqlParams = getSqlParams(sql);
+            String sqlParams = getSqlParams(this);
 
             writeUnescapedCharacters(writer, sqlParams, parent.output);
 
@@ -442,19 +441,19 @@ public class Sql extends RequestChild{
 
             writer.writeCharacters(System.lineSeparator());
 
-            printSqlEnd(sql, writer, var);
+            printSqlEnd(writer, var);
         }
     }
     
-    protected void printSqlEnd(Sql sql, XMLStreamWriter writer, String var) throws XMLStreamException {
+    protected void printSqlEnd(XMLStreamWriter writer, String var) throws XMLStreamException {
       
-        boolean verbose = isVerbose(sql);
+        boolean verbose = isVerbose(this);
               
-        if( sql.getType().value().equalsIgnoreCase("query") && (sql.getClassname() != null) ){
+        if( getType().value().equalsIgnoreCase("query") && (getClassname() != null) ){
             //if classname is given and type=query, print <m:execute> instead of <m:sqlOut> 
             writer.writeEmptyElement("m:execute");
-            writer.writeAttribute("className", sql.getClassname());                
-            writer.writeAttribute("var", sql.getId());
+            writer.writeAttribute("className", getClassname());                
+            writer.writeAttribute("var", getId());
             writer.writeAttribute("param", enclose(var));
             writer.writeAttribute("output", String.valueOf(verbose));        
         } else{
@@ -463,14 +462,14 @@ public class Sql extends RequestChild{
                 printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclose(var)); 
         }
         
-        if (sql.getWhen() != null) {
+        if (getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
     }
     
-    protected String getSqlParams(Sql sql, HashMap<String,String> elementIds) throws ResourceTestException{
+    protected String getSqlParams(HashMap<String,String> elementIds) throws ResourceTestException{
         parent.elementIds = elementIds;
-        return getSqlParams(sql);
+        return getSqlParams(this);
     }
 
     protected String getSqlParams(Sql sql) throws ResourceTestException {
@@ -505,31 +504,31 @@ public class Sql extends RequestChild{
             char d = sql.charAt(i+1);
             if(c == '?' && d == '$'){     
                 
-                    char e = sql.charAt(i+2);
-                    char f = sql.charAt(i+3);
-                    if(e == 'R' && f == ' '){
-                        //append request params
-                        String reqParam = reqParams.getFirst();
-                        reqParams.removeFirst();
-                        builder.append("<sql:param value=\"").append(getJspVariableForRequestParam(reqParam)).append("\"/>");
-                        builder.append(System.lineSeparator());
-                    } else if (e == 'M' && f == ' '){
-                        //append mpath variables
-                        String mpathParam = mpathParams.getFirst();
-                        mpathParams.removeFirst();
+                char e = sql.charAt(i+2);
+                char f = sql.charAt(i+3);
+                if(e == 'R' && f == ' '){
+                    //append request params
+                    String reqParam = reqParams.getFirst();
+                    reqParams.removeFirst();
+                    builder.append("<sql:param value=\"").append(getJspVariableForRequestParam(reqParam)).append("\"/>");
+                    builder.append(System.lineSeparator());
+                } else if (e == 'M' && f == ' '){
+                    //append mpath variables
+                    String mpathParam = mpathParams.getFirst();
+                    mpathParams.removeFirst();
                         
-                        String elementId = ParserServiceUtil.getMPathId(mpathParam);
-                        if(!parent.elementIds.containsKey(elementId)){
-                            throw new ResourceTestException("Could not find element with ID: "+elementId);
-                        }
+                    String elementId = ParserServiceUtil.getMPathId(mpathParam);
+                    if(!parent.elementIds.containsKey(elementId)){
+                        throw new ResourceTestException("Could not find element with ID: "+elementId);
+                    }
                         //get type of element
-                        String type = parent.elementIds.get(elementId);
+                    String type = parent.elementIds.get(elementId);
                         
-                        builder.append("<sql:param value=\"");
-                        builder.append(ParserServiceUtil.getJspVariableForMPath(mpathParam,type,elementId,true));
-                        builder.append("\"/>");
-                        builder.append(System.lineSeparator());
-                    }             
+                    builder.append("<sql:param value=\"");
+                    builder.append(ParserServiceUtil.getJspVariableForMPath(mpathParam,type,elementId,true));
+                    builder.append("\"/>");
+                    builder.append(System.lineSeparator());
+                }             
             }
         }
     }

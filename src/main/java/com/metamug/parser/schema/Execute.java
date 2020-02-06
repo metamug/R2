@@ -215,17 +215,17 @@ public class Execute extends RequestChild {
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
         this.parent = parent;
-        Execute execute = (Execute)this;
+        //Execute execute = (Execute)this;
         
-        if (execute.getWhen() != null) {
+        if (getWhen() != null) {
             writer.writeStartElement("c:if");
             //String testString = getQuotedString(execute.getWhen());
             //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
-            String test = transformVariables(execute.getWhen(),parent.elementIds,false);
+            String test = transformVariables(getWhen(),parent.elementIds,false);
             writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
         }
         //Print params those are marked as 'requires' in <Execute>
-        String requiredParams = execute.getRequires();
+        String requiredParams = getRequires();
         if (requiredParams != null) {
             for (String param : requiredParams.split(",")) {
                 writer.writeEmptyElement("m:param");
@@ -237,18 +237,18 @@ public class Execute extends RequestChild {
         }
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("m:execute");
-        writer.writeAttribute("var", execute.getId());
-        writer.writeAttribute("className", execute.getClassName());
+        writer.writeAttribute("var", getId());
+        writer.writeAttribute("className", getClassName());
         writer.writeAttribute("param", enclose("mtgReq"));
-        if ( (execute.getVerbose() != null && execute.getVerbose()) 
-                || execute.getOutput() != null && execute.getOutput() ) {
+        if ( (getVerbose() != null && getVerbose()) 
+                || getOutput() != null && getOutput() ) {
             writer.writeAttribute("output", "true");
         }
-        if (execute.getOnerror() != null && execute.getOnerror().length() > 0) {
-            writer.writeAttribute("onError", execute.getOnerror());
+        if (getOnerror() != null && getOnerror().length() > 0) {
+            writer.writeAttribute("onError", getOnerror());
         }
         
-        for(Arg arg: execute.getArg()){
+        for(Arg arg: getArg()){
             writer.writeEmptyElement("m:arg");
             writer.writeAttribute("name", arg.getName());
             if(arg.getValue()!=null){
@@ -268,7 +268,7 @@ public class Execute extends RequestChild {
        
         writer.writeCharacters(System.lineSeparator());
 
-        if (execute.getWhen() != null) {
+        if (getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
     }

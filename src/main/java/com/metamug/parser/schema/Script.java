@@ -148,29 +148,29 @@ public class Script extends RequestChild{
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
         this.parent = parent;
-        Script script = (Script)this;
+        //Script script = (Script)this;
         
-        if (script.getWhen() != null) {
+        if (getWhen() != null) {
             writer.writeStartElement("c:if");
             //String testString = getQuotedString(script.getWhen());
             //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
-            String test = transformVariables(script.getWhen(),parent.elementIds,false);
+            String test = transformVariables(getWhen(),parent.elementIds,false);
             writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
         }
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("m:script");
-        String var = script.getId();
+        String var = getId();
         writer.writeAttribute("var", var);
-        writer.writeAttribute("file", script.getFile());
+        writer.writeAttribute("file", getFile());
         
         writer.writeEndElement(); //End of <m:script>    
         writer.writeCharacters(System.lineSeparator());
         
-        if (script.getOutput()) {
+        if (getOutput()) {
             printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclose(var)); 
         }
         
-        if (script.getWhen() != null) {
+        if (getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
     }

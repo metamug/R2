@@ -296,41 +296,40 @@ public class Param extends RequestChild {
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException {
         this.parent = parent;
-        Param param = (Param)this;
         
         writer.writeCharacters(System.lineSeparator());
-        writeUnescapedCharacters(writer, processParam(param), parent.output);
+        writeUnescapedCharacters(writer, processParam(), parent.output);
     }
     
-    private String processParam(Param param) {
+    private String processParam() {
         StringBuilder builder = new StringBuilder();
-        builder.append("<m:param name=\"").append(param.getName()).append("\" ");
-        if (param.getType() != null) {
-            builder.append("type=\"").append(param.getType()).append("\" ");
+        builder.append("<m:param name=\"").append(getName()).append("\" ");
+        if (getType() != null) {
+            builder.append("type=\"").append(getType()).append("\" ");
         }
-        builder.append("value=\"").append("${mtgReq.params['").append(param.getName()).append("']}\" ");
-        if (param.getMax() != null) {
-            builder.append("max=\"").append(param.getMax()).append("\" ");
+        builder.append("value=\"").append("${mtgReq.params['").append(getName()).append("']}\" ");
+        if (getMax() != null) {
+            builder.append("max=\"").append(getMax()).append("\" ");
         }
-        if (param.getMaxlength() != null) {
-            builder.append("maxLen=\"").append(param.getMaxlength()).append("\" ");
+        if (getMaxlength() != null) {
+            builder.append("maxLen=\"").append(getMaxlength()).append("\" ");
         }
-        if (param.getMin() != null) {
-            builder.append("min=\"").append(param.getMin()).append("\" ");
+        if (getMin() != null) {
+            builder.append("min=\"").append(getMin()).append("\" ");
         }
-        if (param.getMinlength() != null) {
-            builder.append("minLen=\"").append(param.getMinlength()).append("\" ");
+        if (getMinlength() != null) {
+            builder.append("minLen=\"").append(getMinlength()).append("\" ");
         }
-        if (param.getPattern() != null) {
-            builder.append("pattern=\"").append(param.getPattern()).append("\" ");
+        if (getPattern() != null) {
+            builder.append("pattern=\"").append(getPattern()).append("\" ");
         }
-        if (param.getExists() != null) {
-            builder.append("exists=\"").append(param.getExists()).append("\" ");
+        if (getExists() != null) {
+            builder.append("exists=\"").append(getExists()).append("\" ");
         }
-        if (param.getValue() != null) {
-            builder.append("defaultValue=\"").append(param.getValue()).append("\" ");
+        if (getValue() != null) {
+            builder.append("defaultValue=\"").append(getValue()).append("\" ");
         }
-        if (param.isRequired()) {
+        if (isRequired()) {
             builder.append("isRequired=\"true\"");
         }
         builder.append("/>");

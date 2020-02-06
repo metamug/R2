@@ -113,26 +113,26 @@ public class Transaction extends RequestChild {
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
         this.parent = parent;
-        Transaction tx = (Transaction)this;
+        //Transaction tx = (Transaction)this;
         
-        if (tx.getWhen() != null) {
+        if (getWhen() != null) {
             writer.writeStartElement("c:if");
             //String testString = getQuotedString(tx.getWhen());
             //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
-            String test = transformVariables(tx.getWhen(),parent.elementIds,false);
+            String test = transformVariables(getWhen(),parent.elementIds,false);
             writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
         }
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("sql:transaction");
         writer.writeAttribute("dataSource", enclose(MASON_DATASOURCE));
         
-        List<Sql> sqlList = tx.getSql();
+        List<Sql> sqlList = getSql();
         for(Sql sql: sqlList){
             sql.print(writer, parent);
         }
         
         writer.writeEndElement(); //End of <sql:transaction> 
-        if (tx.getWhen() != null) {
+        if (getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
     }

@@ -161,24 +161,24 @@ public class Text extends RequestChild {
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
         this.parent = parent;
-        Text txt = (Text)this;
+        //Text txt = (Text)this;
         
-        if (txt.getWhen() != null) {
+        if (getWhen() != null) {
             writer.writeStartElement("c:if");
-            String test = transformVariables(txt.getWhen(),parent.elementIds,false);
+            String test = transformVariables(getWhen(),parent.elementIds,false);
             writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
         }
         writer.writeCharacters(System.lineSeparator());
         
-        String value = transformVariables(txt.getValue(),parent.elementIds,true).trim();
+        String value = transformVariables(getValue(),parent.elementIds,true).trim();
         
-        printPageScopeCSet(writer, txt.getId(), value);
+        printPageScopeCSet(writer,getId(), value);
         
-        if(txt.isOutput()){
-            printTargetCSet(writer, enclose(MASON_OUTPUT), txt.getId(), enclose(txt.getId()) );
+        if(isOutput()){
+            printTargetCSet(writer, enclose(MASON_OUTPUT), getId(), enclose(getId()) );
         }
         
-        if (txt.getWhen() != null) {
+        if (getWhen() != null) {
             writer.writeEndElement();
         }
     }
