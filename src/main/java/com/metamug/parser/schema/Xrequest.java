@@ -6,6 +6,9 @@
 //
 package com.metamug.parser.schema;
 
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.service.ParserService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,6 +17,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
+import org.apache.commons.text.StringEscapeUtils;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -52,7 +60,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "xrequest", propOrder = {
     "paramOrHeaderOrBody"
 })
-public class Xrequest {
+public class Xrequest extends RequestChild{
     @XmlElements({
         @XmlElement(name = "Param", type = Xparam.class),
         @XmlElement(name = "Header", type = Xheader.class),
@@ -218,5 +226,69 @@ public class Xrequest {
      */
     public void setClassName(String value) {
         this.className = value;
+    }
+
+    @Override
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
+        this.parent = parent;
+        Xrequest xrequest = (Xrequest)this;
+        
+        if (xrequest.getWhen() != null) {
+            writer.writeStartElement("c:if");
+            //String testString = getQuotedString(xrequest.getWhen());
+            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            String test = transformVariables(xrequest.getWhen(),parent.elementIds,false);
+            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
+        }
+   
+        //print xrequest mason tags
+        writer.writeCharacters(System.lineSeparator());
+        writer.writeStartElement("m:xrequest");
+        writer.writeAttribute("var", xrequest.getId());
+        writer.writeAttribute("method", xrequest.getMethod().name());
+        if ( xrequest.getOutput() != null ) { 
+            String outputVal = xrequest.getOutput().value();
+            if(outputVal.equals("headers")){
+                writer.writeAttribute("outputHeaders", "true");
+                writer.writeAttribute("output", "true");
+            } else if(outputVal.equals("true")) {
+                writer.writeAttribute("output", "true");
+            }
+        }
+        
+        if ( xrequest.getClassName() != null ) {
+            writer.writeAttribute("className", xrequest.getClassName());
+        }
+        
+        writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(xrequest.getUrl())+"\"",parent.output);
+                
+        for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
+            if (paramOrHeaderOrBody instanceof Xheader) {
+                writer.writeEmptyElement("m:header");
+                writer.writeAttribute("name", ((Xheader) paramOrHeaderOrBody).getName());
+                
+                String value = ((Xheader) paramOrHeaderOrBody).getValue();
+                writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"",parent.output);
+            } else if (paramOrHeaderOrBody instanceof Xparam) {
+                writer.writeEmptyElement("m:xparam");
+                writer.writeAttribute("name", ((Xparam) paramOrHeaderOrBody).getName());
+                //transform request parameters and mpath variables in xrequest param value
+                String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue(),parent.elementIds,true);
+                writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"",parent.output);
+            } else if (paramOrHeaderOrBody instanceof String) {
+                writer.writeStartElement("m:xbody");
+                //transform request parameters and mpath variables in xrequest body
+                String body = transformVariables((String) paramOrHeaderOrBody,parent.elementIds,true);
+              
+                writeUnescapedCharacters(writer, body,parent.output);
+                writer.writeEndElement();
+            }
+        }
+        writer.writeEndElement(); //End of <m:xrequest>    
+        writer.writeCharacters(System.lineSeparator());
+        
+        if (xrequest.getWhen() != null) {
+            writer.writeEndElement(); //End of <c:if>
+        }
     }
 }

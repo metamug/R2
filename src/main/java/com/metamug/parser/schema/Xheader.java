@@ -39,7 +39,7 @@ import javax.xml.xpath.XPathExpressionException;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "xheader")
-public class Xheader extends RequestTag {
+public class Xheader extends RequestChild {
 
     @XmlAttribute(name = "name", required = true)
     protected String name;
@@ -87,8 +87,10 @@ public class Xheader extends RequestTag {
     }
 
     @Override
-    public void print(XMLStreamWriter writer, Object tag, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException {
-        Xheader header = (Xheader)tag;
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException {
+        this.parent = parent;
+        Xheader header = (Xheader)this;
+        
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("m:header");
         writer.writeAttribute("name", header.getName());

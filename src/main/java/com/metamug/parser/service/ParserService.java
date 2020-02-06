@@ -55,18 +55,9 @@ package com.metamug.parser.service;
 
 import com.metamug.parser.RPXParser;
 import com.metamug.parser.exception.ResourceTestException;
-import com.metamug.parser.schema.Arg;
-import com.metamug.parser.schema.Execute;
-import com.metamug.parser.schema.Text;
-import com.metamug.parser.schema.Param;
 import com.metamug.parser.schema.Request;
+import com.metamug.parser.schema.RequestChild;
 import com.metamug.parser.schema.Resource;
-import com.metamug.parser.schema.Script;
-import com.metamug.parser.schema.Sql;
-import com.metamug.parser.schema.Transaction;
-import com.metamug.parser.schema.Xheader;
-import com.metamug.parser.schema.Xparam;
-import com.metamug.parser.schema.Xrequest;
 import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
 import java.beans.PropertyVetoException;
 import java.io.File;
@@ -93,7 +84,6 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
@@ -220,73 +210,11 @@ public class ParserService {
     }
 
     protected void printRequestElements(List elements, XMLStreamWriter writer, String domain) throws XMLStreamException, IOException, XPathExpressionException, SAXException, ResourceTestException {
-        for (Object object : elements) {
-            if (object instanceof Param) {
-                Param param = (Param) object;
-                printParamTag(writer, param);
-            } else if (object instanceof Xheader) {
-                Xheader header = (Xheader)object;
-                printHeaderTag(header, writer);
-            } else if (object instanceof Sql) {
-                Sql sql = (Sql) object;
-                elementIds.put(sql.getId(), Sql.class.getName());
-
-                if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
-                    startValidateTag(writer, sql.getOnerror());
-                }
-
-                preProcessSqlElement(sql, domain);               
-
-                printSqlTag(sql, writer, true);
-
-                if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
-                    closeValidateTag(writer);
-                }
-            } else if (object instanceof Execute) {
-                Execute execute = (Execute) object;
-                elementIds.put(execute.getId(), Execute.class.getName());
-                printExecuteTag(execute, writer);
-            } else if (object instanceof Xrequest) {
-                Xrequest xr = (Xrequest) object;
-                elementIds.put(xr.getId(), Xrequest.class.getName());
-                printXrequestTag(xr, writer);
-            } else if(object instanceof Script){
-                Script sc = (Script)object;
-                elementIds.put(sc.getId(), Script.class.getName());
-                printScriptTag(sc, writer);
-            } else if(object instanceof Transaction){
-                printTransaction((Transaction)object,writer,domain);
-            } else if(object instanceof Text){
-                Text txt = (Text)object;
-                elementIds.put(txt.getId(), Text.class.getName());
-                printTextTag(txt,writer);
-            }
+        for (Object child : elements) {
+            ((RequestChild)child).print(writer, this);
         }
     }
-    
-    
-    protected void printTextTag(Text txt, XMLStreamWriter writer) throws XMLStreamException, ResourceTestException, IOException{
-        if (txt.getWhen() != null) {
-            writer.writeStartElement("c:if");
-            String test = transformVariables(txt.getWhen(),elementIds,false);
-            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"");
-        }
-        writer.writeCharacters(System.lineSeparator());
-        
-        String value = transformVariables(txt.getValue(),elementIds,true).trim();
-        
-        printPageScopeCSet(writer, txt.getId(), value);
-        
-        if(txt.isOutput()){
-            printTargetCSet(writer, enclose(MASON_OUTPUT), txt.getId(), enclose(txt.getId()) );
-        }
-        
-        if (txt.getWhen() != null) {
-            writer.writeEndElement();
-        }
-    }
-    
-    
+
 
     /**
      * Initializes the JSP page and add necessary tags for Auth group and nested resource handling.
@@ -348,206 +276,6 @@ public class ParserService {
     }
 
     /**
-     * Prints mtg:execute tag to call Java code for code execution.
-     *
-     * @param execute Execute object which is to be converted
-     * @param writer XMLStreamWriter to write to JSP file.
-     * @throws XMLStreamException
-     * @throws SAXException
-     */
-    protected void printExecuteTag(Execute execute, XMLStreamWriter writer) throws XMLStreamException, SAXException, ResourceTestException, IOException {
-        if (execute.getWhen() != null) {
-            writer.writeStartElement("c:if");
-            //String testString = getQuotedString(execute.getWhen());
-            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
-            String test = transformVariables(execute.getWhen(),elementIds,false);
-            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"");
-        }
-        //Print params those are marked as 'requires' in <Execute>
-        String requiredParams = execute.getRequires();
-        if (requiredParams != null) {
-            for (String param : requiredParams.split(",")) {
-                writer.writeEmptyElement("m:param");
-                writer.writeAttribute("name", param);
-                writer.writeAttribute("type", "");
-                writer.writeAttribute("value", enclose("mtgReq.params['" + param + "']"));
-                writer.writeAttribute("isRequired", "true");
-            }
-        }
-        writer.writeCharacters(System.lineSeparator());
-        writer.writeStartElement("m:execute");
-        writer.writeAttribute("var", execute.getId());
-        writer.writeAttribute("className", execute.getClassName());
-        writer.writeAttribute("param", enclose("mtgReq"));
-        if ( (execute.getVerbose() != null && execute.getVerbose()) 
-                || execute.getOutput() != null && execute.getOutput() ) {
-            writer.writeAttribute("output", "true");
-        }
-        if (execute.getOnerror() != null && execute.getOnerror().length() > 0) {
-            writer.writeAttribute("onError", execute.getOnerror());
-        }
-        
-        for(Arg arg: execute.getArg()){
-            writer.writeEmptyElement("m:arg");
-            writer.writeAttribute("name", arg.getName());
-            if(arg.getValue()!=null){
-                writer.writeAttribute("value", transformVariables(arg.getValue(),elementIds,true) );
-            }else{
-                //value is null, check path
-                if(arg.getPath()!=null){
-                    writer.writeAttribute("value", transformVariables(arg.getPath(),elementIds,true) );
-                } else{
-                    writer.writeAttribute("value","null");
-                }
-            }
-        }
-        
-        writer.writeCharacters(System.lineSeparator());
-        writer.writeEndElement(); // </m:execute>
-       
-        writer.writeCharacters(System.lineSeparator());
-
-        if (execute.getWhen() != null) {
-            writer.writeEndElement(); //End of <c:if>
-        }
-    }
-    
-    
-    protected void printTransaction(Transaction tx, XMLStreamWriter writer, String domain) throws XMLStreamException, 
-            SAXException, IOException, XPathExpressionException, ResourceTestException{
-        if (tx.getWhen() != null) {
-            writer.writeStartElement("c:if");
-            //String testString = getQuotedString(tx.getWhen());
-            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
-            String test = transformVariables(tx.getWhen(),elementIds,false);
-            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"");
-        }
-        writer.writeCharacters(System.lineSeparator());
-        writer.writeStartElement("sql:transaction");
-        writer.writeAttribute("dataSource", enclose(MASON_DATASOURCE));
-        
-        List<Sql> sqlList = tx.getSql();
-        for(Sql sql: sqlList){
-            elementIds.put(sql.getId(), Sql.class.getName());
-
-            if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
-                startValidateTag(writer, sql.getOnerror());
-            }
-
-            preProcessSqlElement(sql, domain);               
-
-            printSqlTag(sql, writer, false);
-
-            if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
-                closeValidateTag(writer);
-            }
-        }
-        
-        writer.writeEndElement(); //End of <sql:transaction> 
-        if (tx.getWhen() != null) {
-            writer.writeEndElement(); //End of <c:if>
-        }
-    }
-    
-    protected void printScriptTag(Script script,XMLStreamWriter writer) throws XMLStreamException, SAXException, ResourceTestException, IOException{
-        if (script.getWhen() != null) {
-            writer.writeStartElement("c:if");
-            //String testString = getQuotedString(script.getWhen());
-            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
-            String test = transformVariables(script.getWhen(),elementIds,false);
-            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"");
-        }
-        writer.writeCharacters(System.lineSeparator());
-        writer.writeStartElement("m:script");
-        String var = script.getId();
-        writer.writeAttribute("var", var);
-        writer.writeAttribute("file", script.getFile());
-        
-        writer.writeEndElement(); //End of <m:script>    
-        writer.writeCharacters(System.lineSeparator());
-        
-        if (script.getOutput()) {
-            printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclose(var)); 
-        }
-        
-        if (script.getWhen() != null) {
-            writer.writeEndElement(); //End of <c:if>
-        }
-    }
-
-    /**
-     * Prints mtg:xrequest tag to call Java code for making HTTP requests to 3rd party APIs.
-     *
-     * @param xrequest Xrequest object which is to be converted
-     * @param writer XMLStreamWriter to write to JSP file.
-     * @throws XMLStreamException
-     * @throws SAXException
-     * @throws java.io.IOException
-     * @throws javax.xml.xpath.XPathExpressionException
-     * @throws ResourceTestException
-     */
-    protected void printXrequestTag(Xrequest xrequest, XMLStreamWriter writer)
-            throws XMLStreamException, SAXException, IOException, XPathExpressionException, ResourceTestException {
-        if (xrequest.getWhen() != null) {
-            writer.writeStartElement("c:if");
-            //String testString = getQuotedString(xrequest.getWhen());
-            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
-            String test = transformVariables(xrequest.getWhen(),elementIds,false);
-            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"");
-        }
-   
-        //print xrequest mason tags
-        writer.writeCharacters(System.lineSeparator());
-        writer.writeStartElement("m:xrequest");
-        writer.writeAttribute("var", xrequest.getId());
-        writer.writeAttribute("method", xrequest.getMethod().name());
-        if ( xrequest.getOutput() != null ) { 
-            String outputVal = xrequest.getOutput().value();
-            if(outputVal.equals("headers")){
-                writer.writeAttribute("outputHeaders", "true");
-                writer.writeAttribute("output", "true");
-            } else if(outputVal.equals("true")) {
-                writer.writeAttribute("output", "true");
-            }
-        }
-        
-        if ( xrequest.getClassName() != null ) {
-            writer.writeAttribute("className", xrequest.getClassName());
-        }
-        
-        writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(xrequest.getUrl())+"\"");
-                
-        for (Object paramOrHeaderOrBody : xrequest.getParamOrHeaderOrBody()) {
-            if (paramOrHeaderOrBody instanceof Xheader) {
-                writer.writeEmptyElement("m:header");
-                writer.writeAttribute("name", ((Xheader) paramOrHeaderOrBody).getName());
-                
-                String value = ((Xheader) paramOrHeaderOrBody).getValue();
-                writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"");
-            } else if (paramOrHeaderOrBody instanceof Xparam) {
-                writer.writeEmptyElement("m:xparam");
-                writer.writeAttribute("name", ((Xparam) paramOrHeaderOrBody).getName());
-                //transform request parameters and mpath variables in xrequest param value
-                String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue(),elementIds,true);
-                writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
-            } else if (paramOrHeaderOrBody instanceof String) {
-                writer.writeStartElement("m:xbody");
-                //transform request parameters and mpath variables in xrequest body
-                String body = transformVariables((String) paramOrHeaderOrBody,elementIds,true);
-              
-                writeUnescapedCharacters(writer, body);
-                writer.writeEndElement();
-            }
-        }
-        writer.writeEndElement(); //End of <m:xrequest>    
-        writer.writeCharacters(System.lineSeparator());
-        
-        if (xrequest.getWhen() != null) {
-            writer.writeEndElement(); //End of <c:if>
-        }
-    }
-
-    /**
      * Close the m:request for Request tag.
      *
      * @param writer XMLStreamWriter to write to JSP file.
@@ -557,9 +285,7 @@ public class ParserService {
         writer.writeEndElement();
         writer.writeCharacters(System.lineSeparator());
     }
-    
-    
- 
+   
     /**
      *
      * @param writer
@@ -616,99 +342,5 @@ public class ParserService {
                 return "${mtgReq.params['" +param+ "']}";
         }
     }
-
-    
-/*
-    public String getQuotedString(String plainString) throws SAXException {
-        StringBuilder finalString;
-        String quotedString = plainString.replaceAll("\\s+", " ");
-        quotedString = quotedString.replaceAll("\\s+\\(", "\\(");
-        quotedString = quotedString.replaceAll("\\s+\\)", "\\)");
-        quotedString = quotedString.replaceAll("\\s+\\{", "\\{");
-        quotedString = quotedString.replaceAll("\\s+\\}", "\\}");
-        quotedString = quotedString.replaceAll("\\(\\s+", "\\(");
-        quotedString = quotedString.replaceAll("\\)\\s+", "\\)");
-        quotedString = quotedString.replaceAll("\\{\\s+", "\\{");
-        quotedString = quotedString.replaceAll("\\}\\s+", "\\}");
-        String temp = quotedString.trim();
-        quotedString = quotedString.replaceAll("\\s+", " ");
-        //System.out.println("q1: "+quotedString);
-        
-        
-        Pattern pattern = Pattern.compile("((\\$|\\'|\\\"){0,1}\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,}(\\'|\\\"){0,1})");
-        Matcher matcher = pattern.matcher(temp);
-        String[] tokens = temp.split("\\s+");
-        String[] operators = {"eq", "le", "ge", "ne", "lt", "gt", "true", "false", "not"};
-        String[] logicalOperators = {"and", "or", "empty", "null"};
-        List<String> testStringToken = Arrays.asList(tokens);
-        List<String> operatorList = Arrays.asList(operators);
-        List<String> logicalOperatorList = Arrays.asList(logicalOperators);
-        if (!Collections.disjoint(testStringToken, operatorList)) {
-            while (matcher.find()) {
-                String token = temp.substring(matcher.start(1), matcher.end(1)).trim();
-                String tempToken = token;
-                if (!token.startsWith("$") && !operatorList.contains(tempToken.toLowerCase()) && !logicalOperatorList.contains(tempToken.toLowerCase())) {
-                    if (token.startsWith("\"") || token.startsWith("'")) {
-                        if (token.endsWith("\"") || token.endsWith("'")) {
-                            if (token.charAt(0) != token.charAt(token.length() - 1)) {
-                                token = token.replace(token.charAt(token.length() - 1), token.charAt(0));
-                            }
-                        } else {
-                            token = token.concat(String.valueOf(token.charAt(0)));
-                        }
-                    } else {
-                        if (!token.matches("[0-9]")) {
-                            token = "'" + token + "'";
-                        }
-                    }
-                    quotedString = quotedString.replaceFirst(tempToken, token);
-                }
-            }
-            finalString = new StringBuilder(quotedString);
-            String before, after = "";
-            do {
-                before = after;
-                finalString = new StringBuilder(enclose(finalString));
-                after = finalString.toString();
-            } while (!before.equalsIgnoreCase(after));
-        } else {
-            throw new SAXException("Incorrect conditional operator used in 'when' attribute");
-        }
-        //System.out.println("q2: "+finalString.toString());
-        //return finalString.toString();
-        
-        return null;
-    }
-
-    private StringBuilder enclose(StringBuilder finalString) {
-        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
-        Matcher match = pattern.matcher(finalString.toString());
-        if (match.find()) {
-            int start = match.start(1);
-            int end = match.end(1);
-            String old = finalString.substring(start, end);
-            String modified = "['" + old + "']";
-            finalString.replace(start, end, modified);
-        }
-        
-        System.out.println("q3: "+finalString.toString());
-        return finalString;
-    }*/
-/*
-    protected boolean isVerbose(Sql sql) {
-        if (sql.getType().value().equalsIgnoreCase("update") &&
-               ( (sql.getVerbose() != null && sql.getVerbose()) || (sql.getOutput() != null && sql.getOutput()) ) ) {
-            // type = update and verbose = true
-            return true;
-        } else {
-            // type = query and verbose != false
-            return sql.getType().value().equalsIgnoreCase("query") && 
-               ( ( sql.getVerbose() == null || sql.getVerbose() || sql.getOutput() == null || sql.getOutput() ) );
-        }
-    }*/
-    
-    
-   
-
 
 }

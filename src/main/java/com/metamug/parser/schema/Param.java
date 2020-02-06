@@ -50,7 +50,7 @@ import javax.xml.xpath.XPathExpressionException;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "param")
-public class Param extends RequestTag {
+public class Param extends RequestChild {
 
     @XmlAttribute(name = "name", required = true)
     protected String name;
@@ -294,9 +294,10 @@ public class Param extends RequestTag {
     }
 
     @Override
-    public void print(XMLStreamWriter writer, Object tag, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException {
-     
-        Param param = (Param)tag;
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException {
+        this.parent = parent;
+        Param param = (Param)this;
+        
         writer.writeCharacters(System.lineSeparator());
         writeUnescapedCharacters(writer, processParam(param), parent.output);
     }

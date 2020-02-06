@@ -6,6 +6,9 @@
 //
 package com.metamug.parser.schema;
 
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.service.ParserService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,12 +16,17 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
+import org.apache.commons.text.StringEscapeUtils;
+import org.xml.sax.SAXException;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "execute", propOrder = {
     "arg"
 })
-public class Execute {
+public class Execute extends RequestChild {
     @XmlElement(name = "Arg")
     protected List<Arg> arg;
     @XmlAttribute(name = "id", required = true)
@@ -202,5 +210,66 @@ public class Execute {
      */
     public void setOutput(Boolean output) {
         this.output = output;
+    }
+
+    @Override
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
+        this.parent = parent;
+        Execute execute = (Execute)this;
+        
+        if (execute.getWhen() != null) {
+            writer.writeStartElement("c:if");
+            //String testString = getQuotedString(execute.getWhen());
+            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            String test = transformVariables(execute.getWhen(),parent.elementIds,false);
+            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
+        }
+        //Print params those are marked as 'requires' in <Execute>
+        String requiredParams = execute.getRequires();
+        if (requiredParams != null) {
+            for (String param : requiredParams.split(",")) {
+                writer.writeEmptyElement("m:param");
+                writer.writeAttribute("name", param);
+                writer.writeAttribute("type", "");
+                writer.writeAttribute("value", enclose("mtgReq.params['" + param + "']"));
+                writer.writeAttribute("isRequired", "true");
+            }
+        }
+        writer.writeCharacters(System.lineSeparator());
+        writer.writeStartElement("m:execute");
+        writer.writeAttribute("var", execute.getId());
+        writer.writeAttribute("className", execute.getClassName());
+        writer.writeAttribute("param", enclose("mtgReq"));
+        if ( (execute.getVerbose() != null && execute.getVerbose()) 
+                || execute.getOutput() != null && execute.getOutput() ) {
+            writer.writeAttribute("output", "true");
+        }
+        if (execute.getOnerror() != null && execute.getOnerror().length() > 0) {
+            writer.writeAttribute("onError", execute.getOnerror());
+        }
+        
+        for(Arg arg: execute.getArg()){
+            writer.writeEmptyElement("m:arg");
+            writer.writeAttribute("name", arg.getName());
+            if(arg.getValue()!=null){
+                writer.writeAttribute("value", transformVariables(arg.getValue(),parent.elementIds,true) );
+            }else{
+                //value is null, check path
+                if(arg.getPath()!=null){
+                    writer.writeAttribute("value", transformVariables(arg.getPath(),parent.elementIds,true) );
+                } else{
+                    writer.writeAttribute("value","null");
+                }
+            }
+        }
+        
+        writer.writeCharacters(System.lineSeparator());
+        writer.writeEndElement(); // </m:execute>
+       
+        writer.writeCharacters(System.lineSeparator());
+
+        if (execute.getWhen() != null) {
+            writer.writeEndElement(); //End of <c:if>
+        }
     }
 }

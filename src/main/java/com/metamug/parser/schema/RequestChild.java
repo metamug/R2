@@ -72,21 +72,20 @@ import org.xml.sax.SAXException;
  *
  * @author anishhirlekar
  */
-public abstract class RequestTag {
+public abstract class RequestChild {
     
     ParserService parent;
 
     /**
      *
      * @param writer
-     * @param tag
      * @param parent
      * @throws javax.xml.stream.XMLStreamException
      * @throws java.io.IOException
      * @throws javax.xml.xpath.XPathExpressionException
      * @throws com.metamug.parser.exception.ResourceTestException
      */
-    abstract public void print(XMLStreamWriter writer, Object tag, ParserService parent)  throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException;
+    abstract public void print(XMLStreamWriter writer, ParserService parent)  throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException;
     
     /**
      *
@@ -182,5 +181,16 @@ public abstract class RequestTag {
             default:
                 return "${mtgReq.params['" +param+ "']}";
         }
+    }
+    
+    protected void printPageScopeCSet(XMLStreamWriter writer, String var, String value) throws XMLStreamException{
+        printScopeCSet(writer,"page",var,value);
+    }
+    
+    protected void printScopeCSet(XMLStreamWriter writer, String scope, String var, String value) throws XMLStreamException{
+        writer.writeEmptyElement("c:set");
+        writer.writeAttribute("var", var);
+        writer.writeAttribute("scope", scope);    
+        writer.writeAttribute("value", value);
     }
 }

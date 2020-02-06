@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sql", propOrder = {"value"})
-public class Sql extends RequestTag{
+public class Sql extends RequestChild{
 
     @XmlValue
     protected String value;
@@ -319,9 +319,9 @@ public class Sql extends RequestTag{
     }
 
     @Override
-    public void print(XMLStreamWriter writer, Object tag, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
         this.parent = parent;
-        Sql sql = (Sql) tag;
+        Sql sql = this;
         parent.elementIds.put(sql.getId(), Sql.class.getName());
 
         if (sql.getOnerror() != null && sql.getOnerror().length() > 0) {
