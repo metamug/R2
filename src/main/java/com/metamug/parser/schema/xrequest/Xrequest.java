@@ -4,9 +4,12 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2018.06.19 at 07:00:32 PM IST 
 //
-package com.metamug.parser.schema;
+package com.metamug.parser.schema.xrequest;
 
 import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.schema.Method;
+import com.metamug.parser.schema.RequestChild;
+import com.metamug.parser.schema.Xheader;
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
 import java.util.ArrayList;

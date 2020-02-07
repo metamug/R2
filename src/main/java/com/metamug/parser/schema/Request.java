@@ -6,6 +6,7 @@
 //
 package com.metamug.parser.schema;
 
+import com.metamug.parser.schema.xrequest.Xrequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

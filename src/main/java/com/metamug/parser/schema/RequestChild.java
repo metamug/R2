@@ -52,6 +52,7 @@
  */
 package com.metamug.parser.schema;
 
+import com.metamug.parser.schema.xrequest.Xrequest;
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
 import static com.metamug.parser.service.ParserService.MPATH_EXPRESSION_PATTERN;
@@ -77,7 +78,7 @@ import org.xml.sax.SAXException;
  */
 public abstract class RequestChild {
     
-    ParserService parent;
+    public ParserService parent;
 
     /**
      *

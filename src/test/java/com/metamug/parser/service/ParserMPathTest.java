@@ -56,7 +56,7 @@ import com.metamug.parser.exception.ResourceTestException;
 
 import com.metamug.parser.schema.Execute;
 import com.metamug.parser.schema.Sql;
-import com.metamug.parser.schema.Xrequest;
+import com.metamug.parser.schema.xrequest.Xrequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;

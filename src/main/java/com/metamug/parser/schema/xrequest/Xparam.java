@@ -4,7 +4,7 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2018.06.19 at 07:00:32 PM IST 
 //
-package com.metamug.parser.schema;
+package com.metamug.parser.schema.xrequest;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

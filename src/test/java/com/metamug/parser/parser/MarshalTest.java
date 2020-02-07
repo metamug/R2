@@ -56,7 +56,7 @@ import com.metamug.parser.RPXParser;
 import com.metamug.parser.service.ParserServiceTest;
 import com.metamug.parser.schema.Request;
 import com.metamug.parser.schema.Resource;
-import com.metamug.parser.schema.Xrequest;
+import com.metamug.parser.schema.xrequest.Xrequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
