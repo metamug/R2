@@ -279,6 +279,10 @@ public class Xrequest extends RequestChild{
 
     @Override
     public List<String> getRequestParameters() {
-        return null;
+        List<String> params = new ArrayList<>();
+        getParamOrHeaderOrBody().forEach( child  -> {
+            params.addAll(child.getRequestParameters());
+        });
+        return params;
     }
 }
