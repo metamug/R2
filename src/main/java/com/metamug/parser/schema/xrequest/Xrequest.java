@@ -9,7 +9,7 @@ package com.metamug.parser.schema.xrequest;
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.schema.Method;
 import com.metamug.parser.schema.RequestChild;
-import com.metamug.parser.schema.Xheader;
+import com.metamug.parser.schema.Header;
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
 public class Xrequest extends RequestChild{
     @XmlElements({
         @XmlElement(name = "Param", type = Xparam.class),
-        @XmlElement(name = "Header", type = Xheader.class),
+        @XmlElement(name = "Header", type = Header.class),
         @XmlElement(name = "Body", type = String.class)
     })
     protected List<Object> paramOrHeaderOrBody;
@@ -99,7 +99,7 @@ public class Xrequest extends RequestChild{
      *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link Xparam }
-     * {@link Xheader }
+     * {@link Header }
      * {@link String }
      *
      *
@@ -266,11 +266,11 @@ public class Xrequest extends RequestChild{
         writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(getUrl())+"\"",parent.output);
                 
         for (Object paramOrHeaderOrBody : getParamOrHeaderOrBody()) {
-            if (paramOrHeaderOrBody instanceof Xheader) {
+            if (paramOrHeaderOrBody instanceof Header) {
                 writer.writeEmptyElement("m:header");
-                writer.writeAttribute("name", ((Xheader) paramOrHeaderOrBody).getName());
+                writer.writeAttribute("name", ((Header) paramOrHeaderOrBody).getName());
                 
-                String value = ((Xheader) paramOrHeaderOrBody).getValue();
+                String value = ((Header) paramOrHeaderOrBody).getValue();
                 writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"",parent.output);
             } else if (paramOrHeaderOrBody instanceof Xparam) {
                 writer.writeEmptyElement("m:xparam");

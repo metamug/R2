@@ -41,7 +41,7 @@ import javax.xml.xpath.XPathExpressionException;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "xheader")
-public class Xheader extends RequestChild {
+public class Header extends RequestChild {
 
     @XmlAttribute(name = "name", required = true)
     protected String name;
