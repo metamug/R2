@@ -143,12 +143,6 @@
         </xsd:restriction>
     </xsd:simpleType>
 
-    <xsd:simpleType name="xbody">
-        <xsd:restriction base="xsd:string">
-            <xsd:minLength value="1"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-
     <xsd:simpleType name="method">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="HEAD"/>
@@ -258,6 +252,10 @@
     <xsd:complexType name="xparam">
         <xsd:attribute name="name" type="paramName" use="required"/>
         <xsd:attribute name="value" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="xbody">
+       
     </xsd:complexType>
 
     <xsd:complexType name="header">
