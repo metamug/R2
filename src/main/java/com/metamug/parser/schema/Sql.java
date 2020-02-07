@@ -15,6 +15,7 @@ import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
 import com.metamug.parser.service.QueryManagerService;
 import com.metamug.parser.service.ResourceTestService;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -567,6 +568,9 @@ public class Sql extends RequestChild{
 
     @Override
     public List<String> getRequestParameters() {
-        return null;
+        List<String> params = new ArrayList<>();
+        getRequestParametersFromString(params,getWhen());
+        getRequestParametersFromString(params, getValue());
+        return params;
     }
 }

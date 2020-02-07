@@ -275,6 +275,18 @@ public class Execute extends RequestChild {
 
     @Override
     public List<String> getRequestParameters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<String> p = new ArrayList<>();
+        getRequestParametersFromString(p,getWhen());
+        for(Arg arg: getArg()){
+            if(arg.getValue()!=null){
+                getRequestParametersFromString(p,arg.getValue());
+            }else{
+                //value is null, check path
+                if(arg.getPath()!=null){
+                    getRequestParametersFromString(p,arg.getPath());
+                } 
+            }
+        }
+        return p;
     }
 }

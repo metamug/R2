@@ -126,9 +126,8 @@ public class Transaction extends RequestChild {
         writer.writeStartElement("sql:transaction");
         writer.writeAttribute("dataSource", enclose(MASON_DATASOURCE));
         
-        List<Sql> sqlList = getSql();
-        for(Sql sql: sqlList){
-            sql.print(writer, parent);
+        for(Sql s: getSql()){
+            s.print(writer, parent);
         }
         
         writer.writeEndElement(); //End of <sql:transaction> 
@@ -139,6 +138,11 @@ public class Transaction extends RequestChild {
 
     @Override
     public List<String> getRequestParameters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<String> p = new ArrayList<>();
+        getSql().forEach( s -> {
+            getRequestParametersFromString(p, s.getWhen());
+            getRequestParametersFromString(p, s.getValue());
+        });   
+        return p;
     }
 }

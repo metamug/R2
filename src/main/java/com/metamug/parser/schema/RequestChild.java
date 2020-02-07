@@ -203,9 +203,18 @@ public abstract class RequestChild {
         writer.writeAttribute("scope", scope);    
         writer.writeAttribute("value", value);
     }
+    
+    public void getRequestParametersFromString(List<String> paramList, String input) {
+        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
+        Matcher matcher = pattern.matcher(input);
+        while (matcher.find()) {
+            String v = input.substring(matcher.start(1), matcher.end(1)).trim();
+            paramList.add(v);
+        }
+    }
 
     //transforms request variables in given string
-    public static String transformRequestVariables(String input, boolean enclose) {
+    public String transformRequestVariables(String input, boolean enclose) {
         String output = input;
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher matcher = pattern.matcher(input);
@@ -241,7 +250,7 @@ public abstract class RequestChild {
         return output;
     }
     
-    public static String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
         String transformedVariable = mpathVariable;
         
         StringBuilder sb = new StringBuilder();
@@ -300,7 +309,7 @@ public abstract class RequestChild {
     }
     
     //collects MPath variables for sql:param tags
-    public static void collectMPathParams(LinkedList<String> params,String sql, Map<String,String> elementIds) throws ResourceTestException {
+    public void collectMPathParams(LinkedList<String> params,String sql, Map<String,String> elementIds) throws ResourceTestException {
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(sql);
         
@@ -310,7 +319,7 @@ public abstract class RequestChild {
     }
     
     //collects request variables for sql:param tags
-    public static void collectRequestParams(LinkedList<String> params,String sql) throws ResourceTestException {
+    public void collectRequestParams(LinkedList<String> params,String sql) throws ResourceTestException {
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher matcher = pattern.matcher(sql);
         while (matcher.find()) {
@@ -320,7 +329,7 @@ public abstract class RequestChild {
     }
     
     //transforms MPath variables in given string
-    public static String transformMPathVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException {
+    public String transformMPathVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException {
         String transformed = input;
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(input);
@@ -345,7 +354,7 @@ public abstract class RequestChild {
     
 
     // '%$variable%' => CONCAT('%',$variable,'%')
-    public static String processVariablesInLikeClause(String q) {
+    public String processVariablesInLikeClause(String q) {
         Pattern quotePattern = Pattern.compile("'(.*?)'");
         Matcher quotedSubstringMatcher = quotePattern.matcher(q);
         while (quotedSubstringMatcher.find()) {
@@ -387,7 +396,7 @@ public abstract class RequestChild {
         return q;
     }
 
-    public static String getMPathId(String path){
+    public String getMPathId(String path){
         Pattern p = Pattern.compile("^\\$\\[(.*?)\\]");// $[varname]
 
         Matcher m = p.matcher(path);
@@ -399,7 +408,7 @@ public abstract class RequestChild {
         return null;
     }
     
-    protected static String getMPathLocator(String path){
+    protected String getMPathLocator(String path){
         return path.replaceFirst("\\$\\[(.*?)\\]","");
     }
 }
