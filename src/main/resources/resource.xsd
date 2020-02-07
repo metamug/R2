@@ -255,7 +255,11 @@
     </xsd:complexType>
     
     <xsd:complexType name="xbody">
-       
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                
+            </xsd:extension>
+        </xsd:simpleContent>
     </xsd:complexType>
 
     <xsd:complexType name="header">

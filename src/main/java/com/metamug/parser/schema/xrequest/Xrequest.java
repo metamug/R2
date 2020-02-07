@@ -69,7 +69,7 @@ public class Xrequest extends RequestChild{
         @XmlElement(name = "Header", type = Xheader.class),
         @XmlElement(name = "Body", type = String.class)
     })
-    protected List<Object> paramOrHeaderOrBody;
+    protected List<XrequestChild> paramOrHeaderOrBody;
     @XmlAttribute(name = "id", required = true)
     protected String id;
     @XmlAttribute(name = "when")
@@ -105,7 +105,7 @@ public class Xrequest extends RequestChild{
      *
      * @return
      */
-    public List<Object> getParamOrHeaderOrBody() {
+    public List<XrequestChild> getParamOrHeaderOrBody() {
         if (paramOrHeaderOrBody == null) {
             paramOrHeaderOrBody = new ArrayList<>();
         }
@@ -265,28 +265,10 @@ public class Xrequest extends RequestChild{
         
         writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(getUrl())+"\"",parent.output);
                 
-        for (Object paramOrHeaderOrBody : getParamOrHeaderOrBody()) {
-            if (paramOrHeaderOrBody instanceof Xheader) {
-                writer.writeEmptyElement("m:header");
-                writer.writeAttribute("name", ((Xheader) paramOrHeaderOrBody).getName());
-                
-                String value = ((Header) paramOrHeaderOrBody).getValue();
-                writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"",parent.output);
-            } else if (paramOrHeaderOrBody instanceof Xparam) {
-                writer.writeEmptyElement("m:xparam");
-                writer.writeAttribute("name", ((Xparam) paramOrHeaderOrBody).getName());
-                //transform request parameters and mpath variables in xrequest param value
-                String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue(),parent.elementIds,true);
-                writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"",parent.output);
-            } else if (paramOrHeaderOrBody instanceof String) {
-                writer.writeStartElement("m:xbody");
-                //transform request parameters and mpath variables in xrequest body
-                String body = transformVariables((String) paramOrHeaderOrBody,parent.elementIds,true);
-              
-                writeUnescapedCharacters(writer, body,parent.output);
-                writer.writeEndElement();
-            }
+        for (XrequestChild child : getParamOrHeaderOrBody()) {
+            child.print(writer, parent);
         }
+        
         writer.writeEndElement(); //End of <m:xrequest>    
         writer.writeCharacters(System.lineSeparator());
         

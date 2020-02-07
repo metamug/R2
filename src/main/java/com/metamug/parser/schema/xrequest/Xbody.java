@@ -52,17 +52,69 @@
  */
 package com.metamug.parser.schema.xrequest;
 
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.service.ParserService;
+import java.io.IOException;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author anishhirlekar
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "xbody")
-public class Xbody {
+@XmlType(name = "xbody", propOrder = {
+    "value"
+})
+public class Xbody extends XrequestChild {
 
+    @XmlValue
+    protected String value;
+
+    /**
+     * Gets the value of the value property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value of the value property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    @Override
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
+        writer.writeStartElement("m:xbody");
+        //transform request parameters and mpath variables in xrequest body
+        String body = transformVariables(getValue(),parent.elementIds,true);
+              
+        writeUnescapedCharacters(writer, body,parent.output);
+        writer.writeEndElement();
+    }
+
+    @Override
+    public List<String> getRequestParameters() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }
