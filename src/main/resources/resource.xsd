@@ -262,6 +262,11 @@
         <xsd:attribute name="name" type="headerName" use="required"/>
         <xsd:attribute name="value" type="xsd:string" use="required"/>
     </xsd:complexType>
+    
+    <xsd:complexType name="xheader">
+        <xsd:attribute name="name" type="headerName" use="required"/>
+        <xsd:attribute name="value" type="xsd:string" use="required"/>
+    </xsd:complexType>
 
     <xsd:complexType name="xrequest">
         <xsd:annotation>
@@ -271,7 +276,7 @@
         </xsd:annotation>
         <xsd:choice maxOccurs="unbounded">
             <xsd:element name="Param" type="xparam" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="Header" type="header" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="Header" type="xheader" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="Body" type="xbody" minOccurs="0" maxOccurs="1"/>
         </xsd:choice>
         <xsd:attribute name="id" type="elementId" use="required"/>

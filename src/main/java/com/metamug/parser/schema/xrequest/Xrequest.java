@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
 public class Xrequest extends RequestChild{
     @XmlElements({
         @XmlElement(name = "Param", type = Xparam.class),
-        @XmlElement(name = "Header", type = Header.class),
+        @XmlElement(name = "Header", type = Xheader.class),
         @XmlElement(name = "Body", type = String.class)
     })
     protected List<Object> paramOrHeaderOrBody;
@@ -266,9 +266,9 @@ public class Xrequest extends RequestChild{
         writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(getUrl())+"\"",parent.output);
                 
         for (Object paramOrHeaderOrBody : getParamOrHeaderOrBody()) {
-            if (paramOrHeaderOrBody instanceof Header) {
+            if (paramOrHeaderOrBody instanceof Xheader) {
                 writer.writeEmptyElement("m:header");
-                writer.writeAttribute("name", ((Header) paramOrHeaderOrBody).getName());
+                writer.writeAttribute("name", ((Xheader) paramOrHeaderOrBody).getName());
                 
                 String value = ((Header) paramOrHeaderOrBody).getValue();
                 writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"",parent.output);
