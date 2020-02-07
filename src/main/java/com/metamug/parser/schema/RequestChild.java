@@ -54,12 +54,15 @@ package com.metamug.parser.schema;
 
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
+import static com.metamug.parser.service.ParserService.MPATH_EXPRESSION_PATTERN;
 import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
-import com.metamug.parser.service.ParserServiceUtil;
+import static com.metamug.parser.service.ParserService.UPLOAD_OBJECT;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -84,8 +87,15 @@ public abstract class RequestChild {
      * @throws java.io.IOException
      * @throws javax.xml.xpath.XPathExpressionException
      * @throws com.metamug.parser.exception.ResourceTestException
+     * @throws org.xml.sax.SAXException
      */
-    abstract public void print(XMLStreamWriter writer, ParserService parent)  throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException;
+    abstract public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException;
+    
+    /*
+     * Returns parameters according to type of child element
+     *
+     */
+    abstract public List<String> getRequestParameters();
     
     /**
      *
@@ -105,8 +115,8 @@ public abstract class RequestChild {
     }
     
     protected String transformVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException{
-        input = ParserServiceUtil.transformRequestVariables(input,enclose);
-        input = ParserServiceUtil.transformMPathVariables(input, elementIds, enclose);
+        input = transformRequestVariables(input,enclose);
+        input = transformMPathVariables(input, elementIds, enclose);
         return input;
     }
     
@@ -134,7 +144,7 @@ public abstract class RequestChild {
             requestParams.add(query.substring(match.start(1), match.end(1)).trim());
         }
         //collect Mpath variables
-        ParserServiceUtil.collectMPathParams(mPathParams, query, elementIds);
+        collectMPathParams(mPathParams, query, elementIds);
     }
     
     protected String escapeSpecialCharacters(String input){
@@ -192,5 +202,204 @@ public abstract class RequestChild {
         writer.writeAttribute("var", var);
         writer.writeAttribute("scope", scope);    
         writer.writeAttribute("value", value);
+    }
+
+    //transforms request variables in given string
+    public static String transformRequestVariables(String input, boolean enclose) {
+        String output = input;
+        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
+        Matcher matcher = pattern.matcher(input);
+        while (matcher.find()) {
+            String v = input.substring(matcher.start(1), matcher.end(1)).trim();
+            String tv;
+            StringBuilder sb = new StringBuilder();
+            if(enclose){
+                sb.append("${");
+            }
+            switch (v) {
+                case "id":
+                    tv = "mtgReq.id";
+                    break;
+                case "pid":
+                    tv = "mtgReq.pid";
+                    break;
+                case "uid":
+                    tv = "mtgReq.uid";
+                    break;
+                default:
+                    tv = "mtgReq.params['" + v + "']";
+            }
+            sb.append(tv);
+            
+            if(enclose){
+                sb.append("}");
+            }
+            
+            output = output.replace("$"+v, sb.toString());
+        }
+       
+        return output;
+    }
+    
+    public static String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
+        String transformedVariable = mpathVariable;
+        
+        StringBuilder sb = new StringBuilder();
+        if(enclose) {
+            sb.append("${");
+        }
+        
+        if(type.equals(Sql.class.getName())) {
+            // id.rows[0].name
+            String rowIndex = "0";
+            String colName = null;
+
+            Pattern p = Pattern.compile("^\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)$");
+            Matcher m = p.matcher(mpathVariable);
+
+            if(m.find()) {
+                rowIndex = m.group(2);
+                colName = m.group(3);
+            }
+            //System.out.println("Sql");
+            //System.out.println("elementId: "+elementId);
+            transformedVariable = elementId+".rows"+"["+rowIndex+"]."+colName;
+              
+        }else if(type.equals(Xrequest.class.getName())){
+            // m:jsonPath('$.body.args.foo1',bus['id'])
+            String locator = getMPathLocator(mpathVariable);
+                
+            transformedVariable = "m:jsonPath('$"+locator+"',"+elementId+")";
+            
+        } else if(type.equals(Execute.class.getName())){
+            // bus[id].name
+            String locator = getMPathLocator(mpathVariable);
+            transformedVariable = elementId+locator;
+            
+        } else if(type.equals(Script.class.getName())){
+            // bus[id].name
+            String locator = getMPathLocator(mpathVariable);
+            transformedVariable = elementId+locator;
+            
+        } else if(type.equals(Text.class.getName())){
+            //System.out.println("Text");
+            //System.out.println("elementId: "+elementId);
+            transformedVariable = elementId;
+            
+        } else if(type.equals(UPLOAD_OBJECT)){
+            transformedVariable = elementId;
+        }
+        
+        sb.append(transformedVariable);
+        
+        if(enclose){
+            sb.append("}");
+        }
+        
+        return sb.toString();
+    }
+    
+    //collects MPath variables for sql:param tags
+    public static void collectMPathParams(LinkedList<String> params,String sql, Map<String,String> elementIds) throws ResourceTestException {
+        Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
+        Matcher matcher = pattern.matcher(sql);
+        
+        while (matcher.find()) {
+            params.add(sql.substring(matcher.start(), matcher.end()).trim());
+        }
+    }
+    
+    //collects request variables for sql:param tags
+    public static void collectRequestParams(LinkedList<String> params,String sql) throws ResourceTestException {
+        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
+        Matcher matcher = pattern.matcher(sql);
+        while (matcher.find()) {
+            String variable = sql.substring(matcher.start(1), matcher.end(1)).trim();
+            params.add(variable);
+        }
+    }
+    
+    //transforms MPath variables in given string
+    public static String transformMPathVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException {
+        String transformed = input;
+        Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
+        Matcher matcher = pattern.matcher(input);
+        while (matcher.find()) {
+            String mpathVariable = input.substring(matcher.start(), matcher.end()).trim();
+            //get element id from mpath variable
+            String elementId = getMPathId(mpathVariable);
+            
+            if(!elementIds.containsKey(elementId)){
+                throw new ResourceTestException("Could not find element with ID: "+elementId);
+            }
+            //get type of element
+            String type = elementIds.get(elementId);
+            String tv = getJspVariableForMPath(mpathVariable, type, elementId, enclose);
+            
+            transformed = transformed.replace(mpathVariable, tv);
+        }
+       
+        return transformed;
+    }
+    
+    
+
+    // '%$variable%' => CONCAT('%',$variable,'%')
+    public static String processVariablesInLikeClause(String q) {
+        Pattern quotePattern = Pattern.compile("'(.*?)'");
+        Matcher quotedSubstringMatcher = quotePattern.matcher(q);
+        while (quotedSubstringMatcher.find()) {
+            String stringWithinQuotes = quotedSubstringMatcher.group(1);
+
+            Pattern varPattern = Pattern.compile("\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})");
+            Matcher matcher = varPattern.matcher(stringWithinQuotes);
+
+            StringBuilder builder = new StringBuilder();
+            String succedent = stringWithinQuotes;
+
+            builder.append("CONCAT(");
+            List<String> args = new ArrayList();
+            boolean variableFound = false;
+            while (matcher.find()) {
+                variableFound = true;
+                String variable = matcher.group(1);
+
+                if (!args.isEmpty()) {
+                    args.remove(args.size() - 1);
+                }
+                String precedent = succedent.substring(0, succedent.length() - stringWithinQuotes.length() + matcher.start());
+                if (!"".equals(precedent)) {
+                    args.add("'" + precedent + "'");
+                }
+                args.add("$" + variable);
+                succedent = succedent.substring(succedent.length() - stringWithinQuotes.length() + matcher.end());
+                if (!"".equals(succedent)) {
+                    args.add("'" + succedent + "'");
+                }
+            }
+
+            builder.append(String.join(",", args));
+            builder.append(")");
+            if (variableFound) {
+                q = q.replace("'" + stringWithinQuotes + "'", builder.toString());
+            }
+        }
+        return q;
+    }
+
+    public static String getMPathId(String path){
+        Pattern p = Pattern.compile("^\\$\\[(.*?)\\]");// $[varname]
+
+        Matcher m = p.matcher(path);
+        
+        while(m.find()) {
+            return m.group(1);
+        }
+        
+        return null;
+    }
+    
+    protected static String getMPathLocator(String path){
+        return path.replaceFirst("\\$\\[(.*?)\\]","");
     }
 }

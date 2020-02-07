@@ -8,6 +8,7 @@ package com.metamug.parser.schema;
 
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -334,6 +335,11 @@ public class Param extends RequestChild {
         }
         builder.append("/>");
         return builder.toString();
+    }
+
+    @Override
+    public List<String> getRequestParameters() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -12,6 +12,7 @@ import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
 import static com.metamug.parser.service.ParserService.MASON_OUTPUT;
 import java.io.IOException;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -173,5 +174,10 @@ public class Script extends RequestChild{
         if (getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
+    }
+
+    @Override
+    public List<String> getRequestParameters() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

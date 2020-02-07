@@ -291,4 +291,9 @@ public class Xrequest extends RequestChild{
             writer.writeEndElement(); //End of <c:if>
         }
     }
+
+    @Override
+    public List<String> getRequestParameters() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

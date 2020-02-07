@@ -64,18 +64,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLOutputFactory;
@@ -256,25 +251,7 @@ public class ParserService {
         writer.writeAttribute("method", req.getMethod().value());
         writer.writeAttribute("item", String.valueOf(req.isItem()) );
     }
-    
-    protected void printTargetCSet(XMLStreamWriter writer, String target, String property, String value) throws XMLStreamException{
-        writer.writeEmptyElement("c:set");
-        writer.writeAttribute("target", target);
-        writer.writeAttribute("property", property);
-        writer.writeAttribute("value", value);
-    }
-    
-    protected void printPageScopeCSet(XMLStreamWriter writer, String var, String value) throws XMLStreamException{
-        printScopeCSet(writer,"page",var,value);
-    }
-    
-    protected void printScopeCSet(XMLStreamWriter writer, String scope, String var, String value) throws XMLStreamException{
-        writer.writeEmptyElement("c:set");
-        writer.writeAttribute("var", var);
-        writer.writeAttribute("scope", scope);    
-        writer.writeAttribute("value", value);
-    }
-
+   
     /**
      * Close the m:request for Request tag.
      *
@@ -284,49 +261,6 @@ public class ParserService {
     private void closeRequest(XMLStreamWriter writer) throws XMLStreamException {
         writer.writeEndElement();
         writer.writeCharacters(System.lineSeparator());
-    }
-   
-    /**
-     *
-     * @param writer
-     * @param data
-     * @throws javax.xml.stream.XMLStreamException
-     * @throws IOException
-     * @throws javax.xml.xpath.XPathExpressionException
-     */
-    protected void writeUnescapedCharacters(XMLStreamWriter writer, String data) throws XMLStreamException, IOException, XPathExpressionException {
-        writer.writeCharacters("");
-        writer.flush();
-        OutputStreamWriter osw = new OutputStreamWriter(output);
-        osw.write(data);
-        osw.flush();
-    }
-    
-    protected void writeUnescapedData(String data) throws IOException{
-        OutputStreamWriter osw = new OutputStreamWriter(output);
-        osw.write(data);
-        osw.flush();
-    }
-
-    protected String enclose(String expression) {
-        return "${" + expression + "}";
-    }
-    
-    protected void collectVariables(LinkedList<String> requestParams, LinkedList<String> mPathParams, String query) throws ResourceTestException {
-        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
-        Matcher match = pattern.matcher(query);
-        while (match.find()) {
-            requestParams.add(query.substring(match.start(1), match.end(1)).trim());
-        }
-        //collect Mpath variables
-        ParserServiceUtil.collectMPathParams(mPathParams,query, elementIds);
-    }
-    
-    
-    protected String transformVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException{
-        input = ParserServiceUtil.transformRequestVariables(input,enclose);
-        input = ParserServiceUtil.transformMPathVariables(input, elementIds, enclose);
-        return input;
     }
    
     

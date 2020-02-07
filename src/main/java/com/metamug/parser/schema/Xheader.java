@@ -9,6 +9,7 @@ package com.metamug.parser.schema;
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -95,8 +96,12 @@ public class Xheader extends RequestChild {
         writer.writeAttribute("name", getName());
                 
         String value = transformVariables(getValue(),parent.elementIds,true);
-        //writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(value)+"\"");
         writer.writeCharacters(value);
         writer.writeEndElement();
+    }
+
+    @Override
+    public List<String> getRequestParameters() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

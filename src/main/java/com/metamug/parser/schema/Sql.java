@@ -12,12 +12,12 @@ import static com.metamug.parser.service.ParserService.MASON_DATASOURCE;
 import static com.metamug.parser.service.ParserService.MASON_OUTPUT;
 import static com.metamug.parser.service.ParserService.MPATH_EXPRESSION_PATTERN;
 import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
-import com.metamug.parser.service.ParserServiceUtil;
 import com.metamug.parser.service.QueryManagerService;
 import com.metamug.parser.service.ResourceTestService;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -481,7 +481,7 @@ public class Sql extends RequestChild{
         
         String processedQuery = query;
         if (processedQuery.toLowerCase().contains(" like ")) {
-            processedQuery = ParserServiceUtil.processVariablesInLikeClause(processedQuery);
+            processedQuery = processVariablesInLikeClause(processedQuery);
         }
         
         String wildcardQry = processedQuery.replaceAll(REQUEST_PARAM_PATTERN, "? ");
@@ -517,7 +517,7 @@ public class Sql extends RequestChild{
                     String mpathParam = mpathParams.getFirst();
                     mpathParams.removeFirst();
                         
-                    String elementId = ParserServiceUtil.getMPathId(mpathParam);
+                    String elementId = getMPathId(mpathParam);
                     if(!parent.elementIds.containsKey(elementId)){
                         throw new ResourceTestException("Could not find element with ID: "+elementId);
                     }
@@ -525,7 +525,7 @@ public class Sql extends RequestChild{
                     String type = parent.elementIds.get(elementId);
                         
                     builder.append("<sql:param value=\"");
-                    builder.append(ParserServiceUtil.getJspVariableForMPath(mpathParam,type,elementId,true));
+                    builder.append(getJspVariableForMPath(mpathParam,type,elementId,true));
                     builder.append("\"/>");
                     builder.append(System.lineSeparator());
                 }             
@@ -563,5 +563,10 @@ public class Sql extends RequestChild{
             // type = query and verbose != false
             return sql.getType().value().equalsIgnoreCase("query") && (sql.getOutput() == null || sql.getOutput());
         }
+    }
+
+    @Override
+    public List<String> getRequestParameters() {
+        return null;
     }
 }
