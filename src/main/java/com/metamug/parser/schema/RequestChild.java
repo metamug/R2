@@ -52,12 +52,10 @@
  */
 package com.metamug.parser.schema;
 
-import com.metamug.parser.schema.xrequest.Xrequest;
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
 import static com.metamug.parser.service.ParserService.MPATH_EXPRESSION_PATTERN;
 import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
-import static com.metamug.parser.service.ParserService.UPLOAD_OBJECT;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -98,6 +96,7 @@ public abstract class RequestChild {
      */
     abstract public List<String> getRequestParameters();
     
+       
     /**
      *
      * @param writer
@@ -251,7 +250,11 @@ public abstract class RequestChild {
         return output;
     }
     
-    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        return enclose ? enclose(elementId) : elementId;
+    }
+    
+    /*public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
         String transformedVariable = mpathVariable;
         
         StringBuilder sb = new StringBuilder();
@@ -307,7 +310,7 @@ public abstract class RequestChild {
         }
         
         return sb.toString();
-    }
+    }*/
     
     //collects MPath variables for sql:param tags
     public void collectMPathParams(LinkedList<String> params,String sql, Map<String,String> elementIds) throws ResourceTestException {
@@ -350,9 +353,7 @@ public abstract class RequestChild {
         }
        
         return transformed;
-    }
-    
-    
+    }    
 
     // '%$variable%' => CONCAT('%',$variable,'%')
     public String processVariablesInLikeClause(String q) {

@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -572,5 +574,29 @@ public class Sql extends RequestChild{
         getRequestParametersFromString(params,getWhen());
         getRequestParametersFromString(params, getValue());
         return params;
+    }
+
+    @Override
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        
+        StringBuilder sb = new StringBuilder();
+        
+        // id.rows[0].name
+        String rowIndex = "0";
+        String colName = null;
+
+        Pattern p = Pattern.compile("^\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)$");
+        Matcher m = p.matcher(mpathVariable);
+
+        if(m.find()) {
+            rowIndex = m.group(2);
+            colName = m.group(3);
+        }
+        
+        String transformedVariable = elementId+".rows"+"["+rowIndex+"]."+colName;
+        
+        sb.append(transformedVariable);
+        
+        return enclose ? enclose(sb.toString()) : sb.toString();
     }
 }

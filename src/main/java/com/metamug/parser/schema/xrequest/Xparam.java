@@ -105,4 +105,9 @@ public class Xparam extends XrequestChild {
         getRequestParametersFromString(params,getValue());
         return params;
     }
+
+    @Override
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -285,4 +285,19 @@ public class Xrequest extends RequestChild{
         });
         return params;
     }
+
+    @Override
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        
+        StringBuilder sb = new StringBuilder();
+       
+        // m:jsonPath('$.body.args.foo1',bus['id'])
+        String locator = getMPathLocator(mpathVariable);
+                
+        String transformedVariable = "m:jsonPath('$"+locator+"',"+elementId+")";
+            
+        sb.append(transformedVariable);       
+        
+        return enclose ? enclose(sb.toString()) : sb.toString();
+    }
 }

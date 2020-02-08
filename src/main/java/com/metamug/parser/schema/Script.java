@@ -183,4 +183,17 @@ public class Script extends RequestChild{
         getRequestParametersFromString(p,getWhen());
         return p;
     }
+
+    @Override
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        StringBuilder sb = new StringBuilder();
+                
+        // bus[id].name
+        String locator = getMPathLocator(mpathVariable);
+        String transformedVariable = elementId+locator;
+        
+        sb.append(transformedVariable);
+                      
+        return enclose ? enclose(sb.toString()) : sb.toString();
+    }
 }
