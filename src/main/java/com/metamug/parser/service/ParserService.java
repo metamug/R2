@@ -126,6 +126,15 @@ public class ParserService {
         }
     }; // <id,elementType>
 
+    public static void collectRequestParams(LinkedList<String> params,String sql) throws ResourceTestException {
+        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
+        Matcher matcher = pattern.matcher(sql);
+        while (matcher.find()) {
+            String variable = sql.substring(matcher.start(1), matcher.end(1)).trim();
+            params.add(variable);
+        }
+    }
+
 
     public JSONObject transform(File uploadedFile, String appName, boolean updateResource, String outputFolder,
             String domain, JSONObject queryMap) throws SAXException, XMLStreamException,

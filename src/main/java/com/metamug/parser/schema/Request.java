@@ -56,6 +56,8 @@ public class Request {
         @XmlElement(name = "Script", type = Script.class),
         @XmlElement(name = "Text", type = Text.class)
     })
+
+
     protected List paramOrSqlOrExecuteOrXrequestOrScript;
 
     @XmlAttribute(name = "status")
@@ -87,6 +89,10 @@ public class Request {
         }
     }
 
+    /**
+     * Get the list of action items in the request block
+     * @return List of operations
+     */
     public List getParamOrSqlOrExecuteOrXrequestOrScript() {
         if (paramOrSqlOrExecuteOrXrequestOrScript == null) {
             paramOrSqlOrExecuteOrXrequestOrScript = new ArrayList<>();

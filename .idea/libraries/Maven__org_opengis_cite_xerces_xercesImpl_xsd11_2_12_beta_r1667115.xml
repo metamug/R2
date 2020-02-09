@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.opengis.cite.xerces:xercesImpl-xsd11:2.12-beta-r1667115">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/opengis/cite/xerces/xercesImpl-xsd11/2.12-beta-r1667115/xercesImpl-xsd11-2.12-beta-r1667115.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/opengis/cite/xerces/xercesImpl-xsd11/2.12-beta-r1667115/xercesImpl-xsd11-2.12-beta-r1667115-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/opengis/cite/xerces/xercesImpl-xsd11/2.12-beta-r1667115/xercesImpl-xsd11-2.12-beta-r1667115-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

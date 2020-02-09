@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.opengis.cite.eclipse.webtools.sse:org.eclipse.wst.xml.xpath2.processor:1.1.5-738bb7b85d">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/opengis/cite/eclipse/webtools/sse/org.eclipse.wst.xml.xpath2.processor/1.1.5-738bb7b85d/org.eclipse.wst.xml.xpath2.processor-1.1.5-738bb7b85d.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/opengis/cite/eclipse/webtools/sse/org.eclipse.wst.xml.xpath2.processor/1.1.5-738bb7b85d/org.eclipse.wst.xml.xpath2.processor-1.1.5-738bb7b85d-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/opengis/cite/eclipse/webtools/sse/org.eclipse.wst.xml.xpath2.processor/1.1.5-738bb7b85d/org.eclipse.wst.xml.xpath2.processor-1.1.5-738bb7b85d-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

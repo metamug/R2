@@ -15,7 +15,6 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
-import net.sf.saxon.expr.instruct.ParameterSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,7 @@ public class OpenAPIGenerator {
 
     /**
      * Generate Open API documentation from metamug Resource
+     *
      * @return OpenAPI object representation of open api spec 3.0
      */
     public OpenAPI buildOpenAPI(Backend backend) {
@@ -52,7 +52,7 @@ public class OpenAPIGenerator {
         return api;
     }
 
-    private Paths buildPath(Map<String, Resource> resources){
+    private Paths buildPath(Map<String, Resource> resources) {
         Paths paths = new Paths();
         for (Map.Entry<String, Resource> resource : resources.entrySet()) {
             paths.addPathItem(resource.getKey(), buildPathItem(resource.getValue()));
@@ -62,23 +62,27 @@ public class OpenAPIGenerator {
 
     /**
      * One path corresponds to one resource.
+     *
      * @param resource Metamug API Console REST Resource
      * @return Open API Path Item equivalent
      */
-    private PathItem buildPathItem(Resource resource){
+    private PathItem buildPathItem(Resource resource) {
         PathItem item = new PathItem();
         item.setDescription(resource.getDesc());
 
         //loop over all request tags
         for (Request request : resource.getRequest()) {
 
+            //operation corresponds to HTTP Verb Method
             Operation operation = new Operation();
             operation.setDescription(request.getDesc());
 
             Set<Param> requestParameters = request.getParam();
             List<Parameter> openAPIParams = new ArrayList<>();
 
-            for(Param param: requestParameters){
+            List list = request.getParamOrSqlOrExecuteOrXrequestOrScript();
+
+            for (Param param : requestParameters) {
                 Parameter parameter = new Parameter();
                 parameter.setName(param.getName());
                 parameter.setRequired(param.isRequired());
@@ -88,9 +92,11 @@ public class OpenAPIGenerator {
                 parameter.setSchema(schema);
                 openAPIParams.add(parameter);
             }
-            operation.setParameters(openAPIParams);
 
-            switch (request.getMethod().value().toLowerCase()){
+            if (!openAPIParams.isEmpty())
+                operation.setParameters(openAPIParams);
+
+            switch (request.getMethod().value().toLowerCase()) {
                 case "post":
                     item.setGet(operation);
                     break;
@@ -113,9 +119,10 @@ public class OpenAPIGenerator {
 
     /**
      * Set standard set of responses by Mason
+     *
      * @param operation
      */
-    private void setStandardResponses(Operation operation){
+    private void setStandardResponses(Operation operation) {
         ApiResponses responses = new ApiResponses();
         ApiResponse response = new ApiResponse();
         response.description("API Response");
@@ -123,11 +130,11 @@ public class OpenAPIGenerator {
         operation.setResponses(responses);
     }
 
-    public String serializeJSON(OpenAPI api){
+    public String serializeJSON(OpenAPI api) {
         return Json.pretty(api);
     }
 
-    public String serializeYML(OpenAPI api){
+    public String serializeYML(OpenAPI api) {
         return Yaml.pretty(api);
     }
 }

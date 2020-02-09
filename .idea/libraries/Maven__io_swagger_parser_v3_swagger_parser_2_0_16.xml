@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: io.swagger.parser.v3:swagger-parser:2.0.16">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/io/swagger/parser/v3/swagger-parser/2.0.16/swagger-parser-2.0.16.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/io/swagger/parser/v3/swagger-parser/2.0.16/swagger-parser-2.0.16-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/io/swagger/parser/v3/swagger-parser/2.0.16/swagger-parser-2.0.16-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
