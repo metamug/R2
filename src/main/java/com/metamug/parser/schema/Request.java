@@ -6,6 +6,7 @@
 //
 package com.metamug.parser.schema;
 
+import com.metamug.parser.schema.xrequest.Xrequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +39,7 @@ public class Request {
     protected String desc;
     @XmlElement(name = "Param")
     protected List<Param> param;
-    protected List<Xheader> header;
+    protected List<Header> header;
     protected List<Execute> execute;
     protected List<Xrequest> xrequest;
     protected List<Script> script;
@@ -47,7 +48,7 @@ public class Request {
     protected List<Sql> sql;
     
     @XmlElements({
-        @XmlElement(name = "Header", type = Xheader.class),
+        @XmlElement(name = "Header", type = Header.class),
         @XmlElement(name = "Param", type = Param.class),
         @XmlElement(name = "Sql", type = Sql.class),
         @XmlElement(name = "Transaction", type = Transaction.class),

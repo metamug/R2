@@ -6,10 +6,16 @@
 //
 package com.metamug.parser.schema;
 
+import com.metamug.parser.service.ParserService;
+import java.io.IOException;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  *
@@ -45,7 +51,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "param")
-public class Param {
+public class Param extends RequestChild {
 
     @XmlAttribute(name = "name", required = true)
     protected String name;
@@ -286,5 +292,58 @@ public class Param {
      */
     public boolean isRequired() {
         return this.required;
+    }
+
+    @Override
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException {
+        this.parent = parent;
+        
+        writer.writeCharacters(System.lineSeparator());
+        writeUnescapedCharacters(writer, processParam(), parent.output);
+    }
+    
+    private String processParam() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<m:param name=\"").append(getName()).append("\" ");
+        if (getType() != null) {
+            builder.append("type=\"").append(getType()).append("\" ");
+        }
+        builder.append("value=\"").append("${mtgReq.params['").append(getName()).append("']}\" ");
+        if (getMax() != null) {
+            builder.append("max=\"").append(getMax()).append("\" ");
+        }
+        if (getMaxlength() != null) {
+            builder.append("maxLen=\"").append(getMaxlength()).append("\" ");
+        }
+        if (getMin() != null) {
+            builder.append("min=\"").append(getMin()).append("\" ");
+        }
+        if (getMinlength() != null) {
+            builder.append("minLen=\"").append(getMinlength()).append("\" ");
+        }
+        if (getPattern() != null) {
+            builder.append("pattern=\"").append(getPattern()).append("\" ");
+        }
+        if (getExists() != null) {
+            builder.append("exists=\"").append(getExists()).append("\" ");
+        }
+        if (getValue() != null) {
+            builder.append("defaultValue=\"").append(getValue()).append("\" ");
+        }
+        if (isRequired()) {
+            builder.append("isRequired=\"true\"");
+        }
+        builder.append("/>");
+        return builder.toString();
+    }
+
+    @Override
+    public List<String> getRequestParameters() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

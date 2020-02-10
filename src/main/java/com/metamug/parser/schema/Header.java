@@ -6,10 +6,18 @@
 //
 package com.metamug.parser.schema;
 
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.service.ParserService;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * <p>
@@ -33,7 +41,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "xheader")
-public class Xheader {
+public class Header extends RequestChild {
 
     @XmlAttribute(name = "name", required = true)
     protected String name;
@@ -78,5 +86,30 @@ public class Xheader {
      */
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException {
+        this.parent = parent;
+        
+        writer.writeCharacters(System.lineSeparator());
+        writer.writeStartElement("m:header");
+        writer.writeAttribute("name", getName());
+                
+        String value = transformVariables(getValue(),parent.elementIds,true);
+        writer.writeCharacters(value);
+        writer.writeEndElement();
+    }
+
+    @Override
+    public List<String> getRequestParameters() {
+        List<String> p = new ArrayList<>();
+        getRequestParametersFromString(p,getValue());
+        return p;
+    }
+
+    @Override
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

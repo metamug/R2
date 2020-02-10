@@ -8,11 +8,22 @@
 
 package com.metamug.parser.schema;
 
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.service.ParserService;
+import static com.metamug.parser.service.ParserService.MASON_OUTPUT;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
+import org.apache.commons.text.StringEscapeUtils;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -38,7 +49,7 @@ import javax.xml.bind.annotation.XmlValue;
 @XmlType(name = "text", propOrder = {
     "value"
 })
-public class Text {
+public class Text extends RequestChild {
 
     @XmlValue
     protected String value;
@@ -147,6 +158,39 @@ public class Text {
      */
     public void setOutput(Boolean value) {
         this.output = value;
+    }
+
+    @Override
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
+        this.parent = parent;
+        //Text txt = (Text)this;
+        
+        if (getWhen() != null) {
+            writer.writeStartElement("c:if");
+            String test = transformVariables(getWhen(),parent.elementIds,false);
+            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
+        }
+        writer.writeCharacters(System.lineSeparator());
+        
+        String value = transformVariables(getValue(),parent.elementIds,true).trim();
+        
+        printPageScopeCSet(writer,getId(), value);
+        
+        if(isOutput()){
+            printTargetCSet(writer, enclose(MASON_OUTPUT), getId(), enclose(getId()) );
+        }
+        
+        if (getWhen() != null) {
+            writer.writeEndElement();
+        }
+    }
+
+    @Override
+    public List<String> getRequestParameters() {
+        List<String> params = new ArrayList<>();
+        getRequestParametersFromString(params,getWhen());
+        getRequestParametersFromString(params,getValue());
+        return params;
     }
 
 }

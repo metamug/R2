@@ -51,42 +51,172 @@
  * <p>
  * This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.parser.service;
+package com.metamug.parser.schema;
 
 import com.metamug.parser.exception.ResourceTestException;
 
+import com.metamug.parser.service.ParserService;
 import static com.metamug.parser.service.ParserService.MPATH_EXPRESSION_PATTERN;
 import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
-import static com.metamug.parser.service.ParserService.UPLOAD_OBJECT;
-
-import com.metamug.parser.schema.Execute;
-import com.metamug.parser.schema.Script;
-import com.metamug.parser.schema.Sql;
-import com.metamug.parser.schema.Text;
-import com.metamug.parser.schema.Xrequest;
-
-
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author anishhirlekar
  */
-public class ParserServiceUtil {
-
+public abstract class RequestChild {
+    
+    public ParserService parent;
 
     /**
-     * Transforms request variables in given string
-     * @param input
-     * @param enclose
-     * @return
+     *
+     * @param writer
+     * @param parent
+     * @throws javax.xml.stream.XMLStreamException
+     * @throws java.io.IOException
+     * @throws javax.xml.xpath.XPathExpressionException
+     * @throws com.metamug.parser.exception.ResourceTestException
+     * @throws org.xml.sax.SAXException
      */
-    protected static String transformRequestVariables(String input, boolean enclose) {
+    abstract public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException;
+    
+    /*
+     * Returns parameters according to type of child element
+     *
+     */
+    abstract public List<String> getRequestParameters();
+    
+       
+    /**
+     *
+     * @param writer
+     * @param data
+     * @param output
+     * @throws javax.xml.stream.XMLStreamException
+     * @throws IOException
+     * @throws javax.xml.xpath.XPathExpressionException
+     */
+    protected void writeUnescapedCharacters(XMLStreamWriter writer, String data, OutputStream output) throws XMLStreamException, IOException, XPathExpressionException {
+        writer.writeCharacters("");
+        writer.flush();
+        OutputStreamWriter osw = new OutputStreamWriter(output);
+        osw.write(data);
+        osw.flush();
+    }
+    
+    protected String transformVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException{
+        input = transformRequestVariables(input,enclose);
+        input = transformMPathVariables(input, elementIds, enclose);
+        return input;
+    }
+    
+    protected String enclose(String expression) {
+        return "${" + expression + "}";
+    }
+    
+    protected void printTargetCSet(XMLStreamWriter writer, String target, String property, String value) throws XMLStreamException{
+        writer.writeEmptyElement("c:set");
+        writer.writeAttribute("target", target);
+        writer.writeAttribute("property", property);
+        writer.writeAttribute("value", value);
+    }
+    
+    protected void writeUnescapedData(String data, OutputStream output) throws IOException{
+        OutputStreamWriter osw = new OutputStreamWriter(output);
+        osw.write(data);
+        osw.flush();
+    }
+    
+    protected void collectVariables(LinkedList<String> requestParams, LinkedList<String> mPathParams, String query, Map<String,String> elementIds) throws ResourceTestException {
+        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
+        Matcher match = pattern.matcher(query);
+        while (match.find()) {
+            requestParams.add(query.substring(match.start(1), match.end(1)).trim());
+        }
+        //collect Mpath variables
+        collectMPathParams(mPathParams, query, elementIds);
+    }
+    
+    protected String escapeSpecialCharacters(String input){
+        String[] lines = input.split("\\r?\\n");
+        
+        StringBuilder outputString = new StringBuilder();
+        
+        for(String line: lines){
+            String escapedString = line;
+            
+            if (line.toLowerCase().matches(".*\\sle(\\s|\\b).*")) {
+                escapedString = line.replaceAll("\\sle(\\s|\\b)", " <= ");
+            }
+            if (line.toLowerCase().matches(".*\\sge(\\s|\\b).*")) {
+                escapedString = escapedString.replaceAll("\\sge(\\s|\\b)", " >= ");
+            }
+            if (line.toLowerCase().matches(".*\\seq(\\s|\\b).*")) {
+                escapedString = escapedString.replaceAll("\\seq(\\s|\\b)", " = ");
+            }
+            if (line.toLowerCase().matches(".*\\sne(\\s|\\b).*")) {
+                escapedString = escapedString.replaceAll("\\sne(\\s|\\b)", " != ");
+            }
+            if (line.toLowerCase().matches(".*\\slt(\\s|\\b).*")) {
+                escapedString = escapedString.replaceAll("\\slt(\\s|\\b)", " < ");
+            }
+            if (line.toLowerCase().matches(".*\\sgt(\\s|\\b).*")) {
+                escapedString = escapedString.replaceAll("\\sgt(\\s|\\b)", " > ");
+            }
+            
+            outputString.append(escapedString).append("\n");
+        }
+        
+        return outputString.toString().trim();
+    }
+    
+    protected String getJspVariableForRequestParam(String param){
+        switch (param) {
+            case "id":
+                return "${mtgReq.id}";
+            case "pid":
+                return "${mtgReq.pid}";
+            case "uid":
+                return "${mtgReq.uid}";
+            default:
+                return "${mtgReq.params['" +param+ "']}";
+        }
+    }
+    
+    protected void printPageScopeCSet(XMLStreamWriter writer, String var, String value) throws XMLStreamException{
+        printScopeCSet(writer,"page",var,value);
+    }
+    
+    protected void printScopeCSet(XMLStreamWriter writer, String scope, String var, String value) throws XMLStreamException{
+        writer.writeEmptyElement("c:set");
+        writer.writeAttribute("var", var);
+        writer.writeAttribute("scope", scope);    
+        writer.writeAttribute("value", value);
+    }
+    
+    public void getRequestParametersFromString(List<String> paramList, String input) {
+        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
+        Matcher matcher = pattern.matcher(input);
+        while (matcher.find()) {
+            String v = input.substring(matcher.start(1), matcher.end(1)).trim();
+            paramList.add(v);
+        }
+    }
+
+    //transforms request variables in given string
+    public String transformRequestVariables(String input, boolean enclose) {
         String output = input;
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher matcher = pattern.matcher(input);
@@ -121,16 +251,12 @@ public class ParserServiceUtil {
 
         return output;
     }
-
-    /**
-     * Get JSP variables from MPath
-     * @param mpathVariable
-     * @param type
-     * @param elementId
-     * @param enclose
-     * @return
-     */
-    protected static String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+    
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        return enclose ? enclose(elementId) : elementId;
+    }
+    
+    /*public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
         String transformedVariable = mpathVariable;
 
         StringBuilder sb = new StringBuilder();
@@ -186,16 +312,11 @@ public class ParserServiceUtil {
         }
 
         return sb.toString();
-    }
 
-    /**
-     * collects MPath variables for sql:param tags
-     * @param params
-     * @param sql
-     * @param elementIds
-     * @throws ResourceTestException
-     */
-    protected static void collectMPathParams(LinkedList<String> params, String sql, Map<String, String> elementIds) throws ResourceTestException {
+    }*/
+    
+    //collects MPath variables for sql:param tags
+    public void collectMPathParams(LinkedList<String> params,String sql, Map<String,String> elementIds) throws ResourceTestException {
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(sql);
 
@@ -203,11 +324,20 @@ public class ParserServiceUtil {
             params.add(sql.substring(matcher.start(), matcher.end()).trim());
         }
     }
+    
+    //collects request variables for sql:param tags
+    public void collectRequestParams(LinkedList<String> params,String sql) throws ResourceTestException {
+        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
+        Matcher matcher = pattern.matcher(sql);
+        while (matcher.find()) {
+            String variable = sql.substring(matcher.start(1), matcher.end(1)).trim();
+            params.add(variable);
+        }
+    }
+    
+    //transforms MPath variables in given string
+    public String transformMPathVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException {
 
-    /**
-     *  Transforms MPath variables in given string
-     */
-    protected static String transformMPathVariables(String input, Map<String, String> elementIds, boolean enclose) throws ResourceTestException {
         String transformed = input;
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(input);
@@ -227,15 +357,10 @@ public class ParserServiceUtil {
         }
 
         return transformed;
-    }
+    }    
 
-
-    /**
-     *  // '%$variable%' => CONCAT('%',$variable,'%')
-     * @param q
-     * @return
-     */
-    public static String processVariablesInLikeClause(String q) {
+    // '%$variable%' => CONCAT('%',$variable,'%')
+    public String processVariablesInLikeClause(String q) {
         Pattern quotePattern = Pattern.compile("'(.*?)'");
         Matcher quotedSubstringMatcher = quotePattern.matcher(q);
         while (quotedSubstringMatcher.find()) {
@@ -277,7 +402,7 @@ public class ParserServiceUtil {
         return q;
     }
 
-    public static String getMPathId(String path) {
+    public String getMPathId(String path){
         Pattern p = Pattern.compile("^\\$\\[(.*?)\\]");// $[varname]
 
         Matcher m = p.matcher(path);
@@ -288,9 +413,8 @@ public class ParserServiceUtil {
 
         return null;
     }
-
-    protected static String getMPathLocator(String path) {
-        return path.replaceFirst("\\$\\[(.*?)\\]", "");
+    
+    protected String getMPathLocator(String path){
+        return path.replaceFirst("\\$\\[(.*?)\\]","");
     }
-
 }

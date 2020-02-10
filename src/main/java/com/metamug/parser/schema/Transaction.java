@@ -8,6 +8,10 @@
 
 package com.metamug.parser.schema;
 
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.service.ParserService;
+import static com.metamug.parser.service.ParserService.MASON_DATASOURCE;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -15,6 +19,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
+import org.apache.commons.text.StringEscapeUtils;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -40,7 +49,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "transaction", propOrder = {
     "sql"
 })
-public class Transaction {
+public class Transaction extends RequestChild {
 
     @XmlElement(name = "Sql")
     protected List<Sql> sql;
@@ -99,5 +108,46 @@ public class Transaction {
      */
     public void setWhen(String value) {
         this.when = value;
+    }
+
+    @Override
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
+        this.parent = parent;
+        //Transaction tx = (Transaction)this;
+        
+        if (getWhen() != null) {
+            writer.writeStartElement("c:if");
+            //String testString = getQuotedString(tx.getWhen());
+            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            String test = transformVariables(getWhen(),parent.elementIds,false);
+            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
+        }
+        writer.writeCharacters(System.lineSeparator());
+        writer.writeStartElement("sql:transaction");
+        writer.writeAttribute("dataSource", enclose(MASON_DATASOURCE));
+        
+        for(Sql s: getSql()){
+            s.print(writer, parent);
+        }
+        
+        writer.writeEndElement(); //End of <sql:transaction> 
+        if (getWhen() != null) {
+            writer.writeEndElement(); //End of <c:if>
+        }
+    }
+
+    @Override
+    public List<String> getRequestParameters() {
+        List<String> p = new ArrayList<>();
+        getSql().forEach( s -> {
+            getRequestParametersFromString(p, s.getWhen());
+            getRequestParametersFromString(p, s.getValue());
+        });   
+        return p;
+    }
+
+    @Override
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
