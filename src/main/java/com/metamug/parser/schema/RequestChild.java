@@ -122,7 +122,7 @@ public abstract class RequestChild {
         return input;
     }
     
-    protected String enclose(String expression) {
+    protected static String enclose(String expression) {
         return "${" + expression + "}";
     }
     
@@ -216,7 +216,7 @@ public abstract class RequestChild {
     }
 
     //transforms request variables in given string
-    public String transformRequestVariables(String input, boolean enclose) {
+    public static String transformRequestVariables(String input, boolean enclose) {
         String output = input;
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher matcher = pattern.matcher(input);
@@ -251,69 +251,22 @@ public abstract class RequestChild {
 
         return output;
     }
-    
-    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+
+    /**
+     * Get JSP Variables from MPath
+     * @param mpathVariable
+     * @param type
+     * @param elementId
+     * @param enclose
+     * @return
+     */
+    public static String getJspVariableForMPath(String mpathVariable, String elementId, boolean enclose) {
         return enclose ? enclose(elementId) : elementId;
     }
+
+    abstract protected String getJSPVariable(String mPathVariable, String elementId, boolean enclose);
     
-    /*public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
-        String transformedVariable = mpathVariable;
 
-        StringBuilder sb = new StringBuilder();
-        if (enclose) {
-            sb.append("${");
-        }
-
-        if (type.equals(Sql.class.getName())) {
-            // id.rows[0].name
-            String rowIndex = "0";
-            String colName = null;
-
-            Pattern p = Pattern.compile("^\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)$");
-            Matcher m = p.matcher(mpathVariable);
-
-            if (m.find()) {
-                rowIndex = m.group(2);
-                colName = m.group(3);
-            }
-            //System.out.println("Sql");
-            //System.out.println("elementId: "+elementId);
-            transformedVariable = elementId + ".rows" + "[" + rowIndex + "]." + colName;
-
-        } else if (type.equals(Xrequest.class.getName())) {
-            // m:jsonPath('$.body.args.foo1',bus['id'])
-            String locator = getMPathLocator(mpathVariable);
-
-            transformedVariable = "m:jsonPath('$" + locator + "'," + elementId + ")";
-
-        } else if (type.equals(Execute.class.getName())) {
-            // bus[id].name
-            String locator = getMPathLocator(mpathVariable);
-            transformedVariable = elementId + locator;
-
-        } else if (type.equals(Script.class.getName())) {
-            // bus[id].name
-            String locator = getMPathLocator(mpathVariable);
-            transformedVariable = elementId + locator;
-
-        } else if (type.equals(Text.class.getName())) {
-            //System.out.println("Text");
-            //System.out.println("elementId: "+elementId);
-            transformedVariable = elementId;
-
-        } else if (type.equals(UPLOAD_OBJECT)) {
-            transformedVariable = elementId;
-        }
-
-        sb.append(transformedVariable);
-
-        if (enclose) {
-            sb.append("}");
-        }
-
-        return sb.toString();
-
-    }*/
     
     //collects MPath variables for sql:param tags
     public void collectMPathParams(LinkedList<String> params,String sql, Map<String,String> elementIds) throws ResourceTestException {
@@ -336,7 +289,7 @@ public abstract class RequestChild {
     }
     
     //transforms MPath variables in given string
-    public String transformMPathVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException {
+    public static String transformMPathVariables(String input, Map<String, String> elementIds, boolean enclose) throws ResourceTestException {
 
         String transformed = input;
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
@@ -360,7 +313,7 @@ public abstract class RequestChild {
     }    
 
     // '%$variable%' => CONCAT('%',$variable,'%')
-    public String processVariablesInLikeClause(String q) {
+    public static String processVariablesInLikeClause(String q) {
         Pattern quotePattern = Pattern.compile("'(.*?)'");
         Matcher quotedSubstringMatcher = quotePattern.matcher(q);
         while (quotedSubstringMatcher.find()) {
@@ -402,7 +355,7 @@ public abstract class RequestChild {
         return q;
     }
 
-    public String getMPathId(String path){
+    public static String getMPathId(String path){
         Pattern p = Pattern.compile("^\\$\\[(.*?)\\]");// $[varname]
 
         Matcher m = p.matcher(path);

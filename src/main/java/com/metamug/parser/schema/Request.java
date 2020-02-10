@@ -59,7 +59,7 @@ public class Request {
     })
 
 
-    protected List paramOrSqlOrExecuteOrXrequestOrScript;
+    protected List<RequestChild> paramOrSqlOrExecuteOrXrequestOrScript;
 
     @XmlAttribute(name = "status")
     protected Integer status;

@@ -76,6 +76,18 @@ public class Param extends RequestChild {
     @XmlAttribute(name = "required")
     protected boolean required;
 
+
+    /**
+     * Create parameter with string
+     * @param strParam
+     */
+    public Param(String strParam) {
+        super();
+        this.name = strParam;
+        this.type = ParamType.TEXT;
+        this.required = true; //since this is being used inside the request child elements
+    }
+
     /**
      * Gets the value of the name property.
      *

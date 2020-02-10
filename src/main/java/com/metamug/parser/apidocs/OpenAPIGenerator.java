@@ -3,6 +3,7 @@ package com.metamug.parser.apidocs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.metamug.parser.schema.Param;
 import com.metamug.parser.schema.Request;
+import com.metamug.parser.schema.RequestChild;
 import com.metamug.parser.schema.Resource;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.Yaml;
@@ -80,16 +81,19 @@ public class OpenAPIGenerator {
             Set<Param> requestParameters = request.getParam();
             List<Parameter> openAPIParams = new ArrayList<>();
 
-            List list = request.getParamOrSqlOrExecuteOrXrequestOrScript();
+            List<RequestChild> list = request.getParamOrSqlOrExecuteOrXrequestOrScript();
+
+            for (RequestChild requestElement : list) {
+
+                for (String strParam : requestElement.getRequestParameters()) {
+                    Param param = new Param(strParam);
+                    requestParameters.add(param);
+                }
+
+            }
 
             for (Param param : requestParameters) {
-                Parameter parameter = new Parameter();
-                parameter.setName(param.getName());
-                parameter.setRequired(param.isRequired());
-                parameter.setIn("query");
-                Schema schema = new Schema();
-                schema.setType(param.getType().value());
-                parameter.setSchema(schema);
+                Parameter parameter = createParameter(param);
                 openAPIParams.add(parameter);
             }
 
@@ -115,6 +119,23 @@ public class OpenAPIGenerator {
 
 
         return item;
+    }
+
+    /**
+     * Convert Metamug Param object to Open API Parameter
+     *
+     * @param param Metamug Param Object
+     * @return Open API Parameter
+     */
+    private Parameter createParameter(Param param) {
+        Parameter parameter = new Parameter();
+        parameter.setName(param.getName());
+        parameter.setRequired(param.isRequired());
+        parameter.setIn("query");
+        Schema schema = new Schema();
+        schema.setType(param.getType().value());
+        parameter.setSchema(schema);
+        return parameter;
     }
 
     /**
