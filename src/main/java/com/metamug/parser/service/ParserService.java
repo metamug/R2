@@ -58,6 +58,7 @@ import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.schema.Request;
 import com.metamug.parser.schema.RequestChild;
 import com.metamug.parser.schema.Resource;
+import com.metamug.parser.schema.Upload;
 import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
 import java.beans.PropertyVetoException;
 import java.io.File;
@@ -102,9 +103,9 @@ public class ParserService {
     public OutputStream output;
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
 
-    public HashMap<String,String> elementIds = new HashMap<String,String>() {
+    public HashMap<String,RequestChild> elementIds = new HashMap<String,RequestChild>() {
         {
-            put(UPLOAD_OBJECT, UPLOAD_OBJECT);
+            put(UPLOAD_OBJECT, new Upload());
         }
     }; // <id,elementType>  
     public String domain;

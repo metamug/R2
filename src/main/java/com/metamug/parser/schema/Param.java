@@ -355,7 +355,7 @@ public class Param extends RequestChild {
     }
 
     @Override
-    public String getJspVariableForMPath(String mpathVariable, String elementId, boolean enclose) {
+    public String extractFromMPath(String mpathVariable, String elementId, boolean enclose) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -325,7 +325,7 @@ public class Sql extends RequestChild{
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
         this.parent = parent;
         //Sql sql = this;
-        parent.elementIds.put(getId(), Sql.class.getName());
+        parent.elementIds.put(getId(), this);
 
         if (getOnerror() != null && getOnerror().length() > 0) {
             startValidateTag(writer, getOnerror());
@@ -470,7 +470,7 @@ public class Sql extends RequestChild{
         }
     }
     
-    protected String getSqlParams(HashMap<String,String> elementIds) throws ResourceTestException{
+    protected String getSqlParams(HashMap<String,RequestChild> elementIds) throws ResourceTestException{
         parent.elementIds = elementIds;
         return getSqlParams(this);
     }
@@ -525,10 +525,10 @@ public class Sql extends RequestChild{
                         throw new ResourceTestException("Could not find element with ID: "+elementId);
                     }
                     //get type of element
-                    //String type = parent.elementIds.get(elementId);
+                    RequestChild type = parent.elementIds.get(elementId);
                         
                     builder.append("<sql:param value=\"");
-                    builder.append(getJspVariableForMPath(mpathParam,elementId,true));
+                    builder.append(type.extractFromMPath(mpathParam,elementId,true));
                     builder.append("\"/>");
                     builder.append(System.lineSeparator());
                 }             
@@ -577,7 +577,7 @@ public class Sql extends RequestChild{
     }
 
     @Override
-    public String getJspVariableForMPath(String mpathVariable, String elementId, boolean enclose) {
+    public String extractFromMPath(String mpathVariable, String elementId, boolean enclose) {
         
         StringBuilder sb = new StringBuilder();
         

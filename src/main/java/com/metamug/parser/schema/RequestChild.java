@@ -116,7 +116,7 @@ public abstract class RequestChild {
         osw.flush();
     }
     
-    protected String transformVariables(String input, Map<String,String> elementIds, boolean enclose) throws ResourceTestException{
+    protected String transformVariables(String input, Map<String,RequestChild> elementIds, boolean enclose) throws ResourceTestException{
         input = transformRequestVariables(input,enclose);
         input = transformMPathVariables(input, elementIds, enclose);
         return input;
@@ -139,7 +139,8 @@ public abstract class RequestChild {
         osw.flush();
     }
     
-    protected void collectVariables(LinkedList<String> requestParams, LinkedList<String> mPathParams, String query, Map<String,String> elementIds) throws ResourceTestException {
+    protected void collectVariables(LinkedList<String> requestParams, LinkedList<String> mPathParams, String query, 
+            Map<String,RequestChild> elementIds) throws ResourceTestException {
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher match = pattern.matcher(query);
         while (match.find()) {
@@ -251,24 +252,67 @@ public abstract class RequestChild {
 
         return output;
     }
-
-    /**
-     * Get JSP Variables from MPath
-     * @param mpathVariable
-     * @param elementId
-     * @param enclose
-     * @return
-     */
-    public String getJspVariableForMPath(String mpathVariable, String elementId, boolean enclose) {
-        return enclose ? enclose(elementId) : elementId;
-    }
-
-    //abstract protected String getJSPVariable(String mPathVariable, String elementId, boolean enclose);
     
+    public abstract String extractFromMPath(String mpathVariable, String elementId, boolean enclose);
+    /*
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
+        String transformedVariable = mpathVariable;
+        
+        StringBuilder sb = new StringBuilder();
+        if(enclose) {
+            sb.append("${");
+        }
+        
+        if(type.equals(Sql.class.getName())) {
+            // id.rows[0].name
+            String rowIndex = "0";
+            String colName = null;
 
-    
+            Pattern p = Pattern.compile("^\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)$");
+            Matcher m = p.matcher(mpathVariable);
+
+            if(m.find()) {
+                rowIndex = m.group(2);
+                colName = m.group(3);
+            }
+            //System.out.println("Sql");
+            //System.out.println("elementId: "+elementId);
+            transformedVariable = elementId+".rows"+"["+rowIndex+"]."+colName;
+              
+        }else if(type.equals(Xrequest.class.getName())){
+            // m:jsonPath('$.body.args.foo1',bus['id'])
+            String locator = getMPathLocator(mpathVariable);
+                
+            transformedVariable = "m:jsonPath('$"+locator+"',"+elementId+")";
+            
+        } else if(type.equals(Execute.class.getName())){
+            // bus[id].name
+            String locator = getMPathLocator(mpathVariable);
+            transformedVariable = elementId+locator;
+            
+        } else if(type.equals(Script.class.getName())){
+            // bus[id].name
+            String locator = getMPathLocator(mpathVariable);
+            transformedVariable = elementId+locator;
+            
+        } else if(type.equals(Text.class.getName())){
+            transformedVariable = elementId;
+            
+        } else if(type.equals(UPLOAD_OBJECT)){
+            transformedVariable = elementId;
+        }
+        
+        sb.append(transformedVariable);
+        
+        if(enclose){
+            sb.append("}");
+        }
+        
+        return sb.toString();
+    }*/
+
     //collects MPath variables for sql:param tags
-    public void collectMPathParams(LinkedList<String> params,String sql, Map<String,String> elementIds) throws ResourceTestException {
+    public void collectMPathParams(LinkedList<String> params,String sql, Map<String,RequestChild> elementIds) throws ResourceTestException {
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(sql);
 
@@ -288,7 +332,7 @@ public abstract class RequestChild {
     }
     
     //transforms MPath variables in given string
-    public String transformMPathVariables(String input, Map<String, String> elementIds, boolean enclose) throws ResourceTestException {
+    public String transformMPathVariables(String input, Map<String, RequestChild> elementIds, boolean enclose) throws ResourceTestException {
 
         String transformed = input;
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
@@ -302,9 +346,10 @@ public abstract class RequestChild {
                 throw new ResourceTestException("Could not find element with ID: " + elementId);
             }
             //get type of element
-            //String type = elementIds.get(elementId);
-            String tv = getJspVariableForMPath(mpathVariable, elementId, enclose);
-
+            RequestChild type = (RequestChild)elementIds.get(elementId);
+            //String tv = getJspVariableForMPath(mpathVariable, elementId, enclose);
+            String tv = type.extractFromMPath(mpathVariable, elementId, enclose);
+            
             transformed = transformed.replace(mpathVariable, tv);
         }
 

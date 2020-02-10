@@ -291,7 +291,7 @@ public class Execute extends RequestChild {
     }
 
     @Override
-    public String getJspVariableForMPath(String mpathVariable, String elementId, boolean enclose) {
+    public String extractFromMPath(String mpathVariable, String elementId, boolean enclose) {
         
         StringBuilder sb = new StringBuilder();
         

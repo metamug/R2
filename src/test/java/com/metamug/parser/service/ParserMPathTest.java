@@ -57,6 +57,7 @@ import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.schema.Execute;
 import com.metamug.parser.schema.RequestChild;
 import com.metamug.parser.schema.Sql;
+import com.metamug.parser.schema.Upload;
 import com.metamug.parser.schema.xrequest.Xrequest;
 
 import java.util.ArrayList;
@@ -76,16 +77,16 @@ import org.junit.Test;
  */
 public class ParserMPathTest {
     
-    HashMap<String,String> elementIds = new HashMap<>();
+    HashMap<String,RequestChild> elementIds = new HashMap<>();
     
     RequestChild r;
     
     @Before
     public void init(){
-        elementIds.put("sqlresult", Sql.class.getName());
-        elementIds.put("xreq", Xrequest.class.getName());
-        elementIds.put("exec", Execute.class.getName());
-        elementIds.put(ParserService.UPLOAD_OBJECT,ParserService.UPLOAD_OBJECT);    
+        elementIds.put("sqlresult", new Sql());
+        elementIds.put("xreq", new Xrequest());
+        elementIds.put("exec", new Execute());
+        elementIds.put(ParserService.UPLOAD_OBJECT,new Upload());    
         //instantiate using a child class
         r = new Execute();
     }
@@ -146,7 +147,7 @@ public class ParserMPathTest {
         
         Assert.assertEquals(expected, extracted);
     }  
-    /*
+    
     @Test
     public void transformMPathXReq(){
         String input = "{\n" +
@@ -165,7 +166,7 @@ public class ParserMPathTest {
             Logger.getLogger(ParserMPathTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-    }*/
+    }
     
     @Test
     public void transformMPathExec(){
@@ -188,7 +189,7 @@ public class ParserMPathTest {
         }
         
     }
-    /*
+    
     @Test
     public void transformMPathSql(){
         String input = "SELECT $[xreq].body.args.foo1,$[xreq].body.args[2].foo[0].bar AS 'foo1'";
@@ -216,7 +217,7 @@ public class ParserMPathTest {
             Assert.assertTrue(ex.getMessage().contains("Could not find element with ID"));
         }
     }
-    */
+    
     @Test
     public void mPathUploadId(){
         String input = "SELECT $[_upload],$[xreq].body.args[2].foo[0].bar AS 'foo1'";

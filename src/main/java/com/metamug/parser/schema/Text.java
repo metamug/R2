@@ -192,5 +192,9 @@ public class Text extends RequestChild {
         getRequestParametersFromString(params,getValue());
         return params;
     }
-
+    
+    @Override
+    public String extractFromMPath(String mpathVariable, String elementId, boolean enclose) {
+        return enclose ? enclose(elementId) : elementId;
+    }
 }
