@@ -121,7 +121,7 @@ public class Xbody extends XrequestChild {
     }
 
     @Override
-    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+    public String getJspVariableForMPath(String mpathVariable, String elementId, boolean enclose) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

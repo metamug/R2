@@ -524,11 +524,11 @@ public class Sql extends RequestChild{
                     if(!parent.elementIds.containsKey(elementId)){
                         throw new ResourceTestException("Could not find element with ID: "+elementId);
                     }
-                        //get type of element
-                    String type = parent.elementIds.get(elementId);
+                    //get type of element
+                    //String type = parent.elementIds.get(elementId);
                         
                     builder.append("<sql:param value=\"");
-                    builder.append(getJspVariableForMPath(mpathParam,type,elementId,true));
+                    builder.append(getJspVariableForMPath(mpathParam,elementId,true));
                     builder.append("\"/>");
                     builder.append(System.lineSeparator());
                 }             
@@ -577,7 +577,7 @@ public class Sql extends RequestChild{
     }
 
     @Override
-    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+    public String getJspVariableForMPath(String mpathVariable, String elementId, boolean enclose) {
         
         StringBuilder sb = new StringBuilder();
         

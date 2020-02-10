@@ -52,6 +52,7 @@
  */
 package com.metamug.parser.service;
 
+import com.metamug.parser.schema.Execute;
 import com.metamug.parser.schema.RequestChild;
 import org.junit.Assert;
 import org.junit.Test;
@@ -63,6 +64,7 @@ import org.junit.Test;
 public class ParserReqParamTest {
     @Test
     public void transformRequestVariables(){
+        RequestChild r = new Execute();
         String input = "{\n" +
 "                    \"foo1\": $id,\n" +
 "                    \"foo2\": $rating\n" +
@@ -71,7 +73,7 @@ public class ParserReqParamTest {
 "                    \"foo1\": ${mtgReq.id},\n" +
 "                    \"foo2\": ${mtgReq.params['rating']}\n" +
 "                }";
-        String output = RequestChild.transformRequestVariables(input,true);
+        String output = r.transformRequestVariables(input,true);
        
         Assert.assertEquals(exp, output);
     }

@@ -122,7 +122,7 @@ public abstract class RequestChild {
         return input;
     }
     
-    protected static String enclose(String expression) {
+    protected String enclose(String expression) {
         return "${" + expression + "}";
     }
     
@@ -216,7 +216,7 @@ public abstract class RequestChild {
     }
 
     //transforms request variables in given string
-    public static String transformRequestVariables(String input, boolean enclose) {
+    public String transformRequestVariables(String input, boolean enclose) {
         String output = input;
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher matcher = pattern.matcher(input);
@@ -255,16 +255,15 @@ public abstract class RequestChild {
     /**
      * Get JSP Variables from MPath
      * @param mpathVariable
-     * @param type
      * @param elementId
      * @param enclose
      * @return
      */
-    public static String getJspVariableForMPath(String mpathVariable, String elementId, boolean enclose) {
+    public String getJspVariableForMPath(String mpathVariable, String elementId, boolean enclose) {
         return enclose ? enclose(elementId) : elementId;
     }
 
-    abstract protected String getJSPVariable(String mPathVariable, String elementId, boolean enclose);
+    //abstract protected String getJSPVariable(String mPathVariable, String elementId, boolean enclose);
     
 
     
@@ -289,7 +288,7 @@ public abstract class RequestChild {
     }
     
     //transforms MPath variables in given string
-    public static String transformMPathVariables(String input, Map<String, String> elementIds, boolean enclose) throws ResourceTestException {
+    public String transformMPathVariables(String input, Map<String, String> elementIds, boolean enclose) throws ResourceTestException {
 
         String transformed = input;
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
@@ -303,8 +302,8 @@ public abstract class RequestChild {
                 throw new ResourceTestException("Could not find element with ID: " + elementId);
             }
             //get type of element
-            String type = elementIds.get(elementId);
-            String tv = getJspVariableForMPath(mpathVariable, type, elementId, enclose);
+            //String type = elementIds.get(elementId);
+            String tv = getJspVariableForMPath(mpathVariable, elementId, enclose);
 
             transformed = transformed.replace(mpathVariable, tv);
         }
@@ -313,7 +312,7 @@ public abstract class RequestChild {
     }    
 
     // '%$variable%' => CONCAT('%',$variable,'%')
-    public static String processVariablesInLikeClause(String q) {
+    public String processVariablesInLikeClause(String q) {
         Pattern quotePattern = Pattern.compile("'(.*?)'");
         Matcher quotedSubstringMatcher = quotePattern.matcher(q);
         while (quotedSubstringMatcher.find()) {
@@ -355,7 +354,7 @@ public abstract class RequestChild {
         return q;
     }
 
-    public static String getMPathId(String path){
+    public String getMPathId(String path){
         Pattern p = Pattern.compile("^\\$\\[(.*?)\\]");// $[varname]
 
         Matcher m = p.matcher(path);

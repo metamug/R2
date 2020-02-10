@@ -287,7 +287,7 @@ public class Xrequest extends RequestChild{
     }
 
     @Override
-    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+    public String getJspVariableForMPath(String mpathVariable, String elementId, boolean enclose) {
         
         StringBuilder sb = new StringBuilder();
        

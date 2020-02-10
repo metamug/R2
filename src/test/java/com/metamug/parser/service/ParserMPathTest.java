@@ -78,24 +78,29 @@ public class ParserMPathTest {
     
     HashMap<String,String> elementIds = new HashMap<>();
     
+    RequestChild r;
+    
     @Before
     public void init(){
         elementIds.put("sqlresult", Sql.class.getName());
         elementIds.put("xreq", Xrequest.class.getName());
         elementIds.put("exec", Execute.class.getName());
         elementIds.put(ParserService.UPLOAD_OBJECT,ParserService.UPLOAD_OBJECT);    
+        //instantiate using a child class
+        r = new Execute();
     }
     
     @Test
     public void getMPathIdRegex(){
+        
         String[] paths = {"$[xreq].body.args[2].foo","$[xreq].body.args.foo1",
             "$[res].id.name","$[res][0].rating"};
         String[] expected = {"xreq","xreq","res","res"};
         
-        Assert.assertEquals(RequestChild.getMPathId(paths[0]),expected[0]);
-        Assert.assertEquals(RequestChild.getMPathId(paths[1]),expected[1]);
-        Assert.assertEquals(RequestChild.getMPathId(paths[2]),expected[2]);
-        Assert.assertEquals(RequestChild.getMPathId(paths[3]),expected[3]);
+        Assert.assertEquals(r.getMPathId(paths[0]),expected[0]);
+        Assert.assertEquals(r.getMPathId(paths[1]),expected[1]);
+        Assert.assertEquals(r.getMPathId(paths[2]),expected[2]);
+        Assert.assertEquals(r.getMPathId(paths[3]),expected[3]);
     }
     
     @Test
@@ -141,7 +146,7 @@ public class ParserMPathTest {
         
         Assert.assertEquals(expected, extracted);
     }  
-    
+    /*
     @Test
     public void transformMPathXReq(){
         String input = "{\n" +
@@ -153,14 +158,14 @@ public class ParserMPathTest {
 "                    \"foo2\": ${sqlresult.rows[0].rating}\"\n" +
 "                }";
         try {
-            String output = RequestChild.transformMPathVariables(input, elementIds,true);
+            String output = r.transformMPathVariables(input, elementIds,true);
             //System.out.println(output);
             Assert.assertEquals(output,expected);
         } catch (ResourceTestException ex) {
             Logger.getLogger(ParserMPathTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-    }
+    }*/
     
     @Test
     public void transformMPathExec(){
@@ -175,7 +180,7 @@ public class ParserMPathTest {
 "                   \"foo3\": ${exec.contact.phone}\"\n" +
 "               }";
         try {
-            String output = RequestChild.transformMPathVariables(input, elementIds,true);
+            String output = r.transformMPathVariables(input, elementIds,true);
             //System.out.println(output);
             Assert.assertEquals(output,expected);
         } catch (ResourceTestException ex) {
@@ -183,14 +188,14 @@ public class ParserMPathTest {
         }
         
     }
-    
+    /*
     @Test
     public void transformMPathSql(){
         String input = "SELECT $[xreq].body.args.foo1,$[xreq].body.args[2].foo[0].bar AS 'foo1'";
         String expected = "SELECT ${m:jsonPath('$.body.args.foo1',xreq)},${m:jsonPath('$.body.args[2].foo[0].bar',xreq)} AS 'foo1'";
         
         try {
-            String output = RequestChild.transformMPathVariables(input, elementIds,true);
+            String output = r.transformMPathVariables(input, elementIds,true);
         
             Assert.assertEquals(output,expected);
         } catch (ResourceTestException ex) {
@@ -204,20 +209,20 @@ public class ParserMPathTest {
         String input = "SELECT $[invalidId].body.args.foo1,$[xreq].body.args[2].foo[0].bar AS 'foo1'";
         
         try {
-            String output = RequestChild.transformMPathVariables(input, elementIds,true);
+            String output = r.transformMPathVariables(input, elementIds,true);
             //Assert.assertEquals(output,null);
         } catch (ResourceTestException ex) {
             //Logger.getLogger(ParserMPathTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.assertTrue(ex.getMessage().contains("Could not find element with ID"));
         }
     }
-    
+    */
     @Test
     public void mPathUploadId(){
         String input = "SELECT $[_upload],$[xreq].body.args[2].foo[0].bar AS 'foo1'";
             
         try {
-            String o = RequestChild.transformMPathVariables(input, elementIds,true);
+            String o = r.transformMPathVariables(input, elementIds,true);
             Assert.assertEquals("SELECT ${_upload},${m:jsonPath('$.body.args[2].foo[0].bar',xreq)} AS 'foo1'", o);
             //System.out.println("Hello: "+o);
         } catch (ResourceTestException ex) {
