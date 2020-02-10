@@ -8,10 +8,21 @@
 
 package com.metamug.parser.schema;
 
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.service.ParserService;
+import static com.metamug.parser.service.ParserService.MASON_OUTPUT;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
+import org.apache.commons.text.StringEscapeUtils;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -34,7 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "script")
-public class Script {
+public class Script extends RequestChild{
 
     @XmlAttribute(name = "id", required = true)
     protected String id;
@@ -134,5 +145,55 @@ public class Script {
      */
     public void setOutput(Boolean output) {
         this.output = output;
+    }
+
+    @Override
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
+        this.parent = parent;
+        //Script script = (Script)this;
+        
+        if (getWhen() != null) {
+            writer.writeStartElement("c:if");
+            //String testString = getQuotedString(script.getWhen());
+            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            String test = transformVariables(getWhen(),parent.elementIds,false);
+            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
+        }
+        writer.writeCharacters(System.lineSeparator());
+        writer.writeStartElement("m:script");
+        String var = getId();
+        writer.writeAttribute("var", var);
+        writer.writeAttribute("file", getFile());
+        
+        writer.writeEndElement(); //End of <m:script>    
+        writer.writeCharacters(System.lineSeparator());
+        
+        if (getOutput()) {
+            printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclose(var)); 
+        }
+        
+        if (getWhen() != null) {
+            writer.writeEndElement(); //End of <c:if>
+        }
+    }
+
+    @Override
+    public List<String> getRequestParameters() {
+        List<String> p = new ArrayList<>();
+        getRequestParametersFromString(p,getWhen());
+        return p;
+    }
+
+    @Override
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        StringBuilder sb = new StringBuilder();
+                
+        // bus[id].name
+        String locator = getMPathLocator(mpathVariable);
+        String transformedVariable = elementId+locator;
+        
+        sb.append(transformedVariable);
+                      
+        return enclose ? enclose(sb.toString()) : sb.toString();
     }
 }

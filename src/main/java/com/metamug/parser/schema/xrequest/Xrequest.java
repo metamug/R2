@@ -4,8 +4,14 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2018.06.19 at 07:00:32 PM IST 
 //
-package com.metamug.parser.schema;
+package com.metamug.parser.schema.xrequest;
 
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.schema.Method;
+import com.metamug.parser.schema.RequestChild;
+import com.metamug.parser.schema.Header;
+import com.metamug.parser.service.ParserService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,6 +20,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
+import org.apache.commons.text.StringEscapeUtils;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -52,13 +63,13 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "xrequest", propOrder = {
     "paramOrHeaderOrBody"
 })
-public class Xrequest {
+public class Xrequest extends RequestChild{
     @XmlElements({
         @XmlElement(name = "Param", type = Xparam.class),
         @XmlElement(name = "Header", type = Xheader.class),
         @XmlElement(name = "Body", type = String.class)
     })
-    protected List<Object> paramOrHeaderOrBody;
+    protected List<XrequestChild> paramOrHeaderOrBody;
     @XmlAttribute(name = "id", required = true)
     protected String id;
     @XmlAttribute(name = "when")
@@ -88,13 +99,13 @@ public class Xrequest {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link Xparam }
-     * {@link Xheader }
+     * {@link Header }
      * {@link String }
      *
      *
      * @return
      */
-    public List<Object> getParamOrHeaderOrBody() {
+    public List<XrequestChild> getParamOrHeaderOrBody() {
         if (paramOrHeaderOrBody == null) {
             paramOrHeaderOrBody = new ArrayList<>();
         }
@@ -218,5 +229,75 @@ public class Xrequest {
      */
     public void setClassName(String value) {
         this.className = value;
+    }
+
+    @Override
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
+        this.parent = parent;
+        //Xrequest xrequest = (Xrequest)this;
+        
+        if (getWhen() != null) {
+            writer.writeStartElement("c:if");
+            //String testString = getQuotedString(xrequest.getWhen());
+            //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
+            String test = transformVariables(getWhen(),parent.elementIds,false);
+            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
+        }
+   
+        //print xrequest mason tags
+        writer.writeCharacters(System.lineSeparator());
+        writer.writeStartElement("m:xrequest");
+        writer.writeAttribute("var", getId());
+        writer.writeAttribute("method", getMethod().name());
+        if ( getOutput() != null ) { 
+            String outputVal = getOutput().value();
+            if(outputVal.equals("headers")){
+                writer.writeAttribute("outputHeaders", "true");
+                writer.writeAttribute("output", "true");
+            } else if(outputVal.equals("true")) {
+                writer.writeAttribute("output", "true");
+            }
+        }
+        
+        if ( getClassName() != null ) {
+            writer.writeAttribute("className", getClassName());
+        }
+        
+        writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(getUrl())+"\"",parent.output);
+                
+        for (XrequestChild child : getParamOrHeaderOrBody()) {
+            child.print(writer, parent);
+        }
+        
+        writer.writeEndElement(); //End of <m:xrequest>    
+        writer.writeCharacters(System.lineSeparator());
+        
+        if (getWhen() != null) {
+            writer.writeEndElement(); //End of <c:if>
+        }
+    }
+
+    @Override
+    public List<String> getRequestParameters() {
+        List<String> params = new ArrayList<>();
+        getParamOrHeaderOrBody().forEach( child  -> {
+            params.addAll(child.getRequestParameters());
+        });
+        return params;
+    }
+
+    @Override
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        
+        StringBuilder sb = new StringBuilder();
+       
+        // m:jsonPath('$.body.args.foo1',bus['id'])
+        String locator = getMPathLocator(mpathVariable);
+                
+        String transformedVariable = "m:jsonPath('$"+locator+"',"+elementId+")";
+            
+        sb.append(transformedVariable);       
+        
+        return enclose ? enclose(sb.toString()) : sb.toString();
     }
 }

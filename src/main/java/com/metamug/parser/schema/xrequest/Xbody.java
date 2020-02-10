@@ -50,44 +50,78 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.parser.schema;
+package com.metamug.parser.schema.xrequest;
 
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.service.ParserService;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author anishhirlekar
  */
-@XmlType(name = "xrequestOutput")
-@XmlEnum
-public enum XrequestOutput {
-    @XmlEnumValue("true")
-    TRUE("true"),
-    @XmlEnumValue("false")
-    FALSE("false"),
-    @XmlEnumValue("headers")
-    HEADERS("headers");
-    private final String value;
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "xbody", propOrder = {
+    "value"
+})
+public class Xbody extends XrequestChild {
 
-    XrequestOutput(String value) {
+    @XmlValue
+    protected String value;
+
+    /**
+     * Gets the value of the value property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value of the value property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setValue(String value) {
         this.value = value;
     }
-    
-    public String value() {
-        return this.value;
+
+    @Override
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
+        writer.writeStartElement("m:xbody");
+        //transform request parameters and mpath variables in xrequest body
+        String body = transformVariables(getValue(),parent.elementIds,true);
+              
+        writeUnescapedCharacters(writer, body,parent.output);
+        writer.writeEndElement();
     }
 
-    public static XrequestOutput fromValue(String value) {
-        if(value.equals("")){
-            return TRUE;
-        }
-        for (XrequestOutput xo : XrequestOutput.values()) {
-            if (xo.value.equals(value)) {
-                return xo;
-            }
-        }
-        throw new IllegalArgumentException(value);
+    @Override
+    public List<String> getRequestParameters() {
+        List<String> params = new ArrayList<>();
+        getRequestParametersFromString(params,getValue());
+        return params;
+    }
+
+    @Override
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

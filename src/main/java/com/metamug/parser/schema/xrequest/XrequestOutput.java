@@ -50,57 +50,44 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.parser.parser;
+package com.metamug.parser.schema.xrequest;
 
-import com.metamug.parser.RPXParser;
-import com.metamug.parser.service.ParserServiceTest;
-import com.metamug.parser.schema.Request;
-import com.metamug.parser.schema.Resource;
-import com.metamug.parser.schema.xrequest.Xrequest;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpressionException;
-import org.junit.Test;
-import org.xml.sax.SAXException;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  *
  * @author anishhirlekar
  */
-public class MarshalTest {
-    private final String outputFolder = "/Users/anishhirlekar/parser-output";
-    String appName = "testWebapp";
-   
-    @Test
-    public void unmarshal() {
-        File file = new File(ParserServiceTest.class.getClassLoader().getResource("xrequest.xml").getFile());
+@XmlType(name = "xrequestOutput")
+@XmlEnum
+public enum XrequestOutput {
+    @XmlEnumValue("true")
+    TRUE("true"),
+    @XmlEnumValue("false")
+    FALSE("false"),
+    @XmlEnumValue("headers")
+    HEADERS("headers");
+    private final String value;
 
-        try {
-            System.out.println(file.getName());
+    XrequestOutput(String value) {
+        this.value = value;
+    }
+    
+    public String value() {
+        return this.value;
+    }
 
-            RPXParser parser = new RPXParser(outputFolder, appName, file);
-            Resource res = parser.parse();
-
-            Request firstReq = res.getRequest().get(0);
-                    
-            
-            Xrequest xreq = (Xrequest)firstReq.getParamOrSqlOrExecuteOrXrequestOrScript().get(0);
-                    
-            System.out.println(xreq.getId());
-            
-            String outputXmlFile = outputFolder+File.separator+"unmarshalled"+File.separator+file.getName();
-            
-            parser.marshal(res, outputXmlFile);
-                    
-        } catch (SAXException | XMLStreamException | XPathExpressionException | TransformerException | JAXBException | URISyntaxException | IOException ex) {
-            Logger.getLogger(MarshalTest.class.getName()).log(Level.SEVERE, null, ex);
+    public static XrequestOutput fromValue(String value) {
+        if(value.equals("")){
+            return TRUE;
         }
-            
+        for (XrequestOutput xo : XrequestOutput.values()) {
+            if (xo.value.equals(value)) {
+                return xo;
+            }
+        }
+        throw new IllegalArgumentException(value);
     }
 }

@@ -100,7 +100,7 @@
                             </xsd:annotation>
                             <xsd:choice maxOccurs="unbounded">
                                 <xsd:element name="Desc" type="desc" minOccurs="0" maxOccurs="1"/>
-                                <xsd:element name="Header" type="xheader" minOccurs="0" maxOccurs="unbounded"/>
+                                <xsd:element name="Header" type="header" minOccurs="0" maxOccurs="unbounded"/>
                                 <xsd:element name="Param" type="param" minOccurs="0" maxOccurs="unbounded"/>
                                 <xsd:element name="Execute" type="execute" minOccurs="0" maxOccurs="unbounded"/>
                                 <xsd:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded"/>
@@ -138,12 +138,6 @@
     </xsd:element>
 
     <xsd:simpleType name="desc">
-        <xsd:restriction base="xsd:string">
-            <xsd:minLength value="1"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-
-    <xsd:simpleType name="xbody">
         <xsd:restriction base="xsd:string">
             <xsd:minLength value="1"/>
         </xsd:restriction>
@@ -259,7 +253,20 @@
         <xsd:attribute name="name" type="paramName" use="required"/>
         <xsd:attribute name="value" type="xsd:string" use="required"/>
     </xsd:complexType>
+    
+    <xsd:complexType name="xbody">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
 
+    <xsd:complexType name="header">
+        <xsd:attribute name="name" type="headerName" use="required"/>
+        <xsd:attribute name="value" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    
     <xsd:complexType name="xheader">
         <xsd:attribute name="name" type="headerName" use="required"/>
         <xsd:attribute name="value" type="xsd:string" use="required"/>

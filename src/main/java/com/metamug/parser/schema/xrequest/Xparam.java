@@ -4,12 +4,22 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2018.06.19 at 07:00:32 PM IST 
 //
-package com.metamug.parser.schema;
+package com.metamug.parser.schema.xrequest;
 
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.service.ParserService;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
+import org.apache.commons.text.StringEscapeUtils;
+import org.xml.sax.SAXException;
 
 /**
  * <p>
@@ -33,7 +43,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "xparam")
-public class Xparam {
+public class Xparam extends XrequestChild {
 
     @XmlAttribute(name = "name", required = true)
     protected String name;
@@ -78,5 +88,26 @@ public class Xparam {
      */
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
+        writer.writeEmptyElement("m:xparam");
+        writer.writeAttribute("name", getName());
+        //transform request parameters and mpath variables in xrequest param value
+        String v = transformVariables(getValue(),parent.elementIds,true);
+        writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"",parent.output);
+    }
+
+    @Override
+    public List<String> getRequestParameters() {
+        List<String> params = new ArrayList<>();
+        getRequestParametersFromString(params,getValue());
+        return params;
+    }
+
+    @Override
+    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
