@@ -57,8 +57,6 @@ public class Request {
         @XmlElement(name = "Script", type = Script.class),
         @XmlElement(name = "Text", type = Text.class)
     })
-
-
     protected List<RequestChild> paramOrSqlOrExecuteOrXrequestOrScript;
 
     @XmlAttribute(name = "status")
