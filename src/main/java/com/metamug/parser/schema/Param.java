@@ -87,6 +87,9 @@ public class Param extends RequestChild {
         this.type = ParamType.TEXT;
         this.required = true; //since this is being used inside the request child elements
     }
+    
+    public Param(){
+    }
 
     /**
      * Gets the value of the name property.

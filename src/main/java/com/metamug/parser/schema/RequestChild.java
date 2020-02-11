@@ -67,6 +67,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.xpath.XPathExpressionException;
@@ -76,8 +77,10 @@ import org.xml.sax.SAXException;
  *
  * @author anishhirlekar
  */
+@XmlTransient
 public abstract class RequestChild {
     
+    @XmlTransient
     public ParserService parent;
 
     /**
