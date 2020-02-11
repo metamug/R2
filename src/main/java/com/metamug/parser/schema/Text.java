@@ -164,6 +164,7 @@ public class Text extends RequestChild {
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
         this.parent = parent;
         //Text txt = (Text)this;
+        parent.elementIds.put(getId(), this);
         
         if (getWhen() != null) {
             writer.writeStartElement("c:if");

@@ -519,7 +519,7 @@ public class Sql extends RequestChild{
                     //append mpath variables
                     String mpathParam = mpathParams.getFirst();
                     mpathParams.removeFirst();
-                        
+                    //System.out.println("Hello");
                     String elementId = getMPathId(mpathParam);
                     if(!parent.elementIds.containsKey(elementId)){
                         throw new ResourceTestException("Could not find element with ID: "+elementId);

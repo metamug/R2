@@ -235,6 +235,7 @@ public class Xrequest extends RequestChild{
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
         this.parent = parent;
         //Xrequest xrequest = (Xrequest)this;
+        parent.elementIds.put(getId(), this);
         
         if (getWhen() != null) {
             writer.writeStartElement("c:if");
