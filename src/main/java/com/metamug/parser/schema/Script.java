@@ -78,7 +78,8 @@ public class Script {
      *     
      */
     public String getFile() {
-        return file;
+        String val = file.contains(".groovy") ? file : file+".groovy";
+        return val;
     }
 
     /**
