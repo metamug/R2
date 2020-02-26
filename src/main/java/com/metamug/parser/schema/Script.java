@@ -89,7 +89,8 @@ public class Script extends RequestChild{
      *     
      */
     public String getFile() {
-        return file;
+        String val = file.contains(".groovy") ? file : file+".groovy";
+        return val;
     }
 
     /**
