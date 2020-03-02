@@ -462,7 +462,7 @@ public class Sql extends RequestChild{
         } else{
             //if no classname and verbose, print <c:set>
             if(verbose)
-                printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclose(var)); 
+                printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclosePageScope(var)); 
         }
         
         if (getWhen() != null) {

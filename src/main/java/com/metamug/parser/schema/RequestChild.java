@@ -129,6 +129,11 @@ public abstract class RequestChild {
         return "${" + expression + "}";
     }
     
+    protected String enclosePageScope(String exp){
+        return "${pageScope['"+exp+"']}";
+    }
+
+    
     protected void printTargetCSet(XMLStreamWriter writer, String target, String property, String value) throws XMLStreamException{
         writer.writeEmptyElement("c:set");
         writer.writeAttribute("target", target);

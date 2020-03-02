@@ -178,7 +178,7 @@ public class Text extends RequestChild {
         printPageScopeCSet(writer,getId(), value);
         
         if(isOutput()){
-            printTargetCSet(writer, enclose(MASON_OUTPUT), getId(), enclose(getId()) );
+            printTargetCSet(writer, enclose(MASON_OUTPUT), getId(), enclosePageScope(getId()) );
         }
         
         if (getWhen() != null) {

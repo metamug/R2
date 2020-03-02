@@ -252,6 +252,7 @@ public class ParserService {
         writer.writeAttribute("method", req.getMethod().value());
         writer.writeAttribute("item", String.valueOf(req.isItem()) );
     }
+
    
     /**
      * Close the m:request for Request tag.
@@ -263,8 +264,7 @@ public class ParserService {
         writer.writeEndElement();
         writer.writeCharacters(System.lineSeparator());
     }
-   
-    
+ 
     protected String getJspVariableForRequestParam(String param){
         switch (param) {
             case "id":

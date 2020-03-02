@@ -104,9 +104,9 @@ public class DocGenerator {
             writer.writeStartElement("head");
             writer.writeStartElement("link");
             writer.writeAttribute("rel", "stylesheet");
-            writer.writeAttribute("href", "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
-            writer.writeAttribute("integrity", "sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u");
-            writer.writeAttribute("crossorigin", "anonymous");
+            writer.writeAttribute("href", "/assets/vendor/css/bootstrap.min.css");
+            //writer.writeAttribute("integrity", "sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u");
+            //writer.writeAttribute("crossorigin", "anonymous");
             writer.writeEndElement(); //End </link>
             writer.writeEndElement(); //End of </head>
             writer.writeStartElement("body");

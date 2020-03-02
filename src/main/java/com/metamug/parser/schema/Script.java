@@ -171,7 +171,7 @@ public class Script extends RequestChild{
         writer.writeCharacters(System.lineSeparator());
         
         if (getOutput()) {
-            printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclose(var)); 
+            printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclosePageScope(var)); 
         }
         
         if (getWhen() != null) {
