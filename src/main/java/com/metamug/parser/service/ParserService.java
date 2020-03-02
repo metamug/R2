@@ -286,7 +286,7 @@ public class ParserService {
         printPageScopeCSet(writer, txt.getId(), value);
         
         if(txt.isOutput()){
-            printTargetCSet(writer, enclose(MASON_OUTPUT), txt.getId(), enclose(txt.getId()) );
+            printTargetCSet(writer, enclose(MASON_OUTPUT), txt.getId(), enclosePageScope(txt.getId()) );
         }
         
         if (txt.getWhen() != null) {
@@ -483,7 +483,7 @@ public class ParserService {
         } else{
             //if no classname and verbose, print <c:set>
             if(verbose)
-                printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclose(var)); 
+                printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclosePageScope(var)); 
         }
         
         if (sql.getWhen() != null) {
@@ -629,7 +629,7 @@ public class ParserService {
         writer.writeCharacters(System.lineSeparator());
         
         if (script.getOutput()) {
-            printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclose(var)); 
+            printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclosePageScope(var)); 
         }
         
         if (script.getWhen() != null) {
@@ -785,6 +785,10 @@ public class ParserService {
         osw.flush();
     }
 
+    protected String enclosePageScope(String exp){
+        return "${pageScope['"+exp+"']}";
+    }
+    
     protected String enclose(String expression) {
         return "${" + expression + "}";
     }
