@@ -83,6 +83,8 @@ public class OpenAPIGenerator {
 
             List<RequestChild> list = request.getParamOrSqlOrExecuteOrXrequestOrScript();
 
+            //@TODO use precedence of Param tag over $variable since param tags define type
+
             //loop over request elements to get params
             for (RequestChild requestElement : list) {
 
@@ -103,10 +105,10 @@ public class OpenAPIGenerator {
 
             switch (request.getMethod().value().toLowerCase()) {
                 case "post":
-                    item.setGet(operation);
+                    item.setPost(operation);
                     break;
                 case "get":
-                    item.setPost(operation);
+                    item.setGet(operation);
                     break;
                 case "put":
                     item.setPut(operation);
