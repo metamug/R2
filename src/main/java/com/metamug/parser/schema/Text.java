@@ -13,7 +13,9 @@ import com.metamug.parser.service.ParserService;
 import static com.metamug.parser.service.ParserService.MASON_OUTPUT;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -187,8 +189,8 @@ public class Text extends RequestChild {
     }
 
     @Override
-    public List<String> getRequestParameters() {
-        List<String> params = new ArrayList<>();
+    public Set<String> getRequestParameters() {
+        Set<String> params = new HashSet<>();
         getRequestParametersFromString(params,getWhen());
         getRequestParametersFromString(params,getValue());
         return params;

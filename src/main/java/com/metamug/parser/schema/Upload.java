@@ -56,6 +56,7 @@ import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.xpath.XPathExpressionException;
@@ -73,7 +74,7 @@ public class Upload extends RequestChild {
     }
 
     @Override
-    public List<String> getRequestParameters() {
+    public Set<String> getRequestParameters() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

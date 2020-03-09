@@ -12,13 +12,9 @@ import static com.metamug.parser.service.ParserService.MASON_DATASOURCE;
 import static com.metamug.parser.service.ParserService.MASON_OUTPUT;
 import static com.metamug.parser.service.ParserService.MPATH_EXPRESSION_PATTERN;
 import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
-import com.metamug.parser.service.QueryManagerService;
 import com.metamug.parser.service.ResourceTestService;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -31,6 +27,7 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.text.StringEscapeUtils;
 import org.xml.sax.SAXException;
+import com.metamug.parser.service.QueryManagerService;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sql", propOrder = {"value"})
@@ -569,8 +566,8 @@ public class Sql extends RequestChild{
     }
 
     @Override
-    public List<String> getRequestParameters() {
-        List<String> params = new ArrayList<>();
+    public Set<String> getRequestParameters() {
+        Set<String> params = new HashSet<>();
         getRequestParametersFromString(params,getWhen());
         getRequestParametersFromString(params, getValue());
         return params;

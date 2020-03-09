@@ -13,7 +13,9 @@ import com.metamug.parser.schema.Header;
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -279,8 +281,8 @@ public class Xrequest extends RequestChild{
     }
 
     @Override
-    public List<String> getRequestParameters() {
-        List<String> params = new ArrayList<>();
+    public Set<String> getRequestParameters() {
+        Set<String> params = new HashSet<>();
         getParamOrHeaderOrBody().forEach( child  -> {
             params.addAll(child.getRequestParameters());
         });

@@ -10,7 +10,9 @@ import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -275,8 +277,8 @@ public class Execute extends RequestChild {
     }
 
     @Override
-    public List<String> getRequestParameters() {
-        List<String> p = new ArrayList<>();
+    public Set<String> getRequestParameters() {
+        Set<String> p = new HashSet<>();
         getRequestParametersFromString(p,getWhen());
         for(Arg arg: getArg()){
             if(arg.getValue()!=null){

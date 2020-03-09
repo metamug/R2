@@ -8,7 +8,7 @@ package com.metamug.parser.schema;
 
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -353,12 +353,25 @@ public class Param extends RequestChild {
     }
 
     @Override
-    public List<String> getRequestParameters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Set<String> getRequestParameters() {
+        return Collections.singleton(name); //initialise a single element list
     }
 
     @Override
     public String extractFromMPath(String mpathVariable, String elementId, boolean enclose) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Param param = (Param) o;
+        return name.equals(param.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

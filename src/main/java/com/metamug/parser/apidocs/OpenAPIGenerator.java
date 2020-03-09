@@ -83,6 +83,7 @@ public class OpenAPIGenerator {
 
             List<RequestChild> list = request.getParamOrSqlOrExecuteOrXrequestOrScript();
 
+            //loop over request elements to get params
             for (RequestChild requestElement : list) {
 
                 for (String strParam : requestElement.getRequestParameters()) {
@@ -133,7 +134,9 @@ public class OpenAPIGenerator {
         parameter.setRequired(param.isRequired());
         parameter.setIn("query");
         Schema schema = new Schema();
-        schema.setType(param.getType().value());
+        if (param.getType().value() == null || param.getType().value().equalsIgnoreCase("text"))
+            schema.setType("string");
+
         parameter.setSchema(schema);
         return parameter;
     }

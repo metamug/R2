@@ -12,6 +12,7 @@ import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -107,7 +108,7 @@ public class Xheader extends XrequestChild {
     }
 
     @Override
-    public List<String> getRequestParameters() {
+    public Set<String> getRequestParameters() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

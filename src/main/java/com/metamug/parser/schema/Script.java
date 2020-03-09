@@ -13,7 +13,9 @@ import com.metamug.parser.service.ParserService;
 import static com.metamug.parser.service.ParserService.MASON_OUTPUT;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -180,8 +182,8 @@ public class Script extends RequestChild{
     }
 
     @Override
-    public List<String> getRequestParameters() {
-        List<String> p = new ArrayList<>();
+    public Set<String> getRequestParameters() {
+        Set<String> p = new HashSet<>();
         getRequestParametersFromString(p,getWhen());
         return p;
     }

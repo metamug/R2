@@ -56,35 +56,34 @@ package com.metamug.parser.schema;
 import com.metamug.parser.exception.ResourceTestException;
 
 import com.metamug.parser.service.ParserService;
+
 import static com.metamug.parser.service.ParserService.MPATH_EXPRESSION_PATTERN;
 import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.xpath.XPathExpressionException;
+
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 
 /**
- *
  * @author anishhirlekar
  */
 @XmlTransient
 public abstract class RequestChild {
-    
+
     @XmlTransient
     public ParserService parent;
 
     /**
-     *
      * @param writer
      * @param parent
      * @throws javax.xml.stream.XMLStreamException
@@ -94,16 +93,15 @@ public abstract class RequestChild {
      * @throws org.xml.sax.SAXException
      */
     abstract public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException;
-    
+
     /*
      * Returns parameters according to type of child element
      *
      */
-    abstract public List<String> getRequestParameters();
-    
-       
+    abstract public Set<String> getRequestParameters();
+
+
     /**
-     *
      * @param writer
      * @param data
      * @param output
@@ -118,37 +116,37 @@ public abstract class RequestChild {
         osw.write(data);
         osw.flush();
     }
-    
-    protected String transformVariables(String input, Map<String,RequestChild> elementIds, boolean enclose) throws ResourceTestException{
-        input = transformRequestVariables(input,enclose);
+
+    protected String transformVariables(String input, Map<String, RequestChild> elementIds, boolean enclose) throws ResourceTestException {
+        input = transformRequestVariables(input, enclose);
         input = transformMPathVariables(input, elementIds, enclose);
         return input;
     }
-    
+
     protected String enclose(String expression) {
         return "${" + expression + "}";
     }
-    
-    protected String enclosePageScope(String exp){
-        return "${pageScope['"+exp+"']}";
+
+    protected String enclosePageScope(String exp) {
+        return "${pageScope['" + exp + "']}";
     }
 
-    
-    protected void printTargetCSet(XMLStreamWriter writer, String target, String property, String value) throws XMLStreamException{
+
+    protected void printTargetCSet(XMLStreamWriter writer, String target, String property, String value) throws XMLStreamException {
         writer.writeEmptyElement("c:set");
         writer.writeAttribute("target", target);
         writer.writeAttribute("property", property);
         writer.writeAttribute("value", value);
     }
-    
-    protected void writeUnescapedData(String data, OutputStream output) throws IOException{
+
+    protected void writeUnescapedData(String data, OutputStream output) throws IOException {
         OutputStreamWriter osw = new OutputStreamWriter(output);
         osw.write(data);
         osw.flush();
     }
-    
-    protected void collectVariables(LinkedList<String> requestParams, LinkedList<String> mPathParams, String query, 
-            Map<String,RequestChild> elementIds) throws ResourceTestException {
+
+    protected void collectVariables(LinkedList<String> requestParams, LinkedList<String> mPathParams, String query,
+                                    Map<String, RequestChild> elementIds) throws ResourceTestException {
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher match = pattern.matcher(query);
         while (match.find()) {
@@ -157,15 +155,15 @@ public abstract class RequestChild {
         //collect Mpath variables
         collectMPathParams(mPathParams, query, elementIds);
     }
-    
-    protected String escapeSpecialCharacters(String input){
+
+    protected String escapeSpecialCharacters(String input) {
         String[] lines = input.split("\\r?\\n");
-        
+
         StringBuilder outputString = new StringBuilder();
-        
-        for(String line: lines){
+
+        for (String line : lines) {
             String escapedString = line;
-            
+
             if (line.toLowerCase().matches(".*\\sle(\\s|\\b).*")) {
                 escapedString = line.replaceAll("\\sle(\\s|\\b)", " <= ");
             }
@@ -184,14 +182,14 @@ public abstract class RequestChild {
             if (line.toLowerCase().matches(".*\\sgt(\\s|\\b).*")) {
                 escapedString = escapedString.replaceAll("\\sgt(\\s|\\b)", " > ");
             }
-            
+
             outputString.append(escapedString).append("\n");
         }
-        
+
         return outputString.toString().trim();
     }
-    
-    protected String getJspVariableForRequestParam(String param){
+
+    protected String getJspVariableForRequestParam(String param) {
         switch (param) {
             case "id":
                 return "${mtgReq.id}";
@@ -200,22 +198,25 @@ public abstract class RequestChild {
             case "uid":
                 return "${mtgReq.uid}";
             default:
-                return "${mtgReq.params['" +param+ "']}";
+                return "${mtgReq.params['" + param + "']}";
         }
     }
-    
-    protected void printPageScopeCSet(XMLStreamWriter writer, String var, String value) throws XMLStreamException{
-        printScopeCSet(writer,"page",var,value);
+
+    protected void printPageScopeCSet(XMLStreamWriter writer, String var, String value) throws XMLStreamException {
+        printScopeCSet(writer, "page", var, value);
     }
-    
-    protected void printScopeCSet(XMLStreamWriter writer, String scope, String var, String value) throws XMLStreamException{
+
+    protected void printScopeCSet(XMLStreamWriter writer, String scope, String var, String value) throws XMLStreamException {
         writer.writeEmptyElement("c:set");
         writer.writeAttribute("var", var);
-        writer.writeAttribute("scope", scope);    
+        writer.writeAttribute("scope", scope);
         writer.writeAttribute("value", value);
     }
-    
-    public void getRequestParametersFromString(List<String> paramList, String input) {
+
+    public void getRequestParametersFromString(Set<String> paramList, String input) {
+
+        if (StringUtils.isBlank(input)) return;
+
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher matcher = pattern.matcher(input);
         while (matcher.find()) {
@@ -260,7 +261,7 @@ public abstract class RequestChild {
 
         return output;
     }
-    
+
     public abstract String extractFromMPath(String mpathVariable, String elementId, boolean enclose);
     /*
     public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
@@ -320,7 +321,7 @@ public abstract class RequestChild {
     }*/
 
     //collects MPath variables for sql:param tags
-    public void collectMPathParams(LinkedList<String> params,String sql, Map<String,RequestChild> elementIds) throws ResourceTestException {
+    public void collectMPathParams(LinkedList<String> params, String sql, Map<String, RequestChild> elementIds) throws ResourceTestException {
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(sql);
 
@@ -328,9 +329,9 @@ public abstract class RequestChild {
             params.add(sql.substring(matcher.start(), matcher.end()).trim());
         }
     }
-    
+
     //collects request variables for sql:param tags
-    public void collectRequestParams(LinkedList<String> params,String sql) throws ResourceTestException {
+    public void collectRequestParams(LinkedList<String> params, String sql) throws ResourceTestException {
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher matcher = pattern.matcher(sql);
         while (matcher.find()) {
@@ -338,7 +339,7 @@ public abstract class RequestChild {
             params.add(variable);
         }
     }
-    
+
     //transforms MPath variables in given string
     public String transformMPathVariables(String input, Map<String, RequestChild> elementIds, boolean enclose) throws ResourceTestException {
 
@@ -354,15 +355,15 @@ public abstract class RequestChild {
                 throw new ResourceTestException("Could not find element with ID: " + elementId);
             }
             //get type of element
-            RequestChild type = (RequestChild)elementIds.get(elementId);
+            RequestChild type = (RequestChild) elementIds.get(elementId);
             //String tv = getJspVariableForMPath(mpathVariable, elementId, enclose);
             String tv = type.extractFromMPath(mpathVariable, elementId, enclose);
-            
+
             transformed = transformed.replace(mpathVariable, tv);
         }
 
         return transformed;
-    }    
+    }
 
     // '%$variable%' => CONCAT('%',$variable,'%')
     public String processVariablesInLikeClause(String q) {
@@ -407,7 +408,7 @@ public abstract class RequestChild {
         return q;
     }
 
-    public String getMPathId(String path){
+    public String getMPathId(String path) {
         Pattern p = Pattern.compile("^\\$\\[(.*?)\\]");// $[varname]
 
         Matcher m = p.matcher(path);
@@ -418,8 +419,8 @@ public abstract class RequestChild {
 
         return null;
     }
-    
-    protected String getMPathLocator(String path){
-        return path.replaceFirst("\\$\\[(.*?)\\]","");
+
+    protected String getMPathLocator(String path) {
+        return path.replaceFirst("\\$\\[(.*?)\\]", "");
     }
 }
