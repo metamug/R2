@@ -55,7 +55,7 @@ package com.metamug.parser.service;
 import com.metamug.parser.exception.ResourceTestException;
 
 import com.metamug.parser.schema.Execute;
-import com.metamug.parser.schema.RequestChild;
+import com.metamug.parser.schema.InvocableElement;
 import com.metamug.parser.schema.Sql;
 import com.metamug.parser.schema.Upload;
 import com.metamug.parser.schema.xrequest.Xrequest;
@@ -77,9 +77,9 @@ import org.junit.Test;
  */
 public class ParserMPathTest {
     
-    HashMap<String,RequestChild> elementIds = new HashMap<>();
+    HashMap<String,InvocableElement> elementIds = new HashMap<>();
     
-    RequestChild r;
+    InvocableElement r;
     
     @Before
     public void init(){

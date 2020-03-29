@@ -68,7 +68,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.schema.Execute;
-import com.metamug.parser.schema.RequestChild;
+import com.metamug.parser.schema.InvocableElement;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -93,7 +93,7 @@ public class ParserServiceTest {
                 + "LIKE '%$name% OR %rating AGAIN $var' WHERE 'rating LIKE'";
         String expected = "SELECT * FROM CONCAT($name,'%') WHERE LIKE CONCAT('%',$rating,'%') name LIKE CONCAT('%',$name,'% OR %rating AGAIN ',$var) WHERE 'rating LIKE'";
         
-        RequestChild r = new Execute();
+        InvocableElement r = new Execute();
         String processed = r.processVariablesInLikeClause(testQuery);
         //System.out.println(processed);
         Assert.assertEquals(expected,processed);

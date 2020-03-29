@@ -53,7 +53,7 @@
 package com.metamug.parser.service;
 
 import com.metamug.parser.schema.Execute;
-import com.metamug.parser.schema.RequestChild;
+import com.metamug.parser.schema.InvocableElement;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -64,7 +64,7 @@ import org.junit.Test;
 public class ParserReqParamTest {
     @Test
     public void transformRequestVariables(){
-        RequestChild r = new Execute();
+        InvocableElement r = new Execute();
         String input = "{\n" +
 "                    \"foo1\": $id,\n" +
 "                    \"foo2\": $rating\n" +

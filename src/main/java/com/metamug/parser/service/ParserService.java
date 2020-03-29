@@ -56,7 +56,7 @@ package com.metamug.parser.service;
 import com.metamug.parser.RPXParser;
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.schema.Request;
-import com.metamug.parser.schema.RequestChild;
+import com.metamug.parser.schema.InvocableElement;
 import com.metamug.parser.schema.Resource;
 import com.metamug.parser.schema.Upload;
 import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
@@ -103,7 +103,7 @@ public class ParserService {
     public OutputStream output;
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
 
-    public HashMap<String,RequestChild> elementIds = new HashMap<String,RequestChild>() {
+    public HashMap<String,InvocableElement> elementIds = new HashMap<String,InvocableElement>() {
         {
             put(UPLOAD_OBJECT, new Upload());
         }
@@ -207,7 +207,7 @@ public class ParserService {
 
     protected void printRequestElements(List elements, XMLStreamWriter writer, String domain) throws XMLStreamException, IOException, XPathExpressionException, SAXException, ResourceTestException {
         for (Object child : elements) {
-            ((RequestChild)child).print(writer, this);
+            ((InvocableElement)child).print(writer, this);
         }
     }
 

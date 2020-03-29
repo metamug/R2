@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  *
  * @author anishhirlekar
  */
-public class Upload extends RequestChild {
+public class Upload extends InvocableElement {
 
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {

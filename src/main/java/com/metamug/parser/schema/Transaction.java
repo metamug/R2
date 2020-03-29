@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
 @XmlType(name = "transaction", propOrder = {
     "sql"
 })
-public class Transaction extends RequestChild {
+public class Transaction extends InvocableElement {
 
     @XmlElement(name = "Sql")
     protected List<Sql> sql;

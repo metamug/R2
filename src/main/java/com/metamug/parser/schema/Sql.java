@@ -31,7 +31,7 @@ import com.metamug.parser.service.QueryManagerService;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sql", propOrder = {"value"})
-public class Sql extends RequestChild{
+public class Sql extends InvocableElement{
 
     @XmlValue
     protected String value;
@@ -467,7 +467,7 @@ public class Sql extends RequestChild{
         }
     }
     
-    protected String getSqlParams(HashMap<String,RequestChild> elementIds) throws ResourceTestException{
+    protected String getSqlParams(HashMap<String,InvocableElement> elementIds) throws ResourceTestException{
         parent.elementIds = elementIds;
         return getSqlParams(this);
     }
@@ -522,7 +522,7 @@ public class Sql extends RequestChild{
                         throw new ResourceTestException("Could not find element with ID: "+elementId);
                     }
                     //get type of element
-                    RequestChild type = parent.elementIds.get(elementId);
+                    InvocableElement type = parent.elementIds.get(elementId);
                         
                     builder.append("<sql:param value=\"");
                     builder.append(type.extractFromMPath(mpathParam,elementId,true));

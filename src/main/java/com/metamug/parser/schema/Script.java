@@ -12,9 +12,7 @@ import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
 import static com.metamug.parser.service.ParserService.MASON_OUTPUT;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -47,7 +45,7 @@ import org.xml.sax.SAXException;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "script")
-public class Script extends RequestChild{
+public class Script extends InvocableElement{
 
     @XmlAttribute(name = "id", required = true)
     protected String id;

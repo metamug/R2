@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {"desc", "request"})
 @XmlRootElement(name = "Resource")
-public class Resource {
+public class Resource extends XMLElement {
 
     @XmlElement(name = "Desc")
     protected String desc;
@@ -152,5 +152,15 @@ public class Resource {
 
     public void setAuth(String auth) {
         this.auth = auth;
+    }
+
+    @Override
+    public String getValue() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public InvocableElement get(String id){
+       //@TODO get invocable elements from children
+       return null;
     }
 }

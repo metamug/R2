@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 @XmlType(name = "execute", propOrder = {
     "arg"
 })
-public class Execute extends RequestChild {
+public class Execute extends InvocableElement {
     @XmlElement(name = "Arg")
     protected List<Arg> arg;
     @XmlAttribute(name = "id", required = true)

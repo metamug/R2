@@ -51,7 +51,7 @@ import javax.xml.xpath.XPathExpressionException;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "param")
-public class Param extends RequestChild {
+public class Param extends InvocableElement {
 
     @XmlAttribute(name = "name", required = true)
     protected String name;

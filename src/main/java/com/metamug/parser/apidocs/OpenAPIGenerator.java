@@ -3,7 +3,7 @@ package com.metamug.parser.apidocs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.metamug.parser.schema.Param;
 import com.metamug.parser.schema.Request;
-import com.metamug.parser.schema.RequestChild;
+import com.metamug.parser.schema.InvocableElement;
 import com.metamug.parser.schema.Resource;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.Yaml;
@@ -81,12 +81,12 @@ public class OpenAPIGenerator {
             Set<Param> requestParameters = request.getParam();
             List<Parameter> openAPIParams = new ArrayList<>();
 
-            List<RequestChild> list = request.getParamOrSqlOrExecuteOrXrequestOrScript();
+            List<InvocableElement> list = request.getParamOrSqlOrExecuteOrXrequestOrScript();
 
             //@TODO use precedence of Param tag over $variable since param tags define type
 
             //loop over request elements to get params
-            for (RequestChild requestElement : list) {
+            for (InvocableElement requestElement : list) {
 
                 for (String strParam : requestElement.getRequestParameters()) {
                     Param param = new Param(strParam);

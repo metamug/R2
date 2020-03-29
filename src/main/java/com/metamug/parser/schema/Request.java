@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
     "script",
     "text"
 })
-public class Request {
+public class Request extends XMLElement {
 
     @XmlElement(name = "Desc")
     protected String desc;
@@ -57,7 +57,7 @@ public class Request {
         @XmlElement(name = "Script", type = Script.class),
         @XmlElement(name = "Text", type = Text.class)
     })
-    protected List<RequestChild> paramOrSqlOrExecuteOrXrequestOrScript;
+    protected List<InvocableElement> paramOrSqlOrExecuteOrXrequestOrScript;
 
     @XmlAttribute(name = "status")
     protected Integer status;
@@ -133,5 +133,15 @@ public class Request {
 
     public void setItem(Boolean value) {
         this.item = value;
+    }
+
+    @Override
+    public String getValue() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public InvocableElement get(String id){
+       //@TODO get invocable elements from children
+       return null;
     }
 }

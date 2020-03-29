@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
 @XmlType(name = "text", propOrder = {
     "value"
 })
-public class Text extends RequestChild {
+public class Text extends InvocableElement {
 
     @XmlValue
     protected String value;

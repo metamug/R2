@@ -8,7 +8,7 @@ package com.metamug.parser.schema.xrequest;
 
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.schema.Method;
-import com.metamug.parser.schema.RequestChild;
+import com.metamug.parser.schema.InvocableElement;
 import com.metamug.parser.schema.Header;
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
 @XmlType(name = "xrequest", propOrder = {
     "paramOrHeaderOrBody"
 })
-public class Xrequest extends RequestChild{
+public class Xrequest extends InvocableElement{
     @XmlElements({
         @XmlElement(name = "Param", type = Xparam.class),
         @XmlElement(name = "Header", type = Xheader.class),

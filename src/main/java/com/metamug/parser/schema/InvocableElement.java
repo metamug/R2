@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author anishhirlekar
  */
 @XmlTransient
-public abstract class RequestChild {
+public abstract class InvocableElement {
 
     @XmlTransient
     public ParserService parent;
@@ -117,7 +117,7 @@ public abstract class RequestChild {
         osw.flush();
     }
 
-    protected String transformVariables(String input, Map<String, RequestChild> elementIds, boolean enclose) throws ResourceTestException {
+    protected String transformVariables(String input, Map<String, InvocableElement> elementIds, boolean enclose) throws ResourceTestException {
         input = transformRequestVariables(input, enclose);
         input = transformMPathVariables(input, elementIds, enclose);
         return input;
@@ -146,7 +146,7 @@ public abstract class RequestChild {
     }
 
     protected void collectVariables(LinkedList<String> requestParams, LinkedList<String> mPathParams, String query,
-                                    Map<String, RequestChild> elementIds) throws ResourceTestException {
+                                    Map<String, InvocableElement> elementIds) throws ResourceTestException {
         Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher match = pattern.matcher(query);
         while (match.find()) {
@@ -321,7 +321,7 @@ public abstract class RequestChild {
     }*/
 
     //collects MPath variables for sql:param tags
-    public void collectMPathParams(LinkedList<String> params, String sql, Map<String, RequestChild> elementIds) throws ResourceTestException {
+    public void collectMPathParams(LinkedList<String> params, String sql, Map<String, InvocableElement> elementIds) throws ResourceTestException {
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(sql);
 
@@ -341,7 +341,7 @@ public abstract class RequestChild {
     }
 
     //transforms MPath variables in given string
-    public String transformMPathVariables(String input, Map<String, RequestChild> elementIds, boolean enclose) throws ResourceTestException {
+    public String transformMPathVariables(String input, Map<String, InvocableElement> elementIds, boolean enclose) throws ResourceTestException {
 
         String transformed = input;
         Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
@@ -355,7 +355,7 @@ public abstract class RequestChild {
                 throw new ResourceTestException("Could not find element with ID: " + elementId);
             }
             //get type of element
-            RequestChild type = (RequestChild) elementIds.get(elementId);
+            InvocableElement type = (InvocableElement) elementIds.get(elementId);
             //String tv = getJspVariableForMPath(mpathVariable, elementId, enclose);
             String tv = type.extractFromMPath(mpathVariable, elementId, enclose);
 
