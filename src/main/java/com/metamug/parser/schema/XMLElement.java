@@ -110,16 +110,11 @@ public abstract class XMLElement<T extends XMLElement>{
     }
     
     @Deprecated
-    public T XMLElement(String xml) {
-        try {
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            StringReader reader = new StringReader(xml);
-            T t = (T) jaxbUnmarshaller.unmarshal(reader);
-            return t;
-        } catch (JAXBException ex) {
-            Logger.getLogger(XMLElement.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+    public T XMLElement(String xml) throws JAXBException {
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        StringReader reader = new StringReader(xml);
+        T t = (T) jaxbUnmarshaller.unmarshal(reader);
+        return t;      
     } 
     
     public String marshal() throws JAXBException{
