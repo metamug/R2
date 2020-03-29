@@ -52,7 +52,7 @@
  */
 package com.metamug.parser.schema;
 
-import java.io.File;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
@@ -110,13 +110,16 @@ public abstract class XMLElement<T extends XMLElement>{
     }
     
     @Deprecated
-    public void XMLElement(File xml) {
+    public T XMLElement(String xml) {
         try {
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();    
-            T t = (T) jaxbUnmarshaller.unmarshal(xml);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            StringReader reader = new StringReader(xml);
+            T t = (T) jaxbUnmarshaller.unmarshal(reader);
+            return t;
         } catch (JAXBException ex) {
             Logger.getLogger(XMLElement.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     } 
     
     public String marshal() throws JAXBException{
