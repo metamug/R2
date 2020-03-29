@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author anishhirlekar
  */
 @XmlTransient
-public abstract class InvocableElement {
+public abstract class InvocableElement extends XMLElement {
 
     @XmlTransient
     public ParserService parent;

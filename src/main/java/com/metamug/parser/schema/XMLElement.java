@@ -63,15 +63,21 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 /**
  *
  * @author anishhirlekar
  */
+@XmlTransient
 public abstract class XMLElement<T extends XMLElement>{
-
+    @XmlTransient
     protected List<T> children;
+    @XmlTransient
     protected Map<String, String> attributes;
+    @XmlTransient
     protected String value;
+    @XmlTransient
     private JAXBContext jaxbContext;
   
     public XMLElement() {
@@ -82,7 +88,7 @@ public abstract class XMLElement<T extends XMLElement>{
         }
     }
     
-    abstract public String getValue();
+    //abstract public String getValue();
     
     public void addChild(T child){
         children.add(child);

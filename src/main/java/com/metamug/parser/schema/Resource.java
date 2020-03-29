@@ -154,7 +154,7 @@ public class Resource extends XMLElement {
         this.auth = auth;
     }
 
-    @Override
+//    @Override
     public String getValue() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
