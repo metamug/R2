@@ -71,6 +71,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -110,8 +111,9 @@ public abstract class XMLElement<T extends XMLElement>{
     
     public Set<Object> getChildren(){
         Set<Object> children = new HashSet<>();
+        //System.out.println(this);
         for(Field field : this.getClass().getDeclaredFields()){
-            if (field.isAnnotationPresent(XmlElement.class)){
+            if (field.isAnnotationPresent(XmlElement.class)||field.isAnnotationPresent(XmlElements.class)){
                 try {
                     children.add(field.get(this));
                 } catch (IllegalArgumentException | IllegalAccessException ex) {

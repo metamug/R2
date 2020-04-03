@@ -67,16 +67,32 @@ public class ElementTest {
     
     
     @Test
-    public void attributeTest() throws FileNotFoundException, JAXBException{
+    public void attributeAndChildrenTest() throws FileNotFoundException, JAXBException{
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
         
         Resource resource = (Resource)new Resource().XMLElement(resourceFile);
         
-        Set<Object> children = resource.getChildren();
-        Iterator value = children.iterator(); 
+        Set<Object> reschildren = resource.getChildren();
+        Iterator i1 = reschildren.iterator(); 
   
-        while (value.hasNext()) { 
-            System.out.println(value.next()); 
+        while (i1.hasNext()) { 
+            Object reschild = i1.next();
+            if(reschild instanceof Set){
+                Set<Request> requests = (Set)reschild;
+                Iterator i2 = requests.iterator(); 
+
+                while (i2.hasNext()) { 
+                    Request request = (Request)i2.next();
+                    System.out.println(request);
+                    Set<Object> reqchildren = request.getChildren();
+                    Iterator i3 = reqchildren.iterator(); 
+
+                    while (i3.hasNext()) { 
+                        Object reqchild = i3.next();
+                        System.out.println(reqchild);
+                    }
+                } 
+            }
         } 
         
         System.out.println(resource.getAttributes());
