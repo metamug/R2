@@ -58,14 +58,19 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -75,12 +80,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @XmlTransient
 public abstract class XMLElement<T extends XMLElement>{
-    @XmlTransient
-    protected List<T> children;
-    @XmlTransient
-    protected Map<String, String> attributes;
-    @XmlTransient
-    protected String value;
+    
     @XmlTransient
     private JAXBContext jaxbContext;
   
@@ -92,23 +92,34 @@ public abstract class XMLElement<T extends XMLElement>{
         }
     }
     
-    public void addChild(T child){
-        children.add(child);
+    
+    public Map<String,Object> getAttributes(){
+        Map<String,Object> fields = new HashMap<>();
+        for(Field field : this.getClass().getDeclaredFields()){
+            if (field.isAnnotationPresent(XmlAttribute.class)){
+                try {
+                    fields.put(field.getName(), field.get(this));
+                } catch (IllegalArgumentException | IllegalAccessException ex) {
+                    Logger.getLogger(XMLElement.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return fields;
     }
     
-    public void setAttribute(String name, String value){
-       //@TODO check if field exists with the name and 
-       //add its value.
-    }
     
-    public void getAttribute(String name){
-        //@TODO check if a class field exists with the same name
-        //and get its value
-    }
-    
-    
-    public List<T> getChildren(){
-        return null;
+    public Set<Object> getChildren(){
+        Set<Object> children = new HashSet<>();
+        for(Field field : this.getClass().getDeclaredFields()){
+            if (field.isAnnotationPresent(XmlElement.class)){
+                try {
+                    children.add(field.get(this));
+                } catch (IllegalArgumentException | IllegalAccessException ex) {
+                    Logger.getLogger(XMLElement.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return children;
     }
     
     public Object XMLElement(String xml) throws JAXBException {
