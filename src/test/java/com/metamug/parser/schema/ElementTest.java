@@ -84,7 +84,7 @@ public class ElementTest {
                     
                     while (i3.hasNext()) { 
                         Object reqchild = i3.next();
-                        System.out.println(reqchild);
+                        //System.out.println(reqchild);
                     }
                 } 
             }
@@ -99,8 +99,8 @@ public class ElementTest {
         
         //add duplicate GET collection request
         Request getCollection = new Request(Method.GET);
+        
         resource.addRequest(getCollection);
-
         //add new GET item request
         Request getItem = new Request(Method.GET);
         getItem.setItem(true);
@@ -109,7 +109,7 @@ public class ElementTest {
         
         Request post = new Request(Method.POST);
         resource.addRequest(post);
-        System.out.println(resource.marshal());
+        //System.out.println(resource.marshal());
     }
     
     @Test
@@ -119,12 +119,35 @@ public class ElementTest {
         Resource resource = (Resource)new Resource().XMLElement(resourceFile);
         
         resource.setAuth("dummy");
-        System.out.println("addRemoveAuth");
-        System.out.println(resource.marshal());
-        System.out.println(resource.getAttributes());
+        //System.out.println("addRemoveAuth");
+        //System.out.println(resource.marshal());
+        //System.out.println(resource.getAttributes());
     
         resource.setAuth(null);
+        //System.out.println(resource.marshal());
+        //System.out.println(resource.getAttributes());
+    }
+    
+    @Test
+    public void addToRequest() throws FileNotFoundException, JAXBException {
+        String elementXml = "<XRequest id=\"jsonResponse\" method=\"GET\"\n" +
+"                url=\"https://jsonplaceholder.typicode.com/todos/1\" output=\"true\">\n" +
+"      </XRequest>";
+        String elementName = "xrequest";
+        
+        String reqmethod = "DELETE";
+        String reqitem = "true";
+        
+        File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
+        Resource resource = (Resource)new Resource().XMLElement(resourceFile);
+        
+        Request request = resource.getRequest(Method.fromValue(reqmethod), Boolean.valueOf(reqitem));
+        if(request == null){
+            request = new Request(Method.fromValue(reqmethod));
+            request.setItem(Boolean.valueOf(reqitem));
+            resource.addRequest(request);
+        }
+        
         System.out.println(resource.marshal());
-        System.out.println(resource.getAttributes());
     }
 }

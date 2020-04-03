@@ -93,7 +93,6 @@ public abstract class XMLElement<T extends XMLElement>{
         }
     }
     
-    
     public Map<String,Object> getAttributes(){
         Map<String,Object> fields = new HashMap<>();
         for(Field field : this.getClass().getDeclaredFields()){
@@ -106,13 +105,12 @@ public abstract class XMLElement<T extends XMLElement>{
             }
         }
         return fields;
-    }
-    
+    }  
     
     public Set<Object> getChildren(){
         Set<Object> children = new HashSet<>();
-        //System.out.println(this);
-        for(Field field : this.getClass().getDeclaredFields()){
+        
+        for(Field field : getClass().getDeclaredFields()){
             if (field.isAnnotationPresent(XmlElement.class)||field.isAnnotationPresent(XmlElements.class)){
                 try {
                     children.add(field.get(this));

@@ -7,6 +7,7 @@
 package com.metamug.parser.schema;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -84,7 +85,22 @@ public class Resource extends XMLElement<Request> {
         return this.request;
     }
     
+    public Request getRequest(Method method, boolean item){
+        Request req = new Request(method);
+        req.setItem(item);
+        
+        for (Request r : request) {
+            if(r.equals(req)){
+                return r;
+            }
+        }
+        return null;
+    }
+    
     public void addRequest(Request request) {
+        //remove if exists
+        getRequest().remove(request);
+        
         getRequest().add(request);
     }
 
