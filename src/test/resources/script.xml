@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Try saving this resource by clicking [New Resource*] Button 
+ or Press [Ctrl+S] and click the arrow button to try the GET Request. 
+-->
+<Resource xmlns="http://xml.metamug.net/resource/1.0" v="1.0">
+	  <Request method="GET">
+          <Script file="apple" id="firstscript" output="true"/>
+      <Text id="text">Hello World</Text>
+      </Request>
+</Resource>

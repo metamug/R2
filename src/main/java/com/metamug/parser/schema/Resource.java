@@ -31,7 +31,7 @@ public class Resource extends XMLElement<Request> {
     @XmlAttribute(name = "parent")
     protected String parent;
     @XmlAttribute(name = "auth")
-    private String auth;
+    protected String auth;
 
     public Resource(){
         
