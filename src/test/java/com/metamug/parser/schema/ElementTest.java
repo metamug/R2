@@ -65,7 +65,6 @@ import org.junit.Test;
  */
 public class ElementTest {
     
-    
     @Test
     public void attributeAndChildrenTest() throws FileNotFoundException, JAXBException{
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
@@ -79,14 +78,10 @@ public class ElementTest {
             Object reschild = i1.next();
             if(reschild instanceof Set){
                 Set<Request> requests = (Set)reschild;
-                Iterator i2 = requests.iterator(); 
-
-                while (i2.hasNext()) { 
-                    Request request = (Request)i2.next();
-                    System.out.println(request);
+                for (Request request : requests) {
                     Set<Object> reqchildren = request.getChildren();
-                    Iterator i3 = reqchildren.iterator(); 
-
+                    Iterator i3 = reqchildren.iterator();
+                    
                     while (i3.hasNext()) { 
                         Object reqchild = i3.next();
                         System.out.println(reqchild);
@@ -96,5 +91,27 @@ public class ElementTest {
         } 
         
         System.out.println(resource.getAttributes());
+        
+    }
+    
+    @Test
+    public void addDuplicateRequest() throws FileNotFoundException, JAXBException{
+        File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
+        
+        Resource resource = (Resource)new Resource().XMLElement(resourceFile);
+        
+        //add duplicate GET collection request
+        Request getCollection = new Request(Method.GET);
+        resource.addRequest(getCollection);
+
+        //add new GET item request
+        Request getItem = new Request(Method.GET);
+        getItem.setItem(true);
+        //add new POST request
+        resource.addRequest(getItem);
+        
+        Request post = new Request(Method.POST);
+        resource.addRequest(post);
+        System.out.println(resource.marshal());
     }
 }

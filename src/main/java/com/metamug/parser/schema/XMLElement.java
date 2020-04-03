@@ -140,7 +140,7 @@ public abstract class XMLElement<T extends XMLElement>{
     public String marshal() throws JAXBException{
         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
         StringWriter sw = new StringWriter();
-
+        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         //Write XML to StringWriter
         jaxbMarshaller.marshal(this, sw);
         return sw.toString();
