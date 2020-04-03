@@ -88,10 +88,7 @@ public class ElementTest {
                     }
                 } 
             }
-        } 
-        
-        System.out.println(resource.getAttributes());
-        
+        }     
     }
     
     @Test
@@ -113,5 +110,21 @@ public class ElementTest {
         Request post = new Request(Method.POST);
         resource.addRequest(post);
         System.out.println(resource.marshal());
+    }
+    
+    @Test
+    public void addRemoveAuth() throws FileNotFoundException, JAXBException{
+        File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
+        
+        Resource resource = (Resource)new Resource().XMLElement(resourceFile);
+        
+        resource.setAuth("dummy");
+        System.out.println("addRemoveAuth");
+        System.out.println(resource.marshal());
+        System.out.println(resource.getAttributes());
+    
+        resource.setAuth(null);
+        System.out.println(resource.marshal());
+        System.out.println(resource.getAttributes());
     }
 }
