@@ -63,6 +63,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
@@ -132,7 +133,7 @@ public class XSDValidationTest {
             String paramName = null;
             String execClass = null, execReq = null;
 
-            List<Request> requests = rs.getRequest();
+            Set<Request> requests = rs.getRequest();
             if (!requests.isEmpty()) {
                 for (Request request : requests) {
                     List paramOrSqlOrExecute = request.getParamOrSqlOrExecuteOrXrequestOrScript();

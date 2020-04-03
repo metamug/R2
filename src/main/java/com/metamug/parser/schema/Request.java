@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -68,6 +69,26 @@ public class Request extends XMLElement {
 
     public Request() {
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        Request request = (Request)o;
+        if(getMethod().value().equals(request.getMethod().value())) {
+            if(isItem() == request.isItem()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.method);
+        hash = 17 * hash + Objects.hashCode(this.item);
+        return hash;
+    }
+
 
     public Request(Method method) {
         this.method = method;

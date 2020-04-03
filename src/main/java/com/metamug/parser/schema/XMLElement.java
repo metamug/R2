@@ -52,6 +52,10 @@
  */
 package com.metamug.parser.schema;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
@@ -88,8 +92,6 @@ public abstract class XMLElement<T extends XMLElement>{
         }
     }
     
-    //abstract public String getValue();
-    
     public void addChild(T child){
         children.add(child);
     }
@@ -109,13 +111,18 @@ public abstract class XMLElement<T extends XMLElement>{
         return null;
     }
     
-    @Deprecated
-    public T XMLElement(String xml) throws JAXBException {
+    public Object XMLElement(String xml) throws JAXBException {
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         StringReader reader = new StringReader(xml);
-        T t = (T) jaxbUnmarshaller.unmarshal(reader);
-        return t;      
+        return jaxbUnmarshaller.unmarshal(reader);
     } 
+    
+    public Object XMLElement(File xmlFile) throws FileNotFoundException, JAXBException{
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        InputStream inStream = new FileInputStream(xmlFile);
+ 
+        return jaxbUnmarshaller.unmarshal( inStream );
+    }
     
     public String marshal() throws JAXBException{
         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();

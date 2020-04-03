@@ -87,7 +87,7 @@ public class MarshalTest {
             RPXParser parser = new RPXParser(outputFolder, appName, file);
             Resource res = parser.parse();
 
-            Request firstReq = res.getRequest().get(0);
+            Request firstReq = res.getRequest().iterator().next();
                     
             
             Xrequest xreq = (Xrequest)firstReq.getParamOrSqlOrExecuteOrXrequestOrScript().get(0);

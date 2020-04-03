@@ -6,8 +6,8 @@
 //
 package com.metamug.parser.schema;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -18,12 +18,12 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {"desc", "request"})
 @XmlRootElement(name = "Resource")
-public class Resource extends XMLElement {
+public class Resource extends XMLElement<Request> {
 
     @XmlElement(name = "Desc")
     protected String desc;
     @XmlElement(name = "Request")
-    protected List<Request> request;
+    protected Set<Request> request;
     @XmlAttribute(name = "v", required = true)
     protected double version;
     @XmlAttribute(name = "id")
@@ -33,6 +33,10 @@ public class Resource extends XMLElement {
     @XmlAttribute(name = "auth")
     private String auth;
 
+    public Resource(){
+        
+    }    
+    
     /**
      * Gets the value of the desc property.
      *
@@ -73,9 +77,9 @@ public class Resource extends XMLElement {
      *
      * @return
      */
-    public List<Request> getRequest() {
+    public Set<Request> getRequest() {
         if (request == null) {
-            request = new ArrayList<>();
+            request = new HashSet<>();
         }
         return this.request;
     }
