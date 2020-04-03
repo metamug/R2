@@ -117,9 +117,13 @@ public class Request extends XMLElement {
         if (paramOrSqlOrExecuteOrXrequestOrScript == null) {
             paramOrSqlOrExecuteOrXrequestOrScript = new ArrayList<>();
         }
-        return this.paramOrSqlOrExecuteOrXrequestOrScript;
+        return paramOrSqlOrExecuteOrXrequestOrScript;
     }
 
+    public void addElement(InvocableElement element){
+        paramOrSqlOrExecuteOrXrequestOrScript.add(element);
+    }
+    
     public String getDesc() {
         return desc;
     }

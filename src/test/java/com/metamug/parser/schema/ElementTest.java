@@ -52,6 +52,7 @@
  */
 package com.metamug.parser.schema;
 
+import com.metamug.parser.schema.xrequest.Xrequest;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Iterator;
@@ -147,6 +148,13 @@ public class ElementTest {
             request.setItem(Boolean.valueOf(reqitem));
             resource.addRequest(request);
         }
+        
+        InvocableElement element = null;
+        if(elementName.equals("xrequest")){
+            element = (Xrequest)new Xrequest().XMLElement(elementXml);
+        }
+        
+        request.addElement(element);
         
         System.out.println(resource.marshal());
     }

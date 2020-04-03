@@ -7,7 +7,6 @@
 package com.metamug.parser.schema;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
