@@ -123,7 +123,7 @@ public class Request extends XMLElement {
     }
 
     public void addElement(InvocableElement element){
-        paramOrSqlOrExecuteOrXrequestOrScript.add(element);
+        getParamOrSqlOrExecuteOrXrequestOrScript().add(element);
     }
     
     public void addElement(String elementXml, String elementType) throws JAXBException {
@@ -131,13 +131,14 @@ public class Request extends XMLElement {
         
         InvocableElement element = null;
         if(type.equals(Element.EXECUTE)){
-          //  element = (Execute)new Execute().XMLElement(elementXml);
+            element = (Execute)new Execute().XMLElement(elementXml);
         }else if(type.equals(Element.XREQUEST)){
             element = (Xrequest)new Xrequest().XMLElement(elementXml);
-        } if(type.equals(Element.SQL)){            
-            //element = (Sql)new Sql().XMLElement(elementXml);
+            //System.out.println(element);
+        } if(type.equals(Element.SQL)){        
+            element = (Sql)new Sql().XMLElement(elementXml);
         } if(type.equals(Element.SCRIPT)){
-            //element = (Script)new Script().XMLElement(elementXml);
+            element = (Script)new Script().XMLElement(elementXml);
         }
         
         addElement(element);

@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -45,6 +46,7 @@ import org.xml.sax.SAXException;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "script")
+@XmlRootElement(name = "Script")
 public class Script extends InvocableElement{
 
     @XmlAttribute(name = "id", required = true)

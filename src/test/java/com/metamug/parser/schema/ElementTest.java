@@ -57,6 +57,7 @@ import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.Set;
 import javax.xml.bind.JAXBException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -64,7 +65,7 @@ import org.junit.Test;
  * @author anishhirlekar
  */
 public class ElementTest {
-    
+   
     @Test
     public void attributeAndChildrenTest() throws FileNotFoundException, JAXBException{
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
@@ -129,11 +130,10 @@ public class ElementTest {
     }
     
     @Test
-    public void addToRequest() throws FileNotFoundException, JAXBException {
-        String elementXml = "<XRequest xmlns=\"http://xml.metamug.net/resource/1.0\" id=\"jsonResponse\" method=\"GET\"\n" +
-"                url=\"https://jsonplaceholder.typicode.com/todos/1\" output=\"true\">\n" +
-"      </XRequest>";
-        String elementName = "xrequest";
+    public void addToNewRequest() throws FileNotFoundException, JAXBException {
+        String elementXml = "<Script xmlns=\"http://xml.metamug.net/resource/1.0\" file=\"hello\" id=\"firstscript\" output=\"true\">" +
+"      </Script>";
+        String elementName = "script";
         
         String reqmethod = "DELETE";
         String reqitem = "true";
@@ -148,6 +148,30 @@ public class ElementTest {
             resource.addRequest(request);
         }
         
+        request.addElement(elementXml,elementName);
+        
+        System.out.println(resource.marshal());
+    }
+    
+    @Test
+    public void addToExistingRequest() throws FileNotFoundException, JAXBException {
+        String elementXml = "<Xrequest id=\"jsonResponse\" method=\"GET\"\n" +
+"                url=\"https://jsonplaceholder.typicode.com/todos/1\" output=\"true\">\n" +
+"      </Xrequest>";
+        String elementName = "xrequest";
+        
+        String reqmethod = "GET";
+        String reqitem = "false";
+        
+        File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
+        Resource resource = (Resource)new Resource().XMLElement(resourceFile);
+        
+        Request request = resource.getRequest(Method.fromValue(reqmethod), Boolean.valueOf(reqitem));
+        if(request == null){
+            request = new Request(Method.fromValue(reqmethod));
+            request.setItem(Boolean.valueOf(reqitem));
+            resource.addRequest(request);
+        }
         
         request.addElement(elementXml,elementName);
         

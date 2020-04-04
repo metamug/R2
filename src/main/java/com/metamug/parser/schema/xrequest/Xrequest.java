@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -65,6 +66,7 @@ import org.xml.sax.SAXException;
 @XmlType(name = "xrequest", propOrder = {
     "paramOrHeaderOrBody"
 })
+@XmlRootElement(name = "Xrequest")
 public class Xrequest extends InvocableElement{
     @XmlElements({
         @XmlElement(name = "Param", type = Xparam.class),
