@@ -53,6 +53,7 @@
 package com.metamug.parser.schema.xrequest;
 
 import com.metamug.parser.schema.InvocableElement;
+import com.metamug.parser.schema.InvocableElement;
 
 /**
  *

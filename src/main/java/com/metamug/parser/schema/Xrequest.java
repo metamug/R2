@@ -4,12 +4,13 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2018.06.19 at 07:00:32 PM IST 
 //
-package com.metamug.parser.schema.xrequest;
+package com.metamug.parser.schema;
 
+import com.metamug.parser.schema.xrequest.XrequestOutput;
+import com.metamug.parser.schema.xrequest.XrequestChild;
 import com.metamug.parser.exception.ResourceTestException;
-import com.metamug.parser.schema.Method;
-import com.metamug.parser.schema.InvocableElement;
-import com.metamug.parser.schema.Header;
+import com.metamug.parser.schema.xrequest.Xheader;
+import com.metamug.parser.schema.xrequest.Xparam;
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
 import java.util.ArrayList;

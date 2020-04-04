@@ -57,7 +57,6 @@ import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.Set;
 import javax.xml.bind.JAXBException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -155,7 +154,7 @@ public class ElementTest {
     
     @Test
     public void addToExistingRequest() throws FileNotFoundException, JAXBException {
-        String elementXml = "<Xrequest id=\"jsonResponse\" method=\"GET\"\n" +
+        String elementXml = "<Xrequest xmlns=\"http://xml.metamug.net/resource/1.0\" id=\"jsonResponse\" method=\"GET\"\n" +
 "                url=\"https://jsonplaceholder.typicode.com/todos/1\" output=\"true\">\n" +
 "      </Xrequest>";
         String elementName = "xrequest";

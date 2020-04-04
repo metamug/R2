@@ -58,7 +58,7 @@ import com.metamug.parser.schema.Execute;
 import com.metamug.parser.schema.InvocableElement;
 import com.metamug.parser.schema.Sql;
 import com.metamug.parser.schema.Upload;
-import com.metamug.parser.schema.xrequest.Xrequest;
+import com.metamug.parser.schema.Xrequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;

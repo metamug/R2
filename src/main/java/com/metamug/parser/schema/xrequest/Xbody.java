@@ -52,6 +52,7 @@
  */
 package com.metamug.parser.schema.xrequest;
 
+import com.metamug.parser.schema.xrequest.XrequestChild;
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
