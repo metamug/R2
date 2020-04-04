@@ -79,6 +79,31 @@ import org.xml.sax.SAXException;
  */
 @XmlTransient
 public abstract class InvocableElement extends XMLElement {
+    
+    public static enum Element {
+        SQL("sql"),
+        XREQUEST("xrequest"),
+        SCRIPT("script"),
+        EXECUTE("execute");
+        private final String value;
+
+        Element(String value) {
+            this.value = value;
+        }
+
+        public String value() {
+            return value;
+        }
+
+        public static Element fromValue(String v) {
+            for (Element c : Element.values()) {
+                if (c.value.equals(v)) {
+                    return c;
+                }
+            }
+            throw new IllegalArgumentException(v);
+        }
+    }
 
     @XmlTransient
     public ParserService parent;

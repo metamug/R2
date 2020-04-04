@@ -52,7 +52,6 @@
  */
 package com.metamug.parser.schema;
 
-import com.metamug.parser.schema.xrequest.Xrequest;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Iterator;
@@ -131,7 +130,7 @@ public class ElementTest {
     
     @Test
     public void addToRequest() throws FileNotFoundException, JAXBException {
-        String elementXml = "<XRequest id=\"jsonResponse\" method=\"GET\"\n" +
+        String elementXml = "<XRequest xmlns=\"http://xml.metamug.net/resource/1.0\" id=\"jsonResponse\" method=\"GET\"\n" +
 "                url=\"https://jsonplaceholder.typicode.com/todos/1\" output=\"true\">\n" +
 "      </XRequest>";
         String elementName = "xrequest";
@@ -149,12 +148,8 @@ public class ElementTest {
             resource.addRequest(request);
         }
         
-        InvocableElement element = null;
-        if(elementName.equals("xrequest")){
-            element = (Xrequest)new Xrequest().XMLElement(elementXml);
-        }
         
-        request.addElement(element);
+        request.addElement(elementXml,elementName);
         
         System.out.println(resource.marshal());
     }

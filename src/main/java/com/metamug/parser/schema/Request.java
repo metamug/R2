@@ -6,6 +6,7 @@
 //
 package com.metamug.parser.schema;
 
+import com.metamug.parser.schema.InvocableElement.Element;
 import com.metamug.parser.schema.xrequest.Xrequest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -122,6 +124,23 @@ public class Request extends XMLElement {
 
     public void addElement(InvocableElement element){
         paramOrSqlOrExecuteOrXrequestOrScript.add(element);
+    }
+    
+    public void addElement(String elementXml, String elementType) throws JAXBException {
+        Element type = Element.fromValue(elementType);
+        
+        InvocableElement element = null;
+        if(type.equals(Element.EXECUTE)){
+          //  element = (Execute)new Execute().XMLElement(elementXml);
+        }else if(type.equals(Element.XREQUEST)){
+            element = (Xrequest)new Xrequest().XMLElement(elementXml);
+        } if(type.equals(Element.SQL)){            
+            //element = (Sql)new Sql().XMLElement(elementXml);
+        } if(type.equals(Element.SCRIPT)){
+            //element = (Script)new Script().XMLElement(elementXml);
+        }
+        
+        addElement(element);
     }
     
     public String getDesc() {
