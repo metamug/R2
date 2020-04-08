@@ -81,7 +81,7 @@ public class OpenAPIGenerator {
             Set<Param> requestParameters = request.getParam();
             List<Parameter> openAPIParams = new ArrayList<>();
 
-            List<InvocableElement> list = request.getParamOrSqlOrExecuteOrXrequestOrScript();
+            List<InvocableElement> list = request.getInvocableElements();
 
             //@TODO use precedence of Param tag over $variable since param tags define type
 

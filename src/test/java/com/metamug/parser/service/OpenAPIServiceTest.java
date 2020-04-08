@@ -52,7 +52,7 @@
  */
 package com.metamug.parser.service;
 
-import com.metamug.parser.RPXParser;
+import com.metamug.parser.ResourceParser;
 import com.metamug.parser.schema.Resource;
 import java.io.IOException;
 import java.util.Map;
@@ -74,7 +74,7 @@ public class OpenAPIServiceTest {
         String specUri = "https://petstore3.swagger.io/api/v3/openapi.json";
         Map<String, Resource> resources = OpenAPIService.getResources(specUri);
                 
-        RPXParser parser = new RPXParser(outputFolder, "testWebapp", null);
+        ResourceParser parser = new ResourceParser(outputFolder, "testWebapp", null);
         
         resources.forEach( (key,value) -> {
             try {

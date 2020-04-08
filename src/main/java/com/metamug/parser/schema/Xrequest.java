@@ -6,12 +6,10 @@
 //
 package com.metamug.parser.schema;
 
-import com.metamug.parser.schema.xrequest.XrequestOutput;
-import com.metamug.parser.schema.xrequest.XrequestChild;
+import com.metamug.parser.schema.xrequest.*;
 import com.metamug.parser.exception.ResourceTestException;
-import com.metamug.parser.schema.xrequest.Xheader;
-import com.metamug.parser.schema.xrequest.Xparam;
 import com.metamug.parser.service.ParserService;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,11 +25,11 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.xpath.XPathExpressionException;
+
 import org.apache.commons.text.StringEscapeUtils;
 import org.xml.sax.SAXException;
 
 /**
- *
  * For making external request to 3rd party APIs
  *
  *
@@ -60,21 +58,20 @@ import org.xml.sax.SAXException;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "xrequest", propOrder = {
-    "paramOrHeaderOrBody"
+        "xrequestChildren"
 })
 @XmlRootElement(name = "Xrequest")
-public class Xrequest extends InvocableElement{
+public class Xrequest extends InvocableElement {
+
     @XmlElements({
-        @XmlElement(name = "Param", type = Xparam.class),
-        @XmlElement(name = "Header", type = Xheader.class),
-        @XmlElement(name = "Body", type = String.class)
+            @XmlElement(name = "Param", type = Xparam.class),
+            @XmlElement(name = "Header", type = Xheader.class),
+            @XmlElement(name = "Body", type = Xbody.class)
     })
-    protected List<XrequestChild> paramOrHeaderOrBody;
+    protected List<XrequestChild> xrequestChildren;
     @XmlAttribute(name = "id", required = true)
     protected String id;
     @XmlAttribute(name = "when")
@@ -107,21 +104,19 @@ public class Xrequest extends InvocableElement{
      * {@link Header }
      * {@link String }
      *
-     *
      * @return
      */
-    public List<XrequestChild> getParamOrHeaderOrBody() {
-        if (paramOrHeaderOrBody == null) {
-            paramOrHeaderOrBody = new ArrayList<>();
+    public List<XrequestChild> getXRequestChildren() {
+        if (xrequestChildren == null) {
+            xrequestChildren = new ArrayList<XrequestChild>();
         }
-        return this.paramOrHeaderOrBody;
+        return this.xrequestChildren;
     }
 
     /**
      * Gets the value of the id property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getId() {
         return id;
@@ -131,7 +126,6 @@ public class Xrequest extends InvocableElement{
      * Sets the value of the id property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setId(String value) {
         this.id = value;
@@ -141,7 +135,6 @@ public class Xrequest extends InvocableElement{
      * Gets the value of the when property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getWhen() {
         return when;
@@ -151,7 +144,6 @@ public class Xrequest extends InvocableElement{
      * Sets the value of the when property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setWhen(String value) {
         this.when = value;
@@ -161,7 +153,6 @@ public class Xrequest extends InvocableElement{
      * Gets the value of the url property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getUrl() {
         return url;
@@ -171,7 +162,6 @@ public class Xrequest extends InvocableElement{
      * Sets the value of the url property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setUrl(String value) {
         this.url = value;
@@ -181,7 +171,6 @@ public class Xrequest extends InvocableElement{
      * Gets the value of the method property.
      *
      * @return possible object is {@link Method }
-     *
      */
     public Method getMethod() {
         return method;
@@ -191,7 +180,6 @@ public class Xrequest extends InvocableElement{
      * Sets the value of the method property.
      *
      * @param value allowed object is {@link Method }
-     *
      */
     public void setMethod(Method value) {
         this.method = value;
@@ -201,7 +189,6 @@ public class Xrequest extends InvocableElement{
      * Gets the value of the output property.
      *
      * @return possible object is {@link XrequestOutput}.
-     *
      */
     public XrequestOutput getOutput() {
         return output;
@@ -211,16 +198,15 @@ public class Xrequest extends InvocableElement{
      * Sets the value of the verbose property.
      *
      * @param output allowed object is {@link XrequestOutput}
-     *
      */
     public void setOutput(XrequestOutput output) {
         this.output = output;
     }
+
     /**
      * Gets the value of the className property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getClassName() {
         return className;
@@ -230,7 +216,6 @@ public class Xrequest extends InvocableElement{
      * Sets the value of the className property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setClassName(String value) {
         this.className = value;
@@ -241,43 +226,43 @@ public class Xrequest extends InvocableElement{
         this.parent = parent;
         //Xrequest xrequest = (Xrequest)this;
         parent.elementIds.put(getId(), this);
-        
+
         if (getWhen() != null) {
             writer.writeStartElement("c:if");
             //String testString = getQuotedString(xrequest.getWhen());
             //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
-            String test = transformVariables(getWhen(),parent.elementIds,false);
-            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
+            String test = transformVariables(getWhen(), parent.elementIds, false);
+            writeUnescapedData(" test=\"" + enclose(StringEscapeUtils.unescapeXml(test)) + "\"", parent.output);
         }
-   
+
         //print xrequest mason tags
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("m:xrequest");
         writer.writeAttribute("var", getId());
         writer.writeAttribute("method", getMethod().name());
-        if ( getOutput() != null ) { 
+        if (getOutput() != null) {
             String outputVal = getOutput().value();
-            if(outputVal.equals("headers")){
+            if (outputVal.equals("headers")) {
                 writer.writeAttribute("outputHeaders", "true");
                 writer.writeAttribute("output", "true");
-            } else if(outputVal.equals("true")) {
+            } else if (outputVal.equals("true")) {
                 writer.writeAttribute("output", "true");
             }
         }
-        
-        if ( getClassName() != null ) {
+
+        if (getClassName() != null) {
             writer.writeAttribute("className", getClassName());
         }
-        
-        writeUnescapedData(" url=\""+StringEscapeUtils.unescapeXml(getUrl())+"\"",parent.output);
-                
-        for (XrequestChild child : getParamOrHeaderOrBody()) {
+
+        writeUnescapedData(" url=\"" + StringEscapeUtils.unescapeXml(getUrl()) + "\"", parent.output);
+
+        for (XrequestChild child : getXRequestChildren()) {
             child.print(writer, parent);
         }
-        
+
         writer.writeEndElement(); //End of <m:xrequest>    
         writer.writeCharacters(System.lineSeparator());
-        
+
         if (getWhen() != null) {
             writer.writeEndElement(); //End of <c:if>
         }
@@ -285,25 +270,25 @@ public class Xrequest extends InvocableElement{
 
     @Override
     public Set<String> getRequestParameters() {
-        Set<String> params = new HashSet<>();
-        getParamOrHeaderOrBody().forEach( child  -> {
-            params.addAll(child.getRequestParameters());
-        });
-        return params;
+        Set<String> p1 = new HashSet<>();
+        for (XrequestChild child : getXRequestChildren()) {
+            p1.addAll(child.getRequestParameters());
+        }
+        return p1;
     }
 
     @Override
     public String extractFromMPath(String mpathVariable, String elementId, boolean enclose) {
-        
+
         StringBuilder sb = new StringBuilder();
-       
+
         // m:jsonPath('$.body.args.foo1',bus['id'])
         String locator = getMPathLocator(mpathVariable);
-                
-        String transformedVariable = "m:jsonPath('$"+locator+"',"+elementId+")";
-            
-        sb.append(transformedVariable);       
-        
+
+        String transformedVariable = "m:jsonPath('$" + locator + "'," + elementId + ")";
+
+        sb.append(transformedVariable);
+
         return enclose ? enclose(sb.toString()) : sb.toString();
     }
 }

@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {"desc", "request"})
 @XmlRootElement(name = "Resource")
-public class Resource extends XMLElement<Request> {
+public class Resource extends XMLElement {
 
     @XmlElement(name = "Desc")
     protected String desc;
@@ -178,8 +178,5 @@ public class Resource extends XMLElement<Request> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public InvocableElement get(String id){
-       //@TODO get invocable elements from children
-       return null;
-    }
+
 }

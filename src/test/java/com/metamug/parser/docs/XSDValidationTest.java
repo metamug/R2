@@ -52,7 +52,7 @@
  */
 package com.metamug.parser.docs;
 
-import com.metamug.parser.RPXParser;
+import com.metamug.parser.ResourceParser;
 import com.metamug.parser.schema.Execute;
 import com.metamug.parser.schema.Param;
 import com.metamug.parser.schema.Request;
@@ -93,14 +93,14 @@ public class XSDValidationTest {
     private static String PARAM_NAME;
 
     private static String[] testArray;
-    private static RPXParser parser;
+    private static ResourceParser parser;
     private File resourceFile;
 
     @Before
     public void init() {
         XML_FILE_PATH = "/test.xml";
         resourceFile = new File(this.getClass().getResource(XML_FILE_PATH).getFile());
-        parser = new RPXParser("/opt/tomcat8/api", "testApp", resourceFile);
+        parser = new ResourceParser("/opt/tomcat8/api", "testApp", resourceFile);
 
         RES_VER = "1.0";
         RES_DESC = "This works";
@@ -136,7 +136,7 @@ public class XSDValidationTest {
             Set<Request> requests = rs.getRequest();
             if (!requests.isEmpty()) {
                 for (Request request : requests) {
-                    List paramOrSqlOrExecute = request.getParamOrSqlOrExecuteOrXrequestOrScript();
+                    List paramOrSqlOrExecute = request.getInvocableElements();
                     for (Object o: paramOrSqlOrExecute) {
 //                      System.out.println(object.getClass());
                         if(o instanceof Execute){
@@ -172,7 +172,7 @@ public class XSDValidationTest {
     public void TestValidation2() {
         try {
             resourceFile = new File(this.getClass().getResource("/movies.xml").getFile());
-            parser = new RPXParser("/opt/tomcat8/api", "testApp", resourceFile);
+            parser = new ResourceParser("/opt/tomcat8/api", "testApp", resourceFile);
             Resource rs = parser.parse();
             String[] expectedResultArray = new String[]{"1.1"};
             String[] resultArray = new String[]{Double.toString(rs.getVersion())};
@@ -193,7 +193,7 @@ public class XSDValidationTest {
     public void TestValidation3() {
         try {
             resourceFile = new File(this.getClass().getResource("/apple.xml").getFile());
-            parser = new RPXParser("/opt/tomcat8/api", "testApp", resourceFile);
+            parser = new ResourceParser("/opt/tomcat8/api", "testApp", resourceFile);
             Resource rs = parser.parse();
         } catch (JAXBException ex) {
             Assert.fail(ex.toString());

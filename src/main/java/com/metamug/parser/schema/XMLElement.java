@@ -76,12 +76,13 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- *
+ * Root element of all the resource xml elements
  * @author anishhirlekar
  */
 @XmlTransient
-public abstract class XMLElement<T extends XMLElement>{
-    
+public abstract class XMLElement{
+
+
     @XmlTransient
     private JAXBContext jaxbContext;
   
@@ -106,14 +107,16 @@ public abstract class XMLElement<T extends XMLElement>{
         }
         return fields;
     }  
-    
+
+
     public Set<Object> getChildren(){
         Set<Object> children = new HashSet<>();
-        
+
         for(Field field : getClass().getDeclaredFields()){
+
             if (field.isAnnotationPresent(XmlElement.class)||field.isAnnotationPresent(XmlElements.class)){
                 try {
-                    children.add(field.get(this));
+                    children.add((Object) field.get(this));
                 } catch (IllegalArgumentException | IllegalAccessException ex) {
                     Logger.getLogger(XMLElement.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -121,20 +124,33 @@ public abstract class XMLElement<T extends XMLElement>{
         }
         return children;
     }
-    
-    public Object XMLElement(String xml) throws JAXBException {
+
+    /**
+     * Convert xml string to Object using jaxb
+     * @param xml
+     * @return
+     * @throws JAXBException
+     */
+    public XMLElement unmarshal(String xml) throws JAXBException {
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         StringReader reader = new StringReader(xml);
-        return jaxbUnmarshaller.unmarshal(reader);
+        return (XMLElement) jaxbUnmarshaller.unmarshal(reader);
     } 
     
-    public Object XMLElement(File xmlFile) throws FileNotFoundException, JAXBException{
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        InputStream inStream = new FileInputStream(xmlFile);
- 
-        return jaxbUnmarshaller.unmarshal( inStream );
+    public XMLElement unmarshal(File xmlFile) throws FileNotFoundException, JAXBException{
+        return unmarshal(new FileInputStream(xmlFile));
     }
-    
+
+    public XMLElement unmarshal(InputStream stream) throws JAXBException {
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        return (XMLElement) jaxbUnmarshaller.unmarshal(stream);
+    }
+
+    /**
+     * Convert current object to string using jaxb
+     * @return
+     * @throws JAXBException
+     */
     public String marshal() throws JAXBException{
         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
         StringWriter sw = new StringWriter();

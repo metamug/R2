@@ -55,10 +55,19 @@ package com.metamug.parser.schema.xrequest;
 import com.metamug.parser.schema.InvocableElement;
 import com.metamug.parser.schema.InvocableElement;
 
+import javax.xml.bind.annotation.XmlTransient;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  *
  * @author anishhirlekar
  */
+@XmlTransient
 public abstract class XrequestChild extends InvocableElement {
-    
+
+    @Override
+    public Set<String> getRequestParameters() {
+        return new HashSet<>();
+    }
 }

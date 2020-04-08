@@ -53,7 +53,7 @@
  */
 package com.metamug.parser.service;
 
-import com.metamug.parser.RPXParser;
+import com.metamug.parser.ResourceParser;
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.schema.Request;
 import com.metamug.parser.schema.InvocableElement;
@@ -124,7 +124,7 @@ public class ParserService {
 
         OUTPUT_FOLDER = outputFolder;
 
-        RPXParser parser = new RPXParser(OUTPUT_FOLDER, appName, uploadedFile);
+        ResourceParser parser = new ResourceParser(OUTPUT_FOLDER, appName, uploadedFile);
         Resource parsedResource = parser.parse();
 
         this.resourceVersion = parsedResource.getVersion();
@@ -172,7 +172,7 @@ public class ParserService {
                     writer.writeStartElement("m:request");
                     initializeRequest(writer, req);
 
-                    List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
+                    List elements = req.getInvocableElements();
 
                     printRequestElements(elements, writer, domain);
 

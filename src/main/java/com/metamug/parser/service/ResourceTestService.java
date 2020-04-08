@@ -185,7 +185,7 @@ public class ResourceTestService {
         resource.getRequest().forEach( req -> {
             List<Param> paramsWithValue = new ArrayList<>();
 
-            List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
+            List elements = req.getInvocableElements();
 
             elements.forEach( obj -> {
                 if (obj instanceof Param) {
@@ -219,7 +219,7 @@ public class ResourceTestService {
 
             //set type for sql tags without given type
             resource.getRequest().forEach( req -> {
-                List elements = req.getParamOrSqlOrExecuteOrXrequestOrScript();
+                List elements = req.getInvocableElements();
                 JSONArray test_results = results.getJSONObject(0).getJSONArray("test_results");
                 
                 elements.forEach( object -> {

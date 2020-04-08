@@ -77,11 +77,11 @@ public class Xheader extends XrequestChild {
 
     /**
      * Gets the value of the value property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getValue() {
         return value;
@@ -89,11 +89,11 @@ public class Xheader extends XrequestChild {
 
     /**
      * Sets the value of the value property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setValue(String value) {
         this.value = value;
@@ -107,10 +107,7 @@ public class Xheader extends XrequestChild {
         writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(getValue())+"\"",parent.output);
     }
 
-    @Override
-    public Set<String> getRequestParameters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
 
     @Override
     public String extractFromMPath(String mpathVariable, String elementId, boolean enclose) {

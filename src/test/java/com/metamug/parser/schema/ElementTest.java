@@ -69,7 +69,7 @@ public class ElementTest {
     public void attributeAndChildrenTest() throws FileNotFoundException, JAXBException{
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
         
-        Resource resource = (Resource)new Resource().XMLElement(resourceFile);
+        Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
         Set<Object> reschildren = resource.getChildren();
         Iterator i1 = reschildren.iterator(); 
@@ -95,7 +95,7 @@ public class ElementTest {
     public void addDuplicateRequest() throws FileNotFoundException, JAXBException{
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
         
-        Resource resource = (Resource)new Resource().XMLElement(resourceFile);
+        Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
         //add duplicate GET collection request
         Request getCollection = new Request(Method.GET);
@@ -116,7 +116,7 @@ public class ElementTest {
     public void addRemoveAuth() throws FileNotFoundException, JAXBException{
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
         
-        Resource resource = (Resource)new Resource().XMLElement(resourceFile);
+        Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
         resource.setAuth("dummy");
         //System.out.println("addRemoveAuth");
@@ -138,7 +138,7 @@ public class ElementTest {
         String reqitem = "true";
         
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
-        Resource resource = (Resource)new Resource().XMLElement(resourceFile);
+        Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
         Request request = resource.getRequest(Method.fromValue(reqmethod), Boolean.valueOf(reqitem));
         if(request == null){
@@ -163,7 +163,7 @@ public class ElementTest {
         String reqitem = "false";
         
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
-        Resource resource = (Resource)new Resource().XMLElement(resourceFile);
+        Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
         Request request = resource.getRequest(Method.fromValue(reqmethod), Boolean.valueOf(reqitem));
         if(request == null){
