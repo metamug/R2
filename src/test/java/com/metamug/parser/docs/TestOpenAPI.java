@@ -22,6 +22,8 @@ public class TestOpenAPI {
         backend = new Backend("bookmark", "A bookmarking backend", "hi@metamug.com");
 //        List<Resource> resources = new ArrayList<>();
         File file = new File(TestOpenAPI.class.getClassLoader().getResource("./xrequest.xml").getFile());
+        backend.addResource("/backend/v1.0/xrequest", ResourceParser.generateResource(file));
+        file = new File(TestOpenAPI.class.getClassLoader().getResource("./movie.xml").getFile());
         backend.addResource("/backend/v1.0/movie", ResourceParser.generateResource(file));
     }
 
@@ -29,7 +31,7 @@ public class TestOpenAPI {
     @Test
     public void tesOpenAPIGeneration() {
         OpenAPIGenerator generator = new OpenAPIGenerator();
-        OpenAPI api = generator.buildOpenAPI(backend);
+        OpenAPI api = generator.build(backend);
         String str = generator.serializeJSON(api);
         System.out.println(str);
     }
