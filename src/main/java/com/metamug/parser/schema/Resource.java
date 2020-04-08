@@ -33,6 +33,19 @@ public class Resource extends XMLElement {
     @XmlAttribute(name = "auth")
     protected String auth;
 
+    public Resource(String id,double version) {
+        this.version = version;
+        this.id = id;
+    }
+
+    public Resource(String desc, double version, String id, String parent, String auth) {
+        this.desc = desc;
+        this.version = version;
+        this.id = id;
+        this.parent = parent;
+        this.auth = auth;
+    }
+
     public Resource(){
         
     }    
