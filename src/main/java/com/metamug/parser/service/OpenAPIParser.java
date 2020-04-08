@@ -7,15 +7,11 @@ import io.swagger.v3.core.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import org.apache.commons.io.FilenameUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Convert Open API to Backend Object
@@ -33,7 +29,7 @@ public class OpenAPIParser {
 
         for(Map.Entry<String, PathItem> entry : swagger.getPaths().entrySet()){
             String resourceUrl = entry.getKey();
-            Resource resource = buildResource(entry.getValue(), buildResource(entry.getKey()));
+            Resource resource = build(entry.getValue(), build(entry.getKey()));
             backend.addResource(resourceUrl, resource);
         }
 
@@ -49,7 +45,7 @@ public class OpenAPIParser {
      * @param resource
      * @return
      */
-    private Resource buildResource(PathItem item, Resource resource){
+    private Resource build(PathItem item, Resource resource){
         resource.setDesc(item.getDescription());
 
         //loop over all request tags
@@ -60,8 +56,20 @@ public class OpenAPIParser {
             request.setDesc(operation.getDescription());
             request.setMethod(Method.fromValue(openAPIOperations.getKey().name()));
             resource.addRequest(request);
+
+            if(operation.getParameters() == null) continue;
+            for(Parameter parameter : operation.getParameters()){
+                Param param = build(parameter);
+                request.addParam(param);
+            }
         }
         return resource;
+    }
+
+    private Param build(Parameter parameter){
+        Param param = new Param(parameter.getName());
+        param.setRequired(parameter.getRequired());
+        return param;
     }
 
     /**
@@ -69,7 +77,7 @@ public class OpenAPIParser {
      * @param uri
      * @return
      */
-    private Resource buildResource(String uri){
+    private Resource build(String uri){
         String resourceName = FilenameUtils.getBaseName(uri);
         return new Resource(resourceName, 1.0);
     }

@@ -146,7 +146,7 @@ public class XSDValidationTest {
                     }
                     reqDesc = request.getDesc();
                     method = request.getMethod().value();
-                    for (Param p : request.getParam()) {
+                    for (Param p : request.getParamSet()) {
                         paramName = p.getName();
                         System.out.println(paramName);
                     }

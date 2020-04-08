@@ -38,6 +38,8 @@ public class Resource extends XMLElement {
         this.id = id;
     }
 
+
+
     public Resource(String desc, double version, String id, String parent, String auth) {
         this.desc = desc;
         this.version = version;

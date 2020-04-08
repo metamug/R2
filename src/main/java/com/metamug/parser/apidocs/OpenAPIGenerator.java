@@ -86,7 +86,7 @@ public class OpenAPIGenerator {
             Operation operation = new Operation();
             operation.setDescription(request.getDesc());
 
-            Set<Param> requestParameters = request.getParam();
+            Set<Param> requestParameters = request.getParamSet();
             List<Parameter> openAPIParams = new ArrayList<>();
 
             List<InvocableElement> list = request.getInvocableElements();
