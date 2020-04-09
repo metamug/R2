@@ -66,6 +66,13 @@ import org.junit.Test;
 public class ElementTest {
    
     @Test
+    public void emptyResource() throws JAXBException {
+        Resource resource = new Resource();
+        
+        //System.out.println(resource.marshal());
+    }
+    
+    @Test
     public void attributeAndChildrenTest() throws FileNotFoundException, JAXBException{
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
         
@@ -149,14 +156,16 @@ public class ElementTest {
         
         request.addElement(elementXml,elementName);
         
-        System.out.println(resource.marshal());
+     //   System.out.println(resource.marshal());
     }
     
     @Test
     public void addToExistingRequest() throws FileNotFoundException, JAXBException {
         String elementXml = "<Xrequest xmlns=\"http://xml.metamug.net/resource/1.0\" id=\"jsonResponse\" method=\"GET\"\n" +
-"                url=\"https://jsonplaceholder.typicode.com/todos/1\" output=\"true\">\n" +
-"      </Xrequest>";
+"                url=\"https://jsonplaceholder.typicode.com/todos/1\" output=\"true\">"
+                + "<Header name='Accept' value='application/json'></Header>"
+                + "<Body> { 'foo':'bar' } </Body>"
+                + "</Xrequest>";
         String elementName = "xrequest";
         
         String reqmethod = "GET";
@@ -174,6 +183,6 @@ public class ElementTest {
         
         request.addElement(elementXml,elementName);
         
-        System.out.println(resource.marshal());
+        //System.out.println(resource.marshal());
     }
 }

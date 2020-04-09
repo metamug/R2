@@ -132,7 +132,7 @@ public abstract class XMLElement<T extends XMLElement>{
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         InputStream inStream = new FileInputStream(xmlFile);
  
-        return jaxbUnmarshaller.unmarshal( inStream );
+        return jaxbUnmarshaller.unmarshal(inStream);
     }
     
     public String marshal() throws JAXBException{

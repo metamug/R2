@@ -33,8 +33,7 @@ public class Resource extends XMLElement<Request> {
     @XmlAttribute(name = "auth")
     protected String auth;
 
-    public Resource(){
-        
+    public Resource(){        
     }    
     
     /**
