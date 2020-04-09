@@ -1,0 +1,111 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "bookmark",
+    "description" : "A bookmarking backend",
+    "version" : "1.0.0"
+  },
+  "paths" : {
+    "/backend/v1.0/xrequest" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "API Response"
+          }
+        }
+      },
+      "post" : {
+        "parameters" : [ {
+          "name" : "foo1",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "foo2",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "API Response"
+          }
+        }
+      }
+    },
+    "/backend/v1.0/movie" : {
+      "description" : "REST API Resource for Movie Review Operation. This is not as good as rotten tomato",
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "API Response"
+          }
+        }
+      },
+      "put" : {
+        "parameters" : [ {
+          "name" : "rating",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "API Response"
+          }
+        }
+      },
+      "post" : {
+        "description" : "Post A Review about a new movie",
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "rating",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "API Response"
+          }
+        }
+      },
+      "delete" : {
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "API Response"
+          }
+        }
+      }
+    }
+  }
+}

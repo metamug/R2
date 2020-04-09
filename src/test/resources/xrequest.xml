@@ -8,15 +8,23 @@
         </XRequest>
     </Request>
     
+<!--    <Request method="POST">-->
+<!--        <XRequest output="true" id="xreqvalue2" url="https://postman-echo.com/post" method="POST" >-->
+<!--            <Header name="Content-Type" value="application/json"/>-->
+<!--            <Body>-->
+<!--                {-->
+<!--                "foo1": "$foo1",-->
+<!--                "foo2": $foo2-->
+<!--                }-->
+<!--            </Body>-->
+<!--        </XRequest>-->
+<!--    </Request>-->
+
     <Request method="POST">
         <XRequest output="true" id="xreqvalue2" url="https://postman-echo.com/post" method="POST" >
-            <Header name="Content-Type" value="application/json"/>
-            <Body>
-                {
-                "foo1": "$foo1",
-                "foo2": $foo2
-                }
-            </Body>
+            <Header name="Content-Type" value="application/x-www-urlencoded"/>
+            <Param name="foo1" value="$foo1" />
+            <Param name="foo2" value="$foo2" />
         </XRequest>
     </Request>
     

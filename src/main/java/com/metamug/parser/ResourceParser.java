@@ -81,7 +81,7 @@ import org.xml.sax.SAXException;
  *
  * @author anish
  */
-public class RPXParser {
+public class ResourceParser {
 
     private final String appDirectory;
     private final String appName;
@@ -93,7 +93,7 @@ public class RPXParser {
      * @param appName App name
      * @param resourceFile XML file to parsed.
      */
-    public RPXParser(String appDirectory, String appName, File resourceFile) {
+    public ResourceParser(String appDirectory, String appName, File resourceFile) {
         this.appDirectory = appDirectory;
         this.appName = appName;
         this.xmlResourceFile = resourceFile;
@@ -137,7 +137,7 @@ public class RPXParser {
     public static Resource generateResource(File xmlResourceFile) throws IOException, SAXException, JAXBException {
         StreamSource xmlFile = new StreamSource(xmlResourceFile);
         SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
-        Schema schema = schemaFactory.newSchema(RPXParser.class.getClassLoader().getResource("resource.xsd"));
+        Schema schema = schemaFactory.newSchema(ResourceParser.class.getClassLoader().getResource("resource.xsd"));
         Validator validator = schema.newValidator();
         validator.validate(xmlFile);
         JAXBContext jaxbContext = JAXBContext.newInstance(Resource.class);

@@ -25,9 +25,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "request", propOrder = {
     "desc",
-    "paramOrSqlOrExecuteOrXrequestOrScript",
+    "invocableElements",
     "header",
-    "param",
+    "paramSet",
     "execute",
     "sql",
     "transaction",
@@ -40,14 +40,14 @@ public class Request extends XMLElement {
     @XmlElement(name = "Desc")
     protected String desc;
     @XmlElement(name = "Param")
-    protected List<Param> param;
-    protected List<Header> header;
-    protected List<Execute> execute;
-    protected List<Xrequest> xrequest;
-    protected List<Script> script;
-    protected List<Text> text;
-    protected List<Transaction> transaction;
-    protected List<Sql> sql;
+    protected Set<Param> paramSet;
+    protected Set<Header> header;
+    protected Set<Execute> execute;
+    protected Set<Xrequest> xrequest;
+    protected Set<Script> script;
+    protected Set<Text> text;
+    protected Set<Transaction> transaction;
+    protected Set<Sql> sql;
     
     @XmlElements({
         @XmlElement(name = "Header", type = Header.class),
@@ -59,7 +59,7 @@ public class Request extends XMLElement {
         @XmlElement(name = "Script", type = Script.class),
         @XmlElement(name = "Text", type = Text.class)
     })
-    protected List<InvocableElement> paramOrSqlOrExecuteOrXrequestOrScript;
+    protected List<InvocableElement> invocableElements;
 
     @XmlAttribute(name = "status")
     protected Integer status;
@@ -95,13 +95,17 @@ public class Request extends XMLElement {
         this.method = method;
     }
 
-    public Set<Param> getParam() {
-        if (param == null) {
+    /**
+     *
+     * @return
+     */
+    public Set<Param> getParamSet() {
+        if (paramSet == null) {
             Set<Param> paramSet = new HashSet<>();
             return paramSet;
         } else {
             Map<String, Param> paramMap = new HashMap<>();
-            param.forEach((Param param1) -> {
+            paramSet.forEach((param1) -> {
                 paramMap.put(param1.name, param1);
             });
             Set<Param> paramSet = new HashSet<>();
@@ -110,19 +114,24 @@ public class Request extends XMLElement {
         }
     }
 
+    public void addParam(Param param){
+        paramSet = new HashSet<>();
+        paramSet.add(param);
+    }
+
     /**
      * Get the list of action items in the request block
      * @return List of operations
      */
-    public List getParamOrSqlOrExecuteOrXrequestOrScript() {
-        if (paramOrSqlOrExecuteOrXrequestOrScript == null) {
-            paramOrSqlOrExecuteOrXrequestOrScript = new ArrayList<>();
+    public List getInvocableElements() {
+        if (invocableElements == null) {
+            invocableElements = new ArrayList<>();
         }
-        return paramOrSqlOrExecuteOrXrequestOrScript;
+        return invocableElements;
     }
 
     public void addElement(InvocableElement element){
-        getParamOrSqlOrExecuteOrXrequestOrScript().add(element);
+        getInvocableElements().add(element);
     }
     
     public void addElement(String elementXml, String elementType) throws JAXBException {
@@ -130,14 +139,14 @@ public class Request extends XMLElement {
         
         InvocableElement element = null;
         if(type.equals(Element.EXECUTE)){
-            element = (Execute)new Execute().XMLElement(elementXml);
+            element = (Execute)new Execute().unmarshal(elementXml);
         }else if(type.equals(Element.XREQUEST)){
-            element = (Xrequest)new Xrequest().XMLElement(elementXml);
+            element = (Xrequest)new Xrequest().unmarshal(elementXml);
             //System.out.println(element);
         } if(type.equals(Element.SQL)){        
-            element = (Sql)new Sql().XMLElement(elementXml);
+            element = (Sql)new Sql().unmarshal(elementXml);
         } if(type.equals(Element.SCRIPT)){
-            element = (Script)new Script().XMLElement(elementXml);
+            element = (Script)new Script().unmarshal(elementXml);
         }
         
         addElement(element);

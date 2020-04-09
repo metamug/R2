@@ -26,6 +26,8 @@ import java.util.Set;
  * Generate open api 3.0 specification using backend information
  */
 public class OpenAPIGenerator {
+
+
     public static String generateSpec(OpenAPI openAPI) throws JsonProcessingException {
         return Json.mapper().writeValueAsString(openAPI);
     }
@@ -36,7 +38,7 @@ public class OpenAPIGenerator {
      *
      * @return OpenAPI object representation of open api spec 3.0
      */
-    public OpenAPI buildOpenAPI(Backend backend) {
+    public OpenAPI build(Backend backend) {
 
         OpenAPI api = new OpenAPI();
 
@@ -46,13 +48,19 @@ public class OpenAPIGenerator {
         info.setTitle(backend.getName());
         info.setDescription(backend.getDescription());
         api.setInfo(info);
-
         api.setPaths(buildPath(backend.getResourceList()));
 
 
         return api;
     }
 
+
+
+    /**
+     * Each path represents a single resource file
+     * @param resources Map of URI,resource
+     * @return Open API Path
+     */
     private Paths buildPath(Map<String, Resource> resources) {
         Paths paths = new Paths();
         for (Map.Entry<String, Resource> resource : resources.entrySet()) {
@@ -78,10 +86,10 @@ public class OpenAPIGenerator {
             Operation operation = new Operation();
             operation.setDescription(request.getDesc());
 
-            Set<Param> requestParameters = request.getParam();
+            Set<Param> requestParameters = request.getParamSet();
             List<Parameter> openAPIParams = new ArrayList<>();
 
-            List<InvocableElement> list = request.getParamOrSqlOrExecuteOrXrequestOrScript();
+            List<InvocableElement> list = request.getInvocableElements();
 
             //@TODO use precedence of Param tag over $variable since param tags define type
 
@@ -157,6 +165,7 @@ public class OpenAPIGenerator {
     }
 
     public String serializeJSON(OpenAPI api) {
+
         return Json.pretty(api);
     }
 

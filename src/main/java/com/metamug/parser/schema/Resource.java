@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {"desc", "request"})
 @XmlRootElement(name = "Resource")
-public class Resource extends XMLElement<Request> {
+public class Resource extends XMLElement {
 
     @XmlElement(name = "Desc")
     protected String desc;
@@ -33,7 +33,20 @@ public class Resource extends XMLElement<Request> {
     @XmlAttribute(name = "auth")
     protected String auth;
 
-    public Resource(){        
+    public Resource(String id,double version) {
+        this.version = version;
+        this.id = id;
+    }
+    
+    public Resource(String desc, double version, String id, String parent, String auth) {
+        this.desc = desc;
+        this.version = version;
+        this.id = id;
+        this.parent = parent;
+        this.auth = auth;
+    }
+
+    public Resource(){
     }    
     
     /**
@@ -177,8 +190,5 @@ public class Resource extends XMLElement<Request> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public InvocableElement get(String id){
-       //@TODO get invocable elements from children
-       return null;
-    }
+
 }

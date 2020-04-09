@@ -52,7 +52,7 @@
  */
 package com.metamug.parser.parser;
 
-import com.metamug.parser.RPXParser;
+import com.metamug.parser.ResourceParser;
 import com.metamug.parser.service.ParserServiceTest;
 import com.metamug.parser.schema.Request;
 import com.metamug.parser.schema.Resource;
@@ -84,13 +84,13 @@ public class MarshalTest {
         try {
             System.out.println(file.getName());
 
-            RPXParser parser = new RPXParser(outputFolder, appName, file);
+            ResourceParser parser = new ResourceParser(outputFolder, appName, file);
             Resource res = parser.parse();
 
             Request firstReq = res.getRequest().iterator().next();
                     
             
-            Xrequest xreq = (Xrequest)firstReq.getParamOrSqlOrExecuteOrXrequestOrScript().get(0);
+            Xrequest xreq = (Xrequest)firstReq.getInvocableElements().get(0);
                     
             System.out.println(xreq.getId());
             
