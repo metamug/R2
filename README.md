@@ -1,6 +1,6 @@
 # openapi-rest-model
 
-![](https://travis-ci.org/metamug/openapi-rest-model.svg?branch=open-api)
+![](https://travis-ci.org/metamug/openapi-rest-model.svg?branch=open-api) [![Coverage Status](https://coveralls.io/repos/github/metamug/openapi-rest-model/badge.svg?branch=open-api)](https://coveralls.io/github/metamug/openapi-rest-model?branch=open-api)
 
 Convert [OpenAPI](https://www.openapis.org/) Spec file into [Resource Resource XML](https://metamug.com/docs/resource-file) files.
 This project aims to generate compatible resource xmls for a given spec file json/yml.
