@@ -185,4 +185,27 @@ public class ElementTest {
         
         //System.out.println(resource.marshal());
     }
+    
+    @Test
+    public void addSqlToNewRequest() throws FileNotFoundException, JAXBException {
+        String elementXml = "<Sql xmlns=\"http://xml.metamug.net/resource/1.0\" id=\"myqry\" output=\"true\" ref=\"1\" type=\"query\"/>";
+        String elementName = "sql";
+        
+        String reqmethod = "GET";
+        String reqitem = "true";
+        
+        File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
+        Resource resource = (Resource)new Resource().unmarshal(resourceFile);
+        
+        Request request = resource.getRequest(Method.fromValue(reqmethod), Boolean.valueOf(reqitem));
+        if(request == null){
+            request = new Request(Method.fromValue(reqmethod));
+            request.setItem(Boolean.valueOf(reqitem));
+            resource.addRequest(request);
+        }
+        
+        request.addElement(elementXml,elementName);
+        
+        //System.out.println(resource.marshal());
+    }
 }

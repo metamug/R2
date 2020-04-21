@@ -28,9 +28,11 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.text.StringEscapeUtils;
 import org.xml.sax.SAXException;
 import com.metamug.parser.service.QueryManagerService;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sql", propOrder = {"value"})
+@XmlRootElement(name = "Sql")
 public class Sql extends InvocableElement{
 
     @XmlValue
