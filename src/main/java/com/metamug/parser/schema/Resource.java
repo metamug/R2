@@ -99,13 +99,12 @@ public class Resource extends XMLElement {
     public Request getRequest(Method method, boolean item){
         Request req = new Request(method);
         req.setItem(item);
-        
-        for (Request r : request) {
+        for (Request r : getRequest()) {
             if(r.equals(req)){
                 return r;
             }
         }
-        return null;
+        return req;
     }
     
     public void addRequest(Request request) {
