@@ -1,0 +1,14 @@
+language: java                                               
+jdk:                           
+    - openjdk8
+addons:
+  sonarcloud:
+    organization: metamug
+    token: ${SONAR_TOKEN}
+script:
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=metamug_openapi-rest-model
+  
+after_success:
+  - mvn jacoco:report coveralls:report
+  - bash <(curl -s https://codecov.io/bash)
