@@ -134,11 +134,12 @@ public class ParserService {
             ResourceTestService testService = new ResourceTestService();
             testService.testResource(parsedResource, domain, appName);
         }
-
+        
         Resource resource = createJsp(parsedResource, uploadedFile, updateResource, domain);
-
+        
         JSONObject obj = new JSONObject();
         obj.put("version", resource.getVersion());
+        
         if (resource.getAuth() != null && !resource.getAuth().isEmpty()) {
             obj.put("secure", true);
             obj.put("auth",resource.getAuth());
@@ -154,13 +155,12 @@ public class ParserService {
 
         String resourceDir = OUTPUT_FOLDER + File.separator + appName + File.separator
                 + "WEB-INF" + File.separator + "resources" + File.separator;
-
         if (!new File(resourceDir + "v" + resource.getVersion()).exists()) {
             Files.createDirectories(Paths.get(resourceDir + "v" + resource.getVersion()));
         }
-
         String jsp = resourceDir + "v" + resource.getVersion() + File.separator 
                 + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp";
+      
         if (!new File(jsp).exists() || updateResource) {
             try{
                 output = new FileOutputStream(jsp);
@@ -174,7 +174,7 @@ public class ParserService {
 
                     List elements = req.getInvocableElements();
 
-                    printRequestElements(elements, writer, domain);
+                    printRequestElements(elements, writer);
 
                     //end m:request
                     closeRequest(writer);
@@ -195,7 +195,6 @@ public class ParserService {
                 if( (!updateResource) && (new File(jsp).exists()) ) {
                     new File(jsp).delete();
                 }
-                
                 throw e;
             }
         } else {
@@ -205,7 +204,7 @@ public class ParserService {
         }
     }
 
-    protected void printRequestElements(List elements, XMLStreamWriter writer, String domain) throws XMLStreamException, IOException, XPathExpressionException, SAXException, ResourceTestException {
+    protected void printRequestElements(List elements, XMLStreamWriter writer) throws XMLStreamException, IOException, XPathExpressionException, SAXException, ResourceTestException {
         for (Object child : elements) {
             ((InvocableElement)child).print(writer, this);
         }

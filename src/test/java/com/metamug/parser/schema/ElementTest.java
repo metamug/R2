@@ -148,15 +148,11 @@ public class ElementTest {
         Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
         Request request = resource.getRequest(Method.fromValue(reqmethod), Boolean.valueOf(reqitem));
-        if(request == null){
-            request = new Request(Method.fromValue(reqmethod));
-            request.setItem(Boolean.valueOf(reqitem));
-            resource.addRequest(request);
-        }
+        resource.addRequest(request);
         
         request.addElement(elementXml,elementName);
         
-     //   System.out.println(resource.marshal());
+        //System.out.println(resource.marshal());
     }
     
     @Test
@@ -175,11 +171,7 @@ public class ElementTest {
         Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
         Request request = resource.getRequest(Method.fromValue(reqmethod), Boolean.valueOf(reqitem));
-        if(request == null){
-            request = new Request(Method.fromValue(reqmethod));
-            request.setItem(Boolean.valueOf(reqitem));
-            resource.addRequest(request);
-        }
+        resource.addRequest(request);
         
         request.addElement(elementXml,elementName);
         
@@ -198,11 +190,7 @@ public class ElementTest {
         Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
         Request request = resource.getRequest(Method.fromValue(reqmethod), Boolean.valueOf(reqitem));
-        if(request == null){
-            request = new Request(Method.fromValue(reqmethod));
-            request.setItem(Boolean.valueOf(reqitem));
-            resource.addRequest(request);
-        }
+        resource.addRequest(request);
         
         request.addElement(elementXml,elementName);
         
