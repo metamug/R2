@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
 @XmlType(name = "xrequest", propOrder = {
         "xrequestChildren"
 })
-@XmlRootElement(name = "Xrequest")
+@XmlRootElement(name = "XRequest")
 public class Xrequest extends InvocableElement {
 
     @XmlElements({

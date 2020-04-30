@@ -141,6 +141,7 @@ public class Request extends XMLElement {
         if(type.equals(Element.EXECUTE)){
             element = (Execute)new Execute().unmarshal(elementXml);
         }else if(type.equals(Element.XREQUEST)){
+            //System.out.println(type);
             element = (Xrequest)new Xrequest().unmarshal(elementXml);
             //System.out.println(element);
         } if(type.equals(Element.SQL)){        

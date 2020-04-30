@@ -123,10 +123,8 @@ public class ParserService {
         this.queryMap = queryMap;
 
         OUTPUT_FOLDER = outputFolder;
-
         ResourceParser parser = new ResourceParser(OUTPUT_FOLDER, appName, uploadedFile);
         Resource parsedResource = parser.parse();
-
         this.resourceVersion = parsedResource.getVersion();
 
         //make test queries requests
@@ -160,7 +158,7 @@ public class ParserService {
         }
         String jsp = resourceDir + "v" + resource.getVersion() + File.separator 
                 + FilenameUtils.removeExtension(resourceFile.getName()) + ".jsp";
-      
+        
         if (!new File(jsp).exists() || updateResource) {
             try{
                 output = new FileOutputStream(jsp);
@@ -195,6 +193,7 @@ public class ParserService {
                 if( (!updateResource) && (new File(jsp).exists()) ) {
                     new File(jsp).delete();
                 }
+                
                 throw e;
             }
         } else {

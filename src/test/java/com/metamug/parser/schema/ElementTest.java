@@ -157,11 +157,11 @@ public class ElementTest {
     
     @Test
     public void addToExistingRequest() throws FileNotFoundException, JAXBException {
-        String elementXml = "<Xrequest xmlns=\"http://xml.metamug.net/resource/1.0\" id=\"jsonResponse\" method=\"GET\"\n" +
+        String elementXml = "<XRequest xmlns=\"http://xml.metamug.net/resource/1.0\" id=\"jsonResponse\" method=\"GET\"\n" +
 "                url=\"https://jsonplaceholder.typicode.com/todos/1\" output=\"true\">"
                 + "<Header name='Accept' value='application/json'></Header>"
                 + "<Body> { 'foo':'bar' } </Body>"
-                + "</Xrequest>";
+                + "</XRequest>";
         String elementName = "xrequest";
         
         String reqmethod = "GET";
