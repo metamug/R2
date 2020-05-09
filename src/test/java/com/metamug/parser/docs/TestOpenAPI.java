@@ -39,16 +39,16 @@ public class TestOpenAPI {
         System.out.println(str);
     }
 
-    @Test
-    public void testImport() throws JsonProcessingException, JAXBException {
-        OpenAPIGenerator generator = new OpenAPIGenerator();
-        OpenAPI api = generator.build(backend);
-        String str = generator.serializeJSON(api);
-
-
-        OpenAPIParser parser = new OpenAPIParser(str);
-        Backend backend  = parser.getBackend();
-        Resource resource = backend.getResourceList().get("/backend/v1.0/movie");
-        System.out.println(resource.marshal());
-    }
+//    @Test
+//    public void testImport() throws JsonProcessingException, JAXBException {
+//        OpenAPIGenerator generator = new OpenAPIGenerator();
+//        OpenAPI api = generator.build(backend);
+//        String str = generator.serializeJSON(api);
+//
+//
+//        OpenAPIParser parser = new OpenAPIParser(str);
+//        Backend backend  = parser.getBackend();
+//        Resource resource = backend.getResourceList().get("/backend/v1.0/movie");
+//        System.out.println(resource.marshal());
+//    }
 }

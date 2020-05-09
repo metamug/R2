@@ -66,21 +66,22 @@ public class Request extends XMLElement {
     @XmlAttribute(name = "method")
     protected Method method;
     @XmlAttribute(name = "item")
-    protected Boolean item;
+//    protected Boolean item;
+    protected String item;
 
     public Request() {
     }
     
-    @Override
-    public boolean equals(Object o) {
-        Request request = (Request)o;
-        if(getMethod().value().equals(request.getMethod().value())) {
-            if(isItem() == request.isItem()) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        Request request = (Request)o;
+//        if(getMethod().value().equals(request.getMethod().value())) {
+//            if(isItem() == request.isItem()) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     @Override
     public int hashCode() {
@@ -177,15 +178,23 @@ public class Request extends XMLElement {
         this.method = value;
     }
 
-    public boolean isItem() {
-        if (item == null) {
-            return false;
-        } else {
-            return item;
-        }
+//    public boolean isItem() {
+//        if (item == null) {
+//            return false;
+//        } else {
+//            return item;
+//        }
+//    }
+
+    public String getItem() {
+        return item;
     }
 
-    public void setItem(Boolean value) {
+//    public void setItem(boolean value) {
+//        this.item = value;
+//    }
+
+    public void setItem(String value) {
         this.item = value;
     }
 
