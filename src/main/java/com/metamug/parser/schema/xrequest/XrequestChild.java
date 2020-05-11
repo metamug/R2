@@ -53,7 +53,6 @@
 package com.metamug.parser.schema.xrequest;
 
 import com.metamug.parser.schema.InvocableElement;
-import com.metamug.parser.schema.InvocableElement;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.HashSet;

@@ -67,9 +67,9 @@ import org.xml.sax.SAXException;
 public class Xrequest extends InvocableElement {
 
     @XmlElements({
-            @XmlElement(name = "Param", type = Xparam.class),
-            @XmlElement(name = "Header", type = Xheader.class),
-            @XmlElement(name = "Body", type = Xbody.class)
+        @XmlElement(name = "Param", type = Xparam.class),
+        @XmlElement(name = "Header", type = Xheader.class),
+        @XmlElement(name = "Body", type = Xbody.class)
     })
     protected List<XrequestChild> xrequestChildren;
     @XmlAttribute(name = "id", required = true)
@@ -108,7 +108,7 @@ public class Xrequest extends InvocableElement {
      */
     public List<XrequestChild> getXRequestChildren() {
         if (xrequestChildren == null) {
-            xrequestChildren = new ArrayList<XrequestChild>();
+            xrequestChildren = new ArrayList<>();
         }
         return this.xrequestChildren;
     }

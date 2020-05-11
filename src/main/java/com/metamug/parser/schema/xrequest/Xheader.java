@@ -8,11 +8,9 @@
 
 package com.metamug.parser.schema.xrequest;
 
-import com.metamug.parser.schema.xrequest.XrequestChild;
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
 import java.io.IOException;
-import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -106,8 +104,6 @@ public class Xheader extends XrequestChild {
                 
         writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(getValue())+"\"",parent.output);
     }
-
-
 
     @Override
     public String extractFromMPath(String mpathVariable, String elementId, boolean enclose) {
