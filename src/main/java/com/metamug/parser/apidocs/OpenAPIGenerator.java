@@ -1,10 +1,7 @@
 package com.metamug.parser.apidocs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.metamug.parser.schema.Param;
-import com.metamug.parser.schema.Request;
-import com.metamug.parser.schema.InvocableElement;
-import com.metamug.parser.schema.Resource;
+import com.metamug.parser.schema.*;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.Yaml;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -61,10 +58,22 @@ public class OpenAPIGenerator {
      * @param resources Map of URI,resource
      * @return Open API Path
      */
+
+
     private Paths buildPath(Map<String, Resource> resources) {
         Paths paths = new Paths();
         for (Map.Entry<String, Resource> resource : resources.entrySet()) {
-            paths.addPathItem(resource.getKey(), buildPathItem(resource.getValue()));
+
+            Set<Request> req =  resource.getValue().getRequest();
+            String itemRequest = "";
+
+            for(Request r : req) {
+                itemRequest = r.getItem();
+                break;
+            }
+
+
+            paths.addPathItem(resource.getKey() + "/" + itemRequest, buildPathItem(resource.getValue()));
         }
         return paths;
     }
@@ -82,52 +91,55 @@ public class OpenAPIGenerator {
         //loop over all request tags
         for (Request request : resource.getRequest()) {
 
-            //operation corresponds to HTTP Verb Method
-            Operation operation = new Operation();
-            operation.setDescription(request.getDesc());
+//            if(request.getItem() == itemRequest) {
 
-            Set<Param> requestParameters = request.getParamSet();
-            List<Parameter> openAPIParams = new ArrayList<>();
+                //operation corresponds to HTTP Verb Method
+                Operation operation = new Operation();
+                operation.setDescription(request.getDesc());
 
-            List<InvocableElement> list = request.getInvocableElements();
+                Set<Param> requestParameters = request.getParamSet();
+                List<Parameter> openAPIParams = new ArrayList<>();
 
-            //@TODO use precedence of Param tag over $variable since param tags define type
+                List<InvocableElement> list = request.getInvocableElements();
 
-            //loop over request elements to get params
-            for (InvocableElement requestElement : list) {
+                //@TODO use precedence of Param tag over $variable since param tags define type
 
-                for (String strParam : requestElement.getRequestParameters()) {
-                    Param param = new Param(strParam);
-                    requestParameters.add(param);
+                //loop over request elements to get params
+                for (InvocableElement requestElement : list) {
+
+                    for (String strParam : requestElement.getRequestParameters()) {
+                        Param param = new Param(strParam);
+                        requestParameters.add(param);
+                    }
+
                 }
 
+                for (Param param : requestParameters) {
+                    Parameter parameter = createParameter(param);
+                    openAPIParams.add(parameter);
+                }
+
+                if (!openAPIParams.isEmpty())
+                    operation.setParameters(openAPIParams);
+
+                switch (request.getMethod().value().toLowerCase()) {
+                    case "post":
+                        item.setPost(operation);
+                        break;
+                    case "get":
+                        item.setGet(operation);
+                        break;
+                    case "put":
+                        item.setPut(operation);
+                        break;
+                    case "delete":
+                        item.setDelete(operation);
+                        break;
+                }
+                setStandardResponses(operation);
             }
 
-            for (Param param : requestParameters) {
-                Parameter parameter = createParameter(param);
-                openAPIParams.add(parameter);
-            }
-
-            if (!openAPIParams.isEmpty())
-                operation.setParameters(openAPIParams);
-
-            switch (request.getMethod().value().toLowerCase()) {
-                case "post":
-                    item.setPost(operation);
-                    break;
-                case "get":
-                    item.setGet(operation);
-                    break;
-                case "put":
-                    item.setPut(operation);
-                    break;
-                case "delete":
-                    item.setDelete(operation);
-                    break;
-            }
-            setStandardResponses(operation);
-        }
-
+//        }
 
         return item;
     }

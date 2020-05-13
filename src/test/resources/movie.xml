@@ -8,6 +8,13 @@
         </Sql>
     </Request>
 
+    <Request method="GET" item="true">
+        <Desc>Get info of movie with given id.</Desc>
+        <Sql id="allMovies">
+            SELECT * FROM movie where id=$id
+        </Sql>
+    </Request>
+
     <Request method="POST">
         <Param name="name" type="text" minlength="1" max="100"/>
         <Param name="rating" type="number" min="1" max="5"/>

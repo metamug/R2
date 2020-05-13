@@ -96,7 +96,7 @@ public class Resource extends XMLElement {
         return this.request;
     }
     
-    public Request getRequest(Method method, boolean item){
+    public Request getRequest(Method method, String item){
         Request req = new Request(method);
         req.setItem(item);
         for (Request r : getRequest()) {
