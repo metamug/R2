@@ -1,13 +1,17 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<Resource>
-    <Desc>
-        This resource is for customer operations
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Resource v="1.0" id="movie" xmlns="http://xml.metamug.net/resource/1.0">
+    <Desc>REST API Resource for Movie Review Operation. This is not as good as rotten tomato
         <Tag name="customer-operations" color="#CAFE00"/>
     </Desc>
-    <Request>
-        <Desc>
-            This request performs operations for the customer.
-            <Tag name="customer-query" color="#00CAFE"/>
-        </Desc>
+    <Request method="DELETE">
+        <Param name="id" type="text" required="true"/>
     </Request>
+    <Request method="POST">
+        <Desc>Post A Review about a new movie</Desc>
+        <Param name="rating" type="text" required="true"/>
+    </Request>
+    <Request method="PUT">
+        <Param name="id" type="text" required="true"/>
+    </Request>
+    <Request method="GET"/>
 </Resource>
