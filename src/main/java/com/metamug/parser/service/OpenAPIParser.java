@@ -46,14 +46,15 @@ public class OpenAPIParser {
      * @return
      */
     private Resource build(PathItem item, Resource resource){
-        resource.setDesc(item.getDescription());
+        resource.setDescString(item.getDescription());
+
 
         //loop over all request tags
         for (Map.Entry<PathItem.HttpMethod, Operation> openAPIOperations : item.readOperationsMap().entrySet()) {
             Request request = new Request();
             //operation corresponds to HTTP Verb Method
             Operation operation = openAPIOperations.getValue();
-            request.setDesc(operation.getDescription());
+            request.setDescString(operation.getDescription());
             request.setMethod(Method.fromValue(openAPIOperations.getKey().name()));
             resource.addRequest(request);
 

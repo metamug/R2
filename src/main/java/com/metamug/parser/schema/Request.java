@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlType;
 public class Request extends XMLElement {
 
     @XmlElement(name = "Desc")
-    protected String desc;
+    protected Desc desc;
     @XmlElement(name = "Param")
     protected Set<Param> paramSet;
     protected Set<Header> header;
@@ -153,12 +153,20 @@ public class Request extends XMLElement {
         addElement(element);
     }
     
-    public String getDesc() {
+    public Desc getDesc() {
         return desc;
     }
 
+    public String getDescString() {
+        return desc.getDesc();
+    }
+
     public void setDesc(String value) {
-        this.desc = value;
+        this.desc.setDesc(value);
+    }
+
+    public void setDescString(String value) {
+        this.desc.setDesc(value);
     }
 
     public Integer getStatus() {

@@ -77,14 +77,14 @@ public class OpenAPIGenerator {
      */
     private PathItem buildPathItem(Resource resource) {
         PathItem item = new PathItem();
-        item.setDescription(resource.getDesc());
+        item.setDescription(resource.getDescString());
 
         //loop over all request tags
         for (Request request : resource.getRequest()) {
 
             //operation corresponds to HTTP Verb Method
             Operation operation = new Operation();
-            operation.setDescription(request.getDesc());
+            operation.setDescription(request.getDescString());
 
             Set<Param> requestParameters = request.getParamSet();
             List<Parameter> openAPIParams = new ArrayList<>();

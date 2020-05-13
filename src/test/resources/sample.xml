@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource>
+    <Desc>
+        This resource is for customer operations
+        <Tag name="customer-operations" color="#CAFE00"/>
+    </Desc>
+    <Request>
+        <Desc>
+            This request performs operations for the customer.
+            <Tag name="customer-query" color="#00CAFE"/>
+        </Desc>
+    </Request>
+</Resource>

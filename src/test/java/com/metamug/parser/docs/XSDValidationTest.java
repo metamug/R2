@@ -144,7 +144,7 @@ public class XSDValidationTest {
                             execReq = ((Execute)o).getRequires();
                         } 
                     }
-                    reqDesc = request.getDesc();
+                    reqDesc = request.getDescString();
                     method = request.getMethod().value();
                     for (Param p : request.getParamSet()) {
                         paramName = p.getName();
@@ -154,7 +154,7 @@ public class XSDValidationTest {
             } else {
                 Assert.fail("No <Request> element found!");
             }
-            String[] resultArray = new String[]{resourceVersion, rs.getDesc(), rs.getId(), rs.getParent(),
+            String[] resultArray = new String[]{resourceVersion, rs.getDescString(), rs.getId(), rs.getParent(),
                 method, reqDesc, paramName, execClass, execReq};
             Assert.assertArrayEquals(testArray, resultArray);
 

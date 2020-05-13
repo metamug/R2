@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlType;
 public class Resource extends XMLElement {
 
     @XmlElement(name = "Desc")
-    protected String desc;
+    protected Desc desc;
     @XmlElement(name = "Request")
     protected Set<Request> request;
     @XmlAttribute(name = "v", required = true)
@@ -38,7 +38,7 @@ public class Resource extends XMLElement {
         this.id = id;
     }
     
-    public Resource(String desc, double version, String id, String parent, String auth) {
+    public Resource(Desc desc, double version, String id, String parent, String auth) {
         this.desc = desc;
         this.version = version;
         this.id = id;
@@ -55,8 +55,12 @@ public class Resource extends XMLElement {
      * @return possible object is {@link String }
      *
      */
-    public String getDesc() {
+    public Desc getDesc() {
         return desc;
+    }
+
+    public String getDescString() {
+        return desc.getDesc();
     }
 
     /**
@@ -65,8 +69,12 @@ public class Resource extends XMLElement {
      * @param value allowed object is {@link String }
      *
      */
-    public void setDesc(String value) {
+    public void setDesc(Desc value) {
         this.desc = value;
+    }
+
+    public void setDescString(String value) {
+        this.desc.setDesc(value);
     }
 
     /**
