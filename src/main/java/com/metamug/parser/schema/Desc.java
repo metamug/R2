@@ -6,41 +6,36 @@
 //
 package com.metamug.parser.schema;
 
-import com.metamug.parser.service.ParserService;
-import java.io.IOException;
 import java.util.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlType;
 
 
-@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Desc")
 public class Desc {
 
-    protected String desc;
-    @XmlElement(name = "Tag")
-    protected Tag tag;
-
-
-
-    public String getDesc() {
+    protected List<Tag> tags = new ArrayList<>();
+    protected List<String> desc = new ArrayList<>();
+    
+    @XmlElementRef(name="Tag",type=Tag.class)
+    public List<Tag> getTags() {
+        return tags;
+    }
+    
+    @XmlMixed
+    public List<String> getDesc() {
         return desc;
     }
 
     public void setDesc(String value) {
-        this.desc = value;
+        desc = new ArrayList<>();
+        desc.add(value);
     }
 
-    public Tag getTag() {
-        return tag;
+    public void setTag(Tag value) {
+        tags = new ArrayList<>();
+        tags.add(value);
     }
-
-    public void setTag(Tag tagValue) {
-        this.tag = tagValue;
-    }
-
 }
-
-

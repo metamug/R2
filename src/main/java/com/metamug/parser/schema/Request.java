@@ -158,7 +158,7 @@ public class Request extends XMLElement {
     }
 
     public String getDescString() {
-        return desc.getDesc();
+        return desc.getDesc().get(0);
     }
 
     public void setDesc(String value) {

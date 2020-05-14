@@ -6,17 +6,14 @@
 //
 package com.metamug.parser.schema;
 
-import com.metamug.parser.service.ParserService;
-import java.io.IOException;
-import java.util.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Tag")
+@XmlRootElement(name = "Tag")
 public class Tag {
 
     @XmlAttribute(name = "name")
