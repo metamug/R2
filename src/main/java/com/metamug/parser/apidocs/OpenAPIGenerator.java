@@ -67,8 +67,12 @@ public class OpenAPIGenerator {
             String itemRequest = "";
 
             for(Request r : req) {
-                itemRequest = r.getItem();
-                break;
+                if(r.getItem()!=null){
+                    itemRequest = r.getItem();
+                    //System.out.println(itemRequest);
+
+                    break;
+                }
             }
             paths.addPathItem(resource.getKey() + "/" + itemRequest, buildPathItem(resource.getValue()));
         }

@@ -111,7 +111,7 @@
                             </xsd:choice>
                             <xsd:attribute name="method" type="method" use="required"/>
                             <xsd:attribute name="status" type="status"/>
-                            <xsd:attribute name="item" type="xsd:boolean" default="false"/>
+                            <xsd:attribute name="item" type="xsd:string" />
                         </xsd:complexType>
                     </xsd:element>
                 </xsd:choice>

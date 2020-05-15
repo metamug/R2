@@ -3,12 +3,12 @@
 
     <Desc>REST API Resource for Movie Review Operation. This is not as good as rotten tomato</Desc>
 
-    <Request method="GET">
+    <Request method="GET" item="action">
         <Sql id="getResult">SELECT * FROM movie
         </Sql>
     </Request>
 
-    <Request method="GET" item="true">
+    <Request method="GET" >
         <Desc>Get info of movie with given id.</Desc>
         <Sql id="allMovies">
             SELECT * FROM movie where id=$id
@@ -24,13 +24,13 @@
         </Sql>
     </Request>
 
-    <Request method="PUT" item="true">
+    <Request method="PUT" item="dismiss">
         <Sql id="putResult" verbose="true">
             UPDATE movie SET rating=$rating where id=$id
         </Sql>
     </Request>
 
-    <Request method="DELETE" item="true">
+    <Request method="DELETE">
         <Sql id="deleteResult" verbose="true">
             DELETE FROM movie WHERE id=$id
         </Sql>
