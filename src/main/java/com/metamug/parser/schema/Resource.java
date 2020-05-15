@@ -60,7 +60,7 @@ public class Resource extends XMLElement {
     }
 
     public String getDescString() {
-       if(desc.getDesc().size() > 0){
+        if(desc != null && desc.getDesc().size() > 0){
             return desc.getDesc().get(0);
         }
         return null;

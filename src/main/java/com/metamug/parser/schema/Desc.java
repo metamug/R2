@@ -26,6 +26,7 @@ public class Desc {
     
     @XmlMixed
     public List<String> getDesc() {
+        //System.out.println(desc.size());
         return desc;
     }
 

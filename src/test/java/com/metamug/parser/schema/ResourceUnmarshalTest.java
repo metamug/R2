@@ -10,12 +10,14 @@ import java.io.File;
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.util.List;
+import org.junit.Ignore;
 
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class ResourceUnmarshalTest {
+   
+   // @Ignore
     @Test
     public void resourceUnmarshal() throws FileNotFoundException, JAXBException {
 
@@ -26,14 +28,53 @@ public class ResourceUnmarshalTest {
         Resource resource = (Resource)new Resource().unmarshal(file);
 
         Desc desc = resource.getDesc();
-        List<Tag> tags = desc.getTags();
-        tags.forEach( tag -> {
-            System.out.println(tag.getName());
-        }); 
-        List<String> descString = desc.getDesc();
-        descString.forEach( d -> {
-            System.out.println(d);
-        });
+        if(desc != null){
+            List<Tag> tags = desc.getTags();
+            tags.forEach( tag -> {
+                System.out.println(tag.getName());
+            }); 
+            String descString = resource.getDescString();
+            System.out.println(descString);
+        }
+    }
+    //@Ignore
+    @Test
+    public void resourceUnmarshal2() throws FileNotFoundException, JAXBException {
+
+        File file = new File(this.getClass().getResource("/movie.xml").getFile());
+
+        System.out.println(file.getName());
+
+        Resource resource = (Resource)new Resource().unmarshal(file);
+
+        Desc desc = resource.getDesc();
+        if(desc != null){
+            List<Tag> tags = desc.getTags();
+            tags.forEach( tag -> {
+                System.out.println(tag.getName());
+            }); 
+            String descString = resource.getDescString();
+            System.out.println(descString);
+        }
+    }
+    @Test
+    public void resourceUnmarshal3() throws FileNotFoundException, JAXBException {
+
+        File file = new File(this.getClass().getResource("/xrequest.xml").getFile());
+
+        System.out.println(file.getName());
+
+        Resource resource = (Resource)new Resource().unmarshal(file);
+
+        Desc desc = resource.getDesc();
+        if(desc != null){
+            List<Tag> tags = desc.getTags();
+            tags.forEach( tag -> {
+                System.out.println(tag.getName());
+            }); 
+            String descString = resource.getDescString();
+            System.out.println(descString);
+        }
     }
 }
 

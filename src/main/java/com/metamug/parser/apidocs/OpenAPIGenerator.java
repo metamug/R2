@@ -83,6 +83,7 @@ public class OpenAPIGenerator {
      */
     private PathItem buildPathItem(Resource resource) {
         PathItem item = new PathItem();
+        //System.out.println(resource.getDescString());
         item.setDescription(resource.getDescString());
         
         //loop over all request tags

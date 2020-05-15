@@ -142,9 +142,7 @@ public class Request extends XMLElement {
         if(type.equals(Element.EXECUTE)){
             element = (Execute)new Execute().unmarshal(elementXml);
         }else if(type.equals(Element.XREQUEST)){
-            //System.out.println(type);
             element = (Xrequest)new Xrequest().unmarshal(elementXml);
-            //System.out.println(element);
         } if(type.equals(Element.SQL)){        
             element = (Sql)new Sql().unmarshal(elementXml);
         } if(type.equals(Element.SCRIPT)){
@@ -159,7 +157,7 @@ public class Request extends XMLElement {
     }
 
     public String getDescString() {
-        if(desc.getDesc().size() > 0){
+        if(desc != null && desc.getDesc().size() > 0){
             return desc.getDesc().get(0);
         }
         return null;
