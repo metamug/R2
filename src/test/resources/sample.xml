@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Resource v="1.0" id="movie" xmlns="http://xml.metamug.net/resource/1.0">
+<Resource v="1.0" xmlns="http://xml.metamug.net/resource/1.0">
     <Desc>REST API Resource for Sample Operation. This is not as good as rotten tomato
         <Tag name="customer-operations" color="#CAFE00"/>
     </Desc>
