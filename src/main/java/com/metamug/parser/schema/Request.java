@@ -159,7 +159,10 @@ public class Request extends XMLElement {
     }
 
     public String getDescString() {
-        return desc.getDesc().get(0);
+        if(desc.getDesc().size() > 0){
+            return desc.getDesc().get(0);
+        }
+        return null;
     }
 
     public void setDesc(String value) {

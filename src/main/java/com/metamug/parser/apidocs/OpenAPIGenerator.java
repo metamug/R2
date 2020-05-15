@@ -44,9 +44,9 @@ public class OpenAPIGenerator {
         info.version("1.0.0");
         info.setTitle(backend.getName());
         info.setDescription(backend.getDescription());
+        
         api.setInfo(info);
         api.setPaths(buildPath(backend.getResourceList()));
-
 
         return api;
     }
@@ -63,7 +63,6 @@ public class OpenAPIGenerator {
     private Paths buildPath(Map<String, Resource> resources) {
         Paths paths = new Paths();
         for (Map.Entry<String, Resource> resource : resources.entrySet()) {
-
             Set<Request> req =  resource.getValue().getRequest();
             String itemRequest = "";
 
@@ -71,8 +70,6 @@ public class OpenAPIGenerator {
                 itemRequest = r.getItem();
                 break;
             }
-
-
             paths.addPathItem(resource.getKey() + "/" + itemRequest, buildPathItem(resource.getValue()));
         }
         return paths;
@@ -87,7 +84,7 @@ public class OpenAPIGenerator {
     private PathItem buildPathItem(Resource resource) {
         PathItem item = new PathItem();
         item.setDescription(resource.getDescString());
-
+        
         //loop over all request tags
         for (Request request : resource.getRequest()) {
 
