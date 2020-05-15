@@ -71,17 +71,33 @@ public class Request extends XMLElement {
 
     public Request() {
     }
+    /*
+    @Override
+    public boolean equals(Object o) {
+        Request request = (Request)o;
+        if(getMethod().value().equals(request.getMethod().value())) {
+            if(isItem() == request.isItem()) {
+                return true;
+            }
+        }
+        return false;
+    }*/
     
-//    @Override
-//    public boolean equals(Object o) {
-//        Request request = (Request)o;
-//        if(getMethod().value().equals(request.getMethod().value())) {
-//            if(isItem() == request.isItem()) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    @Override
+    public boolean equals(Object o) {
+        Request request = (Request)o;
+        if(getMethod().value().equals(request.getMethod().value())) {
+            //if method value matches
+            if(getItem()==null && request.getItem()==null) {
+                //if both are collection requests
+                return true;
+            } else if(getItem().equals(request.getItem())) {
+                //both have matching item strings 
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public int hashCode() {

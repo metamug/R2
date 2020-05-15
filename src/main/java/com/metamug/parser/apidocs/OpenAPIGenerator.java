@@ -67,7 +67,7 @@ public class OpenAPIGenerator {
             String itemRequest = "";
 
             for(Request r : req) {
-                if(r.getItem()!=null){
+                if(r.getItem()!=null && !r.getItem().equals("")){
                     itemRequest = r.getItem();
                     //System.out.println(itemRequest);
 
