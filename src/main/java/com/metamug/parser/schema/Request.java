@@ -103,10 +103,10 @@ public class Request extends XMLElement {
     public int hashCode() {
         int hash = 7;
         hash = 17 * hash + Objects.hashCode(this.method);
-        hash = 17 * hash + Objects.hashCode(this.item);
+        int itemHashCode = this.item != null ? Objects.hashCode(this.item) : 0;
+        hash = 17 * hash + itemHashCode;
         return hash;
     }
-
 
     public Request(Method method) {
         this.method = method;

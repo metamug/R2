@@ -105,15 +105,15 @@ public class ElementTest {
         Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
         //add duplicate GET collection request
-        Request getCollection = new Request(Method.GET);
-        
+        Request getCollection = new Request(Method.GET);        
         resource.addRequest(getCollection);
+        
         //add new GET item request
         Request getItem = new Request(Method.GET);
         getItem.setItem("true");
-        //add new POST request
         resource.addRequest(getItem);
         
+        //add new POST request
         Request post = new Request(Method.POST);
         resource.addRequest(post);
         //System.out.println(resource.marshal());
@@ -165,17 +165,17 @@ public class ElementTest {
         String elementName = "xrequest";
         
         String reqmethod = "GET";
-        String reqitem = "false";
+        String reqitem = null;
         
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
         Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
-        Request request = resource.getRequest(Method.fromValue(reqmethod), String.valueOf(reqitem));
-        resource.addRequest(request);
+        Request request = resource.getRequest(Method.fromValue(reqmethod), reqitem);
+        //resource.addRequest(request);
         
         request.addElement(elementXml,elementName);
         
-        //System.out.println(resource.marshal());
+        System.out.println(resource.marshal());
     }
     
     @Test
@@ -189,11 +189,11 @@ public class ElementTest {
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
         Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
-        Request request = resource.getRequest(Method.fromValue(reqmethod), String.valueOf(reqitem));
-        resource.addRequest(request);
+        Request request = resource.getRequest(Method.fromValue(reqmethod), reqitem);
+        //resource.addRequest(request);
         
         request.addElement(elementXml,elementName);
         
-        //System.out.println(resource.marshal());
+        System.out.println(resource.marshal());
     }
 }

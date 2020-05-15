@@ -107,21 +107,27 @@ public class Resource extends XMLElement {
         return this.request;
     }
     
+    public Request getRequest(Method method) {
+        return getRequest(method,null);
+    }
+    
     public Request getRequest(Method method, String item){
         Request req = new Request(method);
         req.setItem(item);
         for (Request r : getRequest()) {
             if(r.equals(req)){
+                //request exists, return it
                 return r;
             }
         }
+        //request does not exist, add it and return
+        addRequest(req);
         return req;
     }
     
     public void addRequest(Request request) {
         //remove if exists
-        getRequest().remove(request);
-        
+        //getRequest().remove(request);
         getRequest().add(request);
     }
 
