@@ -110,7 +110,7 @@ public class ElementTest {
         resource.addRequest(getCollection);
         //add new GET item request
         Request getItem = new Request(Method.GET);
-        getItem.setItem(true);
+        getItem.setItem("true");
         //add new POST request
         resource.addRequest(getItem);
         
@@ -147,7 +147,7 @@ public class ElementTest {
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
         Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
-        Request request = resource.getRequest(Method.fromValue(reqmethod), Boolean.valueOf(reqitem));
+        Request request = resource.getRequest(Method.fromValue(reqmethod), String.valueOf(reqitem));
         resource.addRequest(request);
         
         request.addElement(elementXml,elementName);
@@ -170,7 +170,7 @@ public class ElementTest {
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
         Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
-        Request request = resource.getRequest(Method.fromValue(reqmethod), Boolean.valueOf(reqitem));
+        Request request = resource.getRequest(Method.fromValue(reqmethod), String.valueOf(reqitem));
         resource.addRequest(request);
         
         request.addElement(elementXml,elementName);
@@ -189,7 +189,7 @@ public class ElementTest {
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
         Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
-        Request request = resource.getRequest(Method.fromValue(reqmethod), Boolean.valueOf(reqitem));
+        Request request = resource.getRequest(Method.fromValue(reqmethod), String.valueOf(reqitem));
         resource.addRequest(request);
         
         request.addElement(elementXml,elementName);
