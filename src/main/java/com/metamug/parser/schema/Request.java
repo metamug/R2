@@ -91,8 +91,8 @@ public class Request extends XMLElement {
             if(getItem()==null && request.getItem()==null) {
                 //if both are collection requests
                 return true;
-            } else if(getItem().equals(request.getItem())) {
-                //both have matching item strings 
+            } else if(getItem()!=null && request.getItem()!=null) {
+                //if both are item requests
                 return true;
             }
         }
