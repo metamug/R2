@@ -141,7 +141,7 @@ public class ParserService {
     
     private JSONObject getResourceProperties(Resource resource){
         JSONObject obj = new JSONObject();
-        obj.put("version", resource.getVersion());
+        obj.put("version", Double.toString(resource.getVersion()));
         obj.put("secure", false);  
         //obj.put("auth", JSONObject.NULL);
         //obj.put("tag", JSONObject.NULL);
@@ -155,7 +155,7 @@ public class ParserService {
             Tag tag = resource.getDesc().getTags().get(0);
             JSONObject tagObj = new JSONObject();
             tagObj.put("name", tag.getName());
-            tagObj.put("color", tag.getClass());
+            tagObj.put("color", tag.getColor());
             obj.put("tag", tagObj.toString());
         }
         
