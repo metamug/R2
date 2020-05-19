@@ -55,6 +55,7 @@ package com.metamug.parser.service;
 
 import com.metamug.parser.ResourceParser;
 import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.schema.Desc;
 import com.metamug.parser.schema.Request;
 import com.metamug.parser.schema.InvocableElement;
 import com.metamug.parser.schema.Resource;
@@ -151,8 +152,9 @@ public class ParserService {
             obj.put("auth",resource.getAuth());
         }
         
-        if (resource.getDesc().getTags().size() > 0) {
-            Tag tag = resource.getDesc().getTags().get(0);
+        Desc desc = resource.getDesc();
+        if(desc != null && desc.getTags().size() > 0){
+            Tag tag = desc.getTags().get(0);
             JSONObject tagObj = new JSONObject();
             tagObj.put("name", tag.getName());
             tagObj.put("color", tag.getColor());
