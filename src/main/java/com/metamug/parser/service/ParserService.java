@@ -55,9 +55,11 @@ package com.metamug.parser.service;
 
 import com.metamug.parser.ResourceParser;
 import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.schema.Desc;
 import com.metamug.parser.schema.Request;
 import com.metamug.parser.schema.InvocableElement;
 import com.metamug.parser.schema.Resource;
+import com.metamug.parser.schema.Tag;
 import com.metamug.parser.schema.Upload;
 import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
 import java.beans.PropertyVetoException;
@@ -135,15 +137,30 @@ public class ParserService {
         
         Resource resource = createJsp(parsedResource, uploadedFile, updateResource, domain);
         
+        return getResourceProperties(resource);
+    }
+    
+    private JSONObject getResourceProperties(Resource resource){
         JSONObject obj = new JSONObject();
-        obj.put("version", resource.getVersion());
+        obj.put("version", Double.toString(resource.getVersion()));
+        obj.put("secure", false);  
+        //obj.put("auth", JSONObject.NULL);
+        //obj.put("tag", JSONObject.NULL);
         
         if (resource.getAuth() != null && !resource.getAuth().isEmpty()) {
             obj.put("secure", true);
             obj.put("auth",resource.getAuth());
-        } else {
-            obj.put("secure", false);      
         }
+        
+        Desc desc = resource.getDesc();
+        if(desc != null && desc.getTags().size() > 0){
+            Tag tag = desc.getTags().get(0);
+            JSONObject tagObj = new JSONObject();
+            tagObj.put("name", tag.getName());
+            tagObj.put("color", tag.getColor());
+            obj.put("tag", tagObj.toString());
+        }
+        
         return obj;
     }
 
