@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Generate open api 3.0 specification using backend information
@@ -89,6 +91,7 @@ public class OpenAPIGenerator {
         PathItem item = new PathItem();
         //System.out.println(resource.getDescString());
         item.setDescription(resource.getDescString());
+        //resource.getDesc().getTags();
         
         //loop over all request tags
         for (Request request : resource.getRequest()) {
@@ -96,7 +99,15 @@ public class OpenAPIGenerator {
             //operation corresponds to HTTP Verb Method
             Operation operation = new Operation();
             operation.setDescription(request.getDescString());
+            Desc desc = request.getDesc();
+            if(desc != null) {
+                List<Tag> tags = desc.getTags();
+                List<String> tagName = tags.stream().map(tag -> tag.getName())
+                        .distinct()
+                        .collect(Collectors.toList());
 
+                operation.setTags(tagName);
+            }
 
                 Set<Param> requestParameters = request.getParamSet();
                 List<Parameter> openAPIParams = new ArrayList<>();

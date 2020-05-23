@@ -23,7 +23,7 @@ public class TestOpenAPI {
 //        List<Resource> resources = new ArrayList<>();
         File file = new File(TestOpenAPI.class.getClassLoader().getResource("./xrequest.xml").getFile());
         backend.addResource("/backend/v1.0/xrequest", ResourceParser.generateResource(file));
-        file = new File(TestOpenAPI.class.getClassLoader().getResource("./movie.xml").getFile());
+        file = new File(TestOpenAPI.class.getClassLoader().getResource("./moviewithtag.xml").getFile());
         backend.addResource("/backend/v1.0/movie", ResourceParser.generateResource(file));
     }
 
