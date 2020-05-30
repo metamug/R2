@@ -48,6 +48,7 @@ public class ResourceUnmarshalTest {
         Resource resource = (Resource)new Resource().unmarshal(file);
 
         Desc desc = resource.getDesc();
+
         if(desc != null){
             List<Tag> tags = desc.getTags();
             tags.forEach( tag -> {

@@ -184,7 +184,9 @@ public class Request extends XMLElement {
     }
 
     public void setDescString(String value) {
-        this.desc.setDesc(value);
+        if(desc != null) {
+            this.desc.setDesc(value);
+        }
     }
 
     public Integer getStatus() {
