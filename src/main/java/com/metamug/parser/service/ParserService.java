@@ -140,6 +140,10 @@ public class ParserService {
         return getResourceProperties(resource);
     }
     
+    public JSONObject getQueryMap(){
+        return queryMap;
+    }
+    
     private JSONObject getResourceProperties(Resource resource){
         JSONObject obj = new JSONObject();
         obj.put("version", Double.toString(resource.getVersion()));

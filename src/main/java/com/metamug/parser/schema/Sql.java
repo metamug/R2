@@ -63,6 +63,26 @@ public class Sql extends InvocableElement{
     private Boolean verbose;
     @XmlAttribute(name = "output")
     private Boolean output;
+    
+    public Sql(){
+    }
+    
+    public Sql(Sql sql) {
+        value = sql.getValue();
+        id = sql.getId();
+        requires = sql.getRequires();
+        ref = sql.getRef();
+        when = sql.getWhen();
+        onblank = sql.getOnblank();
+        onerror = sql.getOnerror();
+        limit = sql.getLimit();
+        offset = sql.getOffset();
+        classname = sql.getClassname();
+        type = sql.getType();
+        status = sql.getStatus();
+        verbose = sql.getOutput();
+        output = sql.getOutput();
+    }
 
     /**
      * Gets the value of the value property.
