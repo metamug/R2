@@ -99,7 +99,6 @@ public class ParserService {
     public String appName;
     public String resourceName;
     public double resourceVersion;
-    protected JSONObject queryMap;
 
     protected String OUTPUT_FOLDER;
     public OutputStream output;
@@ -116,13 +115,13 @@ public class ParserService {
     public static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
 
     public JSONObject transform(File uploadedFile, String appName, boolean updateResource, String outputFolder,
-            String domain, JSONObject queryMap) throws SAXException, XMLStreamException,
+            String domain) throws SAXException, XMLStreamException,
             XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
             URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
         this.domain = domain;
         this.appName = appName;
         this.resourceName = FilenameUtils.removeExtension(uploadedFile.getName());
-        this.queryMap = queryMap;
+        //this.queryMap = queryMap;
 
         OUTPUT_FOLDER = outputFolder;
         ResourceParser parser = new ResourceParser(OUTPUT_FOLDER, appName, uploadedFile);
@@ -138,10 +137,6 @@ public class ParserService {
         Resource resource = createJsp(parsedResource, uploadedFile, updateResource, domain);
         
         return getResourceProperties(resource);
-    }
-    
-    public JSONObject getQueryMap(){
-        return queryMap;
     }
     
     private JSONObject getResourceProperties(Resource resource){
