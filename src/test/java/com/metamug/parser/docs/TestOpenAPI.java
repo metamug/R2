@@ -8,6 +8,7 @@ import com.metamug.parser.schema.Resource;
 
 import com.metamug.parser.service.OpenAPIParser;
 import io.swagger.v3.oas.models.OpenAPI;
+import org.json.XML;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;

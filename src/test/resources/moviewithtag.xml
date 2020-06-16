@@ -3,7 +3,7 @@
 
     <Desc>REST API Resource for Movie Review Operation. This is not as good as rotten tomato</Desc>
 
-    <Request method="GET" >
+    <Request method="GET">
         <Desc>Get info of movie with given id.
             <Tag name="customer-operations" color="#CAFE00"/>
         </Desc>

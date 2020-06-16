@@ -66,7 +66,6 @@ public class Request extends XMLElement {
     @XmlAttribute(name = "method")
     protected Method method;
     @XmlAttribute(name = "item")
-//    protected Boolean item;
     protected String item;
 
     public Request() {
