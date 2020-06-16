@@ -242,7 +242,7 @@ public class Execute extends InvocableElement {
         writer.writeStartElement("m:execute");
         writer.writeAttribute("var", getId());
         writer.writeAttribute("className", getClassName());
-        writer.writeAttribute("param", enclose("mtgReq"));
+        //writer.writeAttribute("param", enclose("mtgReq"));
         if ( (getVerbose() != null && getVerbose()) 
                 || getOutput() != null && getOutput() ) {
             writer.writeAttribute("output", "true");
