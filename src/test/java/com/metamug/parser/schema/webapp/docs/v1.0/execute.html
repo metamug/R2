@@ -1,0 +1,106 @@
+<!DOCTYPE HTML><html xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:mtg="http://xml.metamug.net/resource/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="/assets/vendor/css/bootstrap.min.css">
+      <link rel="stylesheet" href="/assets/vendor/css/font-awesome.min.css">
+   </head>
+   <body>
+      <div class="container" style="padding-top:25px">
+         <div class="panel-body"><span id="resName" style="color:darkgrey;font-weight:bold;margin-left:5px;margin-right:5px">
+               ABC
+               </span><span id="resVersion" class="badge">1.0</span><span class="fa fa-unlock" style="color: #777777;padding-left: 5px;font-size: large;"></span><span id="resGroup" style="padding:5px;color:#777777;"></span><span><a id="resUri" target="_blank" style="font-weight:bold;cursor:pointer;" class="text text-success pull-right"></a></span><div style="margin-left: 5px;font-size: small;"></div>
+         </div>
+         <div class="col-md-12" style="padding-top:10px">
+            <div class="panel panel-info">
+               <div class="panel-heading"><span class="ReqTypeCollection" style="font-weight:bold"></span><span class="pull-right" style="font-size:14px">
+                     <div class="badge" style="margin-right:10px;">
+                        <div>200</div>
+                     </div>
+                     <div style="font-size:14px" class="label label-info"><span>GET</span></div></span></div>
+               <div class="panel-body">
+                  <div style="padding-bottom:12px">
+                     <div style="color:darkgrey;font-weight:bold;">
+                        Parameters
+                        </div>
+                     <div class="sqlVariables" style="padding-top:6px"><span class="label label-warning" style="margin-right: 5px; background-color: #f1d408;">No Variable Passed</span></div>
+                  </div>
+                  <div style="padding-bottom:12px">
+                     <div style="color:darkgrey;font-weight:bold;margin-bottom:4px">
+                        Response Headers
+                        </div>
+                     <div></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div><script>
+                    var url = window.location.href;
+                    var resName = url.substr(url.lastIndexOf('/')+1).toUpperCase();
+                    var resNameDiv = document.getElementById('resName');
+                    resName = resName.slice(0,-5);
+                    resNameDiv.innerHTML = (resName).toLowerCase();
+                    document.title = resName.toLowerCase();
+                    
+                    var uriDiv = document.getElementById('resUri');
+                    var version = document.getElementById('resVersion').innerHTML;
+                    var group= document.getElementById('resGroup').innerHTML;
+                    
+                    var urlArr = url.split("/");
+                    var uri = urlArr[0]+"//"+urlArr[2]+"/"+urlArr[3]+
+                    ("/v"+version+"/"+resName+" "+group).toLowerCase();
+                    var reqUri=("/v"+version+"/"+resName).toLowerCase();
+                    uriDiv.innerHTML = uri;
+                    uriDiv.href = uri;
+                    
+                    var parentSpan = document.getElementById('resParent');
+                    if(parentSpan != null){
+                    parentSpan.innerHTML = parentSpan.innerHTML.toUpperCase();
+                    }
+                    
+                    var paramListClasses = document.getElementsByClassName("sqlVariables");
+                    for (var i = 0; i < paramListClasses.length; i++) {
+                    var unique = [];
+                    var paramList = paramListClasses[i].childNodes;
+                    for(var j = 0; j < paramList.length; j++){
+                    var param = paramList[j];
+                    unique.push(param.innerHTML);
+                    unique = eliminateDuplicates(unique);
+                    }
+                    var l = paramList.length;
+                    for(var j=l-1; j >= 0; j--){
+                    paramList[j].parentNode.removeChild(paramList[j]);
+                    }
+                    for(var j=0; j < unique.length; j++) {
+                    var span = document.createElement('span');
+                    span.classList.add('label','label-primary');
+                    span.innerHTML = unique[j];
+                    span.style['margin-right'] = '5px';
+                    if(span.innerHTML=="No Variable Passed") {
+                    span.style['background-color'] = 'orange';
+                    }
+                    paramListClasses[i].appendChild(span);
+                    }
+                    }
+                    function eliminateDuplicates(arr) {
+                    var i, len=arr.length, out=[], obj={};
+                    for (i=0;i < len;i++) {
+                    obj[arr[i]]=0;
+                    }
+                    for (i in obj) {
+                    out.push(i);
+                    }
+                    return out;
+                    }
+                    
+                    var ReqTypeItem = document.getElementsByClassName('ReqTypeItem');             
+                    for(var i=0;i < ReqTypeItem.length;i++) {
+                    ReqTypeItem[i].innerHTML = reqUri+"/{id}";
+                    }
+                    var ReqTypeCollection = document.getElementsByClassName('ReqTypeCollection');                    
+                    for(var i=0;i < ReqTypeCollection.length;i++) {
+                    ReqTypeCollection[i].innerHTML = reqUri;
+                    }
+                </script></body>
+</html>
