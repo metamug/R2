@@ -4,7 +4,7 @@
   <m:request method="GET" item="null">
 
     <m:execute var="execRes" className="com.metamug.plugin.RequestExample" output="true">
-    </m:execute>
+</m:execute>
 </m:request>
 
 </m:resource>
