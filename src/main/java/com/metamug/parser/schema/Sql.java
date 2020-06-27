@@ -12,6 +12,8 @@ import static com.metamug.parser.service.ParserService.MASON_DATASOURCE;
 import static com.metamug.parser.service.ParserService.MASON_OUTPUT;
 import static com.metamug.parser.service.ParserService.MPATH_EXPRESSION_PATTERN;
 import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
+import static java.lang.String.valueOf;
+
 import com.metamug.parser.service.ResourceTestService;
 import java.io.IOException;
 import java.util.*;
@@ -63,7 +65,8 @@ public class Sql extends InvocableElement{
     private Boolean verbose;
     @XmlAttribute(name = "output")
     private Boolean output;
-    
+    @XmlAttribute(name = "loop")
+    private String loop;
     public Sql(){
     }
     
@@ -82,6 +85,7 @@ public class Sql extends InvocableElement{
         status = sql.getStatus();
         verbose = sql.getOutput();
         output = sql.getOutput();
+        loop = sql.getLoop();
     }
 
     /**
@@ -340,6 +344,13 @@ public class Sql extends InvocableElement{
         this.output = output;
     }
 
+    public String getLoop() {
+        return loop;
+    }
+    public void setLoop(String loop) {
+        this.loop = loop;
+    }
+
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
         this.parent = parent;
@@ -399,6 +410,15 @@ public class Sql extends InvocableElement{
                 //String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue(),elementIds);
                 //writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
             }
+
+            //Add forEach if loop attribute is not null // ex: item="body.name"
+            if(getLoop() != null && !getLoop().equals("")) {
+                writer.writeStartElement("c:forEach");
+                writer.writeAttribute("items", enclose("mtgReq." + getLoop()));
+                writer.writeAttribute("varStatus", "loop");
+                writer.writeAttribute("var", "loopItem");
+            }
+
             //Print params those are marked as 'requires' in <Sql>
             String requiredParams = getRequires();
             if (requiredParams != null) {
@@ -415,7 +435,7 @@ public class Sql extends InvocableElement{
                 if (getType() != null && getType().value().equalsIgnoreCase("query")) {
                     if (getLimit() != null) {
                         writer.writeEmptyElement("m:param");
-                        writer.writeAttribute("name", String.valueOf(getLimit()));
+                        writer.writeAttribute("name", valueOf(getLimit()));
                         writer.writeAttribute("value", enclose("mtgReq.params['" + getLimit() + "']"));
                         writer.writeAttribute("type", "number");
                         writer.writeAttribute("defaultValue", "-1");
@@ -477,11 +497,15 @@ public class Sql extends InvocableElement{
             writer.writeAttribute("className", getClassname());                
             writer.writeAttribute("var", getId());
             writer.writeAttribute("param", enclose(var));
-            writer.writeAttribute("output", String.valueOf(verbose));        
+            writer.writeAttribute("output", valueOf(verbose));
         } else{
             //if no classname and verbose, print <c:set>
             if(verbose)
                 printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclosePageScope(var)); 
+        }
+
+        if(getLoop() != null && !getLoop().equals("")) {
+            writer.writeEndElement();  //End of <c:forEach>
         }
         
         if (getWhen() != null) {

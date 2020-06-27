@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource xmlns="http://xml.metamug.net/resource/1.0" v="1.0">
+
+    <Request method="POST" item="true">
+        <Param name="name" type="text" minlength="1" max="100"/>
+        <Param name="rating" type="number" min="1" max="5"/>
+        <Sql id="postResult" type="update" verbose="true" item="body.films">
+            INSERT INTO movie (name,rating) values ($name,$rating)
+        </Sql>
+    </Request>
+
+</Resource>
