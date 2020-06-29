@@ -63,7 +63,7 @@ import org.junit.Test;
  */
 public class ParserReqBodyTest {
     @Test
-    public void transformRequestVariables(){
+    public void transformBodyVariables(){
         InvocableElement r = new Execute();
 
         String input = "{\n" +
@@ -83,5 +83,28 @@ public class ParserReqBodyTest {
         System.out.println(input);
         System.out.println(output);
         Assert.assertEquals(exp, output);
+    }
+    
+    @Test
+    public void transformLoopVariables(){
+        InvocableElement r = new Execute();
+
+        String input = "{\n" +
+                "  \"foo1\": $id,\n" +
+                "  \"foo2\": $loopItem.films,\n" +
+                "  \"foo3\": $loopItem.theatre\n" +
+                "}";
+
+        String exp = "{\n" +
+                "  \"foo1\": ${mtgReq.id},\n" +
+                "  \"foo2\": ${loopItem.films},\n" +
+                "  \"foo3\": ${loopItem.theatre}\n" +
+                "}";
+
+
+        //String output = r.transformBodyVariables(input,true);
+        System.out.println(input);
+        //System.out.println(output);
+        //Assert.assertEquals(exp, output);
     }
 }

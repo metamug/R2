@@ -391,7 +391,7 @@ public abstract class InvocableElement extends XMLElement {
 
     public String transformBodyVariables(String input, boolean enclose) {
         String output = input;
-        Pattern pattern = Pattern.compile(REQUEST_BODY_PATTERN);
+        Pattern pattern = Pattern.compile(BODY_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(input);
 
         while (matcher.find()) {

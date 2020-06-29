@@ -113,8 +113,8 @@ public class ParserService {
                                              
     public static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
     public static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
-    public static final String REQUEST_BODY_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
-
+    public static final String BODY_EXPRESSION_PATTERN = "\\$[body]\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
+    
     public JSONObject transform(File uploadedFile, String appName, boolean updateResource, String outputFolder,
             String domain) throws SAXException, XMLStreamException,
             XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
