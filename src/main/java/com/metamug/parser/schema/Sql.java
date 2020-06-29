@@ -500,8 +500,14 @@ public class Sql extends InvocableElement{
             writer.writeAttribute("output", valueOf(verbose));
         } else{
             //if no classname and verbose, print <c:set>
-            if(verbose)
-                printTargetCSet(writer,enclose(MASON_OUTPUT),var,enclosePageScope(var)); 
+            if(verbose) {
+                if(getLoop() != null && !getLoop().equals("")) {    //if it has a loop then "property" attribute will be "postResult_${loop.index}"
+                    String property = var + "_${loop.index}";
+                    printTargetCSet(writer, enclose(MASON_OUTPUT), property, enclosePageScope(var));
+                }
+                else
+                    printTargetCSet(writer, enclose(MASON_OUTPUT), var, enclosePageScope(var));
+            }
         }
 
         if(getLoop() != null && !getLoop().equals("")) {

@@ -62,28 +62,6 @@ import org.junit.Test;
  * @author richard937
  */
 public class ParserReqBodyTest {
-    @Test
-    public void transformBodyVariables(){
-        InvocableElement r = new Execute();
-
-        String input = "{\n" +
-                "  \"foo1\": $id,\n" +
-                "  \"foo2\": $body.films,\n" +
-                "  \"foo3\": $body.theatre.films\n" +
-                "}";
-
-        String exp = "{\n" +
-                "  \"foo1\": ${mtgReq.id},\n" +
-                "  \"foo2\": ${mtgReq.body.films},\n" +
-                "  \"foo3\": ${mtgReq.body.theatre.films}\n" +
-                "}";
-
-
-        String output = r.transformBodyVariables(input,true);
-        System.out.println(input);
-        System.out.println(output);
-        Assert.assertEquals(exp, output);
-    }
     
     @Test
     public void transformLoopVariables(){

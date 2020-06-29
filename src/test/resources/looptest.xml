@@ -5,7 +5,7 @@
         <Param name="name" type="text" minlength="1" max="100"/>
         <Param name="rating" type="number" min="1" max="5"/>
         <Sql id="postResult" type="update" verbose="true" item="body.films">
-            INSERT INTO movie (name,rating) values ($name,$rating)
+            INSERT INTO movie (name,rating) values ($loopItem.name,$loopItem.rating)
         </Sql>
     </Request>
 

@@ -65,15 +65,24 @@ public class ParserReqParamTest {
     @Test
     public void transformRequestVariables(){
         InvocableElement r = new Execute();
+
         String input = "{\n" +
-"                    \"foo1\": $id,\n" +
-"                    \"foo2\": $rating\n" +
-"                }";
+                "  \"foo1\": $id,\n" +
+                "  \"foo2\": $rating,\n" +
+                "  \"foo3\": $body.films,\n" +
+                "  \"foo4\": $body.theatre.films\n" +
+                "}";
+
         String exp = "{\n" +
-"                    \"foo1\": ${mtgReq.id},\n" +
-"                    \"foo2\": ${mtgReq.params['rating']}\n" +
-"                }";
+                "  \"foo1\": ${mtgReq.id},\n" +
+                "  \"foo2\": ${mtgReq.params['rating']},\n" +
+                "  \"foo3\": ${mtgReq.body.films},\n" +
+                "  \"foo4\": ${mtgReq.body.theatre.films}\n" +
+                "}";
+
         String output = r.transformRequestVariables(input,true);
+        System.out.println(input);
+        System.out.println(output);
         Assert.assertEquals(exp, output);
     }
 }

@@ -214,6 +214,10 @@ public abstract class InvocableElement extends XMLElement {
     }
 
     protected String getJspVariableForRequestParam(String param) {
+
+        if(param.startsWith("loopItem")) {
+            return  "${" + param  + "}" ;
+        }
         switch (param) {
             case "id":
                 return "${mtgReq.id}";
@@ -274,6 +278,10 @@ public abstract class InvocableElement extends XMLElement {
                 default:
                     tv = "mtgReq.params['" + v + "']";
             }
+
+            if(v.startsWith("body"))
+                tv = "mtgReq." + v ;
+
             sb.append(tv);
 
             if (enclose) {
@@ -389,47 +397,6 @@ public abstract class InvocableElement extends XMLElement {
         return transformed;
     }
 
-    public String transformBodyVariables(String input, boolean enclose) {
-        String output = input;
-        Pattern pattern = Pattern.compile(BODY_EXPRESSION_PATTERN);
-        Matcher matcher = pattern.matcher(input);
-
-        while (matcher.find()) {
-            String v = input.substring(matcher.start(1), matcher.end(1)).trim();
-            String tv;
-            StringBuilder sb = new StringBuilder();
-//            if (enclose) {
-//                sb.append("${");
-//            }
-//            switch (v) {
-//                case "id":
-//                    tv = "mtgReq.id";
-//                    break;
-//                case "pid":
-//                    tv = "mtgReq.pid";
-//                    break;
-//                case "uid":
-//                    tv = "mtgReq.uid";
-//                    break;
-//                default:
-//                    tv = "mtgReq." + v ;
-//            }
-//            sb.append(tv);
-//
-//            if (enclose) {
-//                sb.append("}");
-//            }
-            sb.append("${");
-            tv = "mtgReq." + v ;
-            sb.append(tv);
-            sb.append("}");
-            System.out.println(v);
-
-            output = output.replace("$" + v, sb.toString());
-        }
-
-        return output;
-    }
 
     // '%$variable%' => CONCAT('%',$variable,'%')
     public String processVariablesInLikeClause(String q) {
