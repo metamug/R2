@@ -59,21 +59,29 @@ import org.junit.Test;
 
 /**
  *
- * @author anishhirlekar
+ * @author richard937
  */
-public class ParserReqParamTest {
+public class ParserReqBodyTest {
     @Test
     public void transformRequestVariables(){
         InvocableElement r = new Execute();
+
         String input = "{\n" +
-"                    \"foo1\": $id,\n" +
-"                    \"foo2\": $rating\n" +
-"                }";
+                "  \"foo1\": $id,\n" +
+                "  \"foo2\": $body.films,\n" +
+                "  \"foo3\": $body.theatre.films\n" +
+                "}";
+
         String exp = "{\n" +
-"                    \"foo1\": ${mtgReq.id},\n" +
-"                    \"foo2\": ${mtgReq.params['rating']}\n" +
-"                }";
-        String output = r.transformRequestVariables(input,true);
+                "  \"foo1\": ${mtgReq.id},\n" +
+                "  \"foo2\": ${mtgReq.body.films},\n" +
+                "  \"foo3\": ${mtgReq.body.theatre.films}\n" +
+                "}";
+
+
+        String output = r.transformBodyVariables(input,true);
+        System.out.println(input);
+        System.out.println(output);
         Assert.assertEquals(exp, output);
     }
 }
