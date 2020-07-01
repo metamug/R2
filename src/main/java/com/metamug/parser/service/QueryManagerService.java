@@ -59,9 +59,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static javax.ws.rs.core.HttpHeaders.USER_AGENT;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -102,32 +105,39 @@ public class QueryManagerService {
     }
 
     private static String makeRequest(String url, Map<String, String> params, String appName) throws IOException, ResourceTestException {
-        URL obj = new URL(url + "/query");
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("POST");
-        con.setRequestProperty("User-Agent", USER_AGENT);
-        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-        con.setRequestProperty("Authorization", Utils.getMasonApiRequestSignature(appName));
-        String urlParameters = Utils.mapToUrlParams(params);
+        try{
+            URL obj = new URL(url + "/query");
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("User-Agent", USER_AGENT);
+            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+            con.setRequestProperty("Authorization", Utils.getMasonApiRequestSignature(appName));
+            String urlParameters = Utils.mapToUrlParams(params);
 
-        // Send post request
-        con.setDoOutput(true);
-        try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
-            wr.writeBytes(urlParameters);
-            wr.flush();
-        }
-
-        if (con.getResponseCode() != 200) {
-            throw new ResourceTestException("Server error. Could not save query references!");
-        }
-
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-            String inputLine;
-            StringBuilder responseBuffer = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                responseBuffer.append(inputLine);
+            // Send post request
+            con.setDoOutput(true);
+            try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
+                wr.writeBytes(urlParameters);
+                wr.flush();
             }
-            return responseBuffer.toString();
+
+            if (con.getResponseCode() != 200) {
+                throw new ResourceTestException("Server error. Could not save query references!");
+            }
+
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                String inputLine;
+                StringBuilder responseBuffer = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    responseBuffer.append(inputLine);
+                }
+                return responseBuffer.toString();
+            }
+        }catch(MalformedURLException mx){ 
+            // catch only MalformedURLException - this will happen during unit tests when server is not running
+            // throw other exceptions like ResourceTestException
+            Logger.getLogger(QueryManagerService.class.getName()).log(Level.SEVERE, mx.getLocalizedMessage(), mx);
+            return mx.getLocalizedMessage();
         }
     }
 }

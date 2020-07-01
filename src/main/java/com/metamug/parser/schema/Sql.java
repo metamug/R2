@@ -370,18 +370,23 @@ public class Sql extends InvocableElement{
         }
     }
     
+     /**
+     * Gets query from ref and saves query and tag data in catalog database
+     *
+     * @throws java.io.IOException
+     * @throws com.metamug.parser.exception.ResourceTestException
+     */
     protected void preProcessSqlElement() throws IOException, ResourceTestException{
         String tag = getId();
-        String ref = getRef();
         QueryManagerService service = new QueryManagerService();
         String url = parent.domain + "/" + parent.appName;
         String version = Double.toString(parent.resourceVersion);
         String sqlValue = ResourceTestService.preprocessSql(getValue());
 
-        if (ref == null) {
+        if (getRef() == null) {
             service.saveQueryWithTag(url, sqlValue, parent.resourceName, version, tag, getType().value(), parent.appName);
         } else {
-            service.saveRefWithTag(url, ref, parent.resourceName, version, tag, parent.appName);
+            service.saveRefWithTag(url, getRef(), parent.resourceName, version, tag, parent.appName);
         }
     }
     
