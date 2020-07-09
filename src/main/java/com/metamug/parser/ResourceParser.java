@@ -63,6 +63,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -137,6 +138,7 @@ public class ResourceParser {
     public static Resource generateResource(File xmlResourceFile) throws IOException, SAXException, JAXBException {
         StreamSource xmlFile = new StreamSource(xmlResourceFile);
         SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
+        //SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = schemaFactory.newSchema(ResourceParser.class.getClassLoader().getResource("resource.xsd"));
         Validator validator = schema.newValidator();
         validator.validate(xmlFile);
