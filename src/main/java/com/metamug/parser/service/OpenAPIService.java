@@ -68,12 +68,8 @@ import java.util.Map;
  * @author anishhirlekar
  */
 public class OpenAPIService {
-
-
-
-
     public static Map<String, Resource> getResources(String specUri) {
-        OpenAPI openAPI = new OpenAPIV3Parser().read("https://petstore3.swagger.io/api/v3/openapi.json");
+        OpenAPI openAPI = new OpenAPIV3Parser().read(specUri);
         /*
         String jsonSpec;
         try {

@@ -121,8 +121,6 @@ public class ResourceParser {
      */
     public Resource parse() throws JAXBException, SAXException, IOException,
             XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
-
-
         Resource resource = generateResource(xmlResourceFile);
 
         if (resource != null) {
@@ -137,6 +135,7 @@ public class ResourceParser {
     public static Resource generateResource(File xmlResourceFile) throws IOException, SAXException, JAXBException {
         StreamSource xmlFile = new StreamSource(xmlResourceFile);
         SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1");
+        //SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = schemaFactory.newSchema(ResourceParser.class.getClassLoader().getResource("resource.xsd"));
         Validator validator = schema.newValidator();
         validator.validate(xmlFile);
@@ -148,9 +147,14 @@ public class ResourceParser {
     
     public void marshal(Resource resource, String xmlFilePath) throws JAXBException, IOException {
         File file = new File(xmlFilePath);
+        
+        File parent = file.getParentFile();
+        if(!parent.exists()){
+            parent.mkdirs();
+        }
         if(!file.exists()){
             file.createNewFile();
-        }
+        }        
         
         JAXBContext contextObj = JAXBContext.newInstance(Resource.class);  
   

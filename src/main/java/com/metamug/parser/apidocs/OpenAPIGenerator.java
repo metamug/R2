@@ -38,9 +38,9 @@ public class OpenAPIGenerator {
      * @return OpenAPI object representation of open api spec 3.0
      */
     public OpenAPI build(Backend backend) {
-
+        
         OpenAPI api = new OpenAPI();
-
+        
         //Set Info
         Info info = new Info();
         info.version("1.0.0");
@@ -150,8 +150,6 @@ public class OpenAPIGenerator {
                 }
                 setStandardResponses(operation);
             }
-
-//        }
 
         return item;
     }
