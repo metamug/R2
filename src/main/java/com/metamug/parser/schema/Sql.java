@@ -416,7 +416,7 @@ public class Sql extends InvocableElement{
                 //writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
             }
 
-            //Add forEach if loop attribute is not null // ex: item="body.name"
+            //Add forEach if loop attribute is not null // ex: loop="body.name"
             if(getLoop() != null && !getLoop().equals("")) {
                 writer.writeStartElement("c:forEach");
                 writer.writeAttribute("items", enclose("mtgReq." + getLoop()));
