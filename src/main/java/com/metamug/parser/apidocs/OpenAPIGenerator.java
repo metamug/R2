@@ -140,8 +140,6 @@ public class OpenAPIGenerator {
                 setStandardResponses(operation);
             }
 
-//        }
-
         return item;
     }
 

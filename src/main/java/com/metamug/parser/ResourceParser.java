@@ -63,7 +63,6 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -122,8 +121,6 @@ public class ResourceParser {
      */
     public Resource parse() throws JAXBException, SAXException, IOException,
             XMLStreamException, XPathExpressionException, TransformerException, URISyntaxException {
-
-
         Resource resource = generateResource(xmlResourceFile);
 
         if (resource != null) {
@@ -150,9 +147,14 @@ public class ResourceParser {
     
     public void marshal(Resource resource, String xmlFilePath) throws JAXBException, IOException {
         File file = new File(xmlFilePath);
+        
+        File parent = file.getParentFile();
+        if(!parent.exists()){
+            parent.mkdirs();
+        }
         if(!file.exists()){
             file.createNewFile();
-        }
+        }        
         
         JAXBContext contextObj = JAXBContext.newInstance(Resource.class);  
   
