@@ -56,6 +56,9 @@ public class Resource extends XMLElement {
      *
      */
     public Desc getDesc() {
+        if(desc == null){
+            desc = new Desc();
+        } 
         return desc;
     }
 
