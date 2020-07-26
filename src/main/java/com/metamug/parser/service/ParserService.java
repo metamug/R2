@@ -157,7 +157,8 @@ public class ParserService {
             JSONObject tagObj = new JSONObject();
             tagObj.put("name", tag.getName());
             tagObj.put("color", tag.getColor());
-            obj.put("tag", tagObj.toString());
+            //obj.put("tag", tagObj.toString());
+            obj.put("tag",tagObj);
         }
         
         return obj;

@@ -14,14 +14,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "Tag")
-public class Tag {
+public class Tag extends XMLElement {
 
     @XmlAttribute(name = "name")
     protected String name;
 
     @XmlAttribute(name = "color")
     protected String colorcode;
-
 
     public Tag() {
     }

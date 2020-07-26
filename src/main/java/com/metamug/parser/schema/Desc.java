@@ -7,6 +7,7 @@
 package com.metamug.parser.schema;
 
 import java.util.*;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlType;
@@ -38,5 +39,10 @@ public class Desc {
     public void setTag(Tag value) {
         tags = new ArrayList<>();
         tags.add(value);
+    }
+    
+    public void SetTag(String tagXml) throws JAXBException{
+        Tag tag = (Tag)new Tag().unmarshal(tagXml);
+        setTag(tag);
     }
 }
