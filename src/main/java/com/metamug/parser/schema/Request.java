@@ -214,7 +214,7 @@ public class Request extends XMLElement {
     public void printStart(XMLStreamWriter writer) throws XMLStreamException {
         writer.writeStartElement("m:request");
         writer.writeAttribute("method", getMethod().value());
-        if(getItem()!=null && !getItem().equals("false")) {
+        if(getItem()!=null) {
             writer.writeAttribute("item", String.valueOf(getItem()));
         }
     }
