@@ -43,7 +43,7 @@ import javax.xml.xpath.XPathExpressionException;
     "script",
     "text"
 })
-public class Request extends XMLElement {
+public class Request extends PrintableElement {
 
     @XmlElement(name = "Desc")
     protected Desc desc;
@@ -217,6 +217,7 @@ public class Request extends XMLElement {
        return null;
     }
 
+    @Override
     public void print(XMLStreamWriter w, ParserService parent) throws XMLStreamException, ResourceTestException, SAXException, XPathExpressionException, IOException {
         printStart(w);
 
