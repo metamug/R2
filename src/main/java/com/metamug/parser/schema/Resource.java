@@ -27,7 +27,7 @@ import javax.xml.xpath.XPathExpressionException;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {"desc", "request"})
 @XmlRootElement(name = "Resource")
-public class Resource extends PrintableElement {
+public class Resource extends XMLElement {
 
     @XmlElement(name = "Desc")
     protected Desc desc;
@@ -218,7 +218,6 @@ public class Resource extends PrintableElement {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, ResourceTestException, SAXException, XPathExpressionException, IOException {
         writer.writeStartElement("m:resource");
 

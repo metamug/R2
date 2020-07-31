@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author anishhirlekar
  */
 @XmlTransient
-public abstract class InvocableElement extends PrintableElement {
+public abstract class InvocableElement extends XMLElement {
     
     public static enum Element {
         SQL("sql"),
@@ -104,6 +104,20 @@ public abstract class InvocableElement extends PrintableElement {
             throw new IllegalArgumentException(v);
         }
     }
+
+    @XmlTransient
+    public ParserService parent;
+
+    /**
+     * @param writer
+     * @param parent
+     * @throws javax.xml.stream.XMLStreamException
+     * @throws java.io.IOException
+     * @throws javax.xml.xpath.XPathExpressionException
+     * @throws com.metamug.parser.exception.ResourceTestException
+     * @throws org.xml.sax.SAXException
+     */
+    abstract public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException;
 
     /*
      * Returns parameters according to type of child element
