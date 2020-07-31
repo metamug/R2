@@ -116,8 +116,7 @@ public class ParserServiceTest {
 
                     System.out.println(jsonObj);
 
-                } catch (SAXException | XMLStreamException | XPathExpressionException | ParserConfigurationException
-                        | TransformerException | JAXBException | URISyntaxException | IOException | SQLException
+                } catch (SAXException | XMLStreamException | XPathExpressionException | TransformerException | JAXBException | URISyntaxException | IOException | SQLException
                         | ClassNotFoundException | PropertyVetoException | ResourceTestException ex) {
                     Logger.getLogger(ParserServiceTest.class.getName()).log(Level.SEVERE, null, ex);
                 }

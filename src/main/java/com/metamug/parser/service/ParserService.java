@@ -73,7 +73,6 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -97,9 +96,9 @@ public class ParserService {
     public String appName;
     public String resourceName;
     public double resourceVersion;
-
     protected String OUTPUT_FOLDER;
     public OutputStream output;
+
     XMLOutputFactory factory = XMLOutputFactory.newInstance();
 
     public HashMap<String,InvocableElement> elementIds = new HashMap<String,InvocableElement>() {
@@ -114,16 +113,14 @@ public class ParserService {
 
     public JSONObject transform(File uploadedFile, String appName, boolean updateResource, String outputFolder,
             String domain) throws SAXException, XMLStreamException,
-            XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
+            XPathExpressionException, TransformerException, JAXBException,
             URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
         this.domain = domain;
         this.appName = appName;
         this.resourceName = FilenameUtils.removeExtension(uploadedFile.getName());
-        //this.queryMap = queryMap;
-
         OUTPUT_FOLDER = outputFolder;
-        ResourceParser parser = new ResourceParser(OUTPUT_FOLDER, appName, uploadedFile);
-        Resource parsedResource = parser.parse();
+
+        Resource parsedResource = getParsedResource(uploadedFile);
         this.resourceVersion = parsedResource.getVersion();
 
         //make test queries requests
@@ -136,13 +133,15 @@ public class ParserService {
         
         return getResourceProperties(resource);
     }
+
+    protected Resource getParsedResource(File uploadedFile) throws XPathExpressionException, TransformerException, IOException, JAXBException, URISyntaxException, SAXException, XMLStreamException {
+        return new ResourceParser(OUTPUT_FOLDER, appName, uploadedFile).parse();
+    }
     
     private JSONObject getResourceProperties(Resource resource){
         JSONObject obj = new JSONObject();
         obj.put("version", Double.toString(resource.getVersion()));
-        obj.put("secure", false);  
-        //obj.put("auth", JSONObject.NULL);
-        //obj.put("tag", JSONObject.NULL);
+        obj.put("secure", false);
         
         if (resource.getAuth() != null && !resource.getAuth().isEmpty()) {
             obj.put("secure", true);
@@ -155,7 +154,6 @@ public class ParserService {
             JSONObject tagObj = new JSONObject();
             tagObj.put("name", tag.getName());
             tagObj.put("color", tag.getColor());
-            //obj.put("tag", tagObj.toString());
             obj.put("tag",tagObj);
         }
         
@@ -163,7 +161,7 @@ public class ParserService {
     }
 
     public Resource createJsp(Resource resource, File resourceFile, boolean updateResource)
-            throws JAXBException, SAXException, IOException, XPathExpressionException,
+            throws SAXException, IOException, XPathExpressionException,
             XMLStreamException, ResourceTestException {
 
         String resourceDir = OUTPUT_FOLDER + File.separator + appName + File.separator

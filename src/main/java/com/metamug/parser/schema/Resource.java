@@ -55,6 +55,15 @@ public class Resource extends XMLElement {
         this.auth = auth;
     }
 
+    public Resource(Resource r){
+        desc = r.getDesc();
+        request = r.getRequest();
+        version = r.getVersion();
+        id = r.getId();
+        parent = r.getParent();
+        auth = r.getAuth();
+    }
+
     public Resource(){
     }    
     
@@ -235,14 +244,16 @@ public class Resource extends XMLElement {
             writer.writeCharacters(System.lineSeparator());
         }
 
+        printRequest(writer, parent);
+
+        writer.writeEndElement();//end m:resource
+    }
+
+    protected void printRequest(XMLStreamWriter writer, ParserService parent) throws ResourceTestException, IOException, SAXException, XPathExpressionException, XMLStreamException {
         for (Request req : getRequest()) {
             req.print(writer, parent);
 
             writer.writeCharacters(System.lineSeparator());
         }
-
-        writer.writeEndElement();//end m:resource
     }
-
-
 }

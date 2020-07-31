@@ -78,6 +78,15 @@ public class Request extends XMLElement {
 
     public Request() {
     }
+
+    public Request(Request r) {
+        this.desc = r.getDesc();
+        this.paramSet = r.getParamSet();
+        this.invocableElements = r.getInvocableElements();
+        this.status = r.getStatus();
+        this.method = r.getMethod();
+        this.item = r.getItem();
+    }
     
     @Override
     public boolean equals(Object o) {
@@ -207,7 +216,6 @@ public class Request extends XMLElement {
         this.item = value;
     }
 
-//    @Override
     public String getValue() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -219,10 +227,14 @@ public class Request extends XMLElement {
 
     public void print(XMLStreamWriter w, ParserService parent) throws XMLStreamException, ResourceTestException, SAXException, XPathExpressionException, IOException {
         printStart(w);
+        printChildren(w, parent);
+        printEnd(w);
+    }
+
+    protected void printChildren(XMLStreamWriter w, ParserService parent) throws SAXException, IOException, ResourceTestException, XPathExpressionException, XMLStreamException {
         for (Object child : getInvocableElements()) {
             ((InvocableElement)child).print(w, parent);
         }
-        printEnd(w);
     }
 
     private void printStart(XMLStreamWriter writer) throws XMLStreamException {
