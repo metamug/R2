@@ -21,6 +21,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "request", propOrder = {
@@ -66,22 +68,10 @@ public class Request extends XMLElement {
     @XmlAttribute(name = "method")
     protected Method method;
     @XmlAttribute(name = "item")
-//    protected Boolean item;
     protected String item;
 
     public Request() {
     }
-    /*
-    @Override
-    public boolean equals(Object o) {
-        Request request = (Request)o;
-        if(getMethod().value().equals(request.getMethod().value())) {
-            if(isItem() == request.isItem()) {
-                return true;
-            }
-        }
-        return false;
-    }*/
     
     @Override
     public boolean equals(Object o) {
@@ -203,21 +193,9 @@ public class Request extends XMLElement {
         this.method = value;
     }
 
-//    public boolean isItem() {
-//        if (item == null) {
-//            return false;
-//        } else {
-//            return item;
-//        }
-//    }
-
     public String getItem() {
         return item;
     }
-
-//    public void setItem(boolean value) {
-//        this.item = value;
-//    }
 
     public void setItem(String value) {
         this.item = value;
@@ -231,5 +209,18 @@ public class Request extends XMLElement {
     public InvocableElement get(String id){
        //@TODO get invocable elements from children
        return null;
+    }
+
+    public void printStart(XMLStreamWriter writer) throws XMLStreamException {
+        writer.writeStartElement("m:request");
+        writer.writeAttribute("method", getMethod().value());
+        if(getItem()!=null && !getItem().equals("false")) {
+            writer.writeAttribute("item", String.valueOf(getItem()));
+        }
+    }
+
+    public void printEnd(XMLStreamWriter writer) throws XMLStreamException {
+        writer.writeEndElement();
+        writer.writeCharacters(System.lineSeparator());
     }
 }

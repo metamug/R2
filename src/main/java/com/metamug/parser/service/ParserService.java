@@ -184,15 +184,15 @@ public class ParserService {
                 printHeaderAndGroup(writer, resource);
 
                 for (Request req : resource.getRequest()) {
-                    writer.writeStartElement("m:request");
-                    initializeRequest(writer, req);
+                    //request start tag
+                    req.printStart(writer);
 
                     List elements = req.getInvocableElements();
 
                     printRequestElements(elements, writer);
 
-                    //end m:request
-                    closeRequest(writer);
+                    //end request
+                    req.printEnd(writer);
 
                     writer.writeCharacters(System.lineSeparator());
                 }
@@ -254,30 +254,6 @@ public class ParserService {
             writer.writeAttribute("value", resource.getParent());
             writer.writeCharacters(System.lineSeparator());
         }
-    }
-
-    /**
-     * Write method and item attributes according to whether the Request is an item or collection Request.
-     *
-     * @param writer XMLStreamWriter to write to JSP file.
-     * @param req Request object defined by user in Resource file.
-     * @throws XMLStreamException
-     */
-    private void initializeRequest(XMLStreamWriter writer, Request req) throws XMLStreamException {
-        writer.writeAttribute("method", req.getMethod().value());
-        writer.writeAttribute("item", String.valueOf(req.getItem()) );
-    }
-
-   
-    /**
-     * Close the m:request for Request tag.
-     *
-     * @param writer XMLStreamWriter to write to JSP file.
-     * @throws XMLStreamException
-     */
-    private void closeRequest(XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeEndElement();
-        writer.writeCharacters(System.lineSeparator());
     }
  
     protected String getJspVariableForRequestParam(String param){
