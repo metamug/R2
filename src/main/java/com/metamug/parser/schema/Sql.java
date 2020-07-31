@@ -342,7 +342,7 @@ public class Sql extends InvocableElement{
 
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
-        this.parent = parent;
+        //this.parent = parent;
         //Sql sql = this;
         parent.elementIds.put(getId(), this);
 

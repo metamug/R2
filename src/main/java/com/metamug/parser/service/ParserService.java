@@ -134,7 +134,7 @@ public class ParserService {
             testService.testResource(parsedResource, domain, appName);
         }
         
-        Resource resource = createJsp(parsedResource, uploadedFile, updateResource, domain);
+        Resource resource = createJsp(parsedResource, uploadedFile, updateResource);
         
         return getResourceProperties(resource);
     }
@@ -164,9 +164,9 @@ public class ParserService {
         return obj;
     }
 
-    public Resource createJsp(Resource resource, File resourceFile, boolean updateResource, String domain)
+    public Resource createJsp(Resource resource, File resourceFile, boolean updateResource)
             throws JAXBException, SAXException, IOException, XPathExpressionException,
-            TransformerException, URISyntaxException, XMLStreamException, ResourceTestException {
+            XMLStreamException, ResourceTestException {
 
         String resourceDir = OUTPUT_FOLDER + File.separator + appName + File.separator
                 + "WEB-INF" + File.separator + "resources" + File.separator;
@@ -181,28 +181,14 @@ public class ParserService {
                 output = new FileOutputStream(jsp);
                 XMLStreamWriter writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output));
 
-                printHeaderAndGroup(writer, resource);
+                printHeader(writer, resource);
 
-                for (Request req : resource.getRequest()) {
-                    //request start tag
-                    req.printStart(writer);
+                resource.print(writer, this);
 
-                    List elements = req.getInvocableElements();
-
-                    printRequestElements(elements, writer);
-
-                    //end request
-                    req.printEnd(writer);
-
-                    writer.writeCharacters(System.lineSeparator());
-                }
-
-                writer.writeEndElement();//end m:resource
                 writer.flush();
                 writer.close();
 
                 output.close();
-                //writeUnescapedCharacters(resource, appName, resourceFile);
 
                 return resource;
             }catch(ResourceTestException | IOException | XMLStreamException | XPathExpressionException | SAXException
@@ -220,13 +206,6 @@ public class ParserService {
         }
     }
 
-    protected void printRequestElements(List elements, XMLStreamWriter writer) throws XMLStreamException, IOException, XPathExpressionException, SAXException, ResourceTestException {
-        for (Object child : elements) {
-            ((InvocableElement)child).print(writer, this);
-        }
-    }
-
-
     /**
      * Initializes the JSP page and add necessary tags for Auth group and nested resource handling.
      *
@@ -234,26 +213,10 @@ public class ParserService {
      * @param resource Marshalled Resource object of resource file.
      * @throws XMLStreamException
      */
-    private void printHeaderAndGroup(XMLStreamWriter writer, Resource resource) throws XMLStreamException {
+    private void printHeader(XMLStreamWriter writer, Resource resource) throws XMLStreamException {
         writer.writeEmptyElement("jsp:directive.include");
         writer.writeAttribute("file", "../fragments/mason-init.jspf");
         writer.writeCharacters(System.lineSeparator());
-
-        writer.writeStartElement("m:resource");
-
-        //Add a Auth group resource tag
-        if (resource.getAuth() != null) {
-            writer.writeAttribute("auth", resource.getAuth());
-        }
-
-        writer.writeCharacters(System.lineSeparator());
-
-        //Add a Parent tag
-        if (resource.getParent() != null) {
-            writer.writeEmptyElement("m:parent");
-            writer.writeAttribute("value", resource.getParent());
-            writer.writeCharacters(System.lineSeparator());
-        }
     }
  
     protected String getJspVariableForRequestParam(String param){

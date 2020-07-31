@@ -6,6 +6,14 @@
 //
 package com.metamug.parser.schema;
 
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.service.ParserService;
+import org.xml.sax.SAXException;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,6 +22,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.xpath.XPathExpressionException;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {"desc", "request"})
@@ -209,5 +218,31 @@ public class Resource extends XMLElement {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, ResourceTestException, SAXException, XPathExpressionException, IOException {
+        writer.writeStartElement("m:resource");
+
+        //Add a Auth group resource tag
+        if (getAuth() != null) {
+            writer.writeAttribute("auth", getAuth());
+        }
+
+        writer.writeCharacters(System.lineSeparator());
+
+        //Add a Parent tag
+        if (getParent() != null) {
+            writer.writeEmptyElement("m:parent");
+            writer.writeAttribute("value", getParent());
+            writer.writeCharacters(System.lineSeparator());
+        }
+
+        for (Request req : getRequest()) {
+            req.print(writer, parent);
+
+            writer.writeCharacters(System.lineSeparator());
+        }
+
+        writer.writeEndElement();//end m:resource
+    }
+
 
 }

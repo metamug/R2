@@ -6,7 +6,12 @@
 //
 package com.metamug.parser.schema;
 
+import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.schema.InvocableElement.Element;
+import com.metamug.parser.service.ParserService;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,6 +28,7 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "request", propOrder = {
@@ -211,7 +217,17 @@ public class Request extends XMLElement {
        return null;
     }
 
-    public void printStart(XMLStreamWriter writer) throws XMLStreamException {
+    public void print(XMLStreamWriter w, ParserService parent) throws XMLStreamException, ResourceTestException, SAXException, XPathExpressionException, IOException {
+        printStart(w);
+
+        for (Object child : getInvocableElements()) {
+            ((InvocableElement)child).print(w, parent);
+        }
+
+        printEnd(w);
+    }
+
+    private void printStart(XMLStreamWriter writer) throws XMLStreamException {
         writer.writeStartElement("m:request");
         writer.writeAttribute("method", getMethod().value());
         if(getItem()!=null) {
@@ -219,7 +235,7 @@ public class Request extends XMLElement {
         }
     }
 
-    public void printEnd(XMLStreamWriter writer) throws XMLStreamException {
+    private void printEnd(XMLStreamWriter writer) throws XMLStreamException {
         writer.writeEndElement();
         writer.writeCharacters(System.lineSeparator());
     }
