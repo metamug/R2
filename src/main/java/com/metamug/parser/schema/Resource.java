@@ -235,14 +235,12 @@ public class Resource extends XMLElement {
             writer.writeAttribute("auth", getAuth());
         }
 
-        writer.writeCharacters(System.lineSeparator());
-
-        //Add a Parent tag
+        //Add Parent attribute
         if (getParent() != null) {
-            writer.writeEmptyElement("m:parent");
-            writer.writeAttribute("value", getParent());
-            writer.writeCharacters(System.lineSeparator());
+            writer.writeAttribute("parentName", getParent());
         }
+
+        writer.writeCharacters(System.lineSeparator());
 
         printRequest(writer, parent);
 
