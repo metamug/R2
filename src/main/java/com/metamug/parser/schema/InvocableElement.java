@@ -137,6 +137,10 @@ public abstract class InvocableElement extends XMLElement {
     protected void writeUnescapedCharacters(XMLStreamWriter writer, String data, OutputStream output) throws XMLStreamException, IOException, XPathExpressionException {
         writer.writeCharacters("");
         writer.flush();
+        writeUnescapedData(data, output);
+    }
+
+    protected void writeUnescapedData(String data, OutputStream output) throws IOException {
         OutputStreamWriter osw = new OutputStreamWriter(output);
         osw.write(data);
         osw.flush();
@@ -162,12 +166,6 @@ public abstract class InvocableElement extends XMLElement {
         writer.writeAttribute("target", target);
         writer.writeAttribute("property", property);
         writer.writeAttribute("value", value);
-    }
-
-    protected void writeUnescapedData(String data, OutputStream output) throws IOException {
-        OutputStreamWriter osw = new OutputStreamWriter(output);
-        osw.write(data);
-        osw.flush();
     }
 
     protected void collectVariables(LinkedList<String> requestParams, LinkedList<String> mPathParams, String query,
