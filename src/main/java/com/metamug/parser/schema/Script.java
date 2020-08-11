@@ -164,12 +164,14 @@ public class Script extends InvocableElement{
             writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"",parent.output);
         }
         writer.writeCharacters(System.lineSeparator());
-        writer.writeStartElement("m:script");
+        writer.writeStartElement("m:execute");
         String var = getId();
         writer.writeAttribute("var", var);
-        writer.writeAttribute("file", getFile());
-        
-        writer.writeEndElement(); //End of <m:script>    
+        writer.writeAttribute("className", "com.metamug.mason.plugin.GroovyRunner");
+        writer.writeEmptyElement("m:arg");
+        writer.writeAttribute("name", "file");
+        writer.writeAttribute("value", getFile());
+        writer.writeEndElement(); //End of <m:execute>    
         writer.writeCharacters(System.lineSeparator());
         
         if (getOutput()) {
