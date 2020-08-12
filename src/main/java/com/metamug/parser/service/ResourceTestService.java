@@ -113,7 +113,7 @@ public class ResourceTestService {
         }
     }
     
-    private void addSqlData(JSONArray queries, Sql sql, List<Param> paramsWithValue, boolean tx){
+    private void addSqlData(JSONArray queries, Sql sql, List<Param> paramsWithValue){
         JSONObject queryObj = new JSONObject();
         queryObj.put("tag_id", sql.getId());
         
@@ -143,7 +143,8 @@ public class ResourceTestService {
             }
         } else {
             queryObj.put("ref", true);
-            queryObj.put("query_id", sql.getRef());
+            //queryObj.put("query_id", sql.getRef());
+            queryObj.put("refValue", sql.getRef());
         }
 
         queries.put(queryObj);
@@ -172,10 +173,10 @@ public class ResourceTestService {
                 if(object instanceof Transaction){
                     List<Sql> sqlList = ((Transaction)object).getSql();
                     sqlList.forEach( sql -> {
-                        addSqlData(queries,sql,paramsWithValue,true);
+                        addSqlData(queries,sql,paramsWithValue);
                     });
                 } else if (object instanceof Sql) {
-                    addSqlData(queries,(Sql)object,paramsWithValue,false);
+                    addSqlData(queries,(Sql)object,paramsWithValue);
                 }
             });
         });
