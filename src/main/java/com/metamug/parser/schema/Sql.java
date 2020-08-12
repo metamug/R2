@@ -12,7 +12,6 @@ import static com.metamug.parser.service.ParserService.MASON_DATASOURCE;
 import static com.metamug.parser.service.ParserService.MASON_OUTPUT;
 import static com.metamug.parser.service.ParserService.MPATH_EXPRESSION_PATTERN;
 import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
-import com.metamug.parser.service.ResourceTestService;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -359,13 +358,39 @@ public class Sql extends InvocableElement{
         }
     }
     
+    private final Map<String, String> escapeCharacters = new HashMap<String, String>() {
+        {
+            put("\\sle(\\s|\\b)", " <= ");
+            put("\\sge(\\s|\\b)", " >= ");
+            put("\\seq(\\s|\\b)", " = ");
+            put("\\sne(\\s|\\b)", " != ");
+            put("\\slt(\\s|\\b)", " < ");
+            put("\\sgt(\\s|\\b)", " > ");
+        }
+    };
+    
+    public String preprocessSql(String sql){
+        sql = sql.replace("\n", " ").replace("\r", " ").trim();
+        sql = sql.replaceAll("\\s{2,}", " ");
+        return replaceEscapeCharacters(sql);         
+    }
+
+    private String replaceEscapeCharacters(String sql) {
+        for (Map.Entry<String, String> e : escapeCharacters.entrySet()) {
+            if (sql.toLowerCase().matches(".*" + e.getKey() + ".*")) {
+                sql = sql.replaceAll(e.getKey(), e.getValue());
+            }
+        }
+        return sql;
+    }
+    
     protected void preProcessSqlElement() throws IOException, ResourceTestException{
         String tag = getId();
         String ref = getRef();
         QueryManagerService service = new QueryManagerService();
         String url = parent.domain + "/" + parent.appName;
         String version = Double.toString(parent.resourceVersion);
-        String sqlValue = ResourceTestService.preprocessSql(getValue());
+        String sqlValue = preprocessSql(getValue());
 
         if (ref == null) {
             service.saveQueryWithTag(url, sqlValue, parent.resourceName, version, tag, getType().value(), parent.appName);
@@ -538,7 +563,6 @@ public class Sql extends InvocableElement{
                     //append mpath variables
                     String mpathParam = mpathParams.getFirst();
                     mpathParams.removeFirst();
-                    //System.out.println("Hello");
                     String elementId = getMPathId(mpathParam);
                     if(!parent.elementIds.containsKey(elementId)){
                         throw new ResourceTestException("Could not find element with ID: "+elementId);

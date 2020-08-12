@@ -69,9 +69,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static javax.ws.rs.core.HttpHeaders.USER_AGENT;
@@ -84,32 +82,6 @@ import org.json.JSONObject;
  * @author anishhirlekar
  */
 public class ResourceTestService {
-
-    public static Map<String, String> escapeCharacters = new HashMap<String, String>() {
-        {
-            put("\\sle(\\s|\\b)", " <= ");
-            put("\\sge(\\s|\\b)", " >= ");
-            put("\\seq(\\s|\\b)", " = ");
-            put("\\sne(\\s|\\b)", " != ");
-            put("\\slt(\\s|\\b)", " < ");
-            put("\\sgt(\\s|\\b)", " > ");
-        }
-    };
-    
-    public static String preprocessSql(String sql){
-        sql = sql.replace("\n", " ").replace("\r", " ").trim();
-        sql = sql.replaceAll("\\s{2,}", " ");
-        return replaceEscapeCharacters(sql);         
-    }
-
-    private static String replaceEscapeCharacters(String sql) {
-        for (Map.Entry<String, String> e : escapeCharacters.entrySet()) {
-            if (sql.toLowerCase().matches(".*" + e.getKey() + ".*")) {
-                sql = sql.replaceAll(e.getKey(), e.getValue());
-            }
-        }
-        return sql;
-    }
 
     public static String makeRequest(String appUrl, String action, JSONObject inputJson, String appName) throws IOException, ResourceTestException {
 
@@ -147,7 +119,7 @@ public class ResourceTestService {
         
         if (null == sql.getRef()) {
             queryObj.put("ref", false);
-            String query = preprocessSql(sql.getValue());
+            String query = sql.preprocessSql(sql.getValue());
             List<String> sqlParamNames = getRequestParams(query);
             JSONArray testdata = new JSONArray();
             for (String sqlParamName : sqlParamNames) {
