@@ -12,13 +12,11 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlType;
 
-
-//@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Desc")
 public class Desc {
 
-    protected List<Tag> tags = new ArrayList<>();
-    protected List<String> desc = new ArrayList<>();
+    protected List<Tag> tags;
+    protected List<String> desc;
     
     @XmlElementRef(name="Tag",type=Tag.class)
     public List<Tag> getTags() {
@@ -27,7 +25,6 @@ public class Desc {
     
     @XmlMixed
     public List<String> getDesc() {
-        //System.out.println(desc.size());
         return desc;
     }
 
@@ -36,13 +33,17 @@ public class Desc {
         desc.add(value);
     }
 
-    public void setTag(Tag value) {
+    public void setTag(Tag tag) {
         tags = new ArrayList<>();
-        tags.add(value);
+        tags.add(tag);
     }
     
-    public void SetTag(String tagXml) throws JAXBException{
-        Tag tag = (Tag)new Tag().unmarshal(tagXml);
-        setTag(tag);
+    public void setTag(String tagXml) throws JAXBException{
+        if(!tagXml.equals("")){
+            Tag tag = (Tag)new Tag().unmarshal(tagXml);
+            setTag(tag);
+        }else{
+            tags = new ArrayList<>();
+        }
     }
 }
