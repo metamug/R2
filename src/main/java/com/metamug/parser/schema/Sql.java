@@ -28,6 +28,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.xml.sax.SAXException;
 import com.metamug.parser.service.QueryManagerService;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sql", propOrder = {"value"})
@@ -358,6 +359,7 @@ public class Sql extends InvocableElement{
         }
     }
     
+    @XmlTransient
     private final Map<String, String> escapeCharacters = new HashMap<String, String>() {
         {
             put("\\sle(\\s|\\b)", " <= ");
