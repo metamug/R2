@@ -53,7 +53,7 @@
 package com.metamug.parser.service;
 
 import com.metamug.parser.exception.ResourceTestException;
-import com.metamug.parser.util.Utils;
+import com.metamug.parser.util.Util;
 import com.metamug.parser.schema.Param;
 import com.metamug.parser.schema.Resource;
 import com.metamug.parser.schema.Sql;
@@ -90,7 +90,7 @@ public class ResourceTestService {
         con.setRequestMethod("POST");
         con.setRequestProperty("User-Agent", USER_AGENT);
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-        con.setRequestProperty("Authorization", Utils.getMasonApiRequestSignature(appName));
+        con.setRequestProperty("Authorization", Util.getMasonApiRequestSignature(appName));
         String urlParameters = "action=" + action + "&querydata=" + URLEncoder.encode(inputJson.toString(), "UTF-8");
         // Send post request
         con.setDoOutput(true);

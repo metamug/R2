@@ -18,9 +18,7 @@ import java.util.logging.Logger;
  *
  * @author anishhirlekar
  */
-public class Utils {
-
-
+public class Util {
 
     public static String getMasonApiRequestSignature(String backendName) {
         try {
@@ -46,7 +44,7 @@ public class Utils {
             // return the HashText
             return hashtext;
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
@@ -70,5 +68,4 @@ public class Utils {
 
         return stringBuilder.toString();
     }
-
 }

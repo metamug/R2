@@ -53,7 +53,7 @@
 package com.metamug.parser.service;
 
 import com.metamug.parser.exception.ResourceTestException;
-import com.metamug.parser.util.Utils;
+import com.metamug.parser.util.Util;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -107,8 +107,8 @@ public class QueryManagerService {
         con.setRequestMethod("POST");
         con.setRequestProperty("User-Agent", USER_AGENT);
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-        con.setRequestProperty("Authorization", Utils.getMasonApiRequestSignature(appName));
-        String urlParameters = Utils.mapToUrlParams(params);
+        con.setRequestProperty("Authorization", Util.getMasonApiRequestSignature(appName));
+        String urlParameters = Util.mapToUrlParams(params);
 
         // Send post request
         con.setDoOutput(true);

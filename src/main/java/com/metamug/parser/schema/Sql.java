@@ -28,7 +28,6 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.xml.sax.SAXException;
 import com.metamug.parser.service.QueryManagerService;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sql", propOrder = {"value"})
@@ -359,18 +358,6 @@ public class Sql extends InvocableElement{
         }
     }
     
-    @XmlTransient
-    private final Map<String, String> escapeCharacters = new HashMap<String, String>() {
-        {
-            put("\\sle(\\s|\\b)", " <= ");
-            put("\\sge(\\s|\\b)", " >= ");
-            put("\\seq(\\s|\\b)", " = ");
-            put("\\sne(\\s|\\b)", " != ");
-            put("\\slt(\\s|\\b)", " < ");
-            put("\\sgt(\\s|\\b)", " > ");
-        }
-    };
-    
     public String preprocessSql(String sql){
         sql = sql.replace("\n", " ").replace("\r", " ").trim();
         sql = sql.replaceAll("\\s{2,}", " ");
@@ -378,6 +365,16 @@ public class Sql extends InvocableElement{
     }
 
     private String replaceEscapeCharacters(String sql) {
+        Map<String, String> escapeCharacters = new HashMap<String, String>() {
+            {
+                put("\\sle(\\s|\\b)", " <= ");
+                put("\\sge(\\s|\\b)", " >= ");
+                put("\\seq(\\s|\\b)", " = ");
+                put("\\sne(\\s|\\b)", " != ");
+                put("\\slt(\\s|\\b)", " < ");
+                put("\\sgt(\\s|\\b)", " > ");
+            }
+        };
         for (Map.Entry<String, String> e : escapeCharacters.entrySet()) {
             if (sql.toLowerCase().matches(".*" + e.getKey() + ".*")) {
                 sql = sql.replaceAll(e.getKey(), e.getValue());

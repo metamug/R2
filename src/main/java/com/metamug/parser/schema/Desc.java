@@ -15,8 +15,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "Desc")
 public class Desc {
 
-    protected List<Tag> tags;
-    protected List<String> desc;
+    protected List<Tag> tags = new ArrayList<>();
+    protected List<String> desc = new ArrayList<>();
     
     @XmlElementRef(name="Tag",type=Tag.class)
     public List<Tag> getTags() {
