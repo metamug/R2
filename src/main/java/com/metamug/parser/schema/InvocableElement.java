@@ -56,10 +56,6 @@ package com.metamug.parser.schema;
 import com.metamug.parser.exception.ResourceTestException;
 
 import com.metamug.parser.service.ParserService;
-
-import static com.metamug.parser.service.ParserService.MPATH_EXPRESSION_PATTERN;
-import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -70,7 +66,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.xpath.XPathExpressionException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 
@@ -79,6 +74,10 @@ import org.xml.sax.SAXException;
  */
 @XmlTransient
 public abstract class InvocableElement extends XMLElement {
+    
+    public static final String BACKEND_PROP_PATTERN = "\\{\\{.*?}}";
+    public static final String REQUEST_PARAM_PATTERN = "\\$(\\w+((\\[\\d\\]){0,}\\.\\w+(\\[\\d\\]){0,}){0,})";
+    public static final String MPATH_EXPRESSION_PATTERN = "\\$\\[(\\w+?)\\](\\[\\d+\\]){0,1}(\\.\\w+(\\[\\d+\\]){0,1}){0,}";
     
     public static enum Element {
         SQL("sql"),
@@ -144,12 +143,6 @@ public abstract class InvocableElement extends XMLElement {
         OutputStreamWriter osw = new OutputStreamWriter(output);
         osw.write(data);
         osw.flush();
-    }
-
-    protected String transformVariables(String input, Map<String, InvocableElement> elementIds, boolean enclose) throws ResourceTestException {
-        input = transformRequestVariables(input, enclose);
-        input = transformMPathVariables(input, elementIds, enclose);
-        return input;
     }
 
     protected String enclose(String expression) {
@@ -247,6 +240,40 @@ public abstract class InvocableElement extends XMLElement {
             paramList.add(v);
         }
     }
+    
+    protected String transformVariables(String input, Map<String, InvocableElement> elementIds, boolean enclose) throws ResourceTestException {
+        input = transformRequestVariables(input, enclose);
+        input = transformMPathVariables(input, elementIds, enclose);
+        input = transformBackendPropertyVariables(input, enclose);
+        return input;
+    }
+    
+    //transform backend prop variables in given string
+    public String transformBackendPropertyVariables(String input, boolean enclose) {
+        String output = input;
+        Pattern pattern = Pattern.compile(BACKEND_PROP_PATTERN);
+        Matcher matcher = pattern.matcher(input);
+        while (matcher.find()) {
+            String v = input.substring(matcher.start(), matcher.end()).trim();
+          
+            StringBuilder sb = new StringBuilder();
+            if (enclose) {
+                sb.append("${");
+            }
+           
+            sb.append("initParam['");
+            sb.append(v);
+            sb.append("']");
+
+            if (enclose) {
+                sb.append("}");
+            }
+
+            output = output.replace("{{"+v+"}}", sb.toString());
+        }
+
+        return output;
+    }
 
     //transforms request variables in given string
     public String transformRequestVariables(String input, boolean enclose) {
@@ -286,62 +313,6 @@ public abstract class InvocableElement extends XMLElement {
     }
 
     public abstract String extractFromMPath(String mpathVariable, String elementId, boolean enclose);
-    /*
-    public String getJspVariableForMPath(String mpathVariable, String type, String elementId, boolean enclose){
-        String transformedVariable = mpathVariable;
-        
-        StringBuilder sb = new StringBuilder();
-        if(enclose) {
-            sb.append("${");
-        }
-        
-        if(type.equals(Sql.class.getName())) {
-            // id.rows[0].name
-            String rowIndex = "0";
-            String colName = null;
-
-            Pattern p = Pattern.compile("^\\$\\[(\\w+?)\\]\\[(\\d+?)\\]\\.(\\S+?)$");
-            Matcher m = p.matcher(mpathVariable);
-
-            if(m.find()) {
-                rowIndex = m.group(2);
-                colName = m.group(3);
-            }
-            //System.out.println("Sql");
-            //System.out.println("elementId: "+elementId);
-            transformedVariable = elementId+".rows"+"["+rowIndex+"]."+colName;
-              
-        }else if(type.equals(Xrequest.class.getName())){
-            // m:jsonPath('$.body.args.foo1',bus['id'])
-            String locator = getMPathLocator(mpathVariable);
-                
-            transformedVariable = "m:jsonPath('$"+locator+"',"+elementId+")";
-            
-        } else if(type.equals(Execute.class.getName())){
-            // bus[id].name
-            String locator = getMPathLocator(mpathVariable);
-            transformedVariable = elementId+locator;
-            
-        } else if(type.equals(Script.class.getName())){
-            // bus[id].name
-            String locator = getMPathLocator(mpathVariable);
-            transformedVariable = elementId+locator;
-            
-        } else if(type.equals(Text.class.getName())){
-            transformedVariable = elementId;
-            
-        } else if(type.equals(UPLOAD_OBJECT)){
-            transformedVariable = elementId;
-        }
-        
-        sb.append(transformedVariable);
-        
-        if(enclose){
-            sb.append("}");
-        }
-        
-        return sb.toString();
-    }*/
 
     //collects MPath variables for sql:param tags
     public void collectMPathParams(LinkedList<String> params, String sql, Map<String, InvocableElement> elementIds) throws ResourceTestException {

@@ -10,8 +10,6 @@ import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
 import static com.metamug.parser.service.ParserService.MASON_DATASOURCE;
 import static com.metamug.parser.service.ParserService.MASON_OUTPUT;
-import static com.metamug.parser.service.ParserService.MPATH_EXPRESSION_PATTERN;
-import static com.metamug.parser.service.ParserService.REQUEST_PARAM_PATTERN;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;

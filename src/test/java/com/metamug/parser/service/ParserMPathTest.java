@@ -56,6 +56,7 @@ import com.metamug.parser.exception.ResourceTestException;
 
 import com.metamug.parser.schema.Execute;
 import com.metamug.parser.schema.InvocableElement;
+import static com.metamug.parser.schema.InvocableElement.MPATH_EXPRESSION_PATTERN;
 import com.metamug.parser.schema.Sql;
 import com.metamug.parser.schema.Upload;
 import com.metamug.parser.schema.Xrequest;
@@ -108,7 +109,7 @@ public class ParserMPathTest {
     public void detectMPathInQueryRegex(){
         String testString = "SELECT $[xreq].body.args.foo1,$[xreq].body.args[2].foo AS 'foo1'";
         
-        Pattern pattern = Pattern.compile(ParserService.MPATH_EXPRESSION_PATTERN);
+        Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(testString);
         
         List<String> extracted = new ArrayList<>();
@@ -132,7 +133,7 @@ public class ParserMPathTest {
 "                    \"foo2\": $[res][0].rating\"\n" +
 "                }";
         
-        Pattern pattern = Pattern.compile(ParserService.MPATH_EXPRESSION_PATTERN);
+        Pattern pattern = Pattern.compile(MPATH_EXPRESSION_PATTERN);
         Matcher matcher = pattern.matcher(testString);
         
         List<String> extracted = new ArrayList<>();
@@ -187,6 +188,20 @@ public class ParserMPathTest {
         } catch (ResourceTestException ex) {
             Logger.getLogger(ParserMPathTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+    }
+    
+    @Test
+    public void transformBackendProps(){
+        String input = "select {{backendprop}}";
+        String expected = "{\n" +
+"                   \"foo1\": \"Hello\",\n" +
+"                   \"foo2\": ${exec.name}\"\n" +
+"                   \"foo3\": ${exec.contact.phone}\"\n" +
+"               }";
+        String output = r.transformBackendPropertyVariables(input, true);
+        System.out.println(output);
+        //Assert.assertEquals(output,expected);
         
     }
     

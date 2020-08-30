@@ -53,6 +53,7 @@
 package com.metamug.parser.service;
 
 import com.metamug.parser.exception.ResourceTestException;
+import static com.metamug.parser.schema.InvocableElement.REQUEST_PARAM_PATTERN;
 import com.metamug.parser.util.Util;
 import com.metamug.parser.schema.Param;
 import com.metamug.parser.schema.Resource;
@@ -230,7 +231,7 @@ public class ResourceTestService {
 
     protected List<String> getRequestParams(String query) {
         List<String> params = new ArrayList<>();
-        Pattern pattern = Pattern.compile(ParserService.REQUEST_PARAM_PATTERN);
+        Pattern pattern = Pattern.compile(REQUEST_PARAM_PATTERN);
         Matcher match = pattern.matcher(query);
         while (match.find()) {
             params.add(query.substring(match.start(1), match.end(1)).trim());
