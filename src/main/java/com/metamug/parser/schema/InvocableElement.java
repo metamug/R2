@@ -254,8 +254,11 @@ public abstract class InvocableElement extends XMLElement {
         Pattern pattern = Pattern.compile(BACKEND_PROP_PATTERN);
         Matcher matcher = pattern.matcher(input);
         while (matcher.find()) {
+      
             String v = input.substring(matcher.start(), matcher.end()).trim();
           
+            v = v.replace("{{", "").replace("}}", "");
+           
             StringBuilder sb = new StringBuilder();
             if (enclose) {
                 sb.append("${");
