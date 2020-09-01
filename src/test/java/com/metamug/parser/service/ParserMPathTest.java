@@ -194,7 +194,7 @@ public class ParserMPathTest {
     @Test
     public void transformBackendProps(){
         String input = "select {{backend}} from {{prop}}";
-        String expected = "select ${initParam['backend']} from ${initParam['prop']}";
+        String expected = "select ${backend} from ${prop}";
         String output = r.transformBackendPropertyVariables(input, true);
         //System.out.println(output);
         Assert.assertEquals(output,expected);

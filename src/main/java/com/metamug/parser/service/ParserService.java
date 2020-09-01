@@ -88,7 +88,7 @@ import org.xml.sax.SAXException;
  */
 public class ParserService {
 
-    public static final String MASON_DATASOURCE = "datasource";
+    public static final String DATASOURCE = "datasource";
     public static final String MASON_OUTPUT = "output";
     
     public static final String UPLOAD_OBJECT = "_upload";

@@ -8,7 +8,7 @@ package com.metamug.parser.schema;
 
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
-import static com.metamug.parser.service.ParserService.MASON_DATASOURCE;
+import static com.metamug.parser.service.ParserService.DATASOURCE;
 import static com.metamug.parser.service.ParserService.MASON_OUTPUT;
 import java.io.IOException;
 import java.util.*;
@@ -460,7 +460,7 @@ public class Sql extends InvocableElement{
             
             writer.writeAttribute("var", var);
             if(addDatasource){
-                String ds = this.datasource != null ? this.datasource : MASON_DATASOURCE;
+                String ds = this.datasource != null ? this.datasource : DATASOURCE;
                 writer.writeAttribute("dataSource", enclose(ds));
             }
             

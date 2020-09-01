@@ -264,9 +264,9 @@ public abstract class InvocableElement extends XMLElement {
                 sb.append("${");
             }
            
-            sb.append("initParam['");
+            //sb.append("initParam['");
             sb.append(v);
-            sb.append("']");
+            //sb.append("']");
 
             if (enclose) {
                 sb.append("}");

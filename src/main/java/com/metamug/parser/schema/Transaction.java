@@ -10,7 +10,7 @@ package com.metamug.parser.schema;
 
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
-import static com.metamug.parser.service.ParserService.MASON_DATASOURCE;
+import static com.metamug.parser.service.ParserService.DATASOURCE;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -129,7 +129,7 @@ public class Transaction extends InvocableElement {
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("sql:transaction");
         
-        String ds = this.datasource != null ? this.datasource : MASON_DATASOURCE;
+        String ds = this.datasource != null ? this.datasource : DATASOURCE;
         writer.writeAttribute("dataSource", enclose(ds));
         
         for(Sql s: getSql()){
