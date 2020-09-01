@@ -84,6 +84,7 @@
             <xsd:element name="Sql" type="sql" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:choice>
         <xsd:attribute name="when" type="xsd:string"/>
+        <xsd:attribute name="datasource" type="xsd:string" />
     </xsd:complexType>
 
     <xsd:element name="Resource">
@@ -213,6 +214,7 @@
             <xsd:extension base="xsd:string">
                 <xsd:attribute name="id" type="elementId" use="required"/>
                 <xsd:attribute name="type" type="sqlType" />
+                <xsd:attribute name="datasource" type="xsd:string" />
                 <xsd:attribute name="requires" type="requires"/>
                 <xsd:attribute name="ref" type="xsd:string"/>
                 <xsd:attribute name="when" type="xsd:string"/>

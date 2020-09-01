@@ -42,6 +42,8 @@ public class Sql extends InvocableElement{
     protected String ref;
     @XmlAttribute(name = "when")
     protected String when;
+    @XmlAttribute(name = "datasource")
+    protected String datasource;
     @XmlAttribute(name = "onblank")
     protected String onblank;
     @XmlAttribute(name = "onerror")
@@ -458,7 +460,8 @@ public class Sql extends InvocableElement{
             
             writer.writeAttribute("var", var);
             if(addDatasource){
-                writer.writeAttribute("dataSource", enclose(MASON_DATASOURCE));
+                String ds = this.datasource != null ? this.datasource : MASON_DATASOURCE;
+                writer.writeAttribute("dataSource", enclose(ds));
             }
             
             if (getLimit() != null || getOffset() != null) {

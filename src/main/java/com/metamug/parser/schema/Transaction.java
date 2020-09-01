@@ -57,6 +57,8 @@ public class Transaction extends InvocableElement {
     protected List<Sql> sql;
     @XmlAttribute(name = "when")
     protected String when;
+    @XmlAttribute(name = "datasource")
+    protected String datasource;
 
     /**
      * Gets the value of the sql property.
@@ -79,6 +81,7 @@ public class Transaction extends InvocableElement {
      * {@link Sql }
      * 
      * 
+     * @return list of Sql contained inside this Transaction
      */
     public List<Sql> getSql() {
         if (sql == null) {
@@ -115,7 +118,6 @@ public class Transaction extends InvocableElement {
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
         this.parent = parent;
-        //Transaction tx = (Transaction)this;
         
         if (getWhen() != null) {
             writer.writeStartElement("c:if");
@@ -126,7 +128,9 @@ public class Transaction extends InvocableElement {
         }
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("sql:transaction");
-        writer.writeAttribute("dataSource", enclose(MASON_DATASOURCE));
+        
+        String ds = this.datasource != null ? this.datasource : MASON_DATASOURCE;
+        writer.writeAttribute("dataSource", enclose(ds));
         
         for(Sql s: getSql()){
             s.print(writer, parent);
