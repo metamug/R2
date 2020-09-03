@@ -9,10 +9,8 @@ package com.metamug.parser.schema;
 import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.service.ParserService;
 import org.xml.sax.SAXException;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -133,28 +131,20 @@ public class Resource extends XMLElement {
     }
     
     public Request getRequest(Method method, String item){
-        System.out.println("item: "+item);
         Request req = new Request(method);
         req.setItem(item);
         for (Request r : getRequest()) {
             if(r.equals(req)){
-                System.out.println("Equals:");
-                System.out.println(r.getMethod());
-                
-                System.out.println(r.getItem());
                 //request exists, return it
                 return r;
             }
         }
-        System.out.println("Not Equals");
         //request does not exist, add it and return
         addRequest(req);
         return req;
     }
     
     public void addRequest(Request request) {
-        //remove if exists
-        //getRequest().remove(request);
         getRequest().add(request);
     }
 
