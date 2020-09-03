@@ -133,14 +133,20 @@ public class Resource extends XMLElement {
     }
     
     public Request getRequest(Method method, String item){
+        System.out.println("item: "+item);
         Request req = new Request(method);
         req.setItem(item);
         for (Request r : getRequest()) {
             if(r.equals(req)){
+                System.out.println("Equals:");
+                System.out.println(r.getMethod());
+                
+                System.out.println(r.getItem());
                 //request exists, return it
                 return r;
             }
         }
+        System.out.println("Not Equals");
         //request does not exist, add it and return
         addRequest(req);
         return req;
