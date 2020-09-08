@@ -101,6 +101,7 @@ public class ResourceTestService {
         }
         int statusCode = con.getResponseCode();
         if (statusCode != 200) {
+            System.out.println("Status: "+statusCode);
             throw new ResourceTestException("Something went wrong!");
         }
 
@@ -246,6 +247,7 @@ public class ResourceTestService {
         try {
             resultArray = new JSONArray(result);
         } catch (JSONException jex) {
+            System.out.println("Jex: "+jex.getMessage());
             throw new ResourceTestException("Something went wrong!");
         }
         JSONArray testResults = resultArray.getJSONObject(0).getJSONArray("test_results");
