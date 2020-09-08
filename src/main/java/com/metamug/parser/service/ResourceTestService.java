@@ -114,10 +114,11 @@ public class ResourceTestService {
         }
     }
     
-    private void addSqlData(JSONArray queries, Sql sql, List<Param> paramsWithValue){
+    private void addSqlData(JSONArray queries, Sql sql, List<Param> paramsWithValue, String datasource){
         JSONObject queryObj = new JSONObject();
+        queryObj.put("datasource", datasource);
         queryObj.put("tag_id", sql.getId());
-        
+                
         if (null == sql.getRef()) {
             queryObj.put("ref", false);
             String query = sql.preprocessSql(sql.getValue());
@@ -144,7 +145,6 @@ public class ResourceTestService {
             }
         } else {
             queryObj.put("ref", true);
-            //queryObj.put("query_id", sql.getRef());
             queryObj.put("refValue", sql.getRef());
         }
 
@@ -172,12 +172,14 @@ public class ResourceTestService {
 
             elements.forEach( object -> {
                 if(object instanceof Transaction){
-                    List<Sql> sqlList = ((Transaction)object).getSql();
+                    Transaction tx = (Transaction)object;
+                    List<Sql> sqlList = tx.getSql();
                     sqlList.forEach( sql -> {
-                        addSqlData(queries,sql,paramsWithValue);
+                        addSqlData(queries,sql,paramsWithValue,tx.getDatasource());
                     });
                 } else if (object instanceof Sql) {
-                    addSqlData(queries,(Sql)object,paramsWithValue);
+                    Sql sql = (Sql)object;
+                    addSqlData(queries,sql,paramsWithValue,sql.getDatasource());
                 }
             });
         });

@@ -114,6 +114,10 @@ public class Transaction extends InvocableElement {
     public void setWhen(String value) {
         this.when = value;
     }
+    
+    public String getDatasource(){
+        return datasource;
+    }
 
     @Override
     public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
@@ -129,7 +133,7 @@ public class Transaction extends InvocableElement {
         writer.writeCharacters(System.lineSeparator());
         writer.writeStartElement("sql:transaction");
         
-        String ds = this.datasource != null ? this.datasource : DATASOURCE;
+        String ds = getDatasource() != null ? getDatasource() : DATASOURCE;
         writer.writeAttribute("dataSource", enclose(ds));
         
         for(Sql s: getSql()){

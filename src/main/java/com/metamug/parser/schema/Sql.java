@@ -81,8 +81,13 @@ public class Sql extends InvocableElement{
         status = sql.getStatus();
         verbose = sql.getOutput();
         output = sql.getOutput();
+        datasource = sql.getDatasource();
     }
 
+    public String getDatasource(){
+        return datasource;
+    }
+    
     /**
      * Gets the value of the value property.
      *
@@ -385,16 +390,15 @@ public class Sql extends InvocableElement{
     
     protected void preProcessSqlElement() throws IOException, ResourceTestException{
         String tag = getId();
-        String ref = getRef();
         QueryManagerService service = new QueryManagerService();
         String url = parent.domain + "/" + parent.appName;
         String version = Double.toString(parent.resourceVersion);
         String sqlValue = preprocessSql(getValue());
 
-        if (ref == null) {
+        if (getRef() == null) {
             service.saveQueryWithTag(url, sqlValue, parent.resourceName, version, tag, getType().value(), parent.appName);
         } else {
-            service.saveRefWithTag(url, ref, parent.resourceName, version, tag, parent.appName);
+            service.saveRefWithTag(url, getRef(), parent.resourceName, version, tag, parent.appName);
         }
     }
     
@@ -460,7 +464,7 @@ public class Sql extends InvocableElement{
             
             writer.writeAttribute("var", var);
             if(addDatasource){
-                String ds = this.datasource != null ? this.datasource : DATASOURCE;
+                String ds = getDatasource() != null ? getDatasource() : DATASOURCE;
                 writer.writeAttribute("dataSource", enclose(ds));
             }
             
