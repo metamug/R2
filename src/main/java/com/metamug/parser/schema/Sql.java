@@ -356,7 +356,9 @@ public class Sql extends InvocableElement{
 
         preProcessSqlElement();               
 
-        printSqlTag(writer, true);
+        if (!getValue().trim().isEmpty()) {
+            printSqlTag(writer, true);
+        }
 
         if (getOnerror() != null && getOnerror().length() > 0) {
             closeValidateTag(writer);
@@ -415,85 +417,82 @@ public class Sql extends InvocableElement{
      */
     protected void printSqlTag(XMLStreamWriter writer, boolean addDatasource)
             throws XMLStreamException, IOException, SAXException, XPathExpressionException, ResourceTestException {
-        //Check for empty tag
-        if (!getValue().trim().isEmpty()) {
-            if (getWhen() != null) {
-                writer.writeStartElement("c:if");
+        if (getWhen() != null) {
+            writer.writeStartElement("c:if");
                 //String testString = getQuotedString(sql.getWhen());
                 //writer.writeAttribute("test", enclose(testString.replace("$", "mtgReq.params")));
                 
-                String test = transformVariables(getWhen(),parent.elementIds,false);
-                writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"", parent.output);
+            String test = transformVariables(getWhen(),parent.elementIds,false);
+            writeUnescapedData(" test=\""+enclose(StringEscapeUtils.unescapeXml(test))+"\"", parent.output);
                 //String v = transformVariables(((Xparam) paramOrHeaderOrBody).getValue(),elementIds);
                 //writeUnescapedData(" value=\""+StringEscapeUtils.unescapeXml(v)+"\"");
-            }
-            //Print params those are marked as 'requires' in <Sql>
-            String requiredParams = getRequires();
-            if (requiredParams != null) {
-                for (String param : requiredParams.split(",")) {
-                    writer.writeEmptyElement("m:param");
-                    writer.writeAttribute("name", param);
-                    writer.writeAttribute("type", "");
-                    writer.writeAttribute("value", enclose("mtgReq.params['" + param + "']"));
-                    writer.writeAttribute("isRequired", "true");
-                }
-            }
-
-            if (getLimit() != null || getOffset() != null) {
-                if (getType() != null && getType().value().equalsIgnoreCase("query")) {
-                    if (getLimit() != null) {
-                        writer.writeEmptyElement("m:param");
-                        writer.writeAttribute("name", String.valueOf(getLimit()));
-                        writer.writeAttribute("value", enclose("mtgReq.params['" + getLimit() + "']"));
-                        writer.writeAttribute("type", "number");
-                        writer.writeAttribute("defaultValue", "-1");
-                    }
-                } else {
-                    throw new SAXException("Offset or limit attribute can't be used for Update query");
-                }
-            }
-
-            writer.writeCharacters(System.lineSeparator());
-            if (getType() != null && getType().value().equalsIgnoreCase("update")) {
-                writer.writeStartElement("sql:update");
-            } else {
-                writer.writeStartElement("sql:query");
-            }
-
-            String var = getId();//"result";
-            
-            writer.writeAttribute("var", var);
-            if(addDatasource){
-                String ds = getDatasource() != null ? getDatasource() : DATASOURCE;
-                writer.writeAttribute("dataSource", enclose(ds));
-            }
-            
-            if (getLimit() != null || getOffset() != null) {
-                if (getType() != null && getType().value().equalsIgnoreCase("query")) {
-                    if (getLimit() != null) {
-                        writer.writeAttribute("maxRows", enclose("mtgReq.params['" + getLimit() + "']"));
-                    }
-
-                    if (getOffset() != null) {
-                        writer.writeAttribute("startRow", enclose("mtgReq.params['" + getOffset() + "']"));
-                    }
-
-                } else {
-                    throw new SAXException("Offset or limit attribute can't be used for Update query");
-                }
-            }
-            //writer.writeCharacters(System.lineSeparator());
-            String sqlParams = getSqlParams(this);
-
-            writeUnescapedCharacters(writer, sqlParams, parent.output);
-
-            writer.writeEndElement();//End of <sql:query/update>
-            //Store the sql data in map for <sql:query> or <sql:update>  
-
-            writer.writeCharacters(System.lineSeparator());
-
-            printSqlEnd(writer, var);
         }
+        //Print params those are marked as 'requires' in <Sql>
+        String requiredParams = getRequires();
+        if (requiredParams != null) {
+            for (String param : requiredParams.split(",")) {
+                writer.writeEmptyElement("m:param");
+                writer.writeAttribute("name", param);
+                writer.writeAttribute("type", "");
+                writer.writeAttribute("value", enclose("mtgReq.params['" + param + "']"));
+                writer.writeAttribute("isRequired", "true");
+            }
+        }
+
+        if (getLimit() != null || getOffset() != null) {
+            if (getType() != null && getType().value().equalsIgnoreCase("query")) {
+                if (getLimit() != null) {
+                    writer.writeEmptyElement("m:param");
+                    writer.writeAttribute("name", String.valueOf(getLimit()));
+                    writer.writeAttribute("value", enclose("mtgReq.params['" + getLimit() + "']"));
+                    writer.writeAttribute("type", "number");
+                    writer.writeAttribute("defaultValue", "-1");
+                }
+            } else {
+                throw new SAXException("Offset or limit attribute can't be used for Update query");
+            }
+        }
+
+        writer.writeCharacters(System.lineSeparator());
+        if (getType() != null && getType().value().equalsIgnoreCase("update")) {
+            writer.writeStartElement("sql:update");
+        } else {
+            writer.writeStartElement("sql:query");
+        }
+
+        String var = getId();//"result";
+            
+        writer.writeAttribute("var", var);
+        if(addDatasource){
+            String ds = getDatasource() != null ? getDatasource() : DATASOURCE;
+            writer.writeAttribute("dataSource", enclose(ds));
+        }
+            
+        if (getLimit() != null || getOffset() != null) {
+            if (getType() != null && getType().value().equalsIgnoreCase("query")) {
+                if (getLimit() != null) {
+                    writer.writeAttribute("maxRows", enclose("mtgReq.params['" + getLimit() + "']"));
+                }
+
+                if (getOffset() != null) {
+                    writer.writeAttribute("startRow", enclose("mtgReq.params['" + getOffset() + "']"));
+                }
+
+            } else {
+                throw new SAXException("Offset or limit attribute can't be used for Update query");
+            }
+        }
+        //writer.writeCharacters(System.lineSeparator());
+        String sqlParams = getSqlParams(this);
+
+        writeUnescapedCharacters(writer, sqlParams, parent.output);
+
+        writer.writeEndElement();//End of <sql:query/update>
+        //Store the sql data in map for <sql:query> or <sql:update>  
+
+        writer.writeCharacters(System.lineSeparator());
+
+        printSqlEnd(writer, var);
     }
     
     protected void printSqlEnd(XMLStreamWriter writer, String var) throws XMLStreamException {
