@@ -33,21 +33,25 @@ public class OpenAPIGenerator {
     /**
      * Generate Open API documentation from metamug Resource
      *
+     * @param backend
      * @return OpenAPI object representation of open api spec 3.0
      */
     public OpenAPI build(Backend backend) {
         
         OpenAPI api = new OpenAPI();
-        
+        System.out.println(api);
         //Set Info
         Info info = new Info();
+        System.out.println(info);
         info.version("1.0.0");
         info.setTitle(backend.getName());
+        System.out.println(backend.getName());
         info.setDescription(backend.getDescription());
-        
+        System.out.println(backend.getDescription());
         api.setInfo(info);
+        System.out.println(info);
         api.setPaths(buildPath(backend.getResourceList()));
-
+        System.out.println(backend.getResourceList());
         return api;
     }
 
