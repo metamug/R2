@@ -262,15 +262,14 @@ public class ResourceTestService {
             JSONObject testResult = testResults.getJSONObject(i);
             String tag_id = testResult.getString("tag_id");
             boolean isRef = testResult.getBoolean("ref");
-            
             if (isRef) {
                 boolean exists = testResult.getBoolean("exists");
                 if (!exists) {
                     error = true;
                     sb.append("<b>Tag ID:</b> ").append("<b class='text-info'>").append(tag_id).append("</b>");
                     sb.append("<br/>");
-                    String queryId = testResult.getString("query_id");
-                    sb.append("<b>Error:</b> ").append("Invalid reference ID <b class='text-success'>").append(queryId);
+                    String queryId = testResult.getString("queryname");
+                    sb.append("<b>Error:</b> ").append("Invalid reference query name <b class='text-success'>").append(queryId);
                     sb.append("</b><br/>");
                 }
             } else {
