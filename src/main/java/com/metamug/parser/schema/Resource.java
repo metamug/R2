@@ -134,6 +134,8 @@ public class Resource extends XMLElement {
         for (Request r : getRequest()) {
             if(r.equals(req)){
                 //request exists, return it
+                r.addAllParam(req.getParamSet());
+                
                 return r;
             }
         }

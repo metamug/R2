@@ -140,6 +140,12 @@ public class Request extends XMLElement {
         paramSet = new HashSet<>();
         paramSet.add(param);
     }
+    
+    public void addAllParam(Set<Param> ps){
+        ps.forEach((param)->{
+            paramSet.add(param);
+        });
+    }
 
     /**
      * Get the list of action items in the request block
