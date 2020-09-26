@@ -130,9 +130,7 @@ public class Resource extends XMLElement {
         return getRequest(method,null);
     }
     
-    public Request getRequest(Method method, String item){
-        Request req = new Request(method);
-        req.setItem(item);
+    public Request getRequest(Request req) {
         for (Request r : getRequest()) {
             if(r.equals(req)){
                 //request exists, return it
@@ -142,6 +140,12 @@ public class Resource extends XMLElement {
         //request does not exist, add it and return
         addRequest(req);
         return req;
+    }
+    
+    public Request getRequest(Method method, String item){
+        Request req = new Request(method);
+        req.setItem(item);
+        return getRequest(req);
     }
     
     public void addRequest(Request request) {
