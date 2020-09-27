@@ -465,7 +465,7 @@ public class Sql extends InvocableElement{
         writer.writeAttribute("var", var);
         if(addDatasource){
             String ds = getDatasource() != null ? getDatasource() : DATASOURCE;
-            writer.writeAttribute("dataSource", enclose(ds));
+            writer.writeAttribute("dataSource", ds);
         }
             
         if (getLimit() != null || getOffset() != null) {

@@ -134,7 +134,7 @@ public class Transaction extends InvocableElement {
         writer.writeStartElement("sql:transaction");
         
         String ds = getDatasource() != null ? getDatasource() : DATASOURCE;
-        writer.writeAttribute("dataSource", enclose(ds));
+        writer.writeAttribute("dataSource", ds);
         
         for(Sql s: getSql()){
             s.print(writer, parent);
