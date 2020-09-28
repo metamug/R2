@@ -138,7 +138,7 @@ public class ElementTest {
     @Test
     public void addSqlToRequestWithParams() throws FileNotFoundException, JAXBException {
         String elementXml = "<Request xmlns=\"http://xml.metamug.net/resource/1.0\" method=\"GET\">\n" +
-"    <Params name=\"name\" type=\"text\" required=\"true\" value=\"Anish\"/>\n" +
+"    <Param name=\"name\" type=\"text\" required=\"true\" value=\"Anish\"/>\n" +
 "    <Sql id=\"hnamer\" output=\"true\" ref=\"hnameid\" type=\"query\"/>\n" +
 "</Request>";
      
