@@ -7,7 +7,6 @@
 package com.metamug.parser.schema;
 
 import com.metamug.parser.exception.ResourceTestException;
-import com.metamug.parser.schema.InvocableElement.Element;
 import com.metamug.parser.service.ParserService;
 import org.xml.sax.SAXException;
 import java.io.IOException;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -148,12 +146,11 @@ public class Request extends XMLElement {
      * @param ps given param set
      */
     public void appendParams(Set<Param> ps){
-        if(paramSet == null){
-            paramSet = new HashSet<>();
+        if(paramSet != null){
+            ps.forEach((param)->{
+                paramSet.add(param);
+            });
         }
-        ps.forEach((param)->{
-            paramSet.add(param);
-        });
     }
 
     /**
@@ -187,28 +184,14 @@ public class Request extends XMLElement {
      * @param invElements
      */
     public void appendInvocableElements(List<InvocableElement> invElements){
-        getInvocableElements().addAll(invElements);
-    }
-
-    public void addInvocableElement(InvocableElement element){
-        getInvocableElements().add(element);
-    }
-    
-    public void addInvocableElement(String elementXml, String elementType) throws JAXBException {
-        Element type = Element.fromValue(elementType);
-        
-        InvocableElement element = null;
-        if(type.equals(Element.EXECUTE)){
-            element = (Execute)new Execute().unmarshal(elementXml);
-        }else if(type.equals(Element.XREQUEST)){
-            element = (Xrequest)new Xrequest().unmarshal(elementXml);
-        } if(type.equals(Element.SQL)){        
-            element = (Sql)new Sql().unmarshal(elementXml);
-        } if(type.equals(Element.SCRIPT)){
-            element = (Script)new Script().unmarshal(elementXml);
+        /*
+        invElements.forEach((e) -> {
+            System.out.println(e);
+        });
+        */
+        if(invElements != null){
+            getInvocableElements().addAll(invElements);
         }
-        
-        addInvocableElement(element);
     }
     
     public Desc getDesc() {

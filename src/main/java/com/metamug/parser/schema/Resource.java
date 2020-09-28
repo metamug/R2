@@ -127,34 +127,47 @@ public class Resource extends XMLElement {
         return this.request;
     }
     
-    public Request getRequest(Method method) {
-        return getRequest(method,null);
-    }
-    
-    public Request getRequest(Request req) {
+    /**
+     * Returns child request of this resource having same method and item attributes as given request
+     * If child request with same method and item does not exist,
+     *
+     * @param req given request
+     * @return child request of this resource
+    */
+    public Request getSimilarRequest(Request req) {
         for (Request r : getRequest()) {
             if(r.equals(req)){
                 //request exists, return it
                 return r;
             }
         }
-        //request does not exist, add it and return
-        addRequest(req);
+        //request does not exist, add a new request with given item and resource and return it
+        addRequest(req.getMethod(),req.getItem());
         return req;
     }
     
-    public Request getRequest(String xml) throws JAXBException{
-        return getRequest((Request) new Request().unmarshal(xml));
+    /**
+     * Appends elements from given request to child request of this resource with same method and item attributes
+     * 
+     * @param givenRequest
+     */
+    public void addRequestElements(Request givenRequest) {
+        Request req = getSimilarRequest(givenRequest);
+        req.appendElements(givenRequest);
     }
     
-    public Request getRequest(Method method, String item){
-        Request req = new Request(method);
-        req.setItem(item);
-        return getRequest(req);
+    public void addRequestElements(String xml) throws JAXBException{
+        addRequestElements((Request) unmarshal(xml));
     }
     
     public void addRequest(Request request) {
         getRequest().add(request);
+    }
+    
+    public void addRequest(Method method, String item) {
+        Request req = new Request(method);
+        req.setItem(item);
+        getRequest().add(req);
     }
 
     /**

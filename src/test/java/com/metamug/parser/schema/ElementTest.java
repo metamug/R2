@@ -136,63 +136,16 @@ public class ElementTest {
     }
     
     @Test
-    public void addToNewRequest() throws FileNotFoundException, JAXBException {
-        String elementXml = "<Script xmlns=\"http://xml.metamug.net/resource/1.0\" file=\"hello\" id=\"firstscript\" output=\"true\">" +
-"      </Script>";
-        String elementName = "script";
-        
-        String reqmethod = "DELETE";
-        String reqitem = "true";
-        
+    public void addSqlToRequestWithParams() throws FileNotFoundException, JAXBException {
+        String elementXml = "<Request xmlns=\"http://xml.metamug.net/resource/1.0\" method=\"GET\">\n" +
+"    <Params name=\"name\" type=\"text\" required=\"true\" value=\"Anish\"/>\n" +
+"    <Sql id=\"hnamer\" output=\"true\" ref=\"hnameid\" type=\"query\"/>\n" +
+"</Request>";
+     
         File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
         Resource resource = (Resource)new Resource().unmarshal(resourceFile);
         
-        Request request = resource.getRequest(Method.fromValue(reqmethod), String.valueOf(reqitem));
-        resource.addRequest(request);
-        
-        request.addInvocableElement(elementXml,elementName);
-        
-        //System.out.println(resource.marshal());
-    }
-    
-    @Test
-    public void addToExistingRequest() throws FileNotFoundException, JAXBException {
-        String elementXml = "<XRequest xmlns=\"http://xml.metamug.net/resource/1.0\" id=\"jsonResponse\" method=\"GET\"\n" +
-"                url=\"https://jsonplaceholder.typicode.com/todos/1\" output=\"true\">"
-                + "<Header name='Accept' value='application/json'></Header>"
-                + "<Body> { 'foo':'bar' } </Body>"
-                + "</XRequest>";
-        String elementName = "xrequest";
-        
-        String reqmethod = "GET";
-        String reqitem = null;
-        
-        File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
-        Resource resource = (Resource)new Resource().unmarshal(resourceFile);
-        
-        Request request = resource.getRequest(Method.fromValue(reqmethod), reqitem);
-        //resource.addRequest(request);
-        
-        request.addInvocableElement(elementXml,elementName);
-        
-        System.out.println(resource.marshal());
-    }
-    
-    @Test
-    public void addSqlToNewRequest() throws FileNotFoundException, JAXBException {
-        String elementXml = "<Sql xmlns=\"http://xml.metamug.net/resource/1.0\" id=\"myqry\" output=\"true\" ref=\"1\" type=\"query\"/>";
-        String elementName = "sql";
-        
-        String reqmethod = "GET";
-        String reqitem = "true";
-        
-        File resourceFile = new File(this.getClass().getResource("/script.xml").getFile());
-        Resource resource = (Resource)new Resource().unmarshal(resourceFile);
-        
-        Request request = resource.getRequest(Method.fromValue(reqmethod), reqitem);
-        //resource.addRequest(request);
-        
-        request.addInvocableElement(elementXml,elementName);
+        resource.addRequestElements(elementXml);
         
         System.out.println(resource.marshal());
     }
