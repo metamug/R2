@@ -10,7 +10,6 @@ import com.metamug.parser.exception.ResourceTestException;
 import com.metamug.parser.schema.InvocableElement.Element;
 import com.metamug.parser.service.ParserService;
 import org.xml.sax.SAXException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -143,14 +142,36 @@ public class Request extends XMLElement {
         paramSet.add(param);
     }
     
-    public void addAllParam(Set<Param> ps){
+    /**
+     * Appends given set of params to param set of this request
+     * 
+     * @param ps given param set
+     */
+    public void appendParams(Set<Param> ps){
+        if(paramSet == null){
+            paramSet = new HashSet<>();
+        }
         ps.forEach((param)->{
             paramSet.add(param);
         });
     }
 
     /**
+     * Appends all elements from given request to this request
+     *   
+     * @param request incoming request
+     *
+     */
+    public void appendElements(Request request) {
+        //append params from incoming to this request
+        appendParams(request.getParamSet());
+        //append invocable elements
+        appendInvocableElements(request.getInvocableElements());
+    }
+    
+    /**
      * Get the list of action items in the request block
+     * 
      * @return List of operations
      */
     public List getInvocableElements() {
@@ -159,12 +180,21 @@ public class Request extends XMLElement {
         }
         return invocableElements;
     }
+    
+    /**
+     * Appends given list of invocable elements to list of invocable elements of this request
+     * 
+     * @param invElements
+     */
+    public void appendInvocableElements(List<InvocableElement> invElements){
+        getInvocableElements().addAll(invElements);
+    }
 
-    public void addElement(InvocableElement element){
+    public void addInvocableElement(InvocableElement element){
         getInvocableElements().add(element);
     }
     
-    public void addElement(String elementXml, String elementType) throws JAXBException {
+    public void addInvocableElement(String elementXml, String elementType) throws JAXBException {
         Element type = Element.fromValue(elementType);
         
         InvocableElement element = null;
@@ -178,7 +208,7 @@ public class Request extends XMLElement {
             element = (Script)new Script().unmarshal(elementXml);
         }
         
-        addElement(element);
+        addInvocableElement(element);
     }
     
     public Desc getDesc() {

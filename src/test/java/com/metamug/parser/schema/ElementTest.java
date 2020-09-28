@@ -150,7 +150,7 @@ public class ElementTest {
         Request request = resource.getRequest(Method.fromValue(reqmethod), String.valueOf(reqitem));
         resource.addRequest(request);
         
-        request.addElement(elementXml,elementName);
+        request.addInvocableElement(elementXml,elementName);
         
         //System.out.println(resource.marshal());
     }
@@ -173,7 +173,7 @@ public class ElementTest {
         Request request = resource.getRequest(Method.fromValue(reqmethod), reqitem);
         //resource.addRequest(request);
         
-        request.addElement(elementXml,elementName);
+        request.addInvocableElement(elementXml,elementName);
         
         System.out.println(resource.marshal());
     }
@@ -192,7 +192,7 @@ public class ElementTest {
         Request request = resource.getRequest(Method.fromValue(reqmethod), reqitem);
         //resource.addRequest(request);
         
-        request.addElement(elementXml,elementName);
+        request.addInvocableElement(elementXml,elementName);
         
         System.out.println(resource.marshal());
     }

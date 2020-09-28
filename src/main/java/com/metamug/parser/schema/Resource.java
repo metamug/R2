@@ -14,6 +14,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -134,14 +135,16 @@ public class Resource extends XMLElement {
         for (Request r : getRequest()) {
             if(r.equals(req)){
                 //request exists, return it
-                r.addAllParam(req.getParamSet());
-                
                 return r;
             }
         }
         //request does not exist, add it and return
         addRequest(req);
         return req;
+    }
+    
+    public Request getRequest(String xml) throws JAXBException{
+        return getRequest((Request) new Request().unmarshal(xml));
     }
     
     public Request getRequest(Method method, String item){
