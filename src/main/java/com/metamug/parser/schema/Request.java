@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -43,6 +44,7 @@ import javax.xml.xpath.XPathExpressionException;
     "script",
     "text"
 })
+@XmlRootElement(name = "Request")
 public class Request extends XMLElement {
 
     @XmlElement(name = "Desc")
