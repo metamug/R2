@@ -101,7 +101,7 @@ public class ResourceTestService {
         }
         int statusCode = con.getResponseCode();
         if (statusCode != 200) {
-            throw new ResourceTestException("Something went wrong!");
+            throw new ResourceTestException("Something went wrong: "+statusCode);
         }
 
         try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
