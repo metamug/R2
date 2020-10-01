@@ -166,7 +166,7 @@ public class Resource extends XMLElement {
     public Request addRequest(Method method, String item) {
         Request req = new Request(method);
         req.setItem(item);
-        getRequest().add(req);
+        addRequest(req);
         return req;
     }
 
