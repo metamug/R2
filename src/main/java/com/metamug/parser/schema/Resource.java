@@ -142,8 +142,7 @@ public class Resource extends XMLElement {
             }
         }
         //request does not exist, add a new request with given item and resource and return it
-        addRequest(req.getMethod(),req.getItem());
-        return req;
+        return addRequest(req.getMethod(),req.getItem());
     }
     
     /**
@@ -164,10 +163,11 @@ public class Resource extends XMLElement {
         getRequest().add(request);
     }
     
-    public void addRequest(Method method, String item) {
+    public Request addRequest(Method method, String item) {
         Request req = new Request(method);
         req.setItem(item);
         getRequest().add(req);
+        return req;
     }
 
     /**
