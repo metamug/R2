@@ -252,7 +252,8 @@ public class Xrequest extends InvocableElement {
             writer.writeAttribute("className", getClassName());
         }
 
-        writeUnescapedData(" url=\"" + StringEscapeUtils.unescapeXml(getUrl()) + "\"", parent.output);
+        String url = transformVariables(getUrl(),parent.elementIds,true);        
+        writeUnescapedData(" url=\"" + StringEscapeUtils.unescapeXml(url) + "\"", parent.output);
 
         for (XrequestChild child : getXRequestChildren()) {
             child.print(writer, parent);
