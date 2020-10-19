@@ -270,9 +270,9 @@ public class Xrequest extends InvocableElement {
     @Override
     public Set<String> getRequestParameters() {
         Set<String> p1 = new HashSet<>();
-        for (XrequestChild child : getXRequestChildren()) {
+        getXRequestChildren().forEach((child) -> {
             p1.addAll(child.getRequestParameters());
-        }
+        });
         return p1;
     }
 
@@ -284,8 +284,10 @@ public class Xrequest extends InvocableElement {
         // m:jsonPath('$.body.args.foo1',bus['id'])
         String locator = getMPathLocator(mpathVariable);
 
-        String transformedVariable = "m:jsonPath('$" + locator + "'," + elementId + ")";
+        //String transformedVariable = "m:jsonPath('$" + locator + "'," + elementId + ")";
 
+        String transformedVariable = elementId+locator;
+        
         sb.append(transformedVariable);
 
         return enclose ? enclose(sb.toString()) : sb.toString();
