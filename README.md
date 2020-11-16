@@ -1,4 +1,16 @@
-# openapi-rest-model
+# R2
+R2 is an open source REST Resource server. It comes with a ready to use REST API. Developer can add/edit resources to the server
+using R2 Console
+
+## R2 Console
+R2 console comes with following features.
+
+* REST Resource Management 
+* Hot deployment for REST Resources
+* Resource editor with autocomplete and query testing (using open source project)
+* Open API documentation generated.
+
+## openapi-rest-model
 
 ![](https://travis-ci.org/metamug/openapi-rest-model.svg?branch=open-api) [![codecov](https://codecov.io/gh/metamug/openapi-rest-model/branch/open-api/graph/badge.svg)](https://codecov.io/gh/metamug/openapi-rest-model)
 
