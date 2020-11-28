@@ -1,0 +1,339 @@
+// Licensed to the Apache Software Foundation (ASF) under one or more
+// contributor license agreements.  See the NOTICE file distributed with
+// this work for additional information regarding copyright ownership.
+// The ASF licenses this file to You under the Apache License, Version 2.0
+// (the "License"); you may not use this file except in compliance with
+// the License.  You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// ============================================================================
+// catalina.policy - Security Policy Permissions for Tomcat 7
+//
+// This file contains a default set of security policies to be enforced (by the
+// JVM) when Catalina is executed with the "-security" option.  In addition
+// to the permissions granted here, the following additional permissions are
+// granted to each web application:
+//
+// * Read access to the web application's document root directory
+// * Read, write and delete access to the web application's working directory
+// ============================================================================
+
+
+// ========== SYSTEM CODE PERMISSIONS =========================================
+
+
+// These permissions apply to javac
+grant codeBase "file:${java.home}/lib/-" {
+        permission java.security.AllPermission;
+};
+
+// These permissions apply to all shared system extensions
+grant codeBase "file:${java.home}/jre/lib/ext/-" {
+        permission java.security.AllPermission;
+};
+
+// These permissions apply to javac when ${java.home] points at $JAVA_HOME/jre
+grant codeBase "file:${java.home}/../lib/-" {
+        permission java.security.AllPermission;
+};
+
+// These permissions apply to all shared system extensions when
+// ${java.home} points at $JAVA_HOME/jre
+grant codeBase "file:${java.home}/lib/ext/-" {
+        permission java.security.AllPermission;
+};
+
+
+// ========== CATALINA CODE PERMISSIONS =======================================
+
+
+// These permissions apply to the daemon code
+grant codeBase "file:${catalina.home}/bin/commons-daemon.jar" {
+        permission java.security.AllPermission;
+};
+
+// These permissions apply to the logging API
+// Note: If tomcat-juli.jar is in ${catalina.base} and not in ${catalina.home},
+// update this section accordingly.
+//  grant codeBase "file:${catalina.home}/bin/tomcat-juli.jar" {..}
+grant codeBase "file:${catalina.base}/bin/tomcat-juli.jar" {
+       permission java.security.AllPermission;
+	   permission java.io.FilePermission  "${java.home}${file.separator}lib${file.separator}logging.properties", "read";
+
+        permission java.io.FilePermission "${catalina.base}${file.separator}conf${file.separator}logging.properties", "read";
+        permission java.io.FilePermission "${catalina.base}${file.separator}logs", "read, write";
+        permission java.io.FilePermission "${catalina.base}${file.separator}logs${file.separator}*", "read, write";
+
+        permission java.lang.RuntimePermission "shutdownHooks";
+        permission java.lang.RuntimePermission "getClassLoader";
+        permission java.lang.RuntimePermission "setContextClassLoader";
+
+        permission java.util.logging.LoggingPermission "control";
+
+        permission java.util.PropertyPermission "java.util.logging.config.class", "read";
+        permission java.util.PropertyPermission "java.util.logging.config.file", "read";
+		permission java.util.PropertyPermission "org.apache.juli.AsyncLoggerPollInterval", "read";
+        permission java.util.PropertyPermission "org.apache.juli.AsyncMaxRecordCount", "read";
+        permission java.util.PropertyPermission "org.apache.juli.AsyncOverflowDropType", "read";
+        permission java.util.PropertyPermission "org.apache.juli.ClassLoaderLogManager.debug", "read";
+        permission java.util.PropertyPermission "catalina.base", "read";
+};
+
+// These permissions apply to the server startup code
+grant codeBase "file:${catalina.home}/bin/bootstrap.jar" {
+        permission java.security.AllPermission;
+};
+
+// These permissions apply to the servlet API classes
+// and those that are shared across all class loaders
+// located in the "lib" directory
+grant codeBase "file:${catalina.home}/lib/-" {
+        permission java.security.AllPermission;
+};
+
+
+// If using a per instance lib directory, i.e. ${catalina.base}/lib,
+// then the following permission will need to be uncommented
+// grant codeBase "file:${catalina.base}/lib/-" {
+//         permission java.security.AllPermission;
+// };
+// ========== GENERATED BACKEND PERMISSIONS =============================
+// Permission for upload files
+grant codeBase "file:${catalina.base}/uploads/-"{
+		// Writing uploaded files
+		permission java.io.FilePermission "*", "read, write"; 
+};
+// These permissions apply to all generated backends
+grant codeBase "file:${catalina.base}/api/-"{
+
+		permission java.io.FilePermission "${java.home}${file.separator}lib${file.separator}logging.properties", "read";
+        permission java.io.FilePermission "${catalina.base}${file.separator}conf${file.separator}db.properties", "read";
+        permission java.io.FilePermission "${catalina.base}${file.separator}logs", "read, write";
+        permission java.io.FilePermission "${catalina.base}${file.separator}logs${file.separator}*", "read, write"; 
+		permission java.io.FilePermission "${catalina.base}${file.separator}uploads${file.separator}-", "read, write"; 
+		permission java.io.FilePermission "${java.io.tmpdir}${file.separator}-", "read, write, delete";
+		
+		//Permission for Object-Return feature
+		permission java.lang.RuntimePermission "createClassLoader";
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.coyote.http11";
+		permission java.util.PropertyPermission "eclipselink.indirection.javase7-indirect-collections", "read";
+		permission java.util.PropertyPermission "eclipselink.cache.record-stack-on-lock", "read";
+		permission java.util.PropertyPermission "eclipselink.register.run.mbean", "read";
+		permission java.util.PropertyPermission "eclipselink.register.dev.mbean", "read";
+		permission java.util.PropertyPermission "eclipselink.logging.level", "read";
+		permission java.util.PropertyPermission "java.specification.version", "read";
+		permission java.util.PropertyPermission "javax.xml.bind.context.factory", "write";
+		permission java.util.PropertyPermission "com.sun.xml.ws.spi.db.BindingContextFactory", "write";
+        
+		// OS Specific properties to allow read access
+		permission java.util.PropertyPermission "os.name", "read";
+		permission java.util.PropertyPermission "os.version", "read";
+		permission java.util.PropertyPermission "java.util.logging.config.class", "read";		
+	
+		//Permission to make http request
+		permission java.util.PropertyPermission "http.agent", "write";
+		
+		//Permission for file upload
+		permission java.lang.RuntimePermission "getClassLoader";
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.util.http";
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.util.http.fileupload";
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.util.http.fileupload.disk";
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.util.http.fileupload.servlet";
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.util.http.fileupload.util";
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.util.http.fileupload.util.mime";
+		permission java.lang.RuntimePermission "accessClassInPackage.sun.security.ssl";
+		
+		//Permission for dhcp database pooling
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.jdbc.pool";
+		
+		//Permission for S3 upload via UploadListener
+		permission java.lang.RuntimePermission "accessClassInPackage.com.sun.activation.registries";
+		permission java.util.PropertyPermission "com.amazonaws.sdk.enableDefaultMetrics", "read";
+		permission java.util.PropertyPermission "user.language", "read";
+		permission java.util.PropertyPermission "user.region", "read";
+		permission java.util.PropertyPermission "com.amazonaws.sdk.disableCertChecking", "read";
+		permission java.util.PropertyPermission "com.amazonaws.sdk.enableRuntimeProfiling", "read";
+		permission java.util.PropertyPermission "com.amazonaws.regions.RegionUtils.fileOverride", "read";
+		permission java.util.PropertyPermission "com.amazonaws.sdk.s3.defaultStreamBufferSize", "read";
+		permission java.util.PropertyPermission "com.amazonaws.services.s3.enforceV4", "read";
+		permission java.util.PropertyPermission "com.amazonaws.services.s3.enableV4", "read";
+		permission java.util.PropertyPermission "com.amazonaws.sdk.enableInRegionOptimizedMode", "read";
+		permission java.util.PropertyPermission "com.amazonaws.services.s3.disableImplicitGlobalClients", "read";
+		permission java.util.PropertyPermission "com.amazonaws.services.s3.disablePutObjectMD5Validation", "read";
+		permission java.util.PropertyPermission "https.proxyHost", "read";
+		permission javax.net.ssl.SSLPermission "setDefaultSSLContext";
+		permission java.net.SocketPermission "*", "connect,resolve";
+		
+        
+		permission java.util.PropertyPermission "java.util.logging.config.class", "read";
+		permission java.util.PropertyPermission "java.version", "read";
+        permission java.util.PropertyPermission "java.util.logging.config.file", "read";
+		permission java.util.PropertyPermission "org.apache.juli.AsyncLoggerPollInterval", "read";
+        permission java.util.PropertyPermission "org.apache.juli.AsyncMaxRecordCount", "read";
+        permission java.util.PropertyPermission "org.apache.juli.AsyncOverflowDropType", "read";
+        permission java.util.PropertyPermission "catalina.base", "read";
+		permission java.util.PropertyPermission "file.encoding", "read";
+		permission java.util.PropertyPermission "java.version", "read";
+		permission java.util.PropertyPermission "java.vm.name", "read";
+		permission java.util.PropertyPermission "java.vm.version", "read";
+		permission java.util.PropertyPermission "java.io.tmpdir", "read";
+		
+		//This permission to access MBeanServer
+		permission javax.management.MBeanServerPermission "findMBeanServer";
+		permission javax.management.MBeanPermission "com.amazonaws.metrics.MetricAdmin#-[com.amazonaws.management:type=AwsSdkMetrics]", "registerMBean";
+		permission javax.management.MBeanPermission "com.amazonaws.metrics.MetricAdmin#-[com.amazonaws.management:type=AwsSdkMetrics/*]", "registerMBean";
+		//permission javax.management.MBeanPermission "com.amazonaws.metrics.MetricAdmin#-[com.amazonaws.management:type=AwsSdkMetrics/2]", "registerMBean";
+		permission javax.management.MBeanTrustPermission "register";
+		// This permission to access declared members
+		permission java.lang.RuntimePermission "accessDeclaredMembers";
+		
+		//This permission to access apache filter
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.filters";
+		permission java.net.NetPermission "getProxySelector";
+		
+		//This permission to access commons-lang3 class
+		permission java.lang.RuntimePermission "accessClassInPackage.sun.text";
+		
+		// Applications using the legacy WebSocket implementation need to be able to access this package
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.websocket";
+
+		// Applications using the JSR-356 WebSocket implementation need to be able to access these packages
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.websocket";
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.websocket.server";
+		
+		// The permission granted to your JDBC driver
+		permission java.net.SocketPermission "127.0.0.1:3306", "resolve, connect, accept";
+		permission java.net.SocketPermission "welnus.chma78bhx2ly.ap-south-1.rds.amazonaws.com:5432", "resolve, connect, accept";
+		permission java.util.PropertyPermission "org.postgresql.forceBinary", "read";
+		
+		
+		//Permission for CATALINA CORE
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.core";
+		
+		//Permission for JASPER
+		permission java.lang.RuntimePermission "accessClassInPackage.org.apache.jasper.util";
+
+						
+		//Suppressing grant checks
+		permission java.lang.reflect.ReflectPermission "suppressAccessChecks"; 
+		
+};
+
+
+// ========== CONSOLE PERMISSIONS =======================================
+
+// These permissions apply only to console webapp
+grant codeBase "file:${catalina.base}/api/console/-" {
+      permission java.security.AllPermission;
+};
+
+
+// ========== WEB APPLICATION PERMISSIONS =====================================
+
+
+// These permissions are granted by default to all web applications
+// In addition, a web application will be given a read FilePermission
+// and JndiPermission for all files and directories in its document root.
+grant {	
+    // Required for JNDI lookup of named JDBC DataSource's and
+    // javamail named MimePart DataSource used to send mail
+    permission java.util.PropertyPermission "java.home", "read";
+	permission java.util.PropertyPermission "java.version", "read";
+    permission java.util.PropertyPermission "java.naming.*", "read";
+    permission java.util.PropertyPermission "javax.sql.*", "read";
+	
+	// OS Specific properties to allow read access
+    permission java.util.PropertyPermission "os.name", "read";
+    permission java.util.PropertyPermission "os.version", "read";
+    permission java.util.PropertyPermission "os.arch", "read";
+    permission java.util.PropertyPermission "file.separator", "read";
+    permission java.util.PropertyPermission "path.separator", "read";
+    permission java.util.PropertyPermission "line.separator", "read";
+	permission java.util.PropertyPermission "file.encoding",  "read";
+
+    // Required for OpenJMX
+    //permission java.lang.RuntimePermission "getAttribute";
+
+    // Allow read of JAXP compliant XML parser debug
+    permission java.util.PropertyPermission "jaxp.debug", "read";
+
+    // All JSPs need to be able to read this package
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat";
+	
+	// Needed for Apache ReverseProxy
+	permission java.util.PropertyPermission "socksProxyHost", "read";
+
+    // Precompiled JSPs need access to these packages.
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.jasper.el";
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.jasper.runtime";
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.jasper.runtime.*";
+
+    // Precompiled JSPs need access to these system properties.
+    permission java.util.PropertyPermission "org.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER", "read";
+    permission java.util.PropertyPermission "org.apache.el.parser.COERCE_TO_ZERO", "read";
+
+    // The cookie code needs these.
+    permission java.util.PropertyPermission "org.apache.catalina.STRICT_SERVLET_COMPLIANCE", "read";
+    permission java.util.PropertyPermission "org.apache.tomcat.util.http.ServerCookie.STRICT_NAMING", "read";
+    permission java.util.PropertyPermission "org.apache.tomcat.util.http.ServerCookie.FWD_SLASH_IS_SEPARATOR", "read";
+
+    // Applications using Comet need to be able to access this package
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.comet";
+
+    // Applications using the legacy WebSocket implementation need to be able to access this package
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.websocket";
+
+    // Applications using the JSR-356 WebSocket implementation need to be able to access these packages
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.websocket";
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.websocket.server";
+};
+/ You can assign additional permissions to particular web applications by
+// adding additional "grant" entries here, based on the code base for that
+// application, /WEB-INF/classes/, or /WEB-INF/lib/ jar files.
+//
+// Different permissions can be granted to JSP pages, classes loaded from
+// the /WEB-INF/classes/ directory, all jar files in the /WEB-INF/lib/
+// directory, or even to individual jar files in the /WEB-INF/lib/ directory.
+//
+// For instance, assume that the standard "examples" application
+// included a JDBC driver that needed to establish a network connection to the
+// corresponding database and used the scrape taglib to get the weather from
+// the NOAA web server.  You might create a "grant" entries like this:
+//
+// The permissions granted to the context root directory apply to JSP pages.
+// grant codeBase "file:${catalina.base}/webapps/examples/-" {
+//      permission java.net.SocketPermission "dbhost.mycompany.com:5432", "connect";
+//      permission java.net.SocketPermission "*.noaa.gov:80", "connect";
+// };
+//
+// The permissions granted to the context WEB-INF/classes directory
+// grant codeBase "file:${catalina.base}/webapps/examples/WEB-INF/classes/-" {
+// };
+//
+// The permission granted to your JDBC driver
+// grant codeBase "jar:file:${catalina.base}/webapps/examples/WEB-INF/lib/driver.jar!/-" {
+//      permission java.net.SocketPermission "dbhost.mycompany.com:5432", "connect";
+// };
+// The permission granted to the scrape taglib
+// grant codeBase "jar:file:${catalina.base}/webapps/examples/WEB-INF/lib/scrape.jar!/-" {
+//      permission java.net.SocketPermission "*.noaa.gov:80", "connect";
+// };
+
+// To grant permissions for web applications using packed WAR files, use the
+// Tomcat specific WAR url scheme.
+//
+// The permissions granted to the entire web application
+// grant codeBase "war:file:${catalina.base}/webapps/examples.war*/-" {
+// };
+//
+// The permissions granted to a specific JAR
+// grant codeBase "war:file:${catalina.base}/webapps/examples.war*/WEB-INF/lib/foo.jar" {
+// };
+
