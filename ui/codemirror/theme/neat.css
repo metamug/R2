@@ -1,0 +1,22 @@
+.cm-s-neat span.cm-comment { color: #a86; }
+.cm-s-neat span.cm-keyword { line-height: 1em; font-weight: bold; color: blue; }
+.cm-s-neat span.cm-string { color: orange; }
+.cm-s-neat span.cm-sqlkeyword { color: blue; }
+.cm-s-neat span.cm-builtin { line-height: 1em; font-weight: bold; color: #077; }
+.cm-s-neat span.cm-special { line-height: 1em; font-weight: bold; color: #0aa; }
+.cm-s-neat span.cm-variable { color: black; }
+.cm-s-neat span.cm-number, .cm-s-neat span.cm-atom { color: #3a3; }
+.cm-s-neat span.cm-meta { color: slategrey; }
+.cm-s-neat span.cm-link { color: #3a3; }
+.cm-s-neat span.cm-word { color: red; }
+.cm-s-neat span.cm-tag { color: cadetblue; }
+.cm-s-neat span.cm-bracket { color: cadetblue; }
+.cm-s-neat span.cm-attribute { color: firebrick; }
+.cm-s-neat span.cm-error { color: red; }
+.cm-s-neat span.cm-mqlparam { color: tomato; }
+.cm-s-neat span.cm-sqlstring { color: limegreen; }
+.cm-s-neat span.cm-sqlpin { color: mediumvioletred; }
+.cm-s-neat span.cm-sqlnumber { color: orangered; }
+
+.cm-s-neat .CodeMirror-activeline-background { background: #e8f2ff; }
+.cm-s-neat .CodeMirror-matchingbracket { outline:1px solid grey; color:black !important; }
