@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/console">
+    <JarScanner scanManifest="false"/>
+    <WatchedResource>/WEB-INF/lib/</WatchedResource>
+    <Resource auth="Container"
+    closeMethod="close"
+    connectionTimeout="300000"
+    dataSource.implicitCachingEnabled="true"
+    driverClassName="org.hsqldb.jdbc.JDBCDriver"
+    factory="com.zaxxer.hikari.HikariJNDIFactory"
+    idleTimeout="120000"
+    jdbcUrl="jdbc:hsqldb:file://${catalina.base}/databases/mtg_console/mtg_console;check_props=true;sql.enforce_names=true;hsqldb.sqllog=0;sql.char_literal=true;sql.pad_space=false;sql.ignore_case=true;sql.syntax_mys=true;hsqldb.lob_compressed=true;hsqldb.log_size=5;shutdown=true;"
+    maxLifetime="1800000"
+    maximumPoolSize="2"
+    minimumIdle="1"
+    name="jdbc/mason"
+    password=""
+    poolName="consolePool"
+    type="javax.sql.DataSource"
+    username="root"/>
+</Context>
