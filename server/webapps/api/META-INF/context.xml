@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/mtg-api-framework" cookies="false" privileged="true" reloadable="true">
+    <Resource auth="Container"
+			  name="jdbc/mason"
+			  factory="com.zaxxer.hikari.HikariJNDIFactory"
+			  type="javax.sql.DataSource"
+              minimumIdle="1"
+			  maximumPoolSize="2"
+			  connectionTimeout="13000"
+			  idleTimeout="120000"
+			  maxLifetime="1800000"
+			  dataSource.implicitCachingEnabled="true"
+			  closeMethod="close"
+              driverClassName="your_db_driver"
+			  jdbcUrl="your_db_link"
+			  username="your_name"
+              password="your_pass"
+			  poolName="your_pool_name"/>
+	<JarScanner scanManifest="false"/>
+    <WatchedResource>/WEB-INF/lib/</WatchedResource>
+</Context>
