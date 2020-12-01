@@ -2,6 +2,8 @@
 R2 is an open source REST Resource server. It comes with a ready to use REST API. Developer can add/edit resources to the server
 using R2 Console
 
+![Metamug Resource Screen](https://metamug.com/img/res-screen.png)
+
 ## R2 Console
 R2 console comes with following features.
 
@@ -10,10 +12,19 @@ R2 console comes with following features.
 * Resource editor with autocomplete and query testing (using open source project)
 * Open API documentation generated.
 
+## API Integration with XRequest
+
+API Integration with third party services like AWS, Facebook, Twitter, Firebase, PayPal, Mailchimp and more.
+Communication with multiple services in a single request using API Gateways.
+
+![Metamug API Integration](https://metamug.com/img/api-integration1.svg)
+
+
 ## openapi-rest-model
 
 ![](https://travis-ci.org/metamug/openapi-rest-model.svg?branch=open-api) [![codecov](https://codecov.io/gh/metamug/openapi-rest-model/branch/open-api/graph/badge.svg)](https://codecov.io/gh/metamug/openapi-rest-model)
 
+![Metamug Open API Integration](https://metamug.com/img/openapi-specification.svg)
 
 
 Convert [OpenAPI](https://www.openapis.org/) Spec file into [Resource Resource XML](https://metamug.com/docs/resource-file) files.
