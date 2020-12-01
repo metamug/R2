@@ -29,7 +29,7 @@ const searchStyle = {
   position: 'relative',
   display: 'flex',
   width: '370px',
-  marginLeft: '740px',
+  marginLeft: '710px',
 }
 
 const initialData = []

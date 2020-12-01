@@ -58,7 +58,9 @@ function Resources(props) {
     <Container className="pt-4">
       <Row>
         <Col lg="9">
-          <span style={{ fontSize: '32px' }}>Resources </span>
+          <span style={{ fontSize: '32px', marginLeft: '12px' }}>
+            Resources{' '}
+          </span>
           {/* Tooltip Overlay */}
         </Col>
         <Col lg="3">
@@ -71,7 +73,7 @@ function Resources(props) {
             <button
               type="button"
               onClick={openResourceEditor}
-              className="btn btn-lg btn-success"
+              className="btn btn-lg btn-success mr-3"
               title="Create New Resource"
             >
               Create Resource <i className="fa fa-file-code-o fa-fw" />

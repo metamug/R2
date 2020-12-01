@@ -22,10 +22,10 @@ function NavigationBar() {
             height="24px"
           />
         </Navbar.Brand>
-        <Nav className="ml-auto" style={{ marginRight: '50px' }}>
+        <Nav>
           <NavDropdown
             alignRight
-            style={{ marginRight: '20px' }}
+            style={{ marginRight: '5px' }}
             title={
               <b className="text-white">
                 <i
