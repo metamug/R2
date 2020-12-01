@@ -50,49 +50,60 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.console.daos;
 
+import com.ibatis.common.jdbc.ScriptRunner;
 import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import java.beans.PropertyVetoException;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anish
  */
-public class ConsoleContextListener implements ServletContextListener {
+public class UpdaterDAO {
 
-    @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
-    }
-    
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
+    public String getCurrentVersion() {
+        try (Connection con = ConnectionProvider.getInstance().getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT UPDATE_VERSION FROM CONSOLE_UPDATE WHERE UPDATE_COMPLETE=1 ORDER BY UPDATE_ID DESC LIMIT 1");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getString("UPDATE_VERSION");
+            }
+        } catch (IOException | SQLException | PropertyVetoException | ClassNotFoundException ex) {
+            Logger.getLogger(UpdaterDAO.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        return "";
     }
 
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+    public void addVersion(String version, String description, String data) {
+        try (Connection con = ConnectionProvider.getInstance().getConnection()) {
+            PreparedStatement ps = con.prepareStatement("INSERT INTO CONSOLE_UPDATE (UPDATE_DATA,UPDATE_VERSION,UPDATE_DESCRIPTION,UPDATE_INSTALLED_ON,UPDATED_ON) VALUES (?,?,?,null,now())");
+            ps.setString(1, data);
+            ps.setString(2, version);
+            ps.setString(3, description);
+            ps.executeUpdate();
+        } catch (IOException | SQLException | PropertyVetoException | ClassNotFoundException ex) {
+            Logger.getLogger(UpdaterDAO.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+    }
+
+    public void runUpgradeScript(String dbType, String dbUrl, String dbUser, String dbPass, String scriptFile) throws FileNotFoundException, IOException, SQLException, PropertyVetoException, ClassNotFoundException {
+        try (Connection con = ConnectionProvider.getInstance().getConnection(dbType, dbUrl, dbUser, dbPass)) {
+            InputStream scriptFileInputStream = new FileInputStream(scriptFile);
+            ScriptRunner sr = new ScriptRunner(con, false, false);
+            sr.runScript(new BufferedReader(new InputStreamReader(scriptFileInputStream)));
+        }
     }
 }

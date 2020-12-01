@@ -50,49 +50,53 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.console.services.file;
 
-import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.metamug.console.daos.file.ScriptFileDAO;
+import java.beans.PropertyVetoException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import org.json.JSONObject;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anishhirlekar
  */
-public class ConsoleContextListener implements ServletContextListener {
+public class ScriptFileService {
 
-    @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
-    }
-    
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
+    private final ScriptFileDAO dao;
+
+    public ScriptFileService() {
+        this.dao = new ScriptFileDAO();
     }
 
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+    public boolean addFile(int userId, String appName, String fileName, String fileSize) throws IOException, SQLException, PropertyVetoException, ClassNotFoundException {
+        return dao.addFile(userId, appName, fileName, fileSize);
+    }
+
+    public JSONObject downloadFile(int userId, String appName, String fileName) throws IOException, SQLException, PropertyVetoException, ClassNotFoundException {
+        return dao.downloadFile(userId, appName, fileName);
+    }
+
+    public JSONObject listing(int userId, String appName) throws IOException, SQLException, PropertyVetoException, ClassNotFoundException {
+        return dao.listing(userId, appName);
+    }
+
+    public JSONObject deleteFile(String fileName, String appName, int userId) throws IOException, SQLException, PropertyVetoException, ClassNotFoundException {
+        return dao.deleteFile(fileName, appName, userId);
+    }
+
+    public static String readableFileSize(long size) {
+        if (size <= 0) {
+            return "0";
+        }
+        final String[] units = new String[]{"B", "kB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    public void updateFile(String appName, String fileName, int userId) throws SQLException, IOException, PropertyVetoException, ClassNotFoundException {
+        dao.updateFile(appName, fileName, userId);
     }
 }

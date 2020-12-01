@@ -50,49 +50,71 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.console.test;
 
-import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.metamug.console.services.ActivationService;
+import com.metamug.console.util.Util;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import junit.framework.Assert;
+import org.json.JSONObject;
+import org.junit.Test;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anishhirlekar
  */
-public class ConsoleContextListener implements ServletContextListener {
-
-    @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
+public class ActivationServiceTest {
+    
+    @Test
+    public void verifyServer() {
+        String licenseKey = "MMYM-7HDSZ-YIU5S-N2BK5-5HODN-P2X7I";
+        String serverId = Util.getMacAddr();
+        
+        ActivationService a = new ActivationService();
+        String res = testActivate(licenseKey, serverId);
+        System.out.println(res);
+        JSONObject respJson = new JSONObject(res);
+        JSONObject activation = respJson.getJSONObject("activation").getJSONObject("activation");
+        
+        boolean result = a.verifyResponse(activation, activation.getJSONObject("message").getString("publicKey"));
+        Assert.assertEquals(true,result);
     }
     
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
-    }
+    public String testActivate(String licenseKey, String serverId){
+        try {
+            URL obj = new URL("https://api.metamug.com/website/v1.0/activate?days=30&serverId="+
+                    URLEncoder.encode(serverId, "UTF-8")+"&licenseKey="+licenseKey);
+            System.out.println(obj);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            //add reuqest header
+            con.setRequestMethod("GET");
+            //con.setRequestProperty("Authorization", getMasonApiRequestSignature(appName));
 
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+            //String urlParameters = "licenseKey=" + licenseKey + "&serverId=" + serverId;
+            // Send post request
+            con.setDoOutput(true);
+            
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                String inputLine;
+                StringBuilder responseBuffer = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    responseBuffer.append(inputLine);
+                }
+                return responseBuffer.toString();
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        } catch (IOException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        return null;
     }
 }

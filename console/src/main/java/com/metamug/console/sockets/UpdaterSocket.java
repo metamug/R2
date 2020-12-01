@@ -50,49 +50,117 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.console.sockets;
 
-import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.metamug.console.services.AuthService;
+import com.metamug.console.services.UpdaterService;
+import com.metamug.console.util.FileUtil;
+import static com.metamug.console.util.Util.APP_BASE;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
+import org.json.JSONObject;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anishhirlekar
  */
-public class ConsoleContextListener implements ServletContextListener {
+@ServerEndpoint("/update")
+public class UpdaterSocket {
 
-    @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
-    }
-    
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
+    private static final List<Session> SESSIONS = new ArrayList<Session>();
+    private UpdaterService updateService = new UpdaterService();
+
+    //initiate status as NOT_STARTED
+    public static String updaterStatus = UpdateStatus.NOT_STARTED;
+
+    public static int downloadedParts = 0;
+    public static int totalParts = 0;
+
+    @OnOpen
+    public void onOpen(Session session) {
+        SESSIONS.add(session);
+        //System.out.println("New session opened: "+session.getId());
     }
 
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+    @OnClose
+    public void onClose(Session session) {
+        SESSIONS.remove(session);
+        //System.out.println("session closed: "+session.getId());
+        if(updaterStatus.equals(UpdateStatus.ERROR)){
+            FileUtil.recursiveDelete(APP_BASE + File.separator + "update");
+        }
+    }
+
+    @OnMessage
+    public void onMessage(String message, final Session session) throws IOException {
+        final String msg = message.trim();
+        JSONObject mesg = new JSONObject(msg);
+        if (mesg.has("accesstoken")) {
+            String token = mesg.getString("accesstoken");
+
+            AuthService authService = new AuthService();
+            int userId = authService.authorizeToken(token);
+            if (userId != 0) {
+                //Start updater thread only if update is NOT_STARTED already
+                if (updaterStatus.equals(UpdateStatus.NOT_STARTED)) {
+                    new Thread(() -> {
+                        //Logger.getLogger(UpdaterSocket.class.getName()).log(Level.INFO,"message: "+message);
+                        String currentVersion = updateService.getCurrentVersion();
+                        try {
+                            updateService.downloadUpdate(msg, currentVersion, SESSIONS, token);
+                        } catch (IOException ex) {
+                            Logger.getLogger(UpdaterSocket.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+                            updaterStatus = UpdateStatus.ERROR;
+                            closeAllSessionsWithError(UpdateStatus.ERROR);               
+                        }
+                    }).start();
+                }
+
+                JSONObject obj = new JSONObject();
+                obj.put("status", updaterStatus);
+                obj.put("total", totalParts);
+                obj.put("done", downloadedParts);
+
+                session.getBasicRemote().sendText(obj.toString());
+            } else {
+                closeSessionWithError(session, UpdateStatus.UNAUTHORIZED);
+            }
+        } else {
+            closeSessionWithError(session, UpdateStatus.UNAUTHORIZED);
+        }
+    }
+
+    private void closeAllSessionsWithError(String errorStatus) {
+        SESSIONS.forEach((s) -> {
+            try {
+                closeSessionWithError(s, errorStatus);
+            } catch (IOException ex) {
+                Logger.getLogger(UpdaterSocket.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            }
+        });
+    }
+
+    private void closeSessionWithError(Session session, String errorStatus) throws IOException {
+        JSONObject obj = new JSONObject();
+        obj.put("status", errorStatus);
+        session.getBasicRemote().sendText(obj.toString());
+        session.close();
+    }
+
+    public class UpdateStatus {
+        public final static String ERROR = "error";
+        public final static String NOT_STARTED = "not_started";
+        public final static String IN_PROGRESS = "in_progress";
+        public final static String DONE = "done";
+        public final static String UNAUTHORIZED = "unauthorized";
     }
 }

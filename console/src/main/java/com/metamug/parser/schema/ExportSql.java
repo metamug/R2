@@ -50,49 +50,140 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.parser.schema;
 
-import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.metamug.parser.exception.ResourceTestException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.xml.sax.SAXException;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPathExpressionException;
+import java.io.IOException;
+import java.util.LinkedList;
+
+import static com.metamug.parser.ExportParserService.KEY_QUERIES;
+import com.metamug.parser.service.ParserService;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anishhirlekar
  */
-public class ConsoleContextListener implements ServletContextListener {
-
-    @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
+public class ExportSql extends Sql{
+    
+    protected JSONObject queryMap;
+    
+    public ExportSql(){
+    }
+    
+    public ExportSql(Sql sql, JSONObject qmap){
+        super(sql);
+        queryMap = qmap;
     }
     
     @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
+    protected void preProcessSqlElement() {
+        if (getType() == null && queryMap != null) {
+            JSONArray queries = queryMap.getJSONArray("queries");
+            for (int i = 0; i < queries.length(); i++) {
+                JSONObject queryData = queries.getJSONObject(i);
+                
+                if (getId().equals(queryData.getString("tag"))) {
+                    SqlType queryType = SqlType.fromValue(queryData.getString("type"));
+                    setType(queryType);
+                }
+            }
+        }
+    }
+    
+    @Override
+    public void print(XMLStreamWriter writer, ParserService parent) throws XMLStreamException, IOException, XPathExpressionException, ResourceTestException, SAXException {
+        this.parent = parent;
+ 
+        parent.elementIds.put(getId(), this);
+
+        if (getOnerror() != null && getOnerror().length() > 0) {
+            startValidateTag(writer, getOnerror());
+        }
+
+        preProcessSqlElement();               
+
+        printSqlTag(writer, true);
+        
+        if (getOnerror() != null && getOnerror().length() > 0) {
+            closeValidateTag(writer);
+        }
+    }
+    
+    @Override
+    protected String getSqlParams(Sql sql) throws ResourceTestException {
+        String query;
+        String queryName;
+        if (sql.getRef() != null) {
+            //get query for ref tag for collecting params
+            JSONObject queryObj = getQueryForTag(sql.getId());
+            queryName = queryObj.getString("query_name");
+            query = queryObj.getString("query");
+        } else {
+            query = sql.getValue();
+            queryName = getQueryName(query);
+        }
+        LinkedList<String> params = new LinkedList<>();
+        LinkedList<String> mpathParams = new LinkedList<>();
+        
+        collectVariables(params, mpathParams, query, parent.elementIds);
+
+        StringBuilder builder = new StringBuilder();
+
+        if (queryName != null) {
+            builder.append("${masonQuery['");
+            //put queryId in masonQuery expression
+            builder.append(queryName);
+            builder.append("']}");
+        } else {
+            builder.append(query);
+        }
+
+        builder.append("\n");
+        
+        String queryWithPlaceholder = query.replaceAll(REQUEST_PARAM_PATTERN, "?\\$R ");
+        queryWithPlaceholder = queryWithPlaceholder.replaceAll(MPATH_EXPRESSION_PATTERN, "?\\$M ");
+
+        appendSqlParams(builder, params, mpathParams, queryWithPlaceholder);
+
+        return builder.toString();
+    }
+    
+    private String getQueryName(String qry) {
+        qry = preprocessSql(qry);
+        JSONArray queries = queryMap.getJSONArray(KEY_QUERIES);
+        for (int i = 0; i < queries.length(); i++) {
+            JSONObject queryObject = queries.getJSONObject(i);
+
+            if (queryObject.getString("query").equalsIgnoreCase(qry)) {
+                return queryObject.getString("query_name");
+            }
+        }
+
+        return null;
     }
 
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+    private JSONObject getQueryForTag(String tag) {
+        JSONArray queries = queryMap.getJSONArray(KEY_QUERIES);
+
+        for (int i = 0; i < queries.length(); i++) {
+            JSONObject queryObject = queries.getJSONObject(i);
+
+            String qTag = queryObject.getString("tag");
+            String qResName = queryObject.getString("resource_name");
+            String qResVer = queryObject.getString("resource_version");
+
+            if (qTag.equals(tag) && qResName.equals(parent.resourceName) && qResVer.equals(Double.toString(parent.resourceVersion))) {
+                return queryObject;
+            }
+        }
+
+        return null;
     }
 }

@@ -50,49 +50,132 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.console.processables;
 
-import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.metamug.console.services.AuthService;
+import com.metamug.console.services.file.ResourceFileService;
+import com.metamug.console.util.Util;
+import com.metamug.entity.Response;
+import com.metamug.exec.RequestProcessable;
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.schema.Resource;
+import com.metamug.parser.service.ParserService;
+import org.apache.commons.io.FilenameUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xml.sax.SAXException;
+
+import javax.sql.DataSource;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import java.beans.PropertyVetoException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anishhirlekar
  */
-public class ConsoleContextListener implements ServletContextListener {
+public class AddToResourceProcessor implements RequestProcessable {
 
-    @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
-    }
-    
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
-    }
-
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+    @Override           
+    public Response process(com.metamug.entity.Request req, DataSource ds, Map<String, Object> args) throws Exception {
+        Map<String,String> params = req.getParams();
+        String appName = params.get("appid");
+        String resname = params.get("resname");
+        String version = params.get("resversion");
+        
+        String object=null;
+        if(params.containsKey("object")){
+            object = params.get("object");
+        }        
+        String type = params.get("objectType");        
+       
+        String token = (String)args.get("Authorization");
+        String serverName = (String)args.get("ServerName");
+        String scheme = (String)args.get("Scheme");
+        int port = (int)args.get("Port");
+       
+        AuthService authService = new AuthService();
+        int userId = authService.authorizeToken(token);
+        
+        // fetch resource xml
+        File resourceFile = new File(Util.XML_RESOURCE_FOLDER + File.separator + appName + File.separator
+                + version + File.separator + resname + ".xml");
+        Resource resource = new Resource();
+        resource.setVersion(Double.parseDouble(version.replace("v", "")));
+      
+        boolean updateResource = false;
+        if(resourceFile.exists()){
+            //Unmarshal resource file
+            updateResource = true;
+            resource = (Resource)resource.unmarshal(resourceFile);
+        }
+        //make changes to resource object
+        switch (type) {
+            case "role":
+                resource.setAuth(object);
+                break;
+            case "tag":
+                resource.getDesc().setTag(params.get("element_xml"));
+                break;
+            case "invocable_element":
+                resource.addRequestElements(params.get("element_xml"));             
+                
+                break;
+            default:
+                break;
+        }
+        
+        if(!updateResource){
+            //create version directory if resource with new version is given
+            resourceFile.getParentFile().mkdirs();
+        }
+        //marshal and save XML to file
+        try (FileWriter writer = new FileWriter(resourceFile.getPath());
+            BufferedWriter bw = new BufferedWriter(writer)) {
+            bw.write(resource.marshal());
+        } catch (IOException e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+        ParserService parseService = new ParserService();
+        StringBuilder domain = new StringBuilder();
+        domain.append(scheme).append("://").append(serverName);
+        if (port != 80 && port != 443) {
+            domain.append(":").append(port);
+        }
+        JSONObject payload = new JSONObject();
+        try{
+            JSONObject jsonObj = parseService.transform(resourceFile, appName, updateResource, Util.OUTPUT_FOLDER, domain.toString());
+            //Insert its entry to database and Update the resources number
+            ResourceFileService fileService = new ResourceFileService();
+            fileService.addFile(userId, appName, FilenameUtils.removeExtension(resourceFile.getName()), 
+                        ResourceFileService.getFileSize(resourceFile.length()),jsonObj, null);
+            //Save it on Server
+            if (!new File(Util.XML_RESOURCE_FOLDER + File.separator + appName + File.separator + "v" + jsonObj.get("version")).exists()) {
+                Files.createDirectories(Paths.get(Util.XML_RESOURCE_FOLDER + File.separator + appName + File.separator + "v" + jsonObj.get("version")));
+            }      
+            payload.put("resource", jsonObj);
+            Response resp = new Response(payload);
+            return resp;
+        }catch(ResourceTestException | PropertyVetoException | IOException | ClassNotFoundException |
+                URISyntaxException | SQLException | JAXBException | XMLStreamException | 
+                    TransformerException | XPathExpressionException | JSONException | SAXException e){
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            payload.put("exception", e.getMessage());
+            Response resp = new Response(payload);
+            return resp;
+        }
     }
 }

@@ -50,49 +50,52 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.parser;
 
-import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.metamug.parser.exception.ResourceTestException;
+import com.metamug.parser.schema.ExportResource;
+import com.metamug.parser.schema.Resource;
+import com.metamug.parser.service.ParserService;
+import org.json.JSONObject;
+import org.xml.sax.SAXException;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import java.beans.PropertyVetoException;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anishhirlekar
  */
-public class ConsoleContextListener implements ServletContextListener {
+public class ExportParserService extends ParserService {
 
-    @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
+    public static final String KEY_QUERIES = "queries";
+    public static final String KEY_TAGS = "tags";
+    
+    protected JSONObject queryMap;
+    
+    public JSONObject getQueryMap(){
+        return queryMap;
     }
     
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
+    public JSONObject transform(File uploadedFile, String appName, boolean updateResource, String outputFolder,
+            String domain, JSONObject queryMap) throws SAXException, XMLStreamException,
+            XPathExpressionException, ParserConfigurationException, TransformerException, JAXBException,
+            URISyntaxException, IOException, SQLException, ClassNotFoundException, PropertyVetoException, ResourceTestException {
+         this.queryMap = queryMap;
+         return transform(uploadedFile, appName, updateResource, outputFolder, domain);
     }
 
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+    @Override
+    protected ExportResource getParsedResource(File uploadedFile) throws XPathExpressionException, TransformerException, IOException, JAXBException, URISyntaxException, SAXException, XMLStreamException {
+        Resource resource = new ResourceParser(OUTPUT_FOLDER, appName, uploadedFile).parse();
+        return new ExportResource(resource);
     }
 }

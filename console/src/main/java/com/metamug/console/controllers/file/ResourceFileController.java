@@ -55,6 +55,7 @@ package com.metamug.console.controllers.file;
 
 import com.metamug.console.exception.MetamugError;
 import com.metamug.console.exception.MetamugException;
+import com.metamug.console.services.UserService;
 import com.metamug.console.services.file.ResourceFileService;
 import com.metamug.console.util.Util;
 import com.metamug.parser.exception.ResourceTestException;
@@ -63,6 +64,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
+
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -103,11 +105,13 @@ public class ResourceFileController extends HttpServlet {
         JSONObject obj = new JSONObject();
         ResourceFileService fileService = new ResourceFileService();
         int userId = (Integer) request.getAttribute("userId");
-        //UserService userService = new UserService();
+        UserService userService = new UserService();
         try (ServletOutputStream out = response.getOutputStream()) {
             try {
                 String pathInfo = request.getPathInfo();
                 String appName = (String) request.getAttribute("appName") == null ? "" : (String) request.getAttribute("appName");
+                userService.validateUserApp(userId, appName);
+                if (userService.isVerifiedUser(userId)) {
                     if (pathInfo != null) {
                         String[] path = pathInfo.split("/");
                         String version = path[1] == null ? "" : path[1].toLowerCase();
@@ -134,11 +138,27 @@ public class ResourceFileController extends HttpServlet {
                         obj = fileService.listing(userId, appName.trim());
                         out.print(obj.toString());
                     }
+                } else {
+                    throw new MetamugException(MetamugError.UNVERIFIED_USER);
+                }
             } catch (IOException | SQLException | PropertyVetoException | ClassNotFoundException ex) {
                 obj.put("message", "File can't be uploaded.");
                 obj.put("status", 422);
                 response.setStatus(422);
                 Logger.getLogger(ResourceFileController.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+                out.print(obj.toString());
+            } catch (MetamugException ex) {
+                obj.put("message", ex.getMessage());
+                switch (ex.getError()) {
+                    case UNAUTHORIZED_USER:
+                        obj.put("status", 401);
+                        response.setStatus(401);
+                        break;
+                    case UNVERIFIED_USER:
+                        obj.put("status", 403);
+                        response.setStatus(403);
+                        break;
+                }
                 out.print(obj.toString());
             }
             out.flush();
@@ -160,6 +180,7 @@ public class ResourceFileController extends HttpServlet {
         JSONObject obj = new JSONObject();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        UserService userService = new UserService();
         ResourceFileService fileService = new ResourceFileService();
         ParserService parseService = new ParserService();
         String fileName = request.getParameter("filename") == null ? "" : request.getParameter("filename");
@@ -184,7 +205,9 @@ public class ResourceFileController extends HttpServlet {
                 
                 int userId = (Integer) request.getAttribute("userId");
                 
+                userService.validateUserApp(userId, appName);
                 fileName = FilenameUtils.removeExtension(uploadedFile.getName());
+                if (userService.isVerifiedUser(userId)) {
                     if (fileName.matches("[a-zA-Z]+")) {
                         //Parse the file
                         boolean isOldFile = false;
@@ -214,6 +237,10 @@ public class ResourceFileController extends HttpServlet {
                     } else {
                         throw new MetamugException(MetamugError.RESOURCE_FILE_NAME_INVALID);
                     }
+                } else {
+                    throw new MetamugException(MetamugError.UNVERIFIED_USER);
+
+                }
             } catch (ResourceTestException ex) {
                 response.setStatus(422);
                 Logger.getLogger(ResourceFileController.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
@@ -309,6 +336,7 @@ public class ResourceFileController extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         JSONObject obj = new JSONObject();
+        UserService userService = new UserService();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         String pathInfo = request.getPathInfo();
@@ -321,6 +349,8 @@ public class ResourceFileController extends HttpServlet {
                 String fileName = path[2];
                         
                 try {
+                    userService.validateUserApp(userId, appName);
+                    if (userService.isVerifiedUser(userId)) {
                         if (fileName.matches("[a-zA-Z]+")) {
                             File resourceFile = new File(fileName + ".xml");
                             
@@ -357,7 +387,9 @@ public class ResourceFileController extends HttpServlet {
                         } else {
                             throw new MetamugException(MetamugError.RESOURCE_FILE_NAME_INVALID);
                         }
-                    
+                    } else {
+                        throw new MetamugException(MetamugError.UNVERIFIED_USER);
+                    }
                 } catch (ResourceTestException ex) {
                     response.setStatus(422);
                     obj.put("message", ex.getMessage());
@@ -432,6 +464,7 @@ public class ResourceFileController extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        UserService userService = new UserService();
         ResourceFileService fileService = new ResourceFileService();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -444,10 +477,18 @@ public class ResourceFileController extends HttpServlet {
                 String type = (String)request.getParameter("type");
                 //System.out.println("TYPE: "+type);
                 int userId = (Integer) request.getAttribute("userId");
+                userService.validateUserApp(userId, appName);
                 String version = path[1].toLowerCase();
                 String fileName = path[2];
+
+                /*StringBuilder domain = new StringBuilder();
+                domain.append(request.getScheme()).append("://").append(request.getServerName());
+                if (request.getServerPort() != 80 && request.getServerPort() != 443) {
+                    domain.append(":").append(request.getServerPort());
+                }*/
                 String domain = (String)request.getAttribute("domain");
         
+                if (userService.isVerifiedUser(userId)) {
                     JSONObject result = fileService.deleteFile(version, fileName, appName, userId, domain.toString(), type);
                     if (result == null) {
                         obj.put("message", "File has been deleted");
@@ -458,6 +499,9 @@ public class ResourceFileController extends HttpServlet {
                         obj.put("message", result.get("message"));
                         obj.put("status", 422);
                     }
+                } else {
+                    throw new MetamugException(MetamugError.UNVERIFIED_USER);
+                }
             } else {
                 obj.put("message", "Preconditions Failed.Check Requests parameter list");
                 obj.put("status", 412);
@@ -468,6 +512,17 @@ public class ResourceFileController extends HttpServlet {
             obj.put("status", 412);
             response.setStatus(412);
             Logger.getLogger(ResourceFileController.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        } catch (MetamugException ex) {
+            switch (ex.getError()) {
+                case UNAUTHORIZED_USER:
+                    obj.put("status", 401);
+                    response.setStatus(401);
+                    break;
+                case UNVERIFIED_USER:
+                    obj.put("status", 403);
+                    response.setStatus(403);
+                    break;
+            }
         }
         try (ServletOutputStream out = response.getOutputStream()) {
             out.print(obj.toString());

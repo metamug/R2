@@ -50,49 +50,111 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.console.controllers;
 
-import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.metamug.console.backend.Loader;
+import com.metamug.console.exception.MetamugException;
+import com.metamug.parser.exception.ResourceTestException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import org.json.JSONObject;
+import org.xml.sax.SAXException;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anishhirlekar
  */
-public class ConsoleContextListener implements ServletContextListener {
-
+@WebServlet(name = "DeploymentController", urlPatterns = {"/deployment"})
+public class DeploymentController extends HttpServlet {
     @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        String appName = request.getParameter("backend");
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        JSONObject obj = new JSONObject();
+        
+        obj.put("backend", appName);
+        
+        String domain = (String)request.getAttribute("domain");
+        try {
+            obj.put("deployed", new Loader(appName).isBackendLoaded(domain));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DeploymentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+             
+        try (ServletOutputStream out = response.getOutputStream()) {
+            out.print(obj.toString());
+            out.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(DeploymentController.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
     }
     
     @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        String appName = request.getParameter("backend");    
+        String domain = (String)request.getAttribute("domain");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        JSONObject obj = new JSONObject();
+        
+        boolean deployed = false;
+        try {
+            new Loader(appName).load(domain);
+            deployed = true;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DeploymentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MetamugException | TransformerException | SAXException | ParserConfigurationException | IOException | ResourceTestException ex) {
+            Logger.getLogger(DeploymentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        obj.put("deployed", deployed);
+             
+        try (ServletOutputStream out = response.getOutputStream()) {
+            out.print(obj.toString());
+            out.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(DeploymentController.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
     }
-
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+    
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        String appName = request.getParameter("backend");        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        JSONObject obj = new JSONObject();
+        
+        boolean deployed = true;
+        try {
+            new Loader(appName).unload();
+            deployed = false;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DeploymentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DeploymentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        obj.put("deployed", deployed);
+             
+        try (ServletOutputStream out = response.getOutputStream()) {
+            out.print(obj.toString());
+            out.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(DeploymentController.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
     }
 }

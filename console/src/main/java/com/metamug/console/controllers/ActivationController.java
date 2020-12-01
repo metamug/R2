@@ -50,49 +50,147 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.console.controllers;
 
-import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.metamug.console.services.ActivationService;
+import com.metamug.console.util.Util;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anishhirlekar
  */
-public class ConsoleContextListener implements ServletContextListener {
-
+@WebServlet(name = "ActivationController", urlPatterns = {"/activation"})
+public class ActivationController extends HttpServlet {
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
-    }
-    
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ActivationService a = new ActivationService();
+        JSONObject activation = a.getActivation();
+        
+        JSONObject obj = new JSONObject();
+        
+        if(activation == null) {
+            response.setStatus(401);
+            obj.put("status", "not_activated");
+        }else{
+        
+            JSONObject message = activation.getJSONObject("message");
+
+            String serverId = Util.getMacAddr();
+            message.put("serverId", serverId);
+
+            String publicKey = message.getString("publicKey");
+
+            boolean verified = a.verifyResponse(activation, publicKey);
+
+            if(verified){
+                Timestamp ts = new Timestamp(System.currentTimeMillis());
+                long currentTime = ts.getTime();
+                long expiryTime = message.getLong("expires");
+
+                if(expiryTime > currentTime) {
+                    obj.put("status", "active");
+                }else{
+                    response.setStatus(401);
+                    obj.put("status", "expired");
+                    //System.out.println("verified");
+                }
+            }else {
+                //System.out.println("not verified");
+                response.setStatus(403);
+                obj.put("status", "license_invalid");
+            }
+        }
+        
+        try (ServletOutputStream out = response.getOutputStream()) {
+            out.print(obj.toString());
+            out.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+        }
     }
 
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String licenseKey = request.getParameter("licenseKey");
+        String serverId = Util.getMacAddr();
+        
+        ActivationService a = new ActivationService();
+        String res = a.activate(licenseKey, serverId);
+        //System.out.println(res);
+        
+        JSONObject obj = new JSONObject();
+        if(null!=res){
+            try{
+                JSONObject respJson = new JSONObject(res);
+                
+                if(respJson.get("activation").equals(false)){
+                    response.setStatus(400);
+                    obj.put("activation", false);
+                } else {
+                
+                    JSONObject activation = respJson.getJSONObject("activation").getJSONObject("activation");
+
+                    a.addActivation(activation);
+
+                    obj.put("activation", true);
+                }
+            }catch(JSONException j){
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, j.getLocalizedMessage(), j);
+                response.setStatus(500);
+                obj.put("activation", false);
+            }
+        }else{
+            response.setStatus(400);
+            obj.put("activation", false);
+        }
+        
+        try (ServletOutputStream out = response.getOutputStream()) {
+            out.print(obj.toString());
+            out.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+        }
     }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
 }

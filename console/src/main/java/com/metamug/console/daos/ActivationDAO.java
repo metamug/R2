@@ -50,49 +50,59 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.console.daos;
 
 import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import java.beans.PropertyVetoException;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONObject;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anishhirlekar
  */
-public class ConsoleContextListener implements ServletContextListener {
-
-    @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
+public class ActivationDAO {
+    public JSONObject getActivation() {
+        JSONObject activation = new JSONObject();
+        JSONObject msg = new JSONObject();
+        try (Connection con = ConnectionProvider.getInstance().getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT ACTIVATION_KEY,LICENSE_KEY,EXPIRES,PUBLIC_KEY FROM CONSOLE_ACTIVATION");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {    
+                activation.put("activationKey", rs.getString("ACTIVATION_KEY"));
+                msg.put("licenseKey", rs.getString("LICENSE_KEY"));
+                msg.put("expires", rs.getLong("EXPIRES"));
+                msg.put("publicKey", rs.getString("PUBLIC_KEY"));
+            }
+        } catch (IOException | SQLException | PropertyVetoException | ClassNotFoundException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        if(msg.isEmpty()){
+            return null;
+        }
+        activation.put("message", msg);
+        return activation;
     }
     
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
-    }
-
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+    public void addActivation(JSONObject activation) {
+        String activationKey = activation.getString("activationKey");
+        JSONObject message = activation.getJSONObject("message");        
+        
+        try (Connection con = ConnectionProvider.getInstance().getConnection()) {
+            PreparedStatement ps = con.prepareStatement("INSERT INTO CONSOLE_ACTIVATION (ACTIVATION_KEY,LICENSE_KEY,EXPIRES,PUBLIC_KEY) VALUES (?,?,?,?)");
+            ps.setString(1, activationKey);
+            ps.setString(2, message.getString("licenseKey"));
+            ps.setDouble(3, message.getDouble("expires"));
+            ps.setString(4, message.getString("publicKey"));
+            ps.executeUpdate();
+        } catch (IOException | SQLException | PropertyVetoException | ClassNotFoundException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
     }
 }

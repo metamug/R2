@@ -50,49 +50,108 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.console.services;
 
-import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.metamug.console.daos.ActivationDAO;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONObject;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anishhirlekar
  */
-public class ConsoleContextListener implements ServletContextListener {
+public class ActivationService {
+    
+    public static final String ACTIVATE_URL = "https://metamug.com/purchase/activate.php";
+    public static final String ALGO = "SHA256withECDSA";
+    
+    private final ActivationDAO dao;
 
-    @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
+    public ActivationService() {
+        this.dao = new ActivationDAO();
     }
     
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
+    public JSONObject getActivation() {
+        return dao.getActivation();
     }
+    
+    public void addActivation(JSONObject activation){
+        dao.addActivation(activation);
+    }
+    
+    public String activate(String licenseKey, String serverId){
+        try {
+            URL obj = new URL(ACTIVATE_URL);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            //add reuqest header
+            con.setRequestMethod("POST");
+            //con.setRequestProperty("Authorization", getMasonApiRequestSignature(appName));
 
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+            String urlParameters = "licenseKey=" + licenseKey + "&serverId=" + URLEncoder.encode(serverId,"UTF-8");
+            // Send post request
+            con.setDoOutput(true);
+            try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
+                wr.writeBytes(urlParameters);
+                wr.flush();
+            }
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                String inputLine;
+                StringBuilder responseBuffer = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    responseBuffer.append(inputLine);
+                }
+                return responseBuffer.toString();
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        } catch (IOException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        return null;
+    }
+    
+    public boolean verifyResponse(JSONObject obj, String publicKey) {
+        try {
+            Signature ecdsaVerify = Signature.getInstance(ALGO);
+            EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKey));
+            
+            KeyFactory keyFactory = KeyFactory.getInstance("EC");
+            PublicKey pbKey = keyFactory.generatePublic(publicKeySpec);
+            
+            ecdsaVerify.initVerify(pbKey);
+            //ecdsaVerify.update(obj.getJSONObject("message").toString().getBytes("UTF-8"));
+            JSONObject jsonMsg = obj.getJSONObject("message");
+            //System.out.println("jsonMsg: "+jsonMsg.toString());
+            String message = jsonMsg.getString("serverId") + jsonMsg.getString("licenseKey") + jsonMsg.getLong("expires") + jsonMsg.getString("publicKey");
+            //System.out.println("message: "+message);
+            ecdsaVerify.update(message.getBytes("UTF-8"));
+
+            boolean result = ecdsaVerify.verify(Base64.getDecoder().decode(obj.getString("activationKey"))); //activationKey is signature
+
+            return result;
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | UnsupportedEncodingException | SignatureException ex) {
+            Logger.getLogger(ActivationService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }

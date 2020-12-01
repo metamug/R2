@@ -50,49 +50,139 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.console.services;
 
-import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.metamug.console.daos.AppDAO;
+import com.metamug.console.exception.MetamugException;
+import com.metamug.console.util.Util;
+import com.metamug.parser.exception.ResourceTestException;
+import java.beans.PropertyVetoException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import org.apache.commons.io.FilenameUtils;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import org.xml.sax.SAXException;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anishhirlekar
  */
-public class ConsoleContextListener implements ServletContextListener {
-
-    @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
+public class ImportService {
+    public void importApp(int userId, File appZip, String domain) throws IOException, ZipException, URISyntaxException, 
+                SQLException, PropertyVetoException, ClassNotFoundException, TransformerException, 
+                    TransformerConfigurationException, SAXException, ParserConfigurationException, MetamugException, FileNotFoundException, XMLStreamException, XPathExpressionException, JAXBException, FileAlreadyExistsException, ResourceTestException{
+        File importFolder = new File(Util.IMPORT_FOLDER);
+        if(!importFolder.exists()){
+            Files.createDirectories(Paths.get(Util.IMPORT_FOLDER));
+        }
+        //extract imported zip into import folder
+        ZipFile zipFile = new ZipFile(appZip);
+        zipFile.extractAll(Util.IMPORT_FOLDER + File.separator);
+        
+        String fileName = FilenameUtils.removeExtension(appZip.getName());
+        
+        JSONObject config = getAppConfig(Util.IMPORT_FOLDER + File.separator + fileName + File.separator + "config.json");
+        
+        String appName = config.getString("app_name");
+        String version = config.getString("app_version");
+        JSONObject dbDetails = config.getJSONObject("app_db_details");
+        /*String dbType = dbDetails.getString("type");
+        String dbUrl = dbDetails.getString("url");
+        String dbUser = dbDetails.getString("user");
+        String dbPw = dbDetails.getString("pw");
+        */
+        Map<String,String> dbD = new HashMap<>();
+        dbD.put("dbType", dbDetails.getString("type"));
+        dbD.put("dbUrl", dbDetails.getString("url"));
+        dbD.put("dbUser", dbDetails.getString("user"));
+        dbD.put("dbPass", dbDetails.getString("pw"));
+        
+        AppService appService = new AppService();
+        //test db connection
+        boolean conn = AppDAO.testConnection(dbD);
+        if(!conn){
+            throw new SQLException("Could not connect to the database!");
+        }
+        
+        //create console tables in database
+        appService.createDefaultTablesForExternal(dbD);
+        
+        //extract app-template
+        ZipFile appTemplate = new ZipFile(ImportService.class.getClassLoader().getResource("app-template-v0.1.zip").toURI().getPath());
+        appTemplate.extractAll(Util.TEMP_FOLDER + File.separator + appName);
+        
+        //set db details inside context.xml
+        //appService.setExternalDataSource(appName, dbD);
+        //deploy app folder from temp to webapps folder
+        //appService.deploy(appName, TEMP_FOLDER);
+        
+        int responseCode;
+        do{
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ImportService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            responseCode = makeAppRequest(appName,domain);
+        }while(responseCode != 200);
+        //add app data to db
+        appService.createApp(userId, appName, dbDetails.getString("url"), appName, version, domain);
+        
+        File resFolder = new File(Util.IMPORT_FOLDER + File.separator + fileName + File.separator + "src" + File.separator + "res");
+        //ParserUtil.parseResources(appName,domain,userId,resFolder,false);
     }
     
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
+    /*
+    private void copyResources(String appName) throws IOException{
+        File resSrc = new File(Util.IMPORT_FOLDER + File.separator + appName + File.separator + "src" + 
+                File.separator + "res");
+        
+        File resourcesDir = new File(Util.RESOURCE_FOLDER + File.separator + appName);
+        if(!resourcesDir.exists()){
+            Files.createDirectories(Paths.get(resourcesDir.getPath()));
+        }
+        Util.copyFolder(resSrc, resourcesDir);
+    }*/
+    
+    private JSONObject getAppConfig(String configFile) throws FileNotFoundException{
+        InputStream is = new FileInputStream(configFile);
+        JSONTokener tokener = new JSONTokener(is);
+        return new JSONObject(tokener);
     }
-
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+    
+    private static int makeAppRequest(String appName, String domain) throws IOException {
+        try {
+            URL obj = new URL(domain + "/" + appName);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+            return con.getResponseCode();
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        return 404;
     }
 }

@@ -50,49 +50,52 @@
  *
  *This Agreement shall be governed by the laws of the State of Maharashtra, India. Exclusive jurisdiction and venue for all matters relating to this Agreement shall be in courts and fora located in the State of Maharashtra, India, and you consent to such jurisdiction and venue. This agreement contains the entire Agreement between the parties hereto with respect to the subject matter hereof, and supersedes all prior agreements and/or understandings (oral or written). Failure or delay by METAMUG in enforcing any right or provision hereof shall not be deemed a waiver of such provision or right with respect to the instant or any subsequent breach. If any provision of this Agreement shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in force and effect.
  */
-package com.metamug.console.listener;
+package com.metamug.console.daos;
 
 import com.metamug.console.services.ConnectionProvider;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import java.beans.PropertyVetoException;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
- * Web application lifecycle listener.
  *
- * @author Kaisteel
+ * @author anishhirlekar
  */
-public class ConsoleContextListener implements ServletContextListener {
-
-    @Override
-    public void contextInitialized(ServletContextEvent sce) { 
-        logStartupMessages();
+public class ResourceTagDAO {
+    public JSONObject getTags() throws IOException, SQLException, PropertyVetoException, ClassNotFoundException {
+        JSONObject obj = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        try (Connection con = ConnectionProvider.getInstance().getConnection()) {
+            PreparedStatement statement = con.prepareStatement("SELECT name FROM CONSOLE_RESOURCE_TAG");
+           
+            try (ResultSet result = statement.executeQuery()) {
+                while (result.next()) {
+                    JSONObject tag = new JSONObject();
+                    tag.put("name", result.getString("name"));
+                    jsonArray.put(tag);
+                }
+            }
+        }
+        return obj.put("tags", jsonArray);
     }
     
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        //@todo improve cleanup process or set higher premGen value
-        //http://www.mkyong.com/tomcat/tomcat-javalangoutofmemoryerror-permgen-space/
-        ConnectionProvider.shutdown();
-    }
-
-    private void logStartupMessages() {
-        System.out.println();
-        System.out.println("  /##      /##             /##");
-        System.out.println(" | ###    /###            | ##");
-        System.out.println(" | ####  /####  /######  /######   /######  /######/####  /##   /##  /######");
-        System.out.println(" | ## ##/## ## /##__  ##|_  ##_/  |____  ##| ##_  ##_  ##| ##  | ## /##__  ##");
-        System.out.println(" | ##  ###| ##| ########  | ##     /#######| ## \\ ## \\ ##| ##  | ##| ##  \\ ##");
-        System.out.println(" | ##\\  # | ##| ##_____/  | ## /##/##__  ##| ## | ## | ##| ##  | ##| ##  | ##");
-        System.out.println(" | ## \\/  | ##|  #######  |  ####/  #######| ## | ## | ##|  ######/|  #######");
-        System.out.println(" |__/     |__/ \\_______/   \\___/  \\_______/|__/ |__/ |__/ \\______/  \\____  ##");
-        System.out.println("                                                                    /##  \\ ##");
-        System.out.println("                                                                   |  ######/");
-        System.out.println("                                                                    \\______/");
-        System.out.println();
-        System.out.println("Server started successfully!");
-        System.out.println("Console can be accessed at http://localhost:7000/console/");
-        System.out.println();
-        System.out.println("Metamug API Server is configured to display WARNING/SEVERE Errors by default\n"
-                + "Please go to conf/logging.properties to change the logging level");
+    public boolean addTag(String name) throws IOException, SQLException, PropertyVetoException, ClassNotFoundException {
+        try (Connection con = ConnectionProvider.getInstance().getConnection()) {
+            
+            try (PreparedStatement statement = con.prepareStatement("INSERT INTO CONSOLE_RESOURCE_TAG (name) "
+                    + "values (?)")) {
+                statement.setString(1, name);
+                statement.execute();
+            }
+            return true;
+        }catch(SQLException sx) {
+            //unique constraint fails
+        }
+        return false;
     }
 }
