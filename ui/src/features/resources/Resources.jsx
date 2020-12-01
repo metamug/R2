@@ -1,10 +1,11 @@
-import { deleteResource, fetchResources } from 'api/apis'
+import { fetchResources } from 'api/apis'
 import ResourceTable from 'features/resources/ResourceTable'
 import { useErrorModalContext } from 'providers/ErrorModalContext'
 import { useLoadingContext } from 'providers/LoadingContext'
 import React, { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { setParams } from 'utils/queryParams'
+import { userLoggedIn } from '../../utils/auth'
 
 export const UTM =
   '?utm_source=metamug-api-console&utm_medium=link&utm_campaign=product-guide'
@@ -18,18 +19,15 @@ function Resources(props) {
   const [data, setData] = useState([])
 
   const openResourceEditor = () => {
-    if (data.length >= 20) {
-      // openLimitModal()
-    } else {
-      const url = `/editor?${setParams({
-        isNew: true,
-        app: 'demo',
-      })}`
-      props.history.push(url)
-    }
+    const url = `/editor?${setParams({
+      isNew: true,
+      app: 'demo',
+    })}`
+    props.history.push(url)
   }
 
   const getResources = async () => {
+    debugger
     try {
       setLoading({
         type: 'open',
@@ -41,7 +39,7 @@ function Resources(props) {
     } catch (error) {
       setLoading({ type: 'close' })
       setConnectionError(true)
-      return setError({
+      setError({
         type: 'open',
         payload: { message: error.message || 'Failed to get resources' },
       })
@@ -49,9 +47,11 @@ function Resources(props) {
   }
 
   useEffect(() => {
-    localStorage.setItem('token', '2e60c561b6bc42c215f7352e7ff16002')
-    localStorage.setItem('defaultItem', 'demo')
-    getResources()
+    // localStorage.setItem('token', '2e60c561b6bc42c215f7352e7ff16002')
+    const loggedIn = userLoggedIn()
+    if (loggedIn) {
+      getResources()
+    }
   }, [])
 
   return (
