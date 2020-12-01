@@ -2,6 +2,8 @@
 R2 is an open source REST Resource server. It comes with a ready to use REST API. Developer can add/edit resources to the server
 using R2 Console
 
+![Resource Screen](https://metamug.com/img/res-screen.png)
+
 ## R2 Console
 R2 console comes with following features.
 
@@ -9,6 +11,9 @@ R2 console comes with following features.
 * Hot deployment for REST Resources
 * Resource editor with autocomplete and query testing (using open source project)
 * Open API documentation generated.
+
+
+
 
 ## openapi-rest-model
 
