@@ -27,7 +27,7 @@ function LoginView(props) {
       })
       const { data } = await doLogin(username, encodePasswordBase64(password))
       await localStorage.setItem('token', data.token)
-      localStorage.setItem('defaultItem', 'demo')
+      localStorage.setItem('defaultItem', data.active_id)
       props.history.push('/resources')
       setLoading({ type: 'close' })
     } catch (error) {

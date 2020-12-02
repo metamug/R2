@@ -49,8 +49,8 @@ function Resources(props) {
   }
 
   useEffect(() => {
-    localStorage.setItem('token', '2e60c561b6bc42c215f7352e7ff16002')
-    localStorage.setItem('defaultItem', 'demo')
+    // localStorage.setItem('token', '2e60c561b6bc42c215f7352e7ff16002')
+    // localStorage.setItem('defaultItem', 'demo')
     getResources()
   }, [])
 
