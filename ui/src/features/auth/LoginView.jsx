@@ -25,10 +25,8 @@ function LoginView(props) {
         type: 'open',
         payload: { message: `Signing In...` },
       })
-      debugger
       const { data } = await doLogin(username, encodePasswordBase64(password))
       await localStorage.setItem('token', data.token)
-      debugger
       localStorage.setItem('defaultItem', 'demo')
       props.history.push('/resources')
       setLoading({ type: 'close' })
@@ -51,7 +49,6 @@ function LoginView(props) {
 
   useEffect(async () => {
     const isLoggedIn = await userLoggedIn()
-    debugger
     if (isLoggedIn) {
       props.history.push('/resources')
     } else {

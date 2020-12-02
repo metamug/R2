@@ -27,7 +27,6 @@ function Resources(props) {
   }
 
   const getResources = async () => {
-    debugger
     try {
       setLoading({
         type: 'open',

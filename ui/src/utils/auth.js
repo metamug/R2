@@ -1,6 +1,5 @@
 export async function userLoggedIn() {
   const status = await localStorage.getItem('token')
-  debugger
   return !!status
 }
 
