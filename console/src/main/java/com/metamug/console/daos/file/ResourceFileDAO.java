@@ -53,7 +53,9 @@
  */
 package com.metamug.console.daos.file;
 
+import com.metamug.console.daos.ResourceTagDAO;
 import com.metamug.console.services.ConnectionProvider;
+import com.metamug.console.services.QueryService;
 import com.metamug.console.util.FileUtil;
 import com.metamug.console.util.Util;
 import static com.metamug.console.util.Util.OUTPUT_FOLDER;
@@ -114,6 +116,12 @@ public class ResourceFileDAO {
             String auth = props.has("auth") ? props.getString("auth") : null;
             JSONObject tag = props.has("tag") ? props.getJSONObject("tag") : null;
             String tagJson = null;
+            
+            if(null != tag){
+                tagJson = tag.toString();
+                ResourceTagDAO tdao = new ResourceTagDAO();
+                tdao.addTag(tag.getString("name"));
+            }
             
             //Check whether the file exists for the same app, same version and created by same user
             try (PreparedStatement stmt = con.prepareStatement("SELECT file_name FROM console_file WHERE file_name=?"
@@ -252,6 +260,8 @@ public class ResourceFileDAO {
                             statement.setInt(4, userId);
                             statement.executeUpdate();
                         }
+                        QueryService qs = new QueryService();
+                        qs.removeReferences(domain, appName, fileName, version.replace("v", ""));
                     }
                     return obj;
                 } else {

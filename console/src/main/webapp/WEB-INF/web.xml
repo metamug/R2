@@ -28,6 +28,18 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter>
+        <filter-name>ConsoleAuthFilter</filter-name>
+        <filter-class>com.metamug.console.filters.ConsoleAuthFilter</filter-class>
+        <init-param>
+            <param-name>requestEncoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>ConsoleAuthFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
         <filter-name>Router</filter-name>
         <filter-class>com.metamug.mason.Router</filter-class>
         <init-param>

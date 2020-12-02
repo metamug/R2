@@ -1,6 +1,6 @@
 import AboutIcon from 'assets/images/menu/about-icon.svg'
 import APIDocsIcon from 'assets/images/menu/api-docs-icon.svg'
-import ErrorIcon from 'assets/images/menu/errors-icon.svg'
+import LogoutIcon from 'assets/images/menu/logout-icon.svg'
 import ResourcesIcon from 'assets/images/menu/resources-icon.svg'
 
 export const navigationConfig = {
@@ -20,8 +20,14 @@ export const navigationConfig = {
     help: {
       path: '/help',
       src: AboutIcon,
-      alt: 'bout icon',
+      alt: 'about icon',
       title: 'About',
+    },
+    logout: {
+      path: '/logout',
+      src: LogoutIcon,
+      alt: 'logout icon',
+      title: 'Log Out',
     },
   },
 }

@@ -67,7 +67,6 @@ public class ConsoleContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) { 
         logStartupMessages();
     }
-
     
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
