@@ -1,11 +1,10 @@
-import { fetchResources } from 'api/apis'
+import { deleteResource, fetchResources } from 'api/apis'
 import ResourceTable from 'features/resources/ResourceTable'
 import { useErrorModalContext } from 'providers/ErrorModalContext'
 import { useLoadingContext } from 'providers/LoadingContext'
 import React, { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { setParams } from 'utils/queryParams'
-import { userLoggedIn } from '../../utils/auth'
 
 export const UTM =
   '?utm_source=metamug-api-console&utm_medium=link&utm_campaign=product-guide'
@@ -19,11 +18,15 @@ function Resources(props) {
   const [data, setData] = useState([])
 
   const openResourceEditor = () => {
-    const url = `/editor?${setParams({
-      isNew: true,
-      app: 'demo',
-    })}`
-    props.history.push(url)
+    if (data.length >= 20) {
+      // openLimitModal()
+    } else {
+      const url = `/editor?${setParams({
+        isNew: true,
+        app: 'demo',
+      })}`
+      props.history.push(url)
+    }
   }
 
   const getResources = async () => {
@@ -38,7 +41,7 @@ function Resources(props) {
     } catch (error) {
       setLoading({ type: 'close' })
       setConnectionError(true)
-      setError({
+      return setError({
         type: 'open',
         payload: { message: error.message || 'Failed to get resources' },
       })
@@ -46,18 +49,18 @@ function Resources(props) {
   }
 
   useEffect(() => {
-    // localStorage.setItem('token', '2e60c561b6bc42c215f7352e7ff16002')
-    const loggedIn = userLoggedIn()
-    if (loggedIn) {
-      getResources()
-    }
+    localStorage.setItem('token', '2e60c561b6bc42c215f7352e7ff16002')
+    localStorage.setItem('defaultItem', 'demo')
+    getResources()
   }, [])
 
   return (
     <Container className="pt-4">
       <Row>
         <Col lg="9">
-          <span style={{ fontSize: '32px' }}>Resources </span>
+          <span style={{ fontSize: '32px', marginLeft: '12px' }}>
+            Resources{' '}
+          </span>
           {/* Tooltip Overlay */}
         </Col>
         <Col lg="3">
@@ -70,7 +73,7 @@ function Resources(props) {
             <button
               type="button"
               onClick={openResourceEditor}
-              className="btn btn-lg btn-success"
+              className="btn btn-lg btn-success mr-3"
               title="Create New Resource"
             >
               Create Resource <i className="fa fa-file-code-o fa-fw" />

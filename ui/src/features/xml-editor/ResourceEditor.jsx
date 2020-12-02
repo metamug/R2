@@ -244,7 +244,7 @@ function ResourceEditor(props) {
   return (
     <div className="container" style={{ marginTop: '10px' }}>
       <Row>
-        <Breadcrumb style={{ marginLeft: '30px' }}>
+        <Breadcrumb style={{ marginLeft: '15px' }}>
           <Breadcrumb.Item>
             <Link to="/resources">resources</Link>
           </Breadcrumb.Item>
@@ -252,9 +252,7 @@ function ResourceEditor(props) {
             {isNewResource ? newResourceTitle : name}
           </Breadcrumb.Item>
         </Breadcrumb>
-      </Row>
-      <div className="row pt-3">
-        <div className="col-md-12">
+        <div className="row pt-4 ml-1">
           {connectionError ? (
             <div>
               <h5 className="text text-danger">
@@ -262,18 +260,33 @@ function ResourceEditor(props) {
               </h5>
             </div>
           ) : (
-            <div style={{ marginTop: '-1.3em' }} className="col-md-12">
+            <div style={{ marginTop: '-1.2em' }} className="col-md-12">
               <div className="row" style={{ marginLeft: '3px' }}>
                 <span
-                  style={{ marginBottom: '5px' }}
+                  style={{
+                    marginBottom: '5px',
+                    width: '31px',
+                    paddingLeft: '4px',
+                  }}
                   title="Save File"
                   onClick={
                     isNewResource ? () => setNameModalOpen(true) : saveHandler
                   }
                   className="btn btn-primary btn-sm"
                 >
-                  <i className="fa fa-floppy-o fa-fw" />
-                  <span>{isNewResource ? newResourceTitle : name}</span>
+                  <i
+                    style={{
+                      marginTop: '6px',
+                    }}
+                    className="fa fa-floppy-o fa-fw fa-lg"
+                  />
+                  {/* <span
+                    style={{
+                      marginTop: '6px',
+                    }}
+                  >
+                    {isNewResource ? newResourceTitle : name}
+                  </span>*/}
                 </span>
                 {!isNewResource && (
                   <span
@@ -291,7 +304,7 @@ function ResourceEditor(props) {
                     <i
                       className="fa fa-lg fa-location-arrow fa-inverse"
                       style={{
-                        marginTop: '8px',
+                        marginTop: '7px',
                       }}
                     />
                   </span>
@@ -303,27 +316,17 @@ function ResourceEditor(props) {
                     marginLeft: '5px',
                     marginBottom: '5px',
                     width: '31px',
+                    paddingLeft: '9px',
                   }}
                   onClick={toggleThemeAndUpdateLStorage}
                   className="btn btn-primary"
                 >
-                  <span>
-                    {darkTheme ? (
-                      <i className="fa fa-moon-o" />
-                    ) : (
-                      <i className="fa fa-lightbulb-o" />
-                    )}
-                  </span>
+                  {darkTheme ? (
+                    <i className="fa fa-lg fa-moon-o" />
+                  ) : (
+                    <i className="fa fa-lg fa-lightbulb-o" />
+                  )}
                 </span>
-              </div>
-              <div className="XMLInput">
-                <XMLEditor
-                  ref={cmRef}
-                  documentModified={documentModified}
-                  onTextChange={onTextChange}
-                  value={value}
-                  darkTheme={darkTheme}
-                />
               </div>
             </div>
           )}
@@ -485,6 +488,15 @@ function ResourceEditor(props) {
               />
             </div>
           ) : null} */}
+      </Row>
+      <div className="XMLInput">
+        <XMLEditor
+          ref={cmRef}
+          documentModified={documentModified}
+          onTextChange={onTextChange}
+          value={value}
+          darkTheme={darkTheme}
+        />
       </div>
     </div>
   )
