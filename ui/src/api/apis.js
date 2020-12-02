@@ -16,7 +16,6 @@ export async function doLogin(username, password) {
 }
 
 export async function fetchResources() {
-  debugger
   return await apis.get(`/app/demo/rpx`)
 }
 export async function fetchXML(resourceName, resourceVersion) {
