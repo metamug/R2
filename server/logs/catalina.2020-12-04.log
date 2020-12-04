@@ -1,0 +1,264 @@
+04-Dec-2020 11:24:28.225 SEVERE [main] org.apache.catalina.startup.Catalina.initDirs Cannot find specified temporary folder at [/Users/anishhirlekar/mtg/R2/server/temp]
+04-Dec-2020 12:17:07.475 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/9.0.16
+04-Dec-2020 12:17:07.479 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Feb 4 2019 16:30:29 UTC
+04-Dec-2020 12:17:07.481 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 9.0.16.0
+04-Dec-2020 12:17:07.481 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Mac OS X
+04-Dec-2020 12:17:07.481 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            10.15.7
+04-Dec-2020 12:17:07.482 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          x86_64
+04-Dec-2020 12:17:07.483 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre
+04-Dec-2020 12:17:07.483 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           1.8.0_131-b11
+04-Dec-2020 12:17:07.483 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Oracle Corporation
+04-Dec-2020 12:17:07.484 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /Users/anishhirlekar/mtg/R2/server
+04-Dec-2020 12:17:07.484 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /Users/anishhirlekar/mtg/R2/server
+04-Dec-2020 12:17:07.485 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/Users/anishhirlekar/mtg/R2/server/conf/logging.properties
+04-Dec-2020 12:17:07.485 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+04-Dec-2020 12:17:07.485 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+04-Dec-2020 12:17:07.486 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+04-Dec-2020 12:17:07.486 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+04-Dec-2020 12:17:07.486 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xms1024m
+04-Dec-2020 12:17:07.486 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xmx2048m
+04-Dec-2020 12:17:07.486 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dignore.endorsed.dirs=
+04-Dec-2020 12:17:07.487 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/Users/anishhirlekar/mtg/R2/server
+04-Dec-2020 12:17:07.487 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/Users/anishhirlekar/mtg/R2/server
+04-Dec-2020 12:17:07.487 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/Users/anishhirlekar/mtg/R2/server/temp
+04-Dec-2020 12:17:07.488 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [/Users/anishhirlekar/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.]
+04-Dec-2020 12:17:07.785 INFO [main] org.apache.coyote.http11.AbstractHttp11Protocol.configureUpgradeProtocol The ["http-nio-7000"] connector has been configured to support HTTP upgrade to [h2c]
+04-Dec-2020 12:17:07.786 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-7000"]
+04-Dec-2020 12:17:07.843 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["ajp-nio-7009"]
+04-Dec-2020 12:17:07.847 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [1,010] milliseconds
+04-Dec-2020 12:17:07.893 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+04-Dec-2020 12:17:07.894 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/9.0.16]
+04-Dec-2020 12:17:07.906 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/Users/anishhirlekar/mtg/R2/server/webapps/ROOT]
+04-Dec-2020 12:17:29.698 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/Users/anishhirlekar/mtg/R2/server/webapps/ROOT] has finished in [21,793] ms
+04-Dec-2020 12:17:29.699 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/Users/anishhirlekar/mtg/R2/server/webapps/api]
+04-Dec-2020 12:17:44.572 WARNING [main] org.apache.naming.NamingContext.lookup Unexpected exception resolving reference
+ java.lang.RuntimeException: java.lang.reflect.InvocationTargetException
+	at com.zaxxer.hikari.util.PropertyElf.setProperty(PropertyElf.java:165)
+	at com.zaxxer.hikari.util.PropertyElf.lambda$setTargetFromProperties$0(PropertyElf.java:59)
+	at java.util.Hashtable.forEach(Hashtable.java:878)
+	at com.zaxxer.hikari.util.PropertyElf.setTargetFromProperties(PropertyElf.java:54)
+	at com.zaxxer.hikari.HikariConfig.<init>(HikariConfig.java:134)
+	at com.zaxxer.hikari.HikariJNDIFactory.createDataSource(HikariJNDIFactory.java:71)
+	at com.zaxxer.hikari.HikariJNDIFactory.getObjectInstance(HikariJNDIFactory.java:59)
+	at org.apache.naming.factory.FactoryBase.getObjectInstance(FactoryBase.java:94)
+	at javax.naming.spi.NamingManager.getObjectInstance(NamingManager.java:321)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:840)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:159)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:827)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:173)
+	at org.apache.catalina.core.NamingContextListener.addResource(NamingContextListener.java:1015)
+	at org.apache.catalina.core.NamingContextListener.createNamingContext(NamingContextListener.java:556)
+	at org.apache.catalina.core.NamingContextListener.lifecycleEvent(NamingContextListener.java:252)
+	at org.apache.catalina.util.LifecycleBase.fireLifecycleEvent(LifecycleBase.java:123)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5034)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:713)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:690)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:695)
+	at org.apache.catalina.startup.HostConfig.deployDirectory(HostConfig.java:1133)
+	at org.apache.catalina.startup.HostConfig$DeployDirectory.run(HostConfig.java:1868)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:112)
+	at org.apache.catalina.startup.HostConfig.deployDirectories(HostConfig.java:1045)
+	at org.apache.catalina.startup.HostConfig.deployApps(HostConfig.java:429)
+	at org.apache.catalina.startup.HostConfig.start(HostConfig.java:1577)
+	at org.apache.catalina.startup.HostConfig.lifecycleEvent(HostConfig.java:309)
+	at org.apache.catalina.util.LifecycleBase.fireLifecycleEvent(LifecycleBase.java:123)
+	at org.apache.catalina.util.LifecycleBase.setStateInternal(LifecycleBase.java:424)
+	at org.apache.catalina.util.LifecycleBase.setState(LifecycleBase.java:367)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:929)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:831)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1377)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1367)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:902)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:262)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:423)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:928)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.startup.Catalina.start(Catalina.java:638)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.catalina.startup.Bootstrap.start(Bootstrap.java:350)
+	at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:492)
+Caused by: java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at com.zaxxer.hikari.util.PropertyElf.setProperty(PropertyElf.java:150)
+	... 56 more
+Caused by: java.lang.RuntimeException: Failed to load driver class your_db_driver in either of HikariConfig class loader or Thread context classloader
+	at com.zaxxer.hikari.HikariConfig.setDriverClassName(HikariConfig.java:485)
+	... 61 more
+
+04-Dec-2020 12:17:44.575 WARNING [main] org.apache.catalina.core.NamingContextListener.addResource Failed to register in JMX: [javax.naming.NamingException: Unexpected exception resolving reference [Root exception is java.lang.RuntimeException: java.lang.reflect.InvocationTargetException]]
+04-Dec-2020 12:17:44.691 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/Users/anishhirlekar/mtg/R2/server/webapps/api] has finished in [14,993] ms
+04-Dec-2020 12:17:44.800 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-7000"]
+04-Dec-2020 12:17:44.820 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["ajp-nio-7009"]
+04-Dec-2020 12:17:44.824 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [36,976] milliseconds
+04-Dec-2020 12:17:48.095 INFO [Thread-5] org.apache.coyote.AbstractProtocol.pause Pausing ProtocolHandler ["http-nio-7000"]
+04-Dec-2020 12:17:48.116 INFO [Thread-5] org.apache.coyote.AbstractProtocol.pause Pausing ProtocolHandler ["ajp-nio-7009"]
+04-Dec-2020 12:17:48.123 INFO [Thread-5] org.apache.catalina.core.StandardService.stopInternal Stopping service [Catalina]
+04-Dec-2020 12:17:48.167 WARNING [Thread-5] org.apache.naming.NamingContext.lookup Unexpected exception resolving reference
+ java.lang.RuntimeException: java.lang.reflect.InvocationTargetException
+	at com.zaxxer.hikari.util.PropertyElf.setProperty(PropertyElf.java:165)
+	at com.zaxxer.hikari.util.PropertyElf.lambda$setTargetFromProperties$0(PropertyElf.java:59)
+	at java.util.Hashtable.forEach(Hashtable.java:878)
+	at com.zaxxer.hikari.util.PropertyElf.setTargetFromProperties(PropertyElf.java:54)
+	at com.zaxxer.hikari.HikariConfig.<init>(HikariConfig.java:134)
+	at com.zaxxer.hikari.HikariJNDIFactory.createDataSource(HikariJNDIFactory.java:71)
+	at com.zaxxer.hikari.HikariJNDIFactory.getObjectInstance(HikariJNDIFactory.java:59)
+	at org.apache.naming.factory.FactoryBase.getObjectInstance(FactoryBase.java:94)
+	at javax.naming.spi.NamingManager.getObjectInstance(NamingManager.java:321)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:840)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:159)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:827)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:173)
+	at org.apache.catalina.deploy.NamingResourcesImpl.cleanUp(NamingResourcesImpl.java:1035)
+	at org.apache.catalina.deploy.NamingResourcesImpl.stopInternal(NamingResourcesImpl.java:1003)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.StandardContext.stopInternal(StandardContext.java:5388)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.ContainerBase$StopChild.call(ContainerBase.java:1393)
+	at org.apache.catalina.core.ContainerBase$StopChild.call(ContainerBase.java:1382)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.stopInternal(ContainerBase.java:969)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.ContainerBase$StopChild.call(ContainerBase.java:1393)
+	at org.apache.catalina.core.ContainerBase$StopChild.call(ContainerBase.java:1382)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.stopInternal(ContainerBase.java:969)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.StandardService.stopInternal(StandardService.java:475)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.StandardServer.stopInternal(StandardServer.java:990)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.startup.Catalina.stop(Catalina.java:711)
+	at org.apache.catalina.startup.Catalina$CatalinaShutdownHook.run(Catalina.java:808)
+Caused by: java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at com.zaxxer.hikari.util.PropertyElf.setProperty(PropertyElf.java:150)
+	... 37 more
+Caused by: java.lang.RuntimeException: Failed to load driver class your_db_driver in either of HikariConfig class loader or Thread context classloader
+	at com.zaxxer.hikari.HikariConfig.setDriverClassName(HikariConfig.java:485)
+	... 42 more
+
+04-Dec-2020 12:17:48.168 WARNING [Thread-5] org.apache.catalina.deploy.NamingResourcesImpl.cleanUp Failed to retrieve JNDI resource [jdbc/mason] for container [StandardEngine[Catalina].StandardHost[localhost].StandardContext[/api]] so no cleanup was performed for that resource
+ javax.naming.NamingException: Unexpected exception resolving reference [Root exception is java.lang.RuntimeException: java.lang.reflect.InvocationTargetException]
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:856)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:159)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:827)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:173)
+	at org.apache.catalina.deploy.NamingResourcesImpl.cleanUp(NamingResourcesImpl.java:1035)
+	at org.apache.catalina.deploy.NamingResourcesImpl.stopInternal(NamingResourcesImpl.java:1003)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.StandardContext.stopInternal(StandardContext.java:5388)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.ContainerBase$StopChild.call(ContainerBase.java:1393)
+	at org.apache.catalina.core.ContainerBase$StopChild.call(ContainerBase.java:1382)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.stopInternal(ContainerBase.java:969)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.ContainerBase$StopChild.call(ContainerBase.java:1393)
+	at org.apache.catalina.core.ContainerBase$StopChild.call(ContainerBase.java:1382)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.stopInternal(ContainerBase.java:969)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.StandardService.stopInternal(StandardService.java:475)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.StandardServer.stopInternal(StandardServer.java:990)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.startup.Catalina.stop(Catalina.java:711)
+	at org.apache.catalina.startup.Catalina$CatalinaShutdownHook.run(Catalina.java:808)
+Caused by: java.lang.RuntimeException: java.lang.reflect.InvocationTargetException
+	at com.zaxxer.hikari.util.PropertyElf.setProperty(PropertyElf.java:165)
+	at com.zaxxer.hikari.util.PropertyElf.lambda$setTargetFromProperties$0(PropertyElf.java:59)
+	at java.util.Hashtable.forEach(Hashtable.java:878)
+	at com.zaxxer.hikari.util.PropertyElf.setTargetFromProperties(PropertyElf.java:54)
+	at com.zaxxer.hikari.HikariConfig.<init>(HikariConfig.java:134)
+	at com.zaxxer.hikari.HikariJNDIFactory.createDataSource(HikariJNDIFactory.java:71)
+	at com.zaxxer.hikari.HikariJNDIFactory.getObjectInstance(HikariJNDIFactory.java:59)
+	at org.apache.naming.factory.FactoryBase.getObjectInstance(FactoryBase.java:94)
+	at javax.naming.spi.NamingManager.getObjectInstance(NamingManager.java:321)
+	at org.apache.naming.NamingContext.lookup(NamingContext.java:840)
+	... 28 more
+Caused by: java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at com.zaxxer.hikari.util.PropertyElf.setProperty(PropertyElf.java:150)
+	... 37 more
+Caused by: java.lang.RuntimeException: Failed to load driver class your_db_driver in either of HikariConfig class loader or Thread context classloader
+	at com.zaxxer.hikari.HikariConfig.setDriverClassName(HikariConfig.java:485)
+	... 42 more
+
+04-Dec-2020 12:17:48.186 INFO [Thread-5] org.apache.coyote.AbstractProtocol.stop Stopping ProtocolHandler ["http-nio-7000"]
+04-Dec-2020 12:17:48.202 INFO [Thread-5] org.apache.coyote.AbstractProtocol.stop Stopping ProtocolHandler ["ajp-nio-7009"]
+04-Dec-2020 12:17:48.210 INFO [Thread-5] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["http-nio-7000"]
+04-Dec-2020 12:17:48.211 INFO [Thread-5] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["ajp-nio-7009"]
+04-Dec-2020 14:47:22.653 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/9.0.16
+04-Dec-2020 14:47:22.656 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Feb 4 2019 16:30:29 UTC
+04-Dec-2020 14:47:22.656 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 9.0.16.0
+04-Dec-2020 14:47:22.656 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Mac OS X
+04-Dec-2020 14:47:22.657 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            10.15.7
+04-Dec-2020 14:47:22.657 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          x86_64
+04-Dec-2020 14:47:22.657 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre
+04-Dec-2020 14:47:22.657 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           1.8.0_131-b11
+04-Dec-2020 14:47:22.657 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Oracle Corporation
+04-Dec-2020 14:47:22.657 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /Users/anishhirlekar/mtg/R2/server
+04-Dec-2020 14:47:22.657 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /Users/anishhirlekar/mtg/R2/server
+04-Dec-2020 14:47:22.658 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/Users/anishhirlekar/mtg/R2/server/conf/logging.properties
+04-Dec-2020 14:47:22.659 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+04-Dec-2020 14:47:22.659 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+04-Dec-2020 14:47:22.659 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+04-Dec-2020 14:47:22.659 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+04-Dec-2020 14:47:22.659 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xms1024m
+04-Dec-2020 14:47:22.660 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xmx2048m
+04-Dec-2020 14:47:22.660 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dignore.endorsed.dirs=
+04-Dec-2020 14:47:22.660 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/Users/anishhirlekar/mtg/R2/server
+04-Dec-2020 14:47:22.660 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/Users/anishhirlekar/mtg/R2/server
+04-Dec-2020 14:47:22.660 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/Users/anishhirlekar/mtg/R2/server/temp
+04-Dec-2020 14:47:22.660 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [/Users/anishhirlekar/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.]
+04-Dec-2020 14:47:23.025 INFO [main] org.apache.coyote.http11.AbstractHttp11Protocol.configureUpgradeProtocol The ["http-nio-7000"] connector has been configured to support HTTP upgrade to [h2c]
+04-Dec-2020 14:47:23.026 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-7000"]
+04-Dec-2020 14:47:23.076 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["ajp-nio-7009"]
+04-Dec-2020 14:47:23.079 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [1,288] milliseconds
+04-Dec-2020 14:47:23.135 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+04-Dec-2020 14:47:23.135 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/9.0.16]
+04-Dec-2020 14:47:23.144 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/Users/anishhirlekar/mtg/R2/server/webapps/ROOT]
+04-Dec-2020 14:47:44.951 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/Users/anishhirlekar/mtg/R2/server/webapps/ROOT] has finished in [21,807] ms
+04-Dec-2020 14:47:44.952 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/Users/anishhirlekar/mtg/R2/server/webapps/api]
+04-Dec-2020 14:48:01.060 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/Users/anishhirlekar/mtg/R2/server/webapps/api] has finished in [16,107] ms
+04-Dec-2020 14:48:01.066 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-7000"]
+04-Dec-2020 14:48:01.090 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["ajp-nio-7009"]
+04-Dec-2020 14:48:01.095 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [38,014] milliseconds
+04-Dec-2020 14:48:27.236 INFO [Thread-6] org.apache.coyote.AbstractProtocol.pause Pausing ProtocolHandler ["http-nio-7000"]
+04-Dec-2020 14:48:27.254 INFO [Thread-6] org.apache.coyote.AbstractProtocol.pause Pausing ProtocolHandler ["ajp-nio-7009"]
+04-Dec-2020 14:48:27.269 INFO [Thread-6] org.apache.catalina.core.StandardService.stopInternal Stopping service [Catalina]
+04-Dec-2020 14:48:27.381 INFO [apiPool connection closer] org.hsqldb.persist.Logger.logInfoEvent Database closed
+04-Dec-2020 14:48:27.509 INFO [Thread-6] org.apache.coyote.AbstractProtocol.stop Stopping ProtocolHandler ["http-nio-7000"]
+04-Dec-2020 14:48:27.528 INFO [Thread-6] org.apache.coyote.AbstractProtocol.stop Stopping ProtocolHandler ["ajp-nio-7009"]
+04-Dec-2020 14:48:27.531 INFO [Thread-6] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["http-nio-7000"]
+04-Dec-2020 14:48:27.532 INFO [Thread-6] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["ajp-nio-7009"]

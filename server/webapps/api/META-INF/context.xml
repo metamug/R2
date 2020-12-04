@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/mtg-api-framework" cookies="false" privileged="true" reloadable="true">
     <Resource auth="Container"
-			  name="jdbc/mason"
-			  factory="com.zaxxer.hikari.HikariJNDIFactory"
-			  type="javax.sql.DataSource"
-              minimumIdle="1"
-			  maximumPoolSize="2"
-			  connectionTimeout="13000"
-			  idleTimeout="120000"
-			  maxLifetime="1800000"
-			  dataSource.implicitCachingEnabled="true"
-			  closeMethod="close"
-              driverClassName="your_db_driver"
-			  jdbcUrl="your_db_link"
-			  username="your_name"
-              password="your_pass"
-			  poolName="your_pool_name"/>
+             closeMethod="close"
+             connectionTimeout="13000"
+             dataSource.implicitCachingEnabled="true"
+             driverClassName="org.hsqldb.jdbc.JDBCDriver"
+             factory="com.zaxxer.hikari.HikariJNDIFactory"
+             idleTimeout="120000"
+             jdbcUrl="jdbc:hsqldb:file://${catalina.base}/databases/api/api_db;check_props=true;sql.enforce_names=true;hsqldb.sqllog=0;sql.char_literal=true;sql.pad_space=false;sql.ignore_case=true;sql.syntax_mys=true;hsqldb.lob_compressed=true;hsqldb.log_size=5;shutdown=true;"
+             maxLifetime="1800000"
+             maximumPoolSize="2"
+             minimumIdle="1"
+             name="jdbc/mason"
+             password="$2a$12$bzQJzWEOx9GHGmgrq.zHQesQpfOuTgSDh2i0Cs3Etq98PWuTwcQPm"
+             poolName="apiPool"
+             type="javax.sql.DataSource"
+             username="1"/>
 	<JarScanner scanManifest="false"/>
     <WatchedResource>/WEB-INF/lib/</WatchedResource>
 </Context>
