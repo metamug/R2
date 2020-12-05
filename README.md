@@ -44,4 +44,6 @@ https://metamug.com/docs/resource-file
 
 https://github.com/OAI/OpenAPI-Specification
 
+## Dependencies
 
+[Mason](https://github.com/metamug/mason) v3.4 available on Maven central
