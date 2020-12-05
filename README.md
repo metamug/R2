@@ -42,7 +42,7 @@ https://metamug.com/docs/resource-file
 
 ### Datasources
 
-Read [this]()
+[Read this](https://github.com/metamug/R2/blob/develop/docs/datasources.md)
 
 ### Open API 
 
