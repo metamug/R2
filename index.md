@@ -1,37 +1,53 @@
-## Welcome to GitHub Pages
+# R2
+R2 is an open source REST Resource server. It comes with a ready to use REST API. Developer can add/edit resources to the server
+using R2 Console
 
-You can use the [editor on GitHub](https://github.com/metamug/R2/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+![Metamug Resource Screen](https://metamug.com/img/res-screen.png)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## R2 Console
+R2 console comes with following features.
 
-### Markdown
+* REST Resource Management 
+* Hot deployment for REST Resources
+* Resource editor with autocomplete and query testing (using open source project)
+* Open API documentation generated.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## API Integration with XRequest
 
-```markdown
-Syntax highlighted code block
+API Integration with third party services like AWS, Facebook, Twitter, Firebase, PayPal, Mailchimp and more.
+Communication with multiple services in a single request using API Gateways.
 
-# Header 1
-## Header 2
-### Header 3
+![Metamug API Integration](https://metamug.com/img/api-integration1.svg)
 
-- Bulleted
-- List
 
-1. Numbered
-2. List
+## openapi-rest-model
 
-**Bold** and _Italic_ and `Code` text
+![](https://travis-ci.org/metamug/openapi-rest-model.svg?branch=open-api) [![codecov](https://codecov.io/gh/metamug/openapi-rest-model/branch/open-api/graph/badge.svg)](https://codecov.io/gh/metamug/openapi-rest-model)
 
-[Link](url) and ![Image](src)
-```
+![Metamug Open API Integration](https://metamug.com/img/openapi-specification.svg)
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
-### Jekyll Themes
+Convert [OpenAPI](https://www.openapis.org/) Spec file into [Resource Resource XML](https://metamug.com/docs/resource-file) files.
+This project aims to generate compatible resource xmls for a given spec file json/yml.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/metamug/R2/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+The sample petstore yml file will convert to a number of resource xmls.
+https://editor.swagger.io/
 
-### Support or Contact
+### REST Resource Files
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+REST Resource files are designed to address a REST resources individually. Each Resource file
+maps to its own URI. This makes resources easily identifiable and managable.
+
+https://metamug.com/docs/resource-file
+
+### Datasources
+
+[Read this](https://github.com/metamug/R2/blob/develop/docs/datasources.md)
+
+### Open API 
+
+https://github.com/OAI/OpenAPI-Specification
+
+## Dependencies
+
+[Mason](https://github.com/metamug/mason) v3.4 available on Maven central
