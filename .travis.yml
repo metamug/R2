@@ -9,3 +9,7 @@ addons:
 script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
   - sh build.sh
+
+notifications:
+  email:
+    - archisbhoir2016@gmail.com
