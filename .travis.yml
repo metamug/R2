@@ -2,6 +2,8 @@ matrix:
   include:
     - language: node_js
       python: 7
+      before_script:
+        - cd ui
       script:
         - npm install
   
