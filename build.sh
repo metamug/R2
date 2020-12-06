@@ -25,6 +25,4 @@ cd ../parser
 mvn clean install
 mv parser/target/*.jar server/lib
 
-cd ../ui
-npm install
 mv ui/assets.zip server/webapps/ROOT
