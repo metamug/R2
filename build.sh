@@ -17,6 +17,12 @@ mkdir -p ./server/tempapps
 mkdir -p ./server/backend
 mkdir -p ./server/logs
 
+cd console
+mvn clean install
 mv console/target/console.war server/webapps
+
+cd ../parser
+mvn clean install
 mv parser/target/*.jar server/lib
+
 mv ui/assets.zip server/webapps/ROOT
