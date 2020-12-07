@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { ListGroup } from 'react-bootstrap'
 import styled from 'styled-components'
 import { ResourceContext } from 'providers/ResourceContext.jsx'
+import { getPrintableDate } from 'utils/date'
 
 const StyledListItem = styled(ListGroup.Item)`
   margin: 3px 6px 0 5px;
@@ -30,8 +31,11 @@ export default function () {
       <StyledListItem>
         {' '}
         <span style={{ marginRight: '15px', fontSize: '16px' }}>
-          EndPoints:{' '}
-        </span>{' '}
+          EndPoints:
+        </span>
+        <a>
+          {`/${state.selectedResource.version}/${state.selectedResource.name}`}{' '}
+        </a>{' '}
       </StyledListItem>
       <StyledListItem>
         {' '}
@@ -39,6 +43,13 @@ export default function () {
           Created On:{' '}
         </span>
         {state.selectedResource.created}{' '}
+      </StyledListItem>
+      <StyledListItem>
+        {' '}
+        <span style={{ marginRight: '15px', fontSize: '16px' }}>
+          Last Modified On:
+        </span>
+        {getPrintableDate(state.selectedResource.created)}{' '}
       </StyledListItem>
     </div>
   )
