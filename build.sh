@@ -19,4 +19,4 @@ mkdir -p ./server/logs
 
 mv console/target/console.war server/webapps
 mv parser/target/*.jar server/lib
-mv ui/assets.zip server/webapps/ROOT
+mv ui/src/assets server/webapps/ROOT

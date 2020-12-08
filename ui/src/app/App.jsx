@@ -10,6 +10,19 @@ import APIDocs from 'features/docs/Redoc.jsx'
 import LoginView from 'features/auth/LoginView.jsx'
 import { useGlobalContext } from '../providers/GlobalContext'
 
+const AuthenticatedRoute = (props) => {
+  const { component: Component, auth, ...rest } = props
+  debugger
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        auth === true ? <Component {...props} /> : <Redirect to="/login" />
+      }
+    />
+  )
+}
+
 const RedirectToResources = () => <Redirect to="/resources" />
 
 const LogOut = () => {
@@ -21,9 +34,7 @@ const LogOut = () => {
 
 function App(props) {
   const [globalState] = useGlobalContext()
-  useEffect(() => {
-    console.log(globalState)
-  }, [])
+  const { isLoggedIn } = globalState
   return (
     <div className="App">
       <LoadingProvider>
@@ -33,10 +44,25 @@ function App(props) {
             {/*{!loggedIn && <Redirect exact to="/login" />}*/}
             <Route exact path="/" component={RedirectToResources} />
             <Route exact path="/login" component={LoginView} />
-            <Route exact path="/logout" component={LogOut} />
-            <Route exact path="/resources" component={Resources} />
-            <Route exact path="/editor" component={ResourceEditor} />
-            <Route exact path="/docs/:app" component={APIDocs} />
+            <AuthenticatedRoute
+              exact
+              path="/logout"
+              auth={isLoggedIn}
+              component={LogOut}
+            />
+            <AuthenticatedRoute
+              exact
+              path="/resources"
+              auth={isLoggedIn}
+              component={Resources}
+            />
+            <AuthenticatedRoute
+              exact
+              path="/editor"
+              auth={isLoggedIn}
+              component={ResourceEditor}
+            />
+            <AuthenticatedRoute exact path="/docs/:app" component={APIDocs} />
           </Switch>
         </ErrorModalProvider>
       </LoadingProvider>
