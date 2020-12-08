@@ -40,8 +40,14 @@ maps to its own URI. This makes resources easily identifiable and managable.
 
 https://metamug.com/docs/resource-file
 
+### Datasources
+
+[Read this](https://github.com/metamug/R2/blob/develop/docs/datasources.md)
+
 ### Open API 
 
 https://github.com/OAI/OpenAPI-Specification
 
+## Dependencies
 
+[Mason](https://github.com/metamug/mason) v3.4 available on Maven central

@@ -21,3 +21,7 @@ code {
   max-height: 90vh;
   /* overflow-y: auto; */
 }
+
+.CodeMirror {
+  min-height: 520px;
+}
