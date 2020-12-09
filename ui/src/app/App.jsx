@@ -14,7 +14,6 @@ import { useGlobalContext } from '../providers/GlobalContext'
 
 const AuthenticatedRoute = (props) => {
   const { component: Component, auth, ...rest } = props
-  debugger
   return (
     <Route
       {...rest}
@@ -41,6 +40,7 @@ function App(props) {
     <div className="App">
       <LoadingProvider>
         <ErrorModalProvider>
+        <ResourceProvider>
           <NavigationBar />
           <Switch>
             {/*{!loggedIn && <Redirect exact to="/login" />}*/}
@@ -71,6 +71,7 @@ function App(props) {
                 component={ResourceManagement}
               />
           </Switch>
+        </ResourceProvider>
         </ErrorModalProvider>
       </LoadingProvider>
     </div>

@@ -1,13 +1,13 @@
 import XMLEditor from 'components/XMLEditor'
-import React, { createRef, useEffect, useState, useContext } from 'react'
+import { useResourceContext } from 'providers/ResourceContext.jsx'
+import React, { useEffect, useState } from 'react'
 import { Breadcrumb, Form, Modal, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { getParams } from 'utils/queryParams'
-import { ResourceContext } from 'providers/ResourceContext.jsx'
 
 function ResourceEditor(props) {
-  const cmRef = createRef()
-  const { state, handlers } = useContext(ResourceContext)
+  const [state, handlers, refs] = useResourceContext()
+
   const [connectionError, setConnectionError] = useState(false)
   const [isNew, setIsNew] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -32,16 +32,13 @@ function ResourceEditor(props) {
   }
 
   useEffect(() => {
-    handlers.getXMLForSelectedResource()
-
     window.addEventListener('keydown', overrideSave)
-
     // cleanup this component
     return () => {
       window.removeEventListener('beforeunload', handlers.onBeforeUnload)
       window.removeEventListener('keydown', overrideSave)
     }
-  }, [state.selectedResource.version])
+  }, [handlers.trimAsteriskFromTitle(state.selectedResource.name)])
 
   useEffect(() => {
     const { name, version, isNew } = getParams(props.location.search)
@@ -307,7 +304,7 @@ function ResourceEditor(props) {
       </Row>
       <div className="XMLInput">
         <XMLEditor
-          ref={cmRef}
+          ref={refs.cmRef}
           documentModified={state.documentModified}
           onTextChange={handlers.onTextChange}
           value={state.value}

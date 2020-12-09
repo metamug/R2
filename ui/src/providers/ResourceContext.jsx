@@ -1,10 +1,14 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import { createNewResource, fetchXML, saveResourceXML } from 'api/apis'
 import { API_URL_DOMAIN, newResourceDefaultVal } from 'constants/resource'
-import { useLoadingContext } from 'providers/LoadingContext'
 import { useErrorModalContext } from 'providers/ErrorModalContext'
-import { getParams } from 'utils/queryParams'
-import { saveResourceXML } from 'api/apis'
-import { createNewResource, fetchXML } from 'api/apis'
+import { useLoadingContext } from 'providers/LoadingContext'
+import React, {
+  createContext,
+  createRef,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 const ResourceContext = createContext()
 
@@ -17,16 +21,22 @@ const initialResource = {
 }
 
 export default function ResourceProvider(props) {
-  const [darkTheme, setDarkTheme] = useState(true)
-  const [selectedResource, setSelectedResource] = useState(initialResource)
+  const cmRef = createRef()
+
   const [loading, setLoading] = useLoadingContext()
   const [error, setError] = useErrorModalContext()
+
+  const [darkTheme, setDarkTheme] = useState(true)
+  const [selectedResource, setSelectedResource] = useState(initialResource)
   const [nameModalOpen, setNameModalOpen] = useState(false)
-  const { name, version, created, isNewResource } = selectedResource
   const [documentModified, setDocumentModified] = useState(false)
   const [value, setValue] = useState(newResourceDefaultVal)
   const [savedValue, setSavedValue] = useState('')
   const [newResourceName, setNewResourceName] = useState('')
+  const [xmlResponse, setXmlResponse] = useState('')
+  const [xmlUpdated, setXmlUpdated] = useState(false)
+
+  const { name, version, created, isNewResource } = selectedResource
 
   const openRes = () => {
     const url = `${API_URL_DOMAIN}/${localStorage.defaultItem}/${version}/${name}`
@@ -96,6 +106,7 @@ export default function ResourceProvider(props) {
           payload: { message: `Getting resource data...` },
         })
         const { data } = await fetchXML(name, version)
+        setXmlResponse(data)
         setSavedValue(data)
         setValue(data)
         return setLoading({ type: 'close' })
@@ -158,6 +169,8 @@ export default function ResourceProvider(props) {
         type: 'open',
         payload: { message: `Saving Resource...` },
       })
+      console.log(value)
+      debugger
       await saveResourceXML(trimAsteriskFromTitle(name), version, value)
       setDocumentModified(false)
       setSelectedResource({
@@ -202,16 +215,21 @@ export default function ResourceProvider(props) {
   }, [])*/
 
   useEffect(() => {
+    debugger
     getXMLForSelectedResource()
+  }, [trimAsteriskFromTitle(selectedResource.name)])
 
-    //window.addEventListener('keydown', overrideSave)
-
-    // cleanup this component
-    return () => {
-      window.removeEventListener('beforeunload', onBeforeUnload)
-      //window.removeEventListener('keydown', overrideSave)
+  useEffect(() => {
+    // getXMLForSelectedResource()
+    if (cmRef.current && xmlResponse !== '') {
+      // const cmValue = cmRef.current.getCodeMirror().getValue()
+      // if (cmValue !== xmlResponse) return
+      if (!xmlUpdated) {
+        cmRef.current.getCodeMirror().setValue(xmlResponse)
+        setXmlUpdated(true)
+      }
     }
-  }, [selectedResource.version])
+  }, [cmRef])
 
   useEffect(() => {
     document.title = name
@@ -261,7 +279,9 @@ export default function ResourceProvider(props) {
           onBeforeUnload,
           newResourceTitle,
           handleNewNameChange,
+          trimAsteriskFromTitle,
         },
+        refs: { cmRef },
       }}
     >
       {props.children}
@@ -269,20 +289,12 @@ export default function ResourceProvider(props) {
   )
 }
 
-export const withResourceContext = (Component) => (props) => (
-  <ResourceContext.Consumer>
-    {(context) => <Component resourceContext={context} {...props} />}
-  </ResourceContext.Consumer>
-)
-
-const Consumer = ResourceContext.Consumer
-
 function useResourceContext() {
   const context = useContext(ResourceContext)
   if (context === undefined) {
-    throw new Error('useCountDispatch must be used within a CountProvider')
+    throw new Error('Context Unavailable')
   }
   return [context.state, context.handlers, context.refs]
 }
 
-export { ResourceContext, Consumer as ResourceConsumer, useResourceContext }
+export { ResourceContext, useResourceContext }
