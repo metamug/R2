@@ -217,6 +217,18 @@ function ResourceEditor(props) {
   }, [])
 
   useEffect(() => {
+    // getXMLForSelectedResource()
+    if (cmRef.current && xmlResponse !== '') {
+      // const cmValue = cmRef.current.getCodeMirror().getValue()
+      // if (cmValue !== xmlResponse) return
+      if (!xmlUpdated) {
+        cmRef.current.getCodeMirror().setValue(xmlResponse)
+        setXmlUpdated(true)
+      }
+    }
+  }, [cmRef])
+
+  useEffect(() => {
     getXMLForSelectedResource()
 
     window.addEventListener('keydown', overrideSave)
