@@ -40,6 +40,7 @@ function ResourceEditor(props) {
   const [selectedResource, setSelectedResource] = useState(initialResource)
   const [newResourceName, setNewResourceName] = useState('')
   const [xmlResponse, setXmlResponse] = useState('')
+  const [xmlUpdated, setXmlUpdated] = useState(false)
 
   const { name, version, isNewResource } = selectedResource
 
