@@ -39,6 +39,7 @@ function ResourceEditor(props) {
   const [savedOnce, setSavedOnce] = useState(false)
   const [selectedResource, setSelectedResource] = useState(initialResource)
   const [newResourceName, setNewResourceName] = useState('')
+  const [xmlResponse, setXmlResponse] = useState('')
 
   const { name, version, isNewResource } = selectedResource
 
@@ -175,6 +176,7 @@ function ResourceEditor(props) {
           payload: { message: `Getting resource data...` },
         })
         const { data } = await fetchXML(name, version)
+        setXmlResponse(data)
         setSavedValue(data)
         setValue(data)
         return setLoading({ type: 'close' })
