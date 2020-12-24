@@ -8,6 +8,8 @@ const apis = axios.create({
   },
 })
 
+const backendName = 'demo'
+
 export async function doLogin(username, password) {
   return await apis.post(
     'accesstoken',
@@ -16,7 +18,7 @@ export async function doLogin(username, password) {
 }
 
 export async function fetchResources() {
-  return await apis.get(`/app/demo/rpx`)
+  return await apis.get(`/app/${backendName}/rpx`)
 }
 export async function fetchXML(resourceName, resourceVersion) {
   return await apis.get(

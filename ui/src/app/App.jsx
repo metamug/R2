@@ -40,38 +40,39 @@ function App(props) {
     <div className="App">
       <LoadingProvider>
         <ErrorModalProvider>
-        <ResourceProvider>
-          <NavigationBar />
-          <Switch>
-            {/*{!loggedIn && <Redirect exact to="/login" />}*/}
-            <Route exact path="/" component={RedirectToResources} />
-            <Route exact path="/login" component={LoginView} />
-            <AuthenticatedRoute
-              exact
-              path="/logout"
-              auth={isLoggedIn}
-              component={LogOut}
-            />
-            <AuthenticatedRoute
-              exact
-              path="/resources"
-              auth={isLoggedIn}
-              component={Resources}
-            />
-            <AuthenticatedRoute
-              exact
-              path="/editor"
-              auth={isLoggedIn}
-              component={ResourceEditor}
-            />
-            <AuthenticatedRoute exact path="/docs/:app" component={APIDocs} />
-            <Route
+          <ResourceProvider>
+            <NavigationBar />
+            <Switch>
+              {/*{!loggedIn && <Redirect exact to="/login" />}*/}
+              <Route exact path="/" component={RedirectToResources} />
+              <Route exact path="/login" component={LoginView} />
+              <AuthenticatedRoute
+                exact
+                path="/logout"
+                auth={isLoggedIn}
+                component={LogOut}
+              />
+              <AuthenticatedRoute
+                exact
+                path="/resources"
+                auth={isLoggedIn}
+                component={Resources}
+              />
+              <AuthenticatedRoute
+                exact
+                path="/editor"
+                auth={isLoggedIn}
+                component={ResourceEditor}
+              />
+              <AuthenticatedRoute exact path="/docs/:app" component={APIDocs} />
+              <Route
                 exact
                 path="/resource-management"
+                auth={isLoggedIn}
                 component={ResourceManagement}
               />
-          </Switch>
-        </ResourceProvider>
+            </Switch>
+          </ResourceProvider>
         </ErrorModalProvider>
       </LoadingProvider>
     </div>
