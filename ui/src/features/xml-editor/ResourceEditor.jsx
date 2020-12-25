@@ -191,7 +191,7 @@ function ResourceEditor(props) {
       // cmRef.current && cmRef.current.getCodeMirror().setValue(value)
     }
   }
-  const overrideSave = (e) => {
+  /* const overrideSave = (e) => {
     const { isNew } = getParams(props.location.search)
     if (
       (window.navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey) &&
@@ -205,7 +205,7 @@ function ResourceEditor(props) {
       }
       // Process the event here (such as click on submit button)
     }
-  }
+  }*/
 
   useEffect(() => {
     const { name, version, isNew } = getParams(props.location.search)
@@ -232,12 +232,12 @@ function ResourceEditor(props) {
   useEffect(() => {
     getXMLForSelectedResource()
 
-    window.addEventListener('keydown', overrideSave)
+    //  window.addEventListener('keydown', overrideSave)
 
     // cleanup this component
     return () => {
       window.removeEventListener('beforeunload', onBeforeUnload)
-      window.removeEventListener('keydown', overrideSave)
+      // window.removeEventListener('keydown', overrideSave)
     }
   }, [selectedResource.version])
 
@@ -258,7 +258,6 @@ function ResourceEditor(props) {
 
   return (
     <div className="container" style={{ marginTop: '10px' }}>
-      {console.log(props)}
       <Row>
         <Breadcrumb style={{ marginLeft: '15px' }}>
           <Breadcrumb.Item>
