@@ -17,7 +17,6 @@ export default function ResourceManagementEditor(props) {
 
   const [loading, setLoading] = useLoadingContext()
   const [error, setError] = useErrorModalContext()
-
   const [connectionError, setConnectionError] = useState(false)
   const [darkTheme, setDarkTheme] = useState(false)
   const [isNew, setIsNew] = useState(false)
@@ -55,6 +54,7 @@ export default function ResourceManagementEditor(props) {
   }
 
   const onTextChange = (text) => {
+    console.log('onTextChange')
     if (!documentModified) {
       window.addEventListener('beforeunload', onBeforeUnload)
       document.title += ' *'
@@ -160,27 +160,30 @@ export default function ResourceManagementEditor(props) {
   }
 
   const getXMLForselectedResource = async () => {
-    if (isNewResource) {
-      try {
-        setLoading({
-          type: 'open',
-          payload: { message: `Getting resource data...` },
-        })
-        const { data } = await fetchXML(name, version)
-        //console.log(data)
-        setXmlResponse(data)
-        setSavedValue(data)
-        setValue(data)
-        return setLoading({ type: 'close' })
-      } catch (error) {
-        setLoading({ type: 'close' })
-        return setError({
-          type: 'open',
-          payload: { message: 'Could not get resource data' },
-        })
-      }
-      // cmRef.current && cmRef.current.getCodeMirror().setValue(value)
+    //if (isNewResource) {
+    console.log('entered getXml')
+    try {
+      setLoading({
+        type: 'open',
+        payload: { message: `Getting resource data...` },
+      })
+      const { data } = await fetchXML(
+        trimAsteriskFromTitle(state.selectedResource.name),
+        state.selectedResource.version
+      )
+      setXmlResponse(data)
+      setSavedValue(data)
+      setValue(data)
+      return setLoading({ type: 'close' })
+    } catch (error) {
+      setLoading({ type: 'close' })
+      /*return setError({
+        type: 'open',
+        payload: { message: 'Could not get resource data' },
+      })*/
     }
+    //  cmRef.current && cmRef.current.getCodeMirror().setValue(value)
+    // }
   }
 
   /*const overrideSave = (e) => {
@@ -235,7 +238,7 @@ export default function ResourceManagementEditor(props) {
       window.removeEventListener('beforeunload', onBeforeUnload)
       // window.removeEventListener('keydown', overrideSave)
     }
-  }, [state.selectedResource.version])
+  }, [trimAsteriskFromTitle(state.selectedResource.name)])
 
   useEffect(() => {
     document.title = name
@@ -247,7 +250,7 @@ export default function ResourceManagementEditor(props) {
       setDocumentModified(false)
       handlers.setSelectedResource({
         ...state.selectedResource,
-        name: trimAsteriskFromTitle(name),
+        name: trimAsteriskFromTitle(state.selectedResource.name),
       })
     }
   }, [value])

@@ -22,13 +22,14 @@ import 'codemirror/keymap/sublime'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material.css'
 import 'codemirror/theme/neat.css'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useEffect, useState, useContext } from 'react'
 import Codemirror from 'react-codemirror'
 
 import 'codemirror/mode/xml/xml'
 
 import 'codemirror/addon/display/placeholder'
 import { cmTags } from 'constants/xml-editor'
+import { ResourceContext } from 'providers/ResourceContext.jsx'
 
 const XMLEditor = forwardRef(
   ({ value, onTextChange, darkTheme, ...props }, ref) => {
@@ -43,6 +44,9 @@ const XMLEditor = forwardRef(
         }, 100)
       return cm.Pass
     }
+
+    const { state, handlers } = useContext(ResourceContext)
+    const [key, setKey] = useState(0)
 
     const completeIfAfterLt = (editor) => {
       // const codeMirror = refs['xmlEditor'].getCodeMirrorInstance();
@@ -100,6 +104,11 @@ const XMLEditor = forwardRef(
       },
     }
 
+    useEffect(() => {
+      setKey(key + 1)
+      console.log(state.selectedResource)
+    }, [state.selectedResource])
+
     return (
       <div>
         <Codemirror
@@ -108,6 +117,7 @@ const XMLEditor = forwardRef(
             theme: darkTheme ? 'material' : 'neat',
           }}
           {...props}
+          key={key}
           onChange={onTextChange}
           autoFocus
           ref={ref}

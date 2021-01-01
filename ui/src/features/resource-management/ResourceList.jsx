@@ -11,10 +11,11 @@ export default function ResourceList() {
 
   const [loading, setLoading] = useLoadingContext()
 
-  const [setConnectionError] = useState(false)
+  const [ConnectionError, setConnectionError] = useState(false)
   const [data, setData] = useState([])
 
   const getResources = async () => {
+    console.log('getResources')
     try {
       setLoading({
         type: 'open',
@@ -22,6 +23,12 @@ export default function ResourceList() {
       })
       const { data } = await fetchResources()
       setData(data.data)
+      handlers.setSelectedResource({
+        ...state.selectedResource,
+        name: data.data[0].name,
+        version: data.data[0].version,
+        created: data.data[0].created,
+      })
       setLoading({ type: 'close' })
     } catch (error) {
       setLoading({ type: 'close' })
@@ -31,6 +38,10 @@ export default function ResourceList() {
         payload: { message: error.message || 'Failed to get resources' },
       })
     }
+  }
+
+  const trimAsteriskFromTitle = (name) => {
+    return name.replace(/\*/g, '')
   }
 
   useEffect(() => {
@@ -43,12 +54,14 @@ export default function ResourceList() {
 
   data.map((value) => {
     config.data.push({
-      name: value.name,
-      isActive: value.name === state.selectedResource.name,
+      name: trimAsteriskFromTitle(value.name),
+      isActive:
+        trimAsteriskFromTitle(value.name) ===
+        trimAsteriskFromTitle(state.selectedResource.name),
       onClickItem: () =>
         handlers.setSelectedResource({
           ...state.selectedResource,
-          name: value.name,
+          name: trimAsteriskFromTitle(value.name),
           version: value.version,
           created: value.created,
         }),
