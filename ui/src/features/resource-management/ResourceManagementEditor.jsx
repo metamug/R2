@@ -109,39 +109,9 @@ export default function ResourceManagementEditor(props) {
     }
   }
 
-  /*const createResource = async () => {
-    if (/^[a-z]+$/.test(newResourceName)) {
-      setLoading({
-        type: 'open',
-        payload: { message: `Creating Resource...` },
-      })
-      try {
-        await createNewResource(newResourceName, value)
-        setLoading({ type: 'close' })
-        props.history.push('/resources')
-      } catch (error) {
-        setLoading({ type: 'close' })
-        return setError({
-          type: 'open',
-          payload: {
-            message: error.message || 'Failed to create resource',
-          },
-        })
-      }
-    } else {
-      return setError({
-        type: 'open',
-        payload: { message: 'Invalid resource name provided' },
-      })
-    }
-  }*/
-
   const saveHandler = (e) => {
     e.preventDefault()
     if (value !== '') {
-      /* if (isNewResource) {
-        return createResource()
-      }*/
       saveResource()
     } else {
       return setError({
@@ -160,7 +130,6 @@ export default function ResourceManagementEditor(props) {
   }
 
   const getXMLForselectedResource = async () => {
-    //if (isNewResource) {
     console.log('entered getXml')
     try {
       setLoading({
@@ -182,45 +151,14 @@ export default function ResourceManagementEditor(props) {
         payload: { message: 'Could not get resource data' },
       })*/
     }
-    //  cmRef.current && cmRef.current.getCodeMirror().setValue(value)
-    // }
   }
-
-  /*const overrideSave = (e) => {
-    const { isNew } = getParams(props.location.search)
-    if (
-      (window.navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey) &&
-      e.keyCode == 83
-    ) {
-      e.preventDefault()
-      if (isNew === 'true') {
-        setNameModalOpen(true)
-      } else {
-        saveResource(e)
-      }
-      // Process the event here (such as click on submit button)
-    }
-  }*/
-
-  /*useEffect(() => {
-    const { name, version, isNew } = getParams(props.location.search)
-    handlers.setselectedResource({
-      name: isNew === 'true' ? newResourceTitle : name,
-      version: version,
-      isNewResource: isNew === 'true',
-    })
-    setDarkTheme(localStorage.darkMode)
-  }, [])*/
 
   useEffect(() => {
     setDarkTheme(localStorage.darkMode)
   }, [])
 
   useEffect(() => {
-    //getXMLForselectedResource()
     if (cmRef.current && xmlResponse !== '') {
-      // const cmValue = cmRef.current.getCodeMirror().getValue()
-      // if (cmValue !== xmlResponse) return
       if (!xmlUpdated) {
         cmRef.current.getCodeMirror().setValue(xmlResponse)
         setXmlUpdated(true)
@@ -230,13 +168,8 @@ export default function ResourceManagementEditor(props) {
 
   useEffect(() => {
     getXMLForselectedResource()
-
-    //window.addEventListener('keydown', overrideSave)
-
-    // cleanup this component
     return () => {
       window.removeEventListener('beforeunload', onBeforeUnload)
-      // window.removeEventListener('keydown', overrideSave)
     }
   }, [trimAsteriskFromTitle(state.selectedResource.name)])
 

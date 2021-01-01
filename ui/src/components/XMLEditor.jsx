@@ -106,7 +106,6 @@ const XMLEditor = forwardRef(
 
     useEffect(() => {
       setKey(key + 1)
-      console.log(state.selectedResource)
     }, [state.selectedResource])
 
     return (

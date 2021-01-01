@@ -32,7 +32,7 @@ const CustomScrollBarDiv = styled.div`
 `
 
 const ScrollableDivs = styled(CustomScrollBarDiv)`
-  height: 85%;
+  height: 69vh;
   overflow-y: auto;
 
   & thead th {
