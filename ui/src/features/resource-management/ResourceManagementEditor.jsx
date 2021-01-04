@@ -54,15 +54,10 @@ export default function ResourceManagementEditor(props) {
   }
 
   const onTextChange = (text) => {
-    console.log('onTextChange')
     if (!documentModified) {
       window.addEventListener('beforeunload', onBeforeUnload)
       document.title += ' *'
       setDocumentModified(true)
-      handlers.setSelectedResource({
-        ...state.selectedResource,
-        name: getModifiedTitle(state.selectedResource.name),
-      })
       return setValue(text)
     }
     return setValue(text)
@@ -94,10 +89,8 @@ export default function ResourceManagementEditor(props) {
       })
       await saveResourceXML(trimAsteriskFromTitle(name), version, value)
       setDocumentModified(false)
-      handlers.setSelectedResource({
-        ...state.selectedResource,
-        name: trimAsteriskFromTitle(state.selectedResource.name),
-      })
+      document.title = state.selectedResource.name
+      setSavedValue(value)
       setLoading({ type: 'close' })
       window.removeEventListener('beforeunload', onBeforeUnload)
     } catch (error) {
@@ -130,7 +123,6 @@ export default function ResourceManagementEditor(props) {
   }
 
   const getXMLForselectedResource = async () => {
-    console.log('entered getXml')
     try {
       setLoading({
         type: 'open',
@@ -174,11 +166,12 @@ export default function ResourceManagementEditor(props) {
   }, [trimAsteriskFromTitle(state.selectedResource.name)])
 
   useEffect(() => {
-    document.title = name
-  }, [name])
+    document.title = state.selectedResource.name
+  }, [state.selectedResource.name])
 
   useEffect(() => {
     if (value === savedValue) {
+      document.title = state.selectedResource.name
       window.removeEventListener('beforeunload', onBeforeUnload)
       setDocumentModified(false)
       handlers.setSelectedResource({

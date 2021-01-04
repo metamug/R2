@@ -15,7 +15,6 @@ export default function ResourceList() {
   const [data, setData] = useState([])
 
   const getResources = async () => {
-    console.log('getResources')
     try {
       setLoading({
         type: 'open',
@@ -54,7 +53,7 @@ export default function ResourceList() {
 
   data.map((value) => {
     config.data.push({
-      name: trimAsteriskFromTitle(value.name),
+      name: value.name,
       isActive:
         trimAsteriskFromTitle(value.name) ===
         trimAsteriskFromTitle(state.selectedResource.name),
