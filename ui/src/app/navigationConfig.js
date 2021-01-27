@@ -2,6 +2,7 @@ import AboutIcon from 'assets/images/menu/about-icon.svg'
 import APIDocsIcon from 'assets/images/menu/api-docs-icon.svg'
 import LogoutIcon from 'assets/images/menu/logout-icon.svg'
 import ResourcesIcon from 'assets/images/menu/resources-icon.svg'
+import ResourceManagerIcon from 'assets/images/menu/resourceManager-icon.svg'
 
 export const navigationConfig = {
   menu: {
@@ -10,6 +11,12 @@ export const navigationConfig = {
       src: ResourcesIcon,
       alt: 'resources icon',
       title: 'Resources',
+    },
+    resourceManager: {
+      path: '/resource-manager',
+      src: ResourceManagerIcon,
+      alt: 'resource-manager icon',
+      title: 'Resource Manager',
     },
     docs: {
       path: `/docs/${localStorage.defaultItem}`,

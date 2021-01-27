@@ -167,6 +167,13 @@ export default function ResourceManagementEditor(props) {
 
   useEffect(() => {
     document.title = state.selectedResource.name
+    if (value != savedValue) {
+      console.log('not saved')
+      /*return setError({
+        type: 'open',
+        payload: { message: 'Changes not saved' },
+      })*/
+    }
   }, [state.selectedResource.name])
 
   useEffect(() => {

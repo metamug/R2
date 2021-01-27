@@ -67,7 +67,7 @@ function App(props) {
               <AuthenticatedRoute exact path="/docs/:app" component={APIDocs} />
               <Route
                 exact
-                path="/resource-management"
+                path="/resource-manager"
                 auth={isLoggedIn}
                 component={ResourceManagement}
               />
