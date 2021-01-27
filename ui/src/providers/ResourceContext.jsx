@@ -12,7 +12,7 @@ import React, {
 
 const ResourceContext = createContext()
 
-const newResourceTitle = 'New Resource'
+export const newResourceTitle = 'New Resource'
 
 const initialResource = {
   name: newResourceTitle,

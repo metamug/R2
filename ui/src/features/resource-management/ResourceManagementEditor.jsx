@@ -31,7 +31,7 @@ export default function ResourceManagementEditor(props) {
   const [errorMessage, setErrorMessage] = useState('')
   const [savedOnce, setSavedOnce] = useState(false)
   const [newResourceName, setNewResourceName] = useState('')
-  const [xmlResponse, setXmlResponse] = useState('')
+  const [xmlResponse, setXmlResponse] = useState(false)
   const [xmlUpdated, setXmlUpdated] = useState(false)
   const { name, version, created, isNewResource } = state.selectedResource
 
@@ -122,7 +122,7 @@ export default function ResourceManagementEditor(props) {
     })
   }
 
-  const getXMLForselectedResource = async () => {
+  const getXMLForSelectedResource = async () => {
     try {
       setLoading({
         type: 'open',
@@ -132,16 +132,16 @@ export default function ResourceManagementEditor(props) {
         trimAsteriskFromTitle(state.selectedResource.name),
         state.selectedResource.version
       )
-      setXmlResponse(data)
+      setXmlResponse(true)
       setSavedValue(data)
       setValue(data)
       return setLoading({ type: 'close' })
     } catch (error) {
       setLoading({ type: 'close' })
-      /*return setError({
+      return setError({
         type: 'open',
         payload: { message: 'Could not get resource data' },
-      })*/
+      })
     }
   }
 
@@ -150,16 +150,17 @@ export default function ResourceManagementEditor(props) {
   }, [])
 
   useEffect(() => {
-    if (cmRef.current && xmlResponse !== '') {
-      if (!xmlUpdated) {
-        cmRef.current.getCodeMirror().setValue(xmlResponse)
-        setXmlUpdated(true)
-      }
-    }
+    // if (cmRef.current && xmlResponse !== '') {
+    //   if (!xmlUpdated) {
+    //     cmRef.current.getCodeMirror().setValue(xmlResponse)
+    //     setXmlUpdated(true)
+    //   }
+    // }
   }, [cmRef])
 
   useEffect(() => {
-    getXMLForselectedResource()
+    if (trimAsteriskFromTitle(state.selectedResource.name) !== newResourceTitle)
+      getXMLForSelectedResource()
     return () => {
       window.removeEventListener('beforeunload', onBeforeUnload)
     }
@@ -169,10 +170,10 @@ export default function ResourceManagementEditor(props) {
     document.title = state.selectedResource.name
     if (value != savedValue) {
       console.log('not saved')
-      /*return setError({
+      return setError({
         type: 'open',
         payload: { message: 'Changes not saved' },
-      })*/
+      })
     }
   }, [state.selectedResource.name])
 
@@ -181,10 +182,13 @@ export default function ResourceManagementEditor(props) {
       document.title = state.selectedResource.name
       window.removeEventListener('beforeunload', onBeforeUnload)
       setDocumentModified(false)
-      handlers.setSelectedResource({
-        ...state.selectedResource,
-        name: trimAsteriskFromTitle(state.selectedResource.name),
-      })
+      if (xmlResponse) {
+        handlers.setSelectedResource({
+          ...state.selectedResource,
+          name: trimAsteriskFromTitle(state.selectedResource.name),
+        })
+        setXmlResponse(false)
+      }
     }
   }, [value])
 
