@@ -2,6 +2,8 @@ import ErrorModalProvider from 'providers/ErrorModalContext'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import LoadingProvider from 'providers/LoadingContext'
 import { userLoggedIn } from 'utils/auth'
+import SaveChangesModalProvider from 'providers/SaveChangesModalContext'
+import ResourceProvider from './ResourceContext'
 
 const GlobalContext = createContext()
 
@@ -41,9 +43,13 @@ export default function GlobalProvider(props) {
         },
       }}
     >
-      <ErrorModalProvider>
-        <LoadingProvider>{props.children}</LoadingProvider>
-      </ErrorModalProvider>
+      <ResourceProvider>
+        <ErrorModalProvider>
+          <SaveChangesModalProvider>
+            <LoadingProvider>{props.children}</LoadingProvider>
+          </SaveChangesModalProvider>
+        </ErrorModalProvider>
+      </ResourceProvider>
     </GlobalContext.Provider>
   )
 }

@@ -3,6 +3,7 @@ import Resources from 'features/resources/Resources'
 import ResourceManagement from 'features/resource-management/ResourceManagementContainer'
 import ResourceEditor from 'features/xml-editor/ResourceEditor'
 import ErrorModalProvider from 'providers/ErrorModalContext'
+import SaveChangesModalProvider from 'providers/SaveChangesModalContext'
 import LoadingProvider from 'providers/LoadingContext'
 import React, { useEffect } from 'react'
 import Switch from 'react-bootstrap/esm/Switch'
@@ -39,41 +40,47 @@ function App(props) {
   return (
     <div className="App">
       <LoadingProvider>
-        <ErrorModalProvider>
-          <ResourceProvider>
-            <NavigationBar />
-            <Switch>
-              {/*{!loggedIn && <Redirect exact to="/login" />}*/}
-              <Route exact path="/" component={RedirectToResources} />
-              <Route exact path="/login" component={LoginView} />
-              <AuthenticatedRoute
-                exact
-                path="/logout"
-                auth={isLoggedIn}
-                component={LogOut}
-              />
-              <AuthenticatedRoute
-                exact
-                path="/resources"
-                auth={isLoggedIn}
-                component={Resources}
-              />
-              <AuthenticatedRoute
-                exact
-                path="/editor"
-                auth={isLoggedIn}
-                component={ResourceEditor}
-              />
-              <AuthenticatedRoute exact path="/docs/:app" component={APIDocs} />
-              <Route
-                exact
-                path="/resource-manager"
-                auth={isLoggedIn}
-                component={ResourceManagement}
-              />
-            </Switch>
-          </ResourceProvider>
-        </ErrorModalProvider>
+        <SaveChangesModalProvider>
+          <ErrorModalProvider>
+            <ResourceProvider>
+              <NavigationBar />
+              <Switch>
+                {/*{!loggedIn && <Redirect exact to="/login" />}*/}
+                <Route exact path="/" component={RedirectToResources} />
+                <Route exact path="/login" component={LoginView} />
+                <AuthenticatedRoute
+                  exact
+                  path="/logout"
+                  auth={isLoggedIn}
+                  component={LogOut}
+                />
+                <AuthenticatedRoute
+                  exact
+                  path="/resources"
+                  auth={isLoggedIn}
+                  component={Resources}
+                />
+                <AuthenticatedRoute
+                  exact
+                  path="/editor"
+                  auth={isLoggedIn}
+                  component={ResourceEditor}
+                />
+                <AuthenticatedRoute
+                  exact
+                  path="/docs/:app"
+                  component={APIDocs}
+                />
+                <Route
+                  exact
+                  path="/resource-manager"
+                  auth={isLoggedIn}
+                  component={ResourceManagement}
+                />
+              </Switch>
+            </ResourceProvider>
+          </ErrorModalProvider>
+        </SaveChangesModalProvider>
       </LoadingProvider>
     </div>
   )

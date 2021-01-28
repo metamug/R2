@@ -1,11 +1,11 @@
 import XMLEditor from 'components/XMLEditor'
 import { API_URL_DOMAIN, newResourceDefaultVal } from 'constants/resource'
 import React, { createRef, useEffect, useState, useContext } from 'react'
-import { createNewResource, fetchXML } from 'api/apis'
-import { getParams } from 'utils/queryParams'
+import { fetchXML } from 'api/apis'
 import { saveResourceXML } from 'api/apis'
 import { useLoadingContext } from 'providers/LoadingContext'
 import { useErrorModalContext } from 'providers/ErrorModalContext'
+import { useSaveChangesModalContext } from 'providers/SaveChangesModalContext'
 import { ResourceContext } from 'providers/ResourceContext.jsx'
 
 const newResourceTitle = 'New Resource'
@@ -17,10 +17,11 @@ export default function ResourceManagementEditor(props) {
 
   const [loading, setLoading] = useLoadingContext()
   const [error, setError] = useErrorModalContext()
+  const [saveChanges, setSaveChanges] = useSaveChangesModalContext()
   const [connectionError, setConnectionError] = useState(false)
   const [darkTheme, setDarkTheme] = useState(false)
   const [isNew, setIsNew] = useState(false)
-  const [savedValue, setSavedValue] = useState('')
+  const [savedValue, setSavedValue] = useState(newResourceDefaultVal)
   const [value, setValue] = useState(newResourceDefaultVal)
   const [documentModified, setDocumentModified] = useState(false)
   const [nameModalOpen, setNameModalOpen] = useState(false)
@@ -82,6 +83,7 @@ export default function ResourceManagementEditor(props) {
   }
 
   const saveResource = async () => {
+    console.log('saving is called')
     try {
       setLoading({
         type: 'open',
@@ -92,6 +94,7 @@ export default function ResourceManagementEditor(props) {
       document.title = state.selectedResource.name
       setSavedValue(value)
       setLoading({ type: 'close' })
+      handlers.setSaved(true)
       window.removeEventListener('beforeunload', onBeforeUnload)
     } catch (error) {
       setLoading({ type: 'close' })
@@ -140,7 +143,10 @@ export default function ResourceManagementEditor(props) {
       setLoading({ type: 'close' })
       return setError({
         type: 'open',
-        payload: { message: 'Could not get resource data' },
+        payload: {
+          message: 'Could not get resource data',
+          saveHandler: saveHandler(),
+        },
       })
     }
   }
@@ -168,17 +174,18 @@ export default function ResourceManagementEditor(props) {
 
   useEffect(() => {
     document.title = state.selectedResource.name
-    if (value != savedValue) {
-      console.log('not saved')
-      /*return setError({
+    /*if (value != savedValue) {
+      //handlers.setSaved(false)
+      return setSaveChanges({
         type: 'open',
         payload: { message: 'Changes not saved' },
-      })*/
-    }
+      })
+    }*/
   }, [state.selectedResource.name])
 
   useEffect(() => {
     if (value === savedValue) {
+      handlers.setSaved(true)
       document.title = state.selectedResource.name
       window.removeEventListener('beforeunload', onBeforeUnload)
       setDocumentModified(false)
@@ -189,6 +196,8 @@ export default function ResourceManagementEditor(props) {
         })
         setXmlResponse(false)
       }
+    } else {
+      handlers.setSaved(false)
     }
   }, [value])
 

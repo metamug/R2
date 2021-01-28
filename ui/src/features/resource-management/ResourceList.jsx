@@ -4,13 +4,14 @@ import { useErrorModalContext } from 'providers/ErrorModalContext'
 import { useLoadingContext } from 'providers/LoadingContext'
 import CustomList from 'elements/CustomList'
 import { ResourceContext } from 'providers/ResourceContext.jsx'
+import { useSaveChangesModalContext } from 'providers/SaveChangesModalContext'
 
 export default function ResourceList() {
   const [setError] = useErrorModalContext()
   const { state, handlers } = useContext(ResourceContext)
 
   const [loading, setLoading] = useLoadingContext()
-
+  const [saveChanges, setSaveChanges] = useSaveChangesModalContext()
   const [ConnectionError, setConnectionError] = useState(false)
   const [data, setData] = useState([])
 
@@ -57,13 +58,21 @@ export default function ResourceList() {
       isActive:
         trimAsteriskFromTitle(value.name) ===
         trimAsteriskFromTitle(state.selectedResource.name),
-      onClickItem: () =>
-        handlers.setSelectedResource({
-          ...state.selectedResource,
-          name: trimAsteriskFromTitle(value.name),
-          version: value.version,
-          created: value.created,
-        }),
+      onClickItem: () => {
+        if (state.saved) {
+          handlers.setSelectedResource({
+            ...state.selectedResource,
+            name: trimAsteriskFromTitle(value.name),
+            version: value.version,
+            created: value.created,
+          })
+        } else {
+          return setSaveChanges({
+            type: 'open',
+            payload: { message: 'Changes not saved' },
+          })
+        }
+      },
     })
   })
 

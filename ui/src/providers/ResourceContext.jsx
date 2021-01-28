@@ -15,14 +15,18 @@ export default function ResourceProvider(props) {
 
   const [selectedResource, setSelectedResource] = useState(initialResource)
 
+  const [saved, setSaved] = useState(true)
+
   return (
     <ResourceContext.Provider
       value={{
         state: {
           selectedResource,
+          saved,
         },
         handlers: {
           setSelectedResource,
+          setSaved,
         },
         refs: { cmRef },
       }}
