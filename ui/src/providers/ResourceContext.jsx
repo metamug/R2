@@ -1,14 +1,4 @@
-import { createNewResource, fetchXML, saveResourceXML } from 'api/apis'
-import { API_URL_DOMAIN, newResourceDefaultVal } from 'constants/resource'
-import { useErrorModalContext } from 'providers/ErrorModalContext'
-import { useLoadingContext } from 'providers/LoadingContext'
-import React, {
-  createContext,
-  createRef,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import React, { createContext, createRef, useContext, useState } from 'react'
 
 const ResourceContext = createContext()
 

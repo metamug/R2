@@ -6,8 +6,7 @@ import Reference from './Reference'
 
 export default function ResourceManagement() {
   return (
-    <div>
-      <p style={{ fontSize: '28px', marginTop: '25px' }}>Resource Manager</p>
+    <div style={{ marginTop: '3%' }}>
       <Row className="mr-0">
         <div className="col-md-3 mt-3 ">
           <ResourceList />
