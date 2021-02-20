@@ -1,0 +1,31 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e43bb251.chunk.css",
+    "main.js": "/static/js/main.a29daba3.chunk.js",
+    "main.js.map": "/static/js/main.a29daba3.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.7489ab04.js",
+    "runtime-main.js.map": "/static/js/runtime-main.7489ab04.js.map",
+    "static/css/2.b74a5506.chunk.css": "/static/css/2.b74a5506.chunk.css",
+    "static/js/2.7e703a94.chunk.js": "/static/js/2.7e703a94.chunk.js",
+    "static/js/2.7e703a94.chunk.js.map": "/static/js/2.7e703a94.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.b74a5506.chunk.css.map": "/static/css/2.b74a5506.chunk.css.map",
+    "static/css/main.e43bb251.chunk.css.map": "/static/css/main.e43bb251.chunk.css.map",
+    "static/js/2.7e703a94.chunk.js.LICENSE.txt": "/static/js/2.7e703a94.chunk.js.LICENSE.txt",
+    "static/media/about-icon.44db342d.svg": "/static/media/about-icon.44db342d.svg",
+    "static/media/api-docs-bg.7373cfaf.svg": "/static/media/api-docs-bg.7373cfaf.svg",
+    "static/media/api-docs-icon.739516cd.svg": "/static/media/api-docs-icon.739516cd.svg",
+    "static/media/font-awesome.min.css": "/static/media/fontawesome-webfont.e646f99c.woff",
+    "static/media/logout-icon.f9b9901d.svg": "/static/media/logout-icon.f9b9901d.svg",
+    "static/media/metamug-console-logo.9d26574d.png": "/static/media/metamug-console-logo.9d26574d.png",
+    "static/media/resourceManager-icon.8b36346c.svg": "/static/media/resourceManager-icon.8b36346c.svg",
+    "static/media/resources-icon.993b4626.svg": "/static/media/resources-icon.993b4626.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.7489ab04.js",
+    "static/css/2.b74a5506.chunk.css",
+    "static/js/2.7e703a94.chunk.js",
+    "static/css/main.e43bb251.chunk.css",
+    "static/js/main.a29daba3.chunk.js"
+  ]
+}
