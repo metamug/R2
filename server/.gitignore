@@ -1,2 +1,8 @@
 logs/
+
+# console webapp
 webapps/console/
+webapps/console.war
+
+# console ui
+webapps/ROOT/
