@@ -1,27 +1,31 @@
-# remove parser
-rm -f ./server/lib/openapi-rest-model-*.jar
+REM remove parser
+del  .\server\lib\openapi-rest-model-*.jar
 
-# remove console webapp
-rm -rf ./server/webapps/console
-rm -f ./server/webapps/console.war
+REM remove console webapp
+rmdir  .\server\webapps\console
+del  .\server\webapps\console.war
 
-# remove root webapp
-rm -rf ./server/webapps/ROOT/dist
-rm -rf ./server/webapps/ROOT/assets
-rm -rf ./server/webapps/ROOT/static
-rm -f ./server/webapps/ROOT/index.html
+REM remove root webapp
+del  .\server\webapps\ROOT\dist
+del  .\server\webapps\ROOT\assets
+del  .\server\webapps\ROOT\static
+del  .\server\webapps\ROOT\index.html
 
-# Add Empty Folders
-mkdir -p ./server/temp
-mkdir -p ./server/tempapps
-mkdir -p ./server/backend
-mkdir -p ./server/logs
+REM Add Empty Folders
+mkdir .\server\temp
+mkdir .\server\tempapps
+mkdir .\server\backend
+mkdir .\server\logs
 
+REM install console in server folder
 cd console
 mvn clean install
-mv console/target/console.war server/webapps
+mv console\target\console.war server\webapps
 
-cd ../parser
+REM install parser into server lib
+cd ..\parser
 mvn clean install
-mv parser/target/*.jar server/lib
-mv ui/src/assets server/webapps/ROOT
+mv parser\target\*.jar server\lib
+
+REM install UI into webapp root
+mv ui\src\assets server\webapps\ROOT
