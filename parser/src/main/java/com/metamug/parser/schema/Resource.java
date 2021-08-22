@@ -97,7 +97,7 @@ public class Resource extends XMLElement {
     }
 
     public void setDescString(String value) {
-        this.desc.setDesc(value);
+        this.getDesc().setDesc(value);
     }
 
     /**
