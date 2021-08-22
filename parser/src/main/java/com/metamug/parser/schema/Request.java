@@ -194,7 +194,16 @@ public class Request extends XMLElement {
         }
     }
     
+    /**
+     * Gets the value of the desc property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
     public Desc getDesc() {
+        if(desc == null){
+            desc = new Desc();
+        } 
         return desc;
     }
 
@@ -206,11 +215,11 @@ public class Request extends XMLElement {
     }
 
     public void setDesc(String value) {
-        this.desc.setDesc(value);
+        this.getDesc().setDesc(value);
     }
 
     public void setDescString(String value) {
-        this.desc.setDesc(value);
+        this.getDesc().setDesc(value);
     }
 
     public Integer getStatus() {
