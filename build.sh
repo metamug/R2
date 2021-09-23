@@ -23,5 +23,7 @@ mv console/target/console.war server/webapps
 
 cd ../parser
 mvn clean install
+
+cd ..
 mv parser/target/*.jar server/lib
 mv ui/src/assets server/webapps/ROOT
