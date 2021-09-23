@@ -1,4 +1,4 @@
-name: Java CI
+name: R2 Build
 
 on: [push]
 
