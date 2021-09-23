@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
+        node-version: [15.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -17,4 +17,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Build web assets with node
-        run: sh ui/build.sh
+        run: cd ui
+      - run: sh build.sh
+        
