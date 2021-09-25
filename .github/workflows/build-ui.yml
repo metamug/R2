@@ -18,4 +18,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Build web assets with node
         run: sh ui/build.sh
-        
+        env:
+          CI: false
