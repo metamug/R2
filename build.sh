@@ -27,3 +27,5 @@ mvn -f parser/pom.xml clean install
 mv console/target/console.war server/webapps
 mv parser/target/*.jar server/lib
 mv ui/src/assets server/webapps/ROOT
+
+ls -R server
