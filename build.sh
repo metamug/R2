@@ -18,14 +18,3 @@ mkdir -p ./server/temp
 mkdir -p ./server/tempapps
 mkdir -p ./server/backend
 mkdir -p ./server/logs
-
-# Build parser and console
-mvn -f console/pom.xml clean install
-mvn -f parser/pom.xml clean install
-
-# Move console, parser and UI assets into server
-mv console/target/console.war server/webapps
-mv parser/target/*.jar server/lib
-mv ui/src/assets server/webapps/ROOT
-
-ls -R server
