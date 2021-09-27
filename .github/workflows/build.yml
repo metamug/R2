@@ -26,7 +26,7 @@ jobs:
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: dist-without-markdown
+          name: Metamug API Server
           path: |
             server
           # !dist/**/*.md
