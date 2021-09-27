@@ -24,8 +24,8 @@ jobs:
         run: sh build.sh
       - name: Build parser and console
         run: | 
-         mvn -f console/pom.xml clean install
          mvn -f parser/pom.xml clean install
+         mvn -f console/pom.xml clean install
       - name: Move console, parser and UI assets into server
         run: |
              mv console/target/console.war server/webapps
