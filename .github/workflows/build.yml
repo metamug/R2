@@ -8,15 +8,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Build with Maven
-        run: sh build.sh
-      # Setup Node JS and execute UI Project  
-      - name: Use Node.js 15.x to buid web assets
+      - name: Setup Node 15
         uses: actions/setup-node@v2
         with:
           node-version: 15.x
@@ -24,3 +16,17 @@ jobs:
         run: sh ui/build.sh
         env:
           CI: false
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Build with Maven
+        run: sh build.sh
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-without-markdown
+          path: |
+            server
+          # !dist/**/*.md
