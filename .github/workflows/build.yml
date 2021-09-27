@@ -5,7 +5,6 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Setup Node 15
@@ -23,6 +22,16 @@ jobs:
           distribution: 'adopt'
       - name: Build with Maven
         run: sh build.sh
+      - name: Build parser and console
+        run: | 
+         mvn -f console/pom.xml clean install
+         mvn -f parser/pom.xml clean install
+      - name: Move console, parser and UI assets into server
+        run: |
+             mv console/target/console.war server/webapps
+             mv parser/target/*.jar server/lib
+             mv ui/src/assets server/webapps/ROOT
+             ls -R server
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
