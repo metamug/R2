@@ -15,3 +15,12 @@ jobs:
           distribution: 'adopt'
       - name: Build with Maven
         run: sh build.sh
+      # Setup Node JS and execute UI Project  
+      - name: Use Node.js 15.x to buid web assets
+        uses: actions/setup-node@v2
+        with:
+          node-version: 15.x
+      - name: Build web assets with node
+        run: sh ui/build.sh
+        env:
+          CI: false
