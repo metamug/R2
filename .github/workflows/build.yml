@@ -28,5 +28,5 @@ jobs:
         with:
           name: Metamug API Server
           path: |
-            server/api-console
+            server
           # !dist/**/*.md
