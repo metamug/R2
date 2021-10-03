@@ -26,6 +26,8 @@ jobs:
         run: mvn -f parser/pom.xml clean install
       - name: Build Console 
         run: mvn -f console/pom.xml clean install
+      - name: Submit Code Coverage
+        uses: codecov/codecov-action@v2
       - name: Move console, parser and UI assets into server
         run: |
              mv console/target/console.war server/webapps
