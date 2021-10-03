@@ -12,7 +12,11 @@ jobs:
         with:
           node-version: 15.x
       - name: Build web assets with node
-        run: sh ui/build.sh
+        run: |
+          npm install --prefix ui
+          npm run build --prefix ui
+          ls build
+          cp ui/build/bundle.js ui/assets/
         env:
           CI: false
       - name: Set up JDK 11
