@@ -15,7 +15,7 @@ jobs:
         run: |
           npm install --prefix ui
           npm run build --prefix ui
-          ls ui/build
+          ls -R ui
           cp ui/build/bundle.js ui/assets/
         env:
           CI: false
