@@ -15,7 +15,7 @@ jobs:
         run: |
           npm install --prefix ui
           npm run build --prefix ui
-          ls build
+          ls ui/build
           cp ui/build/bundle.js ui/assets/
         env:
           CI: false
@@ -24,14 +24,14 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      - name: Build with Maven
+      - name: Run Init Script for build
         run: sh build.sh
       - name: Build parser
         run: mvn -f parser/pom.xml clean install
       - name: Build Console 
         run: mvn -f console/pom.xml clean install
-      - name: Submit Code Coverage
-        uses: codecov/codecov-action@v2
+      #- name: Submit Code Coverage
+      #  uses: codecov/codecov-action@v2
       - name: Move console, parser and UI assets into server
         run: |
              mv console/target/console.war server/webapps
