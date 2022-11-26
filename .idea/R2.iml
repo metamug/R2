@@ -5,6 +5,17 @@
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/console/target" />
+      <excludeFolder url="file://$MODULE_DIR$/parser/target" />
+      <excludeFolder url="file://$MODULE_DIR$/server/webapps/ROOT/assets" />
+      <excludeFolder url="file://$MODULE_DIR$/server/webapps/ROOT/static" />
+      <excludeFolder url="file://$MODULE_DIR$/server/webapps/console" />
+      <excludeFolder url="file://$MODULE_DIR$/server/backend" />
+      <excludeFolder url="file://$MODULE_DIR$/server/logs" />
+      <excludeFolder url="file://$MODULE_DIR$/server/temp" />
+      <excludeFolder url="file://$MODULE_DIR$/server/tempapps" />
+      <excludeFolder url="file://$MODULE_DIR$/ui/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ui/node_modules" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

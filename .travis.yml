@@ -7,9 +7,9 @@ matrix:
       script:
         - npm install
   
-    -  language: java                                               
-        jdk:                           
-            - openjdk8
+    - language: java
+      jdk:
+        - openjdk8
         addons:
           sonarcloud:
             organization: metamug
@@ -18,7 +18,6 @@ matrix:
         script:
           # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
           - sh build.sh
-
 notifications:
   email:
     - archisbhoir2016@gmail.com

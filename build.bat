@@ -7,7 +7,7 @@ del  .\server\webapps\console.war
 
 REM remove root webapp
 del  .\server\webapps\ROOT\dist
-del  .\server\webapps\ROOT\assets
+del /q  .\server\webapps\ROOT\assets
 del  .\server\webapps\ROOT\static
 del  .\server\webapps\ROOT\index.html
 
@@ -17,15 +17,24 @@ mkdir .\server\tempapps
 mkdir .\server\backend
 mkdir .\server\logs
 
-REM install console in server folder
-cd console
-mvn clean install
-mv console\target\console.war server\webapps
+REM install parser as console needs parser and move it into server lib
+call mvn -f parser/pom.xml clean install
+move .\parser\target\*.jar server\lib
 
-REM install parser into server lib
-cd ..\parser
-mvn clean install
-mv parser\target\*.jar server\lib
+REM install console in server folder
+call mvn -f console/pom.xml clean install
+move .\console\target\console.war server\webapps
+
 
 REM install UI into webapp root
-mv ui\src\assets server\webapps\ROOT
+cd ui
+call npm install
+call npm run build
+cd ..
+mkdir server\webapps\ROOT\assets
+XCOPY /q /E ui\src\assets server\webapps\ROOT\assets
+move ui\build\ server\webapps\ROOT\assets
+
+REM Now run the built server
+REM cd server
+REM .\bin\startup.bat
