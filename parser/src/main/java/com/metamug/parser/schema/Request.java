@@ -273,6 +273,9 @@ public class Request extends XMLElement {
         if(getItem()!=null) {
             writer.writeAttribute("item", String.valueOf(getItem()));
         }
+        if(getStatus()!=null) {
+            writer.writeAttribute("status", String.valueOf(getStatus()));
+        }
     }
 
     private void printEnd(XMLStreamWriter writer) throws XMLStreamException {
