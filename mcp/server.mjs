@@ -175,6 +175,42 @@ const tools = [
     },
   },
   {
+    name: 'get_errors',
+    description:
+      'Recent runtime errors of a backend from the Console error log (the cause behind an HTTP 512 "errorId"). ' +
+      'Pass errorId to fetch one. Returns message, resource uri and the top of the stack trace; set trace=true for the full trace.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        app: { type: 'string' },
+        errorId: { type: 'string', description: 'errorId from a 512 response' },
+        limit: { type: 'number', description: 'max errors, newest first (default 5)' },
+        trace: { type: 'boolean', description: 'include the full stack trace (default: first 3 frames)' },
+      },
+      required: ['app'],
+    },
+    run: async ({ app, errorId, limit = 5, trace = false }) => {
+      const r = await consoleReq('GET', `/error/${enc(app)}`);
+      if (r.status !== 200) return fmt(r);
+      let rows;
+      try {
+        rows = JSON.parse(r.body).data || [];
+      } catch {
+        return fmt(r);
+      }
+      if (errorId) rows = rows.filter((e) => String(e.error_id) === String(errorId));
+      rows = rows.slice(0, limit).map((e) => ({
+        error_id: e.error_id,
+        method: e.method,
+        uri: e.uri,
+        created_on: e.created_on,
+        message: e.message,
+        trace: trace ? e.trace : String(e.trace || '').split('\n').slice(0, 3).join('\n'),
+      }));
+      return rows.length ? JSON.stringify(rows, null, 1) : 'no matching errors';
+    },
+  },
+  {
     name: 'call_endpoint',
     description: 'Call a deployed REST endpoint on the runtime to verify behaviour. Path is relative to R2_RUNTIME_URL, e.g. /myapp/v1.0/movie/1.',
     inputSchema: {
@@ -201,7 +237,9 @@ const tools = [
       }
       const t0 = Date.now();
       const res = await fetch(`${RUNTIME}${path.startsWith('/') ? '' : '/'}${path}${qs}`, init);
-      return `HTTP ${res.status} (${Date.now() - t0} ms)\n${await res.text()}`;
+      const text = await res.text();
+      const hint = /"errorId"/.test(text) ? '\n(runtime error: call get_errors with this errorId for the cause)' : '';
+      return `HTTP ${res.status} (${Date.now() - t0} ms)\n${text.slice(0, 4000)}${hint}`;
     },
   },
 ];

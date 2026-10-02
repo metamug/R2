@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource xmlns="http://xml.metamug.net/resource/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" v="1.0">
+  <Desc>Customers. Registration hashes the password in a Kotlin script and feeds the result to SQL with mpath.</Desc>
+
+  <Request method="POST" status="201">
+    <Script id="h" file="hashpw" output="false"/>
+    <Sql id="ins" type="update" output="false">INSERT INTO customer (name, email, pw_hash) VALUES ($name, $email, $[h].hash)</Sql>
+    <Sql id="created" output="true">SELECT id, name, email FROM customer WHERE email = $email</Sql>
+  </Request>
+
+  <Request method="GET">
+    <Sql id="all" when="$q ne 'recent'">SELECT id, name, email FROM customer ORDER BY id</Sql>
+    <Sql id="recent" when="$q eq 'recent'">SELECT id, name, email FROM customer ORDER BY id DESC LIMIT 2</Sql>
+  </Request>
+
+  <Request method="GET" item="true">
+    <Sql id="one">SELECT id, name, email FROM customer WHERE id = $id</Sql>
+  </Request>
+</Resource>
