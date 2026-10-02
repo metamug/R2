@@ -110,7 +110,8 @@ Reference it from two requests of the same resource; element `id`s must be uniqu
 
 ### Editing, errors and performance
 
-- Scripts are compiled when first used and cached until the file changes. Saving a new version is picked up by the next request without a restart. The first call of a version takes about 0.5-4 s (compile), later calls add roughly 30 ms.
+- Scripts are compiled when first used and cached until the file changes. Saving a new version is picked up by the next request without a restart. The first call of a version takes about 0.5-4 s (compile), later calls add a few milliseconds (the script body is a function that is invoked per request).
+- Because the body runs as the body of a function, declare helper functions and classes inside it (local ones are fine) and do not use a top-level `return`.
 - A compile or runtime error returns HTTP 512 with an `errorId`. The cause, with the script line, is recorded in the app's error log and shown on the Console error screen, e.g. `hash.kts: Unresolved reference: nosuchmethod (line 2:20)`. Through the MCP server use the `get_errors` tool.
 - The Kotlin script engine needs the `kotlin-scripting-jsr223` jars on the server classpath. `dev build` fetches them into `server/lib`.
 

@@ -47,13 +47,14 @@ Spring Boot DevTools or JRebel would shrink the Spring number; none was configur
 
 | | R2 | Spring Boot |
 |---|---|---|
-| GET item, 2 joins (median) | 4.9 ms | 1.6 ms |
-| GET script-only (median) | 31.8 ms | 1.0 ms |
-| POST order (median; includes an external call) | 425 ms | 251 ms |
-| memory | 2.1 GB (Tomcat with the Console and ~20 test apps; not comparable) | 191 MB (one app) |
+| GET item, 2 joins (median) | 5.0 ms | 1.4 ms |
+| GET script-only (median) | 4.5 ms | 0.8 ms |
+| POST order (median; includes an external call) | 368 ms | 251 ms |
+| memory | 1.0 GB (Tomcat with the Console and ~20 test apps; not comparable) | 194 MB (one app) |
 
-R2's script path costs ~28 ms per call inside the Kotlin JSR-223 `CompiledScript.eval` (measured). The Kotlin scripting host API
-used directly should remove most of it (follow-up in metamug/R2#92).
+The script path first cost ~28 ms per call inside the Kotlin JSR-223 `CompiledScript.eval` (31.8 ms median for a script-only
+request). Each script is now evaluated once per file version into a function object that is invoked per request, which brought
+script-only requests to 4.5 ms (metamug/R2#93).
 
 ## Defects met while building each
 
