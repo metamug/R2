@@ -60,6 +60,8 @@ import com.metamug.console.services.UserService;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -77,6 +79,8 @@ import org.json.JSONObject;
  */
 @WebServlet(name = "QueryController", urlPatterns = {"/query/*"})
 public class QueryController extends HttpServlet {
+
+    private static final List<String> VALID_ACTIONS = Arrays.asList("query", "plsql", "querybyuser", "plsqlbyuser", "querysave");
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -165,6 +169,14 @@ public class QueryController extends HttpServlet {
 
             if (!appName.trim().isEmpty() && !query.trim().isEmpty() && !action.trim().isEmpty()) {
                 String domain = (String)request.getAttribute("domain");
+
+                if (!VALID_ACTIONS.contains(action.trim().toLowerCase())) {
+                    // previously an unknown type executed nothing and answered 204
+                    response.setStatus(400);
+                    response.getOutputStream().write(("{\"message\":\"Invalid type '" + action.replaceAll("[^A-Za-z]", "")
+                            + "'. Use one of: query, plsql, querybyuser, plsqlbyuser, querysave\",\"status\":400}").getBytes("UTF-8"));
+                    return;
+                }
 
                 if (action.equals("querysave")) {
                     // save query

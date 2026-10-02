@@ -169,7 +169,8 @@ public class AppDAO {
      *
      * @param dbDetails
      */
-    public void createDefaultTablesForExternal(Map<String,String> dbDetails) {
+    public void createDefaultTablesForExternal(Map<String,String> dbDetails)
+            throws SQLException, IOException, PropertyVetoException, ClassNotFoundException {
         String dbType = dbDetails.get("dbType");
         String dbUrl = dbDetails.get("dbUrl");
         String dbUser = dbDetails.get("dbUser");
@@ -191,10 +192,11 @@ public class AppDAO {
         }
         try (Connection con = ConnectionProvider.getInstance().getConnection(dbType, dbUrl, dbUser, dbPass)) {
             InputStream scriptFileInputStream = AppDAO.class.getClassLoader().getResourceAsStream(scriptFile);
-            ScriptRunner sr = new ScriptRunner(con, false, false);
+            // PostgreSQL aborts the whole transaction on the first error, so a failed script would silently
+            // create no tables at all: stop and report it. The other scripts' non-idempotent statements
+            // (e.g. CREATE INDEX when another app shares the database) are still tolerated.
+            ScriptRunner sr = new ScriptRunner(con, false, Util.POSTGRESQL.equals(dbType));
             sr.runScript(new BufferedReader(new InputStreamReader(scriptFileInputStream)));
-        } catch (SQLException | IOException | PropertyVetoException | ClassNotFoundException ex) {
-            //Logger.getLogger(AppDAO.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         }
     }
 
@@ -369,6 +371,10 @@ public class AppDAO {
                                 app.put("app_db_details", dbDetails);
                             } catch (ParserConfigurationException | SAXException ex) {
                                 //Logger.getLogger(AppDAO.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IOException ex) {
+                                // an app whose backend config is missing must not break the whole listing
+                                Logger.getLogger(AppDAO.class.getName()).log(Level.WARNING,
+                                        "Backend config not readable for app " + appName + ": " + ex.getLocalizedMessage());
                             }
                             app.put("end_point", result.getString("end_point"));
                             app.put("app_resources", result.getString("app_resources"));

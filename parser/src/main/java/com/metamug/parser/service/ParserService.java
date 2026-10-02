@@ -171,8 +171,11 @@ public class ParserService {
         
         if (!new File(jsp).exists() || updateResource) {
             try{
-                output = new FileOutputStream(jsp);
-                XMLStreamWriter writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(output));
+                // render into memory first so a failed save never leaves a truncated JSP
+                // (or overwrites the previously working one when updating)
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                output = buffer;
+                XMLStreamWriter writer = new IndentingXMLStreamWriter(factory.createXMLStreamWriter(buffer));
 
                 printHeader(writer);
 
@@ -181,15 +184,11 @@ public class ParserService {
                 writer.flush();
                 writer.close();
 
-                output.close();
+                Files.write(Paths.get(jsp), buffer.toByteArray());
 
                 return resource;
             }catch(ResourceTestException | IOException | XMLStreamException | XPathExpressionException | SAXException
                     | NullPointerException e){
-                if( (!updateResource) && (new File(jsp).exists()) ) {
-                    new File(jsp).delete();
-                }
-                
                 throw e;
             }
         } else {

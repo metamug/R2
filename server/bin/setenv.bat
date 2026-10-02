@@ -1,6 +1,7 @@
 @echo off
 
-set JAVA_HOME=%CATALINA_BASE%\jdk
+REM use the bundled JDK when present, otherwise keep the JAVA_HOME of the environment
+if exist "%CATALINA_BASE%\jdk\bin\java.exe" set JAVA_HOME=%CATALINA_BASE%\jdk
 
 set "JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=UTF-8 -Xms512m -Xmx2048m"
 
