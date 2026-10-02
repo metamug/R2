@@ -143,7 +143,7 @@ public class ContextManager {
                             url = "jdbc:mysql://" + dbUrl + options;
                             break;
                         case Util.POSTGRESQL:
-                            url = "jdbc:postgresql://" + dbUrl;
+                            url = postgresqlUrl(dbUrl);
                             break;
                         case Util.MSSQL:
                             url = "jdbc:sqlserver://" +dbUrl;
@@ -288,7 +288,7 @@ public class ContextManager {
                 url = "jdbc:mysql://" + dbUrl + options;
                 break;
             case Util.POSTGRESQL:
-                url = "jdbc:postgresql://" + dbUrl;
+                url = postgresqlUrl(dbUrl);
                 break;
             case Util.MSSQL:
                 url = "jdbc:sqlserver://" +dbUrl;
@@ -366,5 +366,18 @@ public class ContextManager {
         } catch (TransformerException ex) {
             Logger.getLogger(ContextManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * Builds the PostgreSQL JDBC url for an app datasource. Request parameters are bound as strings
+     * (JSTL sql:param), which PostgreSQL rejects for non-text columns (integer = character varying).
+     * stringtype=unspecified makes the driver send them untyped so the server infers the column type.
+     */
+    static String postgresqlUrl(String dbUrl) {
+        String url = "jdbc:postgresql://" + dbUrl;
+        if (!url.contains("stringtype=")) {
+            url += (url.contains("?") ? "&" : "?") + "stringtype=unspecified";
+        }
+        return url;
     }
 }

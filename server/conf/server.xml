@@ -69,6 +69,7 @@
     <Connector port="7000" protocol="HTTP/1.1"
                    connectionTimeout="8000"
                    URIEncoding="UTF-8"
+                   parseBodyMethods="POST,PUT,PATCH"
                    maxThreads="200"
                    minSpareThreads="80"
                    compression="on"
