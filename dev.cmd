@@ -4,6 +4,7 @@ REM   dev build   build parser + console from source and install them into serve
 REM   dev start   start the Dev server on http://localhost:7000 (console at /console)
 REM   dev stop    stop it
 REM   dev status  show whether it is listening
+REM   dev mason   build Mason (MASON_HOME, default ..\mason) with Maven and put its jar into the app template
 REM Needs a JDK (8-17) via JAVA_HOME or on PATH. Maven is bundled in server\maven.
 setlocal
 set ROOT=%~dp0
@@ -23,7 +24,8 @@ if "%1"=="build" goto build
 if "%1"=="start" goto start
 if "%1"=="stop" goto stop
 if "%1"=="status" goto status
-echo usage: dev [build^|start^|stop^|status]
+if "%1"=="mason" goto mason
+echo usage: dev [build^|start^|stop^|status^|mason]
 exit /b 1
 
 :build
@@ -40,6 +42,21 @@ rmdir /s /q "%SERVER%\webapps\console" 2>nul
 copy /y "%ROOT%\console\target\console.war" "%SERVER%\webapps\console.war" >nul
 for %%d in (temp tempapps backend logs) do if not exist "%SERVER%\%%d" mkdir "%SERVER%\%%d"
 echo Built. Run: dev start
+exit /b 0
+
+:mason
+REM Apps are generated from console\src\main\resources\app-template-v0.1.zip, which embeds the Mason jar.
+if "%MASON_HOME%"=="" set MASON_HOME=%ROOT%\..\mason
+if not exist "%MASON_HOME%\taglib\pom.xml" ( echo Mason checkout not found at %MASON_HOME%. Set MASON_HOME. & exit /b 1 )
+set MAVEN_OPTS=--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED
+call "%SERVER%\maven\bin\mvn.cmd" -B -f "%MASON_HOME%\taglib\pom.xml" clean package -DskipTests || exit /b 1
+if exist "%TEMP%\r2tpl" rmdir /s /q "%TEMP%\r2tpl"
+mkdir "%TEMP%\r2tpl\WEB-INF\lib"
+copy /y "%MASON_HOME%\taglib\target\mason-*.jar" "%TEMP%\r2tpl\WEB-INF\lib\" >nul
+pushd "%TEMP%\r2tpl"
+"%JAVA_HOME%\bin\jar.exe" uf "%ROOT%\console\src\main\resources\app-template-v0.1.zip" WEB-INF\lib
+popd
+echo App template updated. Run: dev build (rebuilds the console with it)
 exit /b 0
 
 :start

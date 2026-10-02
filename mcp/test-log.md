@@ -28,3 +28,18 @@ Environment: Tomcat 7000 on JDK 17; PostgreSQL 16.4 portable binaries in mcp/pgs
 
 ## Not yet run
 Cases 2-10, and the Oracle / SQL Server repeats.
+
+---
+
+# Update: Kotlin scripting, composed APIs and MCP coverage (metamug/R2#92)
+
+Scenario suites (all driven only through the MCP tools): `mcp/scenarios/shop/run.mjs` 48/48 on HSQLDB and PostgreSQL
+(37/37 with `apply_project`), `mcp/scenarios/tools.mjs` 25/25 (all 19 tools). Spring Boot comparison in `benchmarks/`.
+
+Fixed (Mason PRs #175-#180 and R2 `main`): Kotlin runner (hot reload, typed variables, `steps`), invalid JSP from
+`<Transaction>`, every internal error recorded in `error_log` with its real message, Groovy scripts getting no parameters,
+pooled tag handlers leaking XRequest headers/body, MOXy not working on JDK 17, per-response JAXB context, form bodies on PUT,
+declared status codes, PostgreSQL string-bound parameters, re-uploading a script silently doing nothing.
+
+Open (issues): script eval ~28 ms (#93), invisible XRequest failures (#94), scripts cannot set HTTP status (#95),
+app naming/delete-recreate/duplicate-id messages (#96), docs on EL null semantics and Oracle/SQL Server not tested (#97).

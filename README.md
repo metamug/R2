@@ -16,6 +16,8 @@ dev stop
 
 On Linux/macOS/Git Bash use `./dev.sh` with the same commands.
 
+`dev mason` builds [Mason](https://github.com/metamug/mason) (the runtime that apps run on) from a checkout (`MASON_HOME`, default `../mason`) with Maven and puts the jar into the app template; run `dev build` afterwards. The template currently embeds a Mason build that includes the open Mason PRs (Kotlin runner, error log, pooled tag state, request status, param map, JAXB cache).
+
 ### Layout
 
 | Folder | What it is |

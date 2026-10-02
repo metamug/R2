@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # R2 Dev server helper (Linux/macOS/Git Bash). Same commands as dev.cmd:
-#   ./dev.sh build | start | stop | status
+#   ./dev.sh build | start | stop | status | mason
+#   mason: build Mason (MASON_HOME, default ../mason) with Maven and put its jar into the app template
 set -e
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 SERVER="$ROOT/server"
@@ -27,6 +28,17 @@ case "$1" in
     cp "$ROOT/console/target/console.war" "$SERVER/webapps/console.war"
     mkdirs
     echo "Built. Run: ./dev.sh start" ;;
+  mason)
+    MASON_HOME="${MASON_HOME:-$ROOT/../mason}"
+    [ -f "$MASON_HOME/taglib/pom.xml" ] || { echo "Mason checkout not found at $MASON_HOME. Set MASON_HOME."; exit 1; }
+    export MAVEN_OPTS="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
+    MVN="$SERVER/maven/bin/mvn"; [ -x "$MVN" ] || MVN="mvn"
+    "$MVN" -B -f "$MASON_HOME/taglib/pom.xml" clean package -DskipTests
+    TPL="$(mktemp -d)"; mkdir -p "$TPL/WEB-INF/lib"
+    cp "$MASON_HOME"/taglib/target/mason-*.jar "$TPL/WEB-INF/lib/"
+    (cd "$TPL" && "$JAVA_HOME/bin/jar" uf "$ROOT/console/src/main/resources/app-template-v0.1.zip" WEB-INF/lib)
+    rm -rf "$TPL"
+    echo "App template updated. Run: ./dev.sh build (rebuilds the console with it)" ;;
   start)
     export CATALINA_HOME="$SERVER" CATALINA_BASE="$SERVER"
     mkdirs
