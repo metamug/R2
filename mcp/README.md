@@ -19,7 +19,7 @@ Dependency-free MCP (stdio) server that wraps the R2 Console HTTP API, so an age
 
 ## Configure
 
-Environment: `R2_CONSOLE_URL` (default `http://localhost:7000/console`), `R2_RUNTIME_URL` (default `http://localhost:7000/api`), `R2_USER` / `R2_PASSWORD` (default `admin`/`admin`), optional `R2_TOKEN`.
+Environment: `R2_CONSOLE_URL` (default `http://localhost:7000/console`), `R2_RUNTIME_URL` (default `http://localhost:7000`), `R2_USER` / `R2_PASSWORD` (default `admin`/`admin`), optional `R2_TOKEN`.
 
 ```json
 { "mcpServers": { "r2-dev": { "command": "node", "args": ["D:/projects/R2/mcp/server.mjs"] } } }
