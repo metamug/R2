@@ -78,6 +78,30 @@ const tools = [
     },
   },
   {
+    name: 'wait_for_app',
+    description:
+      'Wait until a newly created backend is actually serving (create_app returns before its webapp is deployed, usually 10-40 s). ' +
+      'Call this after create_app and before run_sql / define_resource.',
+    inputSchema: {
+      type: 'object',
+      properties: { app: { type: 'string' }, timeoutSeconds: { type: 'number', description: 'default 120' } },
+      required: ['app'],
+    },
+    run: async ({ app, timeoutSeconds = 120 }) => {
+      const t0 = Date.now();
+      while (Date.now() - t0 < timeoutSeconds * 1000) {
+        try {
+          const res = await fetch(`${RUNTIME}/${enc(app)}/`);
+          if (res.status === 200) return `HTTP 200 (ready after ${Math.round((Date.now() - t0) / 1000)} s)`;
+        } catch {
+          /* not up yet */
+        }
+        await new Promise((r) => setTimeout(r, 1500));
+      }
+      return `HTTP 504\nbackend ${app} not serving after ${timeoutSeconds} s`;
+    },
+  },
+  {
     name: 'run_sql',
     description: 'Run SQL (DDL/DML/query) against a backend database, e.g. to create the tables a resource uses. Use type "query" for any SQL including DDL/DML ("plsql" is only for functions/procedures).',
     inputSchema: {

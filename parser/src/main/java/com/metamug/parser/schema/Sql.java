@@ -42,6 +42,14 @@ public class Sql extends InvocableElement{
     protected String when;
     @XmlAttribute(name = "datasource")
     protected String datasource;
+
+    /** set by Transaction for the statements it wraps; they use the transaction's dataSource */
+    @javax.xml.bind.annotation.XmlTransient
+    protected boolean inTransaction;
+
+    public void setInTransaction(boolean inTransaction) {
+        this.inTransaction = inTransaction;
+    }
     @XmlAttribute(name = "onblank")
     protected String onblank;
     @XmlAttribute(name = "onerror")
@@ -355,7 +363,8 @@ public class Sql extends InvocableElement{
         preProcessSqlElement();               
 
         if (!getValue().trim().isEmpty()) {
-            printSqlTag(writer, true);
+            // JSTL forbids a dataSource attribute on sql tags nested in <sql:transaction>
+            printSqlTag(writer, !inTransaction);
         }
 
         if (getOnerror() != null && getOnerror().length() > 0) {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource xmlns="http://xml.metamug.net/resource/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" v="1.0">
+  <Desc>Products. Also called by the order resource through an XRequest on the same server.</Desc>
+  <Request method="GET">
+    <Sql id="all">SELECT id, sku, name, price, stock FROM product ORDER BY id</Sql>
+  </Request>
+  <Request method="GET" item="true">
+    <Sql id="one">SELECT id, sku, name, price, stock FROM product WHERE id = $id</Sql>
+  </Request>
+</Resource>

@@ -137,6 +137,7 @@ public class Transaction extends InvocableElement {
         writer.writeAttribute("dataSource", ds);
         
         for(Sql s: getSql()){
+            s.setInTransaction(true);
             s.print(writer, parent);
         }
         

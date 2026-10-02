@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource xmlns="http://xml.metamug.net/resource/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" v="1.0">
+  <Desc>Orders: XRequest (product lookup) + Kotlin script (validate, price, sign) + SQL transaction + external notification, in one request.</Desc>
+
+  <Request method="POST" status="201">
+    <XRequest id="prod" method="GET" url="{{runtime}}/{{app}}/v1.0/product/$product_id" output="false">
+      <Header name="Accept" value="application/json"/>
+    </XRequest>
+    <Script id="calc" file="ordercalc" output="true"/>
+    <Transaction when="$[calc].ok eq true">
+      <Sql id="o" type="update">INSERT INTO orders (customer_id, total, status, token) VALUES ($customer_id, $[calc].total, 'NEW', $[calc].token)</Sql>
+      <Sql id="l" type="update">INSERT INTO order_line (order_id, product_id, qty, price) VALUES ((SELECT MAX(id) FROM orders WHERE token = $[calc].token), $product_id, $qty, $[calc].price)</Sql>
+      <Sql id="s" type="update">UPDATE product SET stock = stock - $qty WHERE id = $product_id</Sql>
+    </Transaction>
+    <XRequest id="notify" when="$[calc].ok eq true" method="POST" url="https://postman-echo.com/post" output="false">
+      <Header name="Content-Type" value="application/json"/>
+      <Body>{"event": "order.placed", "token": "$[calc].token", "total": "$[calc].total"}</Body>
+    </XRequest>
+    <Sql id="placed" when="$[calc].ok eq true" output="true">SELECT o.id, o.total, o.status, o.token, c.name AS customer FROM orders o JOIN customer c ON c.id = o.customer_id WHERE o.token = $[calc].token</Sql>
+  </Request>
+
+  <Request method="GET">
+    <Sql id="byCustomer" when="not empty $customer_id">SELECT id, customer_id, total, status FROM orders WHERE customer_id = $customer_id ORDER BY id</Sql>
+    <Sql id="byStatus" when="not empty $status">SELECT id, customer_id, total, status FROM orders WHERE status = $status ORDER BY id</Sql>
+    <Sql id="all" when="empty $customer_id and empty $status">SELECT id, customer_id, total, status FROM orders ORDER BY id</Sql>
+  </Request>
+
+  <Request method="GET" item="true">
+    <Sql id="order">SELECT o.id, o.total, o.status, c.name AS customer, c.email FROM orders o JOIN customer c ON c.id = o.customer_id WHERE o.id = $id</Sql>
+    <Sql id="lines">SELECT p.sku, p.name, l.qty, l.price FROM order_line l JOIN product p ON p.id = l.product_id WHERE l.order_id = $id</Sql>
+  </Request>
+
+  <Request method="PUT" item="true" status="202">
+    <Sql id="cur" output="false">SELECT status FROM orders WHERE id = $id</Sql>
+    <Script id="move" file="transition" output="true"/>
+    <Sql id="apply" type="update" when="$[move].ok eq true">UPDATE orders SET status = $status WHERE id = $id</Sql>
+  </Request>
+</Resource>
