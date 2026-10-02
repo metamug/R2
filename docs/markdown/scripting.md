@@ -1,288 +1,125 @@
 [//]: # (Scripting)
 [//]: # (https://metamug.com/img/docs/scripting/Groovy.png)
 [//]: # (2020-02-27T14:00:00+00:00)
-[//]: # (Add logic to your API with server-side scripting)
+[//]: # (Add logic to your API with server-side Kotlin scripting)
 
 
-Scripts can be written using [Groovy language](https://groovy-lang.org/) and referenced inside [resource files](/docs/resource-file). The Console provides an editor for editing and saving Groovy
-script files.
+Scripts are written in [Kotlin](https://kotlinlang.org/) (`.kts` files) and referenced from [resource files](/docs/resource-file) with the `<Script>` tag. A script can combine the request, earlier SQL results and external API responses, and its output becomes part of the response. Groovy scripts written for earlier versions keep working (see [Groovy scripts](#groovy-scripts-legacy)).
 
-![Console Editor](https://metamug.com/img/docs/scripting/groovy-editor.png)
+### Referencing a script
 
-### Referencing Script files in Resources
+Save a script as `hello.kts` and reference it without the extension:
 
-Let's create a script file and save it with the name `hello` as follows:
-
-**hello.groovy**
-```groovy
-response['message'] = 'Hello World';
+**hello.kts**
+```kotlin
+val name = params["name"] ?: "World"
+response["message"] = "Hello $name"
 ```
 
-This file can be referenced in the resource XML using a `<Script>` tag as follows:
-
-**script.xml**
+**hello.xml**
 ```xml
 <Request method="GET">
-    <Script file="hello" id="firstscript" output="true"/>
+    <Script file="hello" id="greeting" output="true"/>
 </Request>
 ```
 
-
-### Response array
-
-When we make a GET request to the `script` resource given above, the output obtained as follows:
+`GET /v1.0/hello?name=John` returns
 
 ```js
-{
-   "firstscript": {
-      "message":"Hello World"
-    }
-}
+{ "greeting": { "message": "Hello John" } }
 ```
 
-Here, we can observer that the values assigned to the `response` array in the script are printed in the response output.
+### Variables available to a script
 
-### Executing functions
+| name | type | what it is |
+|---|---|---|
+| `params` | `Map<String, String>` | request parameters (query string or form body, also for PUT): `params["qty"]?.toIntOrNull()` |
+| `request` | Mason request | `request.id` (item id, `null` for a collection request), `request.body`, `request.method` |
+| `response` | `MutableMap<String, Any?>` | the output of the step: whatever you put here is returned under the step's `id` |
+| `steps` | `Map<String, Any?>` | results of the elements declared **before** the script, by `id` (see below) |
+| `ds` | `javax.sql.DataSource` | the app's data source, for your own JDBC |
 
-Groovy scripts can be used to create functions. Below is a simple factorial function example.
+Put `import` lines at the top of the file. `print` output is not part of the response: assign to `response`.
 
-```groovy
-def fact(n){
-	if(n < 1)
-  		return 1;
-  	else
-      	return fact(n-1)*n;
-}
+### Combining SQL, scripts and external APIs in one request
 
-response["output"]=fact(5)
-
-```
-> Note here `print` will not work, like a regular script. The function call must be passed to `response` object.
-
-
-### Accessing Request parameters
-
-All the request variables can be accessed with \_$variable. If the variable is not present in the incoming the request you will get the following error
-
-![](https://lh3.googleusercontent.com/-uB9ms_tm-ig/XlOBRnijV5I/AAAAAAAAKas/ReBTiVFh0Uo7i-dllpCHUVGcTlwAPvGBACK8BGAsYHg/s512/2020-02-23.png)
-
-```groovy
-response["message"] = 'Hello ' + _$name;
-```
-
-### Internal Elements with MPath
-
-In order to access internal elements of the request using MPath. The MPath notation is used.
-
-```groovy
-def sqlOutput = _$["sqlElement"].rows[2].name
-```
-
-### Adding Script to Resource
-
-In order to add a script to your request flow. The script needs to be added as an element inside `Request` tag.
-
-#### Resource XML
-
-hello.xml
+The request below looks a product up through an external call, lets a script validate and price the order and sign it, writes
+everything in one transaction when the script accepted the order, and returns the stored order:
 
 ```xml
-<Request method="GET">
-	<Desc> Greet with Hello </Desc>
-	<Script id="msg" file="greet.groovy" output="true" />
+<Request method="POST" status="201">
+    <XRequest id="prod" method="GET" url="https://api.example.com/products/$product_id" output="false"/>
+    <Script id="calc" file="ordercalc" output="true"/>
+    <Transaction when="$[calc].ok eq true">
+        <Sql id="o" type="update">INSERT INTO orders (customer_id, total, token) VALUES ($customer_id, $[calc].total, $[calc].token)</Sql>
+        <Sql id="s" type="update">UPDATE product SET stock = stock - $qty WHERE id = $product_id</Sql>
+    </Transaction>
+    <Sql id="placed" when="$[calc].ok eq true" output="true">SELECT * FROM orders WHERE token = $[calc].token</Sql>
 </Request>
 ```
 
+**ordercalc.kts**
+```kotlin
+import java.math.BigDecimal
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
-**greet.groovy**
+@Suppress("UNCHECKED_CAST")
+val product = ((steps["prod"] as? Map<String, Any?>)?.get("one") as? List<Map<String, Any?>>)?.firstOrNull()
+val qty = params["qty"]?.toIntOrNull() ?: 0
 
-```groovy
-response['msg'] = 'Hello ' + _$name;
-```
-
-The name needs to be passed as a query parameter in case of a GET request
-
-```
-/script?name=John
-```
-
-The response object is converted into a json object. In this example, `msg` is assigned with the greeting message
-
-```js
-{ "script": { "msg": "Hello John" } }
-```
-
-### Query to Script
-
-
-One of the regular use-cases of scripts can be post-processing an SQL Result. Groovy has access to all the previous elements defined in the request with MPath.
-
-
-**qrytoscript.xml**
-
-```xml
-<Request method="GET">	
-	<Sql id="q"> SELECT * from movie </Sql>
-  	<Script id="greet" file="qtos.groovy" output="true" />
-</Request>
-```
-
-**qtos.groovy**
-
-we can use `_$[“q“].rows[2].name` to access the name attribute.
-
-```groovy
-response['message'] = 'Hello ' +  _$["q"].rows[2].name;
-```
-
-Since the query element `q` is a request element, no parameter is expected in the GET request.
-
-```cmd
-/qrytoscript
-```
-
-The above request will result in following response 
-
-```js
-{ 
-  "q": [
-    {"name":"Superman","rating":2,"id":1},
-    {"name":"Spiderman","rating":4,"id":2},
-    {"name":"Batman","rating":4,"id":5},
-    {"name":"I am legend","rating":5,"id":8}
-  ],
-  "greet": {"message":"Hello Batman"}
+if (product == null || qty <= 0) {
+    response["ok"] = false
+    response["reason"] = "unknown product or bad quantity"
+} else {
+    val total = BigDecimal(product["price"].toString()).multiply(BigDecimal(qty))
+    val mac = Mac.getInstance("HmacSHA256").apply { init(SecretKeySpec("secret".toByteArray(), "HmacSHA256")) }
+    response["ok"] = true
+    response["total"] = total
+    response["token"] = mac.doFinal("${params["customer_id"]}:$total".toByteArray()).joinToString("") { "%02x".format(it) }.take(40)
 }
 ```
 
-### 3. XRequest to Script
+- A later element reads a script result with [MPath](/docs/mpath): `$[calc].total`. Use it in `when="..."` to branch.
+- In a script, `steps["id"]` holds an earlier element's result: SQL as a `List<Map<String, Any?>>` (column names keep the database's case: HSQLDB upper-case, PostgreSQL lower-case), XRequest as its parsed JSON body, a script or `Execute` as its response map.
+- The declared `status` of the `<Request>` is fixed. Use `when` on later elements to skip work when a script rejects the request.
+- `<Transaction>` commits or rolls back its SQL elements together.
 
-When integrating external APIs, scripts can help add additional processing. No need to upload projects or write extensive code. Formatting, conversion between APIs can be easily handled with scripting.
+### One script for item and collection requests
 
-**xreqtoscript.xml**
+`request.id` is `null` for `/resource` and the id for `/resource/{id}`:
 
-In the below request we have added a script tag after the XRequest.
+```kotlin
+import java.security.MessageDigest
+import java.util.UUID
 
-```xml
-<Request method="GET">
-	<XRequest id="xreq" url="https://postman-echo.com/get?foo1=Hello&amp;foo2=World"
-                          method="GET" output="true" >
-        <Header name="Accept" value="application/json" />
-    </XRequest>
-    <Script id="greet" file="xtos.groovy" output="true"/>
-</Request>
-```
-
-**xtos.groovy**
-
-Here since the returned object is a JSON object we use `getJSONObject` method to access the element.
-
-```groovy
-response['message'] = 'Hello ' + _$['xreq'].getJSONObject('args').getString('foo2');
-```
-
-#### Request and Response
-
-```
-/xreqtoscript
-```
-
-```js
-{
-   "xreq": {
-
-     "args": {"foo1":"Hello","foo2":"World"},
-     "headers": {"x-forwarded-proto":"https","host":"postman-echo.com","x-forwarded-port":"443","accept-encoding":"gzip","accept":"application/json","user-agent":"okhttp/3.10.0"},
-
-     "url":"https://postman-echo.com/get?foo1=Hello&foo2=World"
-   },
-
-   "greet": { "message": "Hello World" }
+val id = request.id
+if (id != null) {
+    response["sha256"] = MessageDigest.getInstance("SHA-256").digest(id.toByteArray()).joinToString("") { "%02x".format(it) }
+} else {
+    response["items"] = (1..(params["count"]?.toIntOrNull() ?: 3)).map { UUID.randomUUID().toString() }
 }
 ```
 
-### Using MPath to access Script Output
-
-In the resource XML, standard MPath notation can be used to access script output. In case we want to access script information in a query or XRequest tag.
-
-The below section must be added to MPath documentation
-
-**Script to Query**
-
-**scripttoqry.xml**
+Reference it from two requests of the same resource; element `id`s must be unique across **all** requests of a resource:
 
 ```xml
-<Request method="GET">
-    <Script id="script" file="test.groovy" output="true" />
-	<Sql id="q"> SELECT $[script].message as greeting </Sql>
-</Request>
+<Request method="GET"><Script id="many" file="tokens"/></Request>
+<Request method="GET" item="true"><Script id="one" file="tokens"/></Request>
 ```
 
-**test.groovy**
+### Editing, errors and performance
+
+- Scripts are compiled when first used and cached until the file changes. Saving a new version is picked up by the next request without a restart. The first call of a version takes about 0.5-4 s (compile), later calls add roughly 30 ms.
+- A compile or runtime error returns HTTP 512 with an `errorId`. The cause, with the script line, is recorded in the app's error log and shown on the Console error screen, e.g. `hash.kts: Unresolved reference: nosuchmethod (line 2:20)`. Through the MCP server use the `get_errors` tool.
+- The Kotlin script engine needs the `kotlin-scripting-jsr223` jars on the server classpath. `dev build` fetches them into `server/lib`.
+
+### Groovy scripts (legacy)
+
+Existing `.groovy` scripts keep working: reference them with the extension (`<Script file="greet.groovy" id="g"/>`), read request parameters as `_$name` and write to `response['key']`. Groovy scripts do not receive `steps`/`ds`. New scripts should use Kotlin.
 
 ```groovy
-response['message'] = 'Hello ' + _$name;
+response['message'] = 'Hello ' + _$name
 ```
 
-Sending the below request will result in the following response. 
-
-```
-/scripttoqry?name=John
-```
-
-```js
-{  
-	"q": [ 
-			{"greet":"Hello John"} 
-		],
-    "script": {
-    	"message":"Hello John"
-    }
-}
-```
-
-### Script to Xrequest
-
-**scripttoxreq.xml**
-
-```xml
-<Request method="GET">
-	<Script id="script" file="test.groovy" output="true" />
-	<XRequest id="xreq" url="https://postman-echo.com/post"
-                          method="POST" output="true" >
-        <Header name="Content-Type" value="application/json" />
-        <Body>
-          	{
-                "foo1": "Welcome",
-                "foo2": "$[script].message"
-            }
-        </Body>
-    </XRequest>
-</Request>
-```
-
-**test.groovy**
-
-```groovy
-response['message'] = 'Hello ' + _$name;
-```
-
-Sending the below request will result in the following response. 
-
-```
-/scripttoxreq?name=Anish
-```
-
-```js			
-{
-    "script": {"message":"Hello Anish"},
-    "xreq":{"args":{},"headers":{"content-length":"97","x-forwarded-proto":"https","host":"postman-echo.com","x-forwarded-port":"443","content-type":"application/json; charset=utf-8","accept-encoding":"gzip","user-agent":"okhttp/3.10.0"},"data":{"foo1":"Welcome","foo2":"Hello Anish"},"form":{},"files":{},"json":{"foo1":"Welcome","foo2":"Hello Anish"},"url":"https://postman-echo.com/post"}
-}
-```
-
-## Treating \_$variable as request parameter
-
-
-![](https://lh3.googleusercontent.com/-uB9ms_tm-ig/XlOBRnijV5I/AAAAAAAAKas/ReBTiVFh0Uo7i-dllpCHUVGcTlwAPvGBACK8BGAsYHg/s512/2020-02-23.png)
-
-now imagine if we get an error for \_$name. all \_$variables are actually coming from the request. So it makes perfect sense to have throw 412 client error. How can we do this for a script. We have achieved it for xml
+**Migrating** a Groovy script: rename to `.kts`, replace `_$name` with `params["name"]`, `response['k'] = v` with `response["k"] = v`, and drop the extension (or use `.kts`) in the `<Script file>` attribute. A script name can exist in one language only.

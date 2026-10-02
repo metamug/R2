@@ -12,6 +12,7 @@ const runtime = (process.env.R2_RUNTIME_URL || 'http://localhost:7000').replace(
 const pg = process.env.R2_DB === 'postgresql';
 const mcp = startMcp();
 await mcp.init();
+const startedAt = Date.now();
 
 const base = `/${app}/v1.0`;
 const sql = (q) => mcp.call('run_sql', { app, type: 'query', sql: q });
@@ -28,7 +29,13 @@ check('create_app', created.status === 201 || created.status === 409, created.te
 const ready = await mcp.call('wait_for_app', { app });
 check('wait_for_app', ready.status === 200, ready.text);
 
-const schema = read(here, 'schema.sql')
+if (process.env.BUNDLE) {
+  // one call instead of ~16: schema, scripts and resources are read from the folder by the MCP server
+  const r = await mcp.call('apply_project', { app, dir: here, schemaFile: pg ? 'schema.postgresql.sql' : 'schema.sql' });
+  check('apply_project (schema + scripts + resources)', r.status === 200, r.text);
+}
+
+const schema = process.env.BUNDLE ? [] : read(here, 'schema.sql')
   .split(/;\s*\n/)
   .map((s) => s.trim())
   .filter(Boolean);
@@ -37,11 +44,11 @@ for (const q of schema) {
   if (r.status !== 200 || (r.json?.[0]?.status ?? 200) >= 400) console.log('  schema note:', q.slice(0, 40), r.body.slice(0, 120));
 }
 
-for (const s of ['hashpw.kts', 'ordercalc.kts', 'transition.kts', 'tokens.kts', 'legacy.groovy']) {
+for (const s of process.env.BUNDLE ? [] : ['hashpw.kts', 'ordercalc.kts', 'transition.kts', 'tokens.kts', 'legacy.groovy']) {
   const r = await mcp.call('upload_script', { app, filename: s, content: read(here, 'scripts', s) });
   check(`upload_script ${s}`, r.status === 200 || r.status === 201, r.text);
 }
-for (const rsc of ['product', 'customer', 'order', 'token', 'txtest', 'xfail', 'legacy']) {
+for (const rsc of process.env.BUNDLE ? [] : ['product', 'customer', 'order', 'token', 'txtest', 'xfail', 'legacy']) {
   const xml = read(here, 'resources', `${rsc}.xml`).replaceAll('{{app}}', app).replaceAll('{{runtime}}', runtime);
   const r = await mcp.call('define_resource', { app, name: rsc, xml });
   check(`define_resource ${rsc}`, /deployed":true/.test(r.text), r.text);
@@ -153,5 +160,7 @@ console.log('== backwards compatibility: Groovy ==');
 const groovy = await mcp.call('call_endpoint', { method: 'GET', path: `${base}/legacy`, query: { who: 'R2' } });
 check('Groovy script still runs and sees its request parameter', groovy.json?.g?.message === 'Hello R2' && groovy.json?.g?.length === 2, groovy.body);
 
+const s = mcp.stats;
+console.log(`\nmcp: ${s.calls} tool calls, ${s.argChars} chars sent, ${s.resultChars} chars received (~${Math.round((s.argChars + s.resultChars) / 4)} tokens), wall time ${Math.round((Date.now() - startedAt) / 1000)} s`);
 mcp.close();
 process.exit(summary() ? 0 : 1);

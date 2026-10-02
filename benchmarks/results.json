@@ -1,0 +1,75 @@
+{
+  "authored_r2": {
+    "files": 11,
+    "lines": 188,
+    "chars": 10942,
+    "approxTokens": 2736
+  },
+  "authored_spring": {
+    "files": 4,
+    "lines": 295,
+    "chars": 13584,
+    "approxTokens": 3396
+  },
+  "latency_get_item_join": {
+    "r2": {
+      "median_ms": 4.9,
+      "p95_ms": 7.2
+    },
+    "spring": {
+      "median_ms": 1.6,
+      "p95_ms": 2.5
+    }
+  },
+  "latency_get_script_only": {
+    "r2": {
+      "median_ms": 31.8,
+      "p95_ms": 34.6
+    },
+    "spring": {
+      "median_ms": 1,
+      "p95_ms": 1.9
+    }
+  },
+  "latency_post_order": {
+    "r2": {
+      "median_ms": 425.5,
+      "p95_ms": 450.2
+    },
+    "spring": {
+      "median_ms": 251.4,
+      "p95_ms": 264.6
+    }
+  },
+  "iteration_r2": [
+    {
+      "edit": "script rev 1",
+      "ms": 604,
+      "applied": true
+    },
+    {
+      "edit": "script rev 2",
+      "ms": 446,
+      "applied": true
+    },
+    {
+      "edit": "script rev 3",
+      "ms": 451,
+      "applied": true
+    },
+    {
+      "edit": "resource xml rev 1 (save + validate SQL + deploy)",
+      "ms": 908,
+      "applied": true
+    },
+    {
+      "edit": "resource xml rev 2 (save + validate SQL + deploy)",
+      "ms": 599,
+      "applied": true
+    }
+  ],
+  "memory_mb": {
+    "r2_tomcat_all_apps": 2113,
+    "spring": 191
+  }
+}

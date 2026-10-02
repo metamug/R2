@@ -130,6 +130,61 @@ const tools = [
     },
   },
   {
+    name: 'apply_project',
+    description:
+      'Deploy a whole project folder in ONE call (cheaper than many define_resource/upload_script calls, and the files are not re-sent through the conversation). ' +
+      'Folder layout: schema.sql (optional, statements separated by ";" + newline, run in order), scripts/*.kts|*.groovy, resources/*.xml. ' +
+      'In resources, {{app}} and {{runtime}} (runtime base url) are replaced. Waits for the app to be served. Returns one line per failed item.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        app: { type: 'string' },
+        dir: { type: 'string', description: 'absolute path of the project folder' },
+        skipSchema: { type: 'boolean', description: 'do not run the schema (e.g. when redeploying)' },
+        schemaFile: { type: 'string', description: 'schema file name inside dir (default schema.sql), e.g. schema.postgresql.sql' },
+      },
+      required: ['app', 'dir'],
+    },
+    run: async ({ app, dir, skipSchema = false, schemaFile: schemaName = 'schema.sql' }) => {
+      const lines = [];
+      const failed = [];
+      const note = (ok, what, detail) => {
+        lines.push(`${ok ? 'ok  ' : 'FAIL'} ${what}`);
+        if (!ok) failed.push(`${what}: ${String(detail).slice(0, 300).replace(/\s+/g, ' ')}`);
+      };
+      const ready = await tools.find((t) => t.name === 'wait_for_app').run({ app });
+      if (!ready.startsWith('HTTP 200')) return `HTTP 504\napp ${app} is not served: ${ready}`;
+      const schemaFile = path.join(dir, schemaName);
+      if (!skipSchema && fs.existsSync(schemaFile)) {
+        const stmts = fs.readFileSync(schemaFile, 'utf8').split(/;\s*\n/).map((x) => x.trim()).filter(Boolean);
+        let okCount = 0;
+        for (const sql of stmts) {
+          const r = await consoleReq('POST', '/query', { form: { appid: app, sql, type: 'query' } });
+          const body = r.body.slice(0, 300);
+          if (r.status === 200 && !/"status":(4|5)\d\d/.test(body)) okCount++;
+          else failed.push(`schema: ${sql.slice(0, 50)}: ${body.replace(/\s+/g, ' ')}`);
+        }
+        lines.push(`schema: ${okCount}/${stmts.length} statements`);
+      }
+      const scriptsDir = path.join(dir, 'scripts');
+      if (fs.existsSync(scriptsDir)) {
+        for (const f of fs.readdirSync(scriptsDir).sort()) {
+          const out = await tools.find((t) => t.name === 'upload_script').run({ app, filename: f, content: fs.readFileSync(path.join(scriptsDir, f), 'utf8') });
+          note(/HTTP 20[01]/.test(out), `script ${f}`, out);
+        }
+      }
+      const resDir = path.join(dir, 'resources');
+      if (fs.existsSync(resDir)) {
+        for (const f of fs.readdirSync(resDir).filter((x) => x.endsWith('.xml')).sort()) {
+          const xml = fs.readFileSync(path.join(resDir, f), 'utf8').replaceAll('{{app}}', app).replaceAll('{{runtime}}', RUNTIME);
+          const out = await tools.find((t) => t.name === 'define_resource').run({ app, name: f.replace(/\.xml$/, ''), xml });
+          note(/deployed":true/.test(out), `resource ${f}`, out);
+        }
+      }
+      return `HTTP ${failed.length ? 422 : 200}\n${lines.join('\n')}${failed.length ? '\n--- failures ---\n' + failed.join('\n') : ''}`;
+    },
+  },
+  {
     name: 'wait_for_app',
     description:
       'Wait until a newly created backend is actually serving (create_app returns before its webapp is deployed, usually 10-40 s). ' +

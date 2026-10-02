@@ -37,3 +37,4 @@ mcp/tomcat.*.log
 server/lib/kotlin-*.jar
 server/lib/trove4j-*.jar
 server/lib/annotations-13.0.jar
+benchmarks/*.log

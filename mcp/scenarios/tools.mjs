@@ -1,5 +1,8 @@
 // Exercises every MCP tool once against a running Dev server and fails if a tool was not covered.
 // usage: node mcp/scenarios/tools.mjs [appName]
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { startMcp, check, summary } from './lib.mjs';
 
 // app names are letters only
@@ -58,6 +61,22 @@ check('call_endpoint reports an errorId and hints at get_errors', bad.status ===
 const errId = bad.body.match(/"errorId":"(\d+)"/)?.[1];
 const err = await call('get_errors', { app, errorId: errId });
 check('get_errors returns the compile error with its line', /Unresolved reference: nope \(line 1:/.test(err.text), err.text);
+
+console.log('== apply_project (a whole folder in one call) ==');
+const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'r2proj-'));
+fs.mkdirSync(path.join(dir, 'scripts'));
+fs.mkdirSync(path.join(dir, 'resources'));
+fs.writeFileSync(path.join(dir, 'schema.sql'), 'CREATE TABLE pnote (id INT PRIMARY KEY, body VARCHAR(50))\n;\nINSERT INTO pnote VALUES (1, \'x\')\n');
+fs.writeFileSync(path.join(dir, 'scripts', 'proj.kts'), 'response["from"] = "project"\n');
+fs.writeFileSync(path.join(dir, 'resources', 'proj.xml'), resourceXml().replace('file="hello"', 'file="proj"').replace('<Script id="s"', '<Script id="p"'));
+const ap = await call('apply_project', { app, dir });
+check('apply_project deploys schema, script and resource in one call', ap.status === 200 && /schema: 2\/2/.test(ap.text) && /ok\s+script proj\.kts/.test(ap.text) && /ok\s+resource proj\.xml/.test(ap.text), ap.text);
+const pj = await call('call_endpoint', { method: 'GET', path: `/${app}/v1.0/proj` });
+check('the applied project is served', pj.json?.p?.from === 'project', pj.text);
+fs.writeFileSync(path.join(dir, 'resources', 'broken.xml'), '<Resource v="1.0"><oops/></Resource>');
+const apBad = await call('apply_project', { app, dir, skipSchema: true });
+check('apply_project reports a broken item without hiding the others', apBad.status === 422 && /FAIL resource broken\.xml/.test(apBad.text) && /ok\s+resource proj\.xml/.test(apBad.text), apBad.text);
+fs.rmSync(dir, { recursive: true, force: true });
 
 console.log('== cleanup ==');
 const del = await call('delete_script', { app, name: 'hello' });

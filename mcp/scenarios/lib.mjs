@@ -11,6 +11,8 @@ export function startMcp(env = {}) {
   let buf = '';
   const waiters = new Map();
   let id = 0;
+  // what an agent would have to send/read: tool call arguments out, tool results in
+  const stats = { calls: 0, argChars: 0, resultChars: 0, perTool: {} };
   p.stdout.on('data', (d) => {
     buf += d;
     let i;
@@ -32,9 +34,18 @@ export function startMcp(env = {}) {
     init: () => rpc('initialize', {}),
     tools: async () => (await rpc('tools/list', {})).result.tools,
     /** calls an MCP tool and returns { status, body, text } parsed from the "HTTP <n>\n<body>" convention */
+    stats,
     async call(name, args = {}) {
       const r = await rpc('tools/call', { name, arguments: args });
       const text = r.result.content[0].text;
+      const argChars = JSON.stringify(args).length;
+      stats.calls++;
+      stats.argChars += argChars;
+      stats.resultChars += text.length;
+      const t = (stats.perTool[name] ||= { calls: 0, argChars: 0, resultChars: 0 });
+      t.calls++;
+      t.argChars += argChars;
+      t.resultChars += text.length;
       const m = /HTTP (\d+)(?: \((\d+) ms\))?\n?([\s\S]*)/.exec(text);
       const body = m ? m[3] : text;
       let json;

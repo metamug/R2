@@ -67,7 +67,7 @@ XRequest response can also be accessed via MPath and added to the query
 
         <Sql id="result" output="true">
             SELECT name
-            from customer where customer_id = $[xreq].body.args.foo1
+            from customer where customer_id = $[xreq].args.foo1
         </Sql>
 
     </Request>
@@ -186,7 +186,7 @@ In the below example, Execute tag accepts [XRequest](/docs/xrequest) response vi
         </XRequest>
 
         <Execute classname="com.metamug.plugin.ExtractExample" id="execRes" output="true">
-    		    <Arg name="foo1" path="$[xreq].body.args.foo1" />
+    		    <Arg name="foo1" path="$[xreq].args.foo1" />
     	  </Execute>
 
     </Request>
