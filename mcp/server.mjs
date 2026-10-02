@@ -6,7 +6,10 @@
 //   R2_RUNTIME_URL  base URL of deployed resources for call_endpoint (default http://localhost:7000; resources live at {base}/{app}/v1.0/{name})
 //   R2_USER / R2_PASSWORD  Console credentials (default admin/admin)
 //   R2_TOKEN        optional pre-issued token (skips login)
+import fs from 'node:fs';
+import path from 'node:path';
 import readline from 'node:readline';
+import { fileURLToPath } from 'node:url';
 
 const CONSOLE = (process.env.R2_CONSOLE_URL || 'http://localhost:7000/console').replace(/\/$/, '');
 const RUNTIME = (process.env.R2_RUNTIME_URL || 'http://localhost:7000').replace(/\/$/, '');
@@ -17,14 +20,22 @@ async function login() {
   const pass = process.env.R2_PASSWORD || 'admin';
   // Console expects a base64 password; the CLI strips "==" padding, mirror that.
   const encoded = Buffer.from(pass).toString('base64').split('==')[0];
-  const res = await fetch(`${CONSOLE}/accesstoken`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({ username: user, password: encoded }),
-  });
-  const body = await res.json().catch(() => ({}));
-  if (!res.ok || !body.token) throw new Error(`login failed (${res.status}): ${JSON.stringify(body)}`);
-  token = body.token;
+  let last = '';
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const res = await fetch(`${CONSOLE}/accesstoken`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ username: user, password: encoded }),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (res.ok && body.token) {
+      token = body.token;
+      return;
+    }
+    last = `login failed (${res.status}): ${JSON.stringify(body)}`;
+    await new Promise((r) => setTimeout(r, 1000)); // the Console occasionally answers 401 once under load
+  }
+  throw new Error(last);
 }
 
 async function consoleReq(method, path, { form, rawBody, contentType } = {}, retried = false) {
@@ -75,6 +86,47 @@ const tools = [
       const form = { id, desc };
       for (const [k, v] of Object.entries({ dbtype, dburl, dbuser, dbpass })) if (v !== undefined) form[k] = v;
       return fmt(await consoleReq('POST', '/app', { form }));
+    },
+  },
+  {
+    name: 'delete_app',
+    description: 'Delete a backend and its webapp. Wait before re-creating the same name (a quick re-create can leave a half-extracted app).',
+    inputSchema: { type: 'object', properties: { app: { type: 'string' } }, required: ['app'] },
+    run: async ({ app }) => fmt(await consoleReq('DELETE', `/app/${enc(app)}`)),
+  },
+  {
+    name: 'list_scripts',
+    description: 'List the script files of a backend.',
+    inputSchema: { type: 'object', properties: { app: { type: 'string' } }, required: ['app'] },
+    run: async ({ app }) => fmt(await consoleReq('GET', `/app/${enc(app)}/script`)),
+  },
+  {
+    name: 'get_script',
+    description: 'Read the source of a script (name without extension).',
+    inputSchema: { type: 'object', properties: { app: { type: 'string' }, name: { type: 'string' } }, required: ['app', 'name'] },
+    run: async ({ app, name }) => fmt(await consoleReq('GET', `/app/${enc(app)}/script/${enc(name.replace(/\.(kts|groovy)$/, ''))}`)),
+  },
+  {
+    name: 'delete_script',
+    description: 'Delete a script (name without extension).',
+    inputSchema: { type: 'object', properties: { app: { type: 'string' }, name: { type: 'string' } }, required: ['app', 'name'] },
+    run: async ({ app, name }) => fmt(await consoleReq('DELETE', `/app/${enc(app)}/script/${enc(name.replace(/\.(kts|groovy)$/, ''))}`)),
+  },
+  {
+    name: 'get_stats',
+    description: 'Usage summary of a backend: requests per resource and version, and error counts (compact).',
+    inputSchema: { type: 'object', properties: { app: { type: 'string' } }, required: ['app'] },
+    run: async ({ app }) => {
+      const r = await consoleReq('GET', `/stat/${enc(app)}`);
+      if (r.status !== 200) return fmt(r);
+      try {
+        const j = JSON.parse(r.body);
+        const keep = {};
+        for (const k of ['resourcecount', 'errorcount', 'statuscount', 'methodcount']) if (j[k]) keep[k] = j[k];
+        return JSON.stringify(Object.keys(keep).length ? keep : j);
+      } catch {
+        return fmt(r);
+      }
     },
   },
   {
@@ -269,6 +321,33 @@ const tools = [
 ];
 
 const byName = new Map(tools.map((t) => [t.name, t]));
+
+// MCP resources: the authoring guide, the repo docs and the worked shop example, so an agent can read
+// what it needs on demand instead of exploring the source tree.
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const resourceFiles = [];
+function addResource(uri, file, description) {
+  if (fs.existsSync(file)) resourceFiles.push({ uri, name: uri.replace('r2://', ''), description, mimeType: 'text/markdown', file });
+}
+addResource('r2://guide', path.join(HERE, 'guide.md'), 'Start here: R2 authoring guide (workflow, resource XML, mpath, Kotlin scripts, gotchas)');
+for (const [name, description] of [
+  ['resource-file', 'Resource XML reference'],
+  ['mpath', 'MPath expressions between steps'],
+  ['xrequest', 'XRequest: calling external APIs'],
+  ['scripting', 'Scripting'],
+  ['request-parameters', 'Request parameters'],
+  ['output-format', 'Response output format'],
+  ['auth', 'Authentication and roles'],
+]) {
+  addResource(`r2://docs/${name}`, path.join(HERE, '..', 'docs', 'markdown', `${name}.md`), description);
+}
+const shop = path.join(HERE, 'scenarios', 'shop');
+for (const sub of ['resources', 'scripts']) {
+  if (fs.existsSync(path.join(shop, sub))) {
+    for (const f of fs.readdirSync(path.join(shop, sub))) addResource(`r2://examples/shop/${sub}/${f}`, path.join(shop, sub, f), 'Worked example (shop scenario, tested)');
+  }
+}
+
 const send = (msg) => process.stdout.write(JSON.stringify({ jsonrpc: '2.0', ...msg }) + '\n');
 
 async function handle({ id, method, params }) {
@@ -279,12 +358,19 @@ async function handle({ id, method, params }) {
           id,
           result: {
             protocolVersion: params?.protocolVersion || '2024-11-05',
-            capabilities: { tools: {} },
+            capabilities: { tools: {}, resources: {} },
             serverInfo: { name: 'r2-dev-mcp', version: '0.1.0' },
           },
         });
       case 'ping':
         return send({ id, result: {} });
+      case 'resources/list':
+        return send({ id, result: { resources: resourceFiles.map(({ uri, name, description, mimeType }) => ({ uri, name, description, mimeType })) } });
+      case 'resources/read': {
+        const res = resourceFiles.find((r) => r.uri === params?.uri);
+        if (!res) return send({ id, error: { code: -32602, message: `unknown resource ${params?.uri}` } });
+        return send({ id, result: { contents: [{ uri: res.uri, mimeType: res.mimeType, text: fs.readFileSync(res.file, 'utf8') }] } });
+      }
       case 'tools/list':
         return send({ id, result: { tools: tools.map(({ name, description, inputSchema }) => ({ name, description, inputSchema })) } });
       case 'tools/call': {
