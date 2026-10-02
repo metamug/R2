@@ -158,13 +158,21 @@ const tools = [
   },
   {
     name: 'upload_script',
-    description: 'Upload a script file (e.g. Kotlin) referenced by an Execute step in a resource.',
+    description: 'Create or update a script referenced by a <Script file="name"/> step. Kotlin (.kts) is the default language; a .groovy name keeps using Groovy. Scripts see params (Map), request (id, body, method), response (MutableMap, the step output) and ds (DataSource). Updates are hot.',
     inputSchema: {
       type: 'object',
       properties: { app: { type: 'string' }, filename: { type: 'string' }, content: { type: 'string' } },
       required: ['app', 'filename', 'content'],
     },
-    run: async ({ app, filename, content }) => fmt(await consoleReq('POST', `/app/${enc(app)}/script`, { form: { filename, data: content } })),
+    run: async ({ app, filename, content }) => {
+      let r = await consoleReq('POST', `/app/${enc(app)}/script`, { form: { filename, data: content } });
+      if (r.status === 409) {
+        // already exists: update in place (hot, picked up on the next request)
+        r = await consoleReq('PUT', `/app/${enc(app)}/script/${enc(filename)}`, { rawBody: content, contentType: 'text/plain' });
+        return `updated: ${fmt(r)}`;
+      }
+      return `created: ${fmt(r)}`;
+    },
   },
   {
     name: 'call_endpoint',

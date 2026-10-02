@@ -32,3 +32,8 @@ mcp/pgsql/
 mcp/pgdata/
 mcp/pg.log
 mcp/tomcat.*.log
+
+# Kotlin script engine jars fetched by dev build
+server/lib/kotlin-*.jar
+server/lib/trove4j-*.jar
+server/lib/annotations-13.0.jar

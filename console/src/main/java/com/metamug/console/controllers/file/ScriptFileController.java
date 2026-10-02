@@ -111,9 +111,10 @@ public class ScriptFileController extends HttpServlet {
                         String fileName = path[1] == null ? "" : path[1];
                         if (path.length == 2) {
                             if (!appName.trim().isEmpty() && !fileName.trim().isEmpty()) {
-                                File file = new File(Util.OUTPUT_FOLDER + File.separator + appName + File.separator + "WEB-INF" + File.separator
-                                        + "scripts" + File.separator + fileName + ".groovy");
-                                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + ".groovy\"");
+                                String ext = Util.scriptExtension(appName, fileName);
+                                fileName = Util.stripScriptExtension(fileName);
+                                File file = new File(Util.scriptDir(appName), fileName + ext);
+                                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + ext + "\"");
                                 response.setContentType("application/octet-stream");
                                 response.setContentLength((int) file.length());
                                 try (FileInputStream fileIn = new FileInputStream(file)) {
@@ -177,7 +178,9 @@ public class ScriptFileController extends HttpServlet {
         UserService userService = new UserService();
         ScriptFileService fileService = new ScriptFileService();
         String fileName = request.getParameter("filename") == null ? "" : request.getParameter("filename");
-        fileName = fileName.replace(".groovy", "");
+        String appNameForExt = (String) request.getAttribute("appName");
+        String scriptExt = appNameForExt == null ? Util.KOTLIN_SCRIPT_EXTENSION : Util.scriptExtension(appNameForExt, fileName);
+        fileName = Util.stripScriptExtension(fileName);
         String fileContent = request.getParameter("data") == null ? "" : request.getParameter("data");
         if (!fileName.isEmpty() && !fileContent.isEmpty()) {
             File uploadedFile = null;
@@ -194,18 +197,25 @@ public class ScriptFileController extends HttpServlet {
 
                     boolean fileExists = fileService.addFile(userId, appName, fileName, ResourceFileService.getFileSize(uploadedFile.length()));
 
-                    if (!fileExists) {
+                    if (fileExists) {
+                        // saving over an existing script is a PUT; do not report a silent no-op as success
+                        obj.put("message", "Script already exists. Use PUT to update it.");
+                        obj.put("status", 409);
+                        response.setStatus(409);
+                    } else {
                         //Save it on Server
                         String scriptDir = Util.OUTPUT_FOLDER + File.separator + appName + File.separator + "WEB-INF"
                                 + File.separator + "scripts";
                         if (!new File(scriptDir).exists()) {
                             Files.createDirectories(Paths.get(scriptDir));
                         }
-                        Files.copy(uploadedFile.toPath(), new File(scriptDir + File.separator + uploadedFile.getName() + ".groovy").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        Files.copy(uploadedFile.toPath(), new File(scriptDir + File.separator + uploadedFile.getName() + scriptExt).toPath(), StandardCopyOption.REPLACE_EXISTING);
                     }
-                    // Give a message that upload is done
-                    obj.put("message", "Your file has been uploaded");
-                    response.setStatus(201);
+                    if (!fileExists) {
+                        // Give a message that upload is done
+                        obj.put("message", "Your file has been uploaded");
+                        response.setStatus(201);
+                    }
                 } else {
                     throw new MetamugException(MetamugError.UNVERIFIED_USER);
                 }
@@ -272,7 +282,9 @@ public class ScriptFileController extends HttpServlet {
                 try {
                     userService.validateUserApp(userId, appName);
                     if (userService.isVerifiedUser(userId)) {
-                        File updatedFile = new File(fileName + ".groovy");
+                        String putExt = Util.scriptExtension(appName, fileName);
+                        fileName = Util.stripScriptExtension(fileName);
+                        File updatedFile = new File(fileName + putExt);
                         try (FileOutputStream fos = new FileOutputStream(updatedFile)) {
                             BufferedReader reader = request.getReader();
                             String line;
@@ -284,7 +296,7 @@ public class ScriptFileController extends HttpServlet {
                             }
                         }
                         ScriptFileService fileService = new ScriptFileService();
-                        fileService.addFile(userId, appName, FilenameUtils.removeExtension(updatedFile.getName()), ResourceFileService.getFileSize(updatedFile.length()));
+                        fileService.addFile(userId, appName, fileName, ResourceFileService.getFileSize(updatedFile.length()));
                         //Save it on Server
                         String scriptDir = Util.OUTPUT_FOLDER + File.separator + appName + File.separator + "WEB-INF" + File.separator + "scripts";
                         if (!new File(scriptDir).exists()) {

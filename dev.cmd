@@ -32,6 +32,8 @@ set MAVEN_OPTS=--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base
 set MVN=%SERVER%\maven\bin\mvn.cmd
 call "%MVN%" -B -f "%ROOT%\parser\pom.xml" clean install -DskipTests || exit /b 1
 call "%MVN%" -B -f "%ROOT%\console\pom.xml" clean package -DskipTests || exit /b 1
+REM Kotlin script engine for KotlinRunner (git-ignored jars)
+call "%MVN%" -B -q -f "%SERVER%\kotlin\pom.xml" dependency:copy-dependencies -DoutputDirectory="%SERVER%\lib" || exit /b 1
 del /q "%SERVER%\lib\openapi-rest-model-*.jar" 2>nul
 copy /y "%ROOT%\parser\target\openapi-rest-model-*.jar" "%SERVER%\lib\" >nul
 rmdir /s /q "%SERVER%\webapps\console" 2>nul

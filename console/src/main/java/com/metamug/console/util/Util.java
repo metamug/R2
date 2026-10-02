@@ -426,4 +426,42 @@ public class Util {
         }
         return null;
     }
+
+    public static final String KOTLIN_SCRIPT_EXTENSION = ".kts";
+    public static final String GROOVY_SCRIPT_EXTENSION = ".groovy";
+
+    /**
+     * Folder holding the script files of an app.
+     */
+    public static File scriptDir(String appName) {
+        return new File(OUTPUT_FOLDER + File.separator + appName + File.separator + "WEB-INF" + File.separator + "scripts");
+    }
+
+    /**
+     * Extension to use for a script name: the one it was given with (.groovy), the one of an already
+     * saved script with that name, otherwise Kotlin (.kts) which is the default scripting language.
+     */
+    public static String scriptExtension(String appName, String fileName) {
+        if (fileName.endsWith(GROOVY_SCRIPT_EXTENSION)) {
+            return GROOVY_SCRIPT_EXTENSION;
+        }
+        String base = stripScriptExtension(fileName);
+        if (new File(scriptDir(appName), base + KOTLIN_SCRIPT_EXTENSION).exists()) {
+            return KOTLIN_SCRIPT_EXTENSION;
+        }
+        if (new File(scriptDir(appName), base + GROOVY_SCRIPT_EXTENSION).exists()) {
+            return GROOVY_SCRIPT_EXTENSION;
+        }
+        return KOTLIN_SCRIPT_EXTENSION;
+    }
+
+    public static String stripScriptExtension(String fileName) {
+        if (fileName.endsWith(KOTLIN_SCRIPT_EXTENSION)) {
+            return fileName.substring(0, fileName.length() - KOTLIN_SCRIPT_EXTENSION.length());
+        }
+        if (fileName.endsWith(GROOVY_SCRIPT_EXTENSION)) {
+            return fileName.substring(0, fileName.length() - GROOVY_SCRIPT_EXTENSION.length());
+        }
+        return fileName;
+    }
 }

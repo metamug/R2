@@ -169,7 +169,7 @@ public class ScriptFileDAO {
 
     public JSONObject deleteFile(String fileName, String appName, int userId) throws IOException, SQLException, PropertyVetoException, ClassNotFoundException {
         JSONObject obj = null;
-        File file = new File(OUTPUT_FOLDER + File.separator + appName + File.separator + "WEB-INF" + File.separator + "scripts" + File.separator + fileName + ".groovy");
+        File file = new File(Util.scriptDir(appName), Util.stripScriptExtension(fileName) + Util.scriptExtension(appName, fileName));
         if (FileUtil.deleteFile(file)) {
             try (Connection con = ConnectionProvider.getInstance().getConnection()) {
                 /*try (PreparedStatement statement = con.prepareStatement("UPDATE console_app SET app_resources=app_resources-1 WHERE app_name=? AND user_id=? AND deleted_on IS NULL")) {

@@ -19,6 +19,8 @@ case "$1" in
     MVN="$SERVER/maven/bin/mvn"; [ -x "$MVN" ] || MVN="mvn"
     "$MVN" -B -f "$ROOT/parser/pom.xml" clean install -DskipTests
     "$MVN" -B -f "$ROOT/console/pom.xml" clean package -DskipTests
+    # Kotlin script engine for KotlinRunner (git-ignored jars)
+    "$MVN" -B -q -f "$SERVER/kotlin/pom.xml" dependency:copy-dependencies -DoutputDirectory="$SERVER/lib"
     rm -f "$SERVER"/lib/openapi-rest-model-*.jar
     cp "$ROOT"/parser/target/openapi-rest-model-*.jar "$SERVER/lib/"
     rm -rf "$SERVER/webapps/console"

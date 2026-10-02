@@ -47,6 +47,10 @@ import org.xml.sax.SAXException;
 @XmlType(name = "script")
 public class Script extends InvocableElement{
 
+    private static final String KOTLIN_EXTENSION = ".kts";
+    private static final String GROOVY_EXTENSION = ".groovy";
+
+
     @XmlAttribute(name = "id", required = true)
     protected String id;
     @XmlAttribute(name = "file", required = true)
@@ -89,8 +93,8 @@ public class Script extends InvocableElement{
      *     
      */
     public String getFile() {
-        String val = file.contains(".groovy") ? file : file+".groovy";
-        return val;
+        // Kotlin is the default scripting language; an explicit .groovy name still runs on the Groovy runner
+        return file.endsWith(GROOVY_EXTENSION) || file.endsWith(KOTLIN_EXTENSION) ? file : file + KOTLIN_EXTENSION;
     }
 
     /**
@@ -165,7 +169,8 @@ public class Script extends InvocableElement{
         writer.writeStartElement("m:execute");
         String var = getId();
         writer.writeAttribute("var", var);
-        writer.writeAttribute("className", "com.metamug.mason.plugin.GroovyRunner");
+        writer.writeAttribute("className", getFile().endsWith(GROOVY_EXTENSION)
+                ? "com.metamug.mason.plugin.GroovyRunner" : "com.metamug.mason.plugin.KotlinRunner");
         writer.writeEmptyElement("m:arg");
         writer.writeAttribute("name", "file");
         writer.writeAttribute("value", getFile());
