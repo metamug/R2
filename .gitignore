@@ -1,0 +1,34 @@
+# build output
+target/
+node_modules/
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Dev server runtime state (created by running the server, never committed)
+server/work/
+server/downloads/
+server/jdk/
+server/databases/*/*.lck
+server/databases/*/*.log
+server/databases/*/*.tmp
+server/databases/*/*.lobs
+# apps created through the console/MCP: only the shipped console DB is tracked
+server/databases/*
+!server/databases/mtg_console/
+server/webapps/*
+!server/webapps/ROOT/
+server/backend/
+server/logs/
+server/temp/
+server/tempapps/
+
+# local test infrastructure (portable PostgreSQL etc.)
+mcp/pgsql/
+mcp/pgdata/
+mcp/pg.log
+mcp/tomcat.*.log

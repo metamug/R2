@@ -1,0 +1,9 @@
+{
+  "name": "r2-dev-mcp",
+  "version": "0.1.0",
+  "description": "MCP server exposing the R2 Dev server (Console) so an agent can define, hot-deploy and test REST resources",
+  "type": "module",
+  "main": "server.mjs",
+  "bin": { "r2-dev-mcp": "server.mjs" },
+  "engines": { "node": ">=18" }
+}

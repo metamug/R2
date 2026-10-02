@@ -4,6 +4,37 @@ using R2 Console
 
 ![Metamug Resource Screen](https://metamug.com/img/res-screen.png)
 
+## Dev server quick start
+
+Needs a JDK (8 to 17). Maven is bundled in `server/maven`.
+
+```
+dev build     # build parser + console from source into server/
+dev start     # http://localhost:7000/console  (login admin/admin)
+dev stop
+```
+
+On Linux/macOS/Git Bash use `./dev.sh` with the same commands.
+
+### Layout
+
+| Folder | What it is |
+|---|---|
+| `parser/` | XML resource parser (builds `openapi-rest-model` jar into `server/lib`) |
+| `console/` | Console webapp and REST API for apps, resources, deployment (builds `console.war`) |
+| `server/` | Tomcat based server. Apps you create are generated into `server/webapps`, `server/databases`, `server/backend` (git-ignored) |
+| `mcp/` | MCP server so an AI agent can create apps, define/hot-deploy resources and call them (see `mcp/README.md`) |
+| `cli/` | `mtg` command line client |
+| `docs/` | Documentation |
+
+### Agent workflow (MCP)
+
+```
+claude mcp add r2-dev -- node mcp/server.mjs
+```
+
+Then ask the agent to create an app, a table and a resource. `mcp/test-log.md` records the Dev server validation run and the issues it found.
+
 ## R2 Console
 R2 console comes with following features.
 

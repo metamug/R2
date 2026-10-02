@@ -1,0 +1,5 @@
+
+pgsql/
+pgdata/
+pg.log
+tomcat.*.log
