@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource xmlns="http://xml.metamug.net/resource/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" v="1.0">
+  <Desc>Failure semantics: the external API answers 500, then a SQL step uses its result.</Desc>
+  <Request method="GET">
+    <XRequest id="ext" method="GET" url="https://postman-echo.com/status/500" output="false"/>
+    <Sql id="after" output="true">SELECT COUNT(*) AS n FROM product</Sql>
+  </Request>
+</Resource>

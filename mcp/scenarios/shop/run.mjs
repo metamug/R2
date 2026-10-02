@@ -37,11 +37,11 @@ for (const q of schema) {
   if (r.status !== 200 || (r.json?.[0]?.status ?? 200) >= 400) console.log('  schema note:', q.slice(0, 40), r.body.slice(0, 120));
 }
 
-for (const s of ['hashpw', 'ordercalc', 'transition']) {
-  const r = await mcp.call('upload_script', { app, filename: `${s}.kts`, content: read(here, 'scripts', `${s}.kts`) });
+for (const s of ['hashpw.kts', 'ordercalc.kts', 'transition.kts', 'tokens.kts', 'legacy.groovy']) {
+  const r = await mcp.call('upload_script', { app, filename: s, content: read(here, 'scripts', s) });
   check(`upload_script ${s}`, r.status === 200 || r.status === 201, r.text);
 }
-for (const rsc of ['product', 'customer', 'order']) {
+for (const rsc of ['product', 'customer', 'order', 'token', 'txtest', 'xfail', 'legacy']) {
   const xml = read(here, 'resources', `${rsc}.xml`).replaceAll('{{app}}', app).replaceAll('{{runtime}}', runtime);
   const r = await mcp.call('define_resource', { app, name: rsc, xml });
   check(`define_resource ${rsc}`, /deployed":true/.test(r.text), r.text);
@@ -116,6 +116,42 @@ const pay = await mcp.call('call_endpoint', { method: 'PUT', path: `${base}/orde
 check('NEW -> PAID accepted, declared 202', pay.status === 202, pay.text);
 const after = await mcp.call('call_endpoint', { method: 'GET', path: `${base}/order/${orderId}` });
 check('status is now PAID', has(after, 'PAID'), after.body);
+
+console.log('== script-only resource: one script for item and collection requests ==');
+const crypto = await import('node:crypto');
+const item1 = await mcp.call('call_endpoint', { method: 'GET', path: `${base}/token/hello` });
+check('item request: sha256 of the id', item1.json?.digest?.sha256 === crypto.createHash('sha256').update('hello').digest('hex'), item1.body);
+check(
+  'item request: md5, base64 and a deterministic uuid',
+  item1.json?.digest?.md5 === crypto.createHash('md5').update('hello').digest('hex') &&
+    item1.json?.digest?.base64 === Buffer.from('hello').toString('base64') &&
+    /^[0-9a-f-]{36}$/.test(item1.json?.digest?.uuid || ''),
+  item1.body,
+);
+const item2 = await mcp.call('call_endpoint', { method: 'GET', path: `${base}/token/hello` });
+check('item request is deterministic', item2.json?.digest?.uuid === item1.json?.digest?.uuid, item2.body);
+const coll = await mcp.call('call_endpoint', { method: 'GET', path: `${base}/token`, query: { count: '5' } });
+check('collection request: 5 distinct uuids', new Set(coll.json?.many?.items || []).size === 5, coll.body);
+
+console.log('== failure semantics ==');
+const countTx = async () => JSON.stringify((await sql("SELECT COUNT(*) FROM orders WHERE status = 'TX'")).json);
+const before = await countTx();
+const tx = await mcp.call('call_endpoint', { method: 'POST', path: `${base}/txtest`, body: { customer_id: String(ada) } });
+check('transaction with a failing statement returns an error', tx.status >= 400, tx.text);
+check('...and the first statement was rolled back', (await countTx()) === before && before.includes('0'), before);
+const txErr = tx.body.match(/"errorId":"(\d+)"/)?.[1];
+if (txErr) {
+  const e = await mcp.call('get_errors', { app, errorId: txErr });
+  check('get_errors names the constraint violation', /null|not null|constraint/i.test(e.text), e.text);
+}
+const t0 = Date.now();
+const xf = await mcp.call('call_endpoint', { method: 'GET', path: `${base}/xfail` });
+check('external API 500: request completes quickly (no hang)', Date.now() - t0 < 15000, `${Date.now() - t0} ms`);
+console.log('  note: external 500 -> HTTP ' + xf.status + ' ' + xf.body.slice(0, 160).replace(/\s+/g, ' '));
+
+console.log('== backwards compatibility: Groovy ==');
+const groovy = await mcp.call('call_endpoint', { method: 'GET', path: `${base}/legacy`, query: { who: 'R2' } });
+check('Groovy script still runs and sees its request parameter', groovy.json?.g?.message === 'Hello R2' && groovy.json?.g?.length === 2, groovy.body);
 
 mcp.close();
 process.exit(summary() ? 0 : 1);

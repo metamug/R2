@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Resource xmlns="http://xml.metamug.net/resource/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://xml.metamug.net/resource/1.0 http://xml.metamug.net/schema/resource.xsd" v="1.0">
+  <Desc>Failure semantics: the second statement needs an order_ref parameter; the test omits it so it violates NOT NULL and the whole transaction must roll back.</Desc>
+  <Request method="POST">
+    <Transaction>
+      <Sql id="a" type="update">INSERT INTO orders (customer_id, total, status, token) VALUES ($customer_id, 1, 'TX', 'tx-rollback-test')</Sql>
+      <Sql id="b" type="update">INSERT INTO order_line (order_id, product_id, qty, price) VALUES ($order_ref, 1, 1, 1)</Sql>
+    </Transaction>
+  </Request>
+</Resource>
